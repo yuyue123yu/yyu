@@ -9,7 +9,7 @@ import {
   downloadTemplate,
   type LegalTemplate 
 } from "@/lib/api/legalTemplates";
-import { Download, Search, Filter, Star, TrendingUp } from "lucide-react";
+import { Download, Search, Filter, Star, TrendingUp, X, FileText, Calendar, Eye } from "lucide-react";
 
 export default function TemplatesPage() {
   const [templates, setTemplates] = useState<LegalTemplate[]>([]);
@@ -17,6 +17,7 @@ export default function TemplatesPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState("");
   const [downloading, setDownloading] = useState<string | null>(null);
+  const [selectedTemplate, setSelectedTemplate] = useState<LegalTemplate | null>(null);
 
   useEffect(() => {
     loadTemplates();
@@ -50,6 +51,7 @@ export default function TemplatesPage() {
       alert('下载失败，请稍后重试');
     } finally {
       setDownloading(null);
+      setSelectedTemplate(null);
     }
   };
 
@@ -147,7 +149,8 @@ export default function TemplatesPage() {
                   {filteredTemplates.map((template) => (
                     <div
                       key={template.id}
-                      className="bg-white rounded-lg border border-neutral-200 p-6 hover:shadow-lg transition-all"
+                      className="bg-white rounded-lg border border-neutral-200 p-6 hover:shadow-lg transition-all cursor-pointer"
+                      onClick={() => setSelectedTemplate(template)}
                     >
                       {/* Header */}
                       <div className="flex items-start justify-between mb-4">
@@ -202,7 +205,10 @@ export default function TemplatesPage() {
                           )}
                         </div>
                         <button 
-                          onClick={() => handleDownload(template.id, template.title)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDownload(template.id, template.title);
+                          }}
                           disabled={downloading === template.id}
                           className="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-medium transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
@@ -250,6 +256,145 @@ export default function TemplatesPage() {
           </div>
         </section>
       </main>
+
+      {/* Template Detail Modal */}
+      {selectedTemplate && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setSelectedTemplate(null)}>
+          <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            {/* Header */}
+            <div className="sticky top-0 bg-white border-b border-neutral-200 p-6 flex items-start justify-between">
+              <div className="flex-1">
+                <h2 className="text-2xl font-bold text-neutral-900 mb-2">
+                  {selectedTemplate.title}
+                </h2>
+                <p className="text-neutral-600">
+                  {selectedTemplate.description}
+                </p>
+              </div>
+              <button
+                onClick={() => setSelectedTemplate(null)}
+                className="ml-4 p-2 hover:bg-neutral-100 rounded-lg transition-all"
+              >
+                <X className="h-6 w-6 text-neutral-600" />
+              </button>
+            </div>
+
+            {/* Content */}
+            <div className="p-6 space-y-6">
+              {/* Stats */}
+              <div className="grid grid-cols-3 gap-4">
+                <div className="bg-neutral-50 rounded-lg p-4 text-center">
+                  <Star className="h-6 w-6 text-yellow-500 fill-yellow-500 mx-auto mb-2" />
+                  <div className="text-2xl font-bold text-neutral-900">{selectedTemplate.rating}</div>
+                  <div className="text-sm text-neutral-600">评分</div>
+                </div>
+                <div className="bg-neutral-50 rounded-lg p-4 text-center">
+                  <Download className="h-6 w-6 text-primary-600 mx-auto mb-2" />
+                  <div className="text-2xl font-bold text-neutral-900">{selectedTemplate.downloads.toLocaleString()}</div>
+                  <div className="text-sm text-neutral-600">下载量</div>
+                </div>
+                <div className="bg-neutral-50 rounded-lg p-4 text-center">
+                  <FileText className="h-6 w-6 text-green-600 mx-auto mb-2" />
+                  <div className="text-2xl font-bold text-neutral-900">{selectedTemplate.pages}</div>
+                  <div className="text-sm text-neutral-600">页数</div>
+                </div>
+              </div>
+
+              {/* Details */}
+              <div className="space-y-4">
+                <div>
+                  <h3 className="font-bold text-neutral-900 mb-2">模板信息</h3>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between py-2 border-b border-neutral-100">
+                      <span className="text-neutral-600">语言:</span>
+                      <span className="font-medium text-neutral-900">
+                        {selectedTemplate.language === 'en' ? 'English' : selectedTemplate.language === 'ms' ? 'Bahasa Malaysia' : '中文'}
+                      </span>
+                    </div>
+                    <div className="flex justify-between py-2 border-b border-neutral-100">
+                      <span className="text-neutral-600">文件大小:</span>
+                      <span className="font-medium text-neutral-900">{selectedTemplate.fileSize}</span>
+                    </div>
+                    <div className="flex justify-between py-2 border-b border-neutral-100">
+                      <span className="text-neutral-600">格式:</span>
+                      <span className="font-medium text-neutral-900">PDF</span>
+                    </div>
+                    <div className="flex justify-between py-2 border-b border-neutral-100">
+                      <span className="text-neutral-600">最后更新:</span>
+                      <span className="font-medium text-neutral-900">{selectedTemplate.lastUpdated}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Description */}
+                <div>
+                  <h3 className="font-bold text-neutral-900 mb-2">详细说明</h3>
+                  <p className="text-neutral-700 leading-relaxed">
+                    这是一份专业的{selectedTemplate.title}，符合马来西亚法律要求。
+                    该模板由专业律师审核，包含所有必要的法律条款和条件。
+                    您可以根据自己的需求进行修改和定制。
+                  </p>
+                </div>
+
+                {/* Features */}
+                <div>
+                  <h3 className="font-bold text-neutral-900 mb-2">模板特点</h3>
+                  <ul className="space-y-2">
+                    <li className="flex items-start gap-2">
+                      <span className="text-green-600 font-bold">✓</span>
+                      <span className="text-neutral-700">符合马来西亚法律要求</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-green-600 font-bold">✓</span>
+                      <span className="text-neutral-700">专业律师审核</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-green-600 font-bold">✓</span>
+                      <span className="text-neutral-700">可编辑PDF格式</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-green-600 font-bold">✓</span>
+                      <span className="text-neutral-700">包含使用说明</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Price & Download */}
+              <div className="bg-primary-50 rounded-lg p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <div className="text-sm text-neutral-600 mb-1">价格</div>
+                    {selectedTemplate.price === 0 ? (
+                      <div className="text-3xl font-bold text-green-600">免费</div>
+                    ) : (
+                      <div className="text-3xl font-bold text-primary-600">RM {selectedTemplate.price}</div>
+                    )}
+                  </div>
+                </div>
+                <button
+                  onClick={() => handleDownload(selectedTemplate.id, selectedTemplate.title)}
+                  disabled={downloading === selectedTemplate.id}
+                  className="w-full bg-primary-600 hover:bg-primary-700 text-white py-4 rounded-lg font-bold text-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {downloading === selectedTemplate.id ? (
+                    <>
+                      <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
+                      下载中...
+                    </>
+                  ) : (
+                    <>
+                      <Download className="h-5 w-5" />
+                      立即下载
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <Footer />
     </>
   );
