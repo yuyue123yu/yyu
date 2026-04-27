@@ -3,9 +3,12 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Menu, X, Scale, Phone } from "lucide-react";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { t } = useLanguage();
 
   return (
     <header className="bg-white border-b border-neutral-200 sticky top-0 z-50 shadow-sm">
@@ -14,16 +17,16 @@ export default function Header() {
           <div className="flex items-center gap-6">
             <span className="flex items-center gap-2">
               <Phone className="h-4 w-4" />
-              24/7 热线：+60 3-1234 5678
+              24/7 {t('common.contact')}: +60 3-1234 5678
             </span>
           </div>
           <div className="hidden md:flex items-center gap-4">
             <Link href="/login" className="hover:text-accent-400 transition-colors">
-              登录
+              {t('common.login')}
             </Link>
             <span className="text-neutral-400">|</span>
             <Link href="/register" className="hover:text-accent-400 transition-colors">
-              注册
+              {t('common.register')}
             </Link>
           </div>
         </div>
@@ -40,29 +43,30 @@ export default function Header() {
               <span className="text-2xl font-bold text-primary-700 tracking-tight">
                 LegalMY
               </span>
-              <p className="text-xs text-neutral-500">专业法律咨询平台</p>
+              <p className="text-xs text-neutral-500">{t('home.heroTitle')}</p>
             </div>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-6">
             <Link href="/services" className="text-sm font-medium text-neutral-700 hover:text-primary-600 transition-colors">
-              法律服务
+              {t('common.services')}
             </Link>
             <Link href="/lawyers" className="text-sm font-medium text-neutral-700 hover:text-primary-600 transition-colors">
-              律师团队
+              {t('common.lawyers')}
             </Link>
-            <Link href="/contact" className="text-sm font-medium text-neutral-700 hover:text-primary-600 transition-colors">
-              关于我们
+            <Link href="/about" className="text-sm font-medium text-neutral-700 hover:text-primary-600 transition-colors">
+              {t('common.about')}
             </Link>
             <Link href="/knowledge" className="text-sm font-medium text-neutral-700 hover:text-primary-600 transition-colors">
-              法律资讯
+              {t('common.knowledge')}
             </Link>
+            <LanguageSwitcher />
             <Link 
               href="/consultation" 
               className="bg-accent-500 hover:bg-accent-600 text-white px-6 py-2.5 rounded-lg text-sm font-semibold transition-all shadow-md hover:shadow-lg"
             >
-              免费咨询
+              {t('common.consultation')}
             </Link>
           </div>
 
@@ -79,22 +83,25 @@ export default function Header() {
         {isMenuOpen && (
           <div className="md:hidden mt-6 pb-4 space-y-4 border-t border-neutral-200 pt-4">
             <Link href="/services" className="block text-neutral-700 hover:text-primary-600 py-2 font-medium">
-              法律服务
+              {t('common.services')}
             </Link>
             <Link href="/lawyers" className="block text-neutral-700 hover:text-primary-600 py-2 font-medium">
-              律师团队
+              {t('common.lawyers')}
             </Link>
-            <Link href="/contact" className="block text-neutral-700 hover:text-primary-600 py-2 font-medium">
-              关于我们
+            <Link href="/about" className="block text-neutral-700 hover:text-primary-600 py-2 font-medium">
+              {t('common.about')}
             </Link>
             <Link href="/knowledge" className="block text-neutral-700 hover:text-primary-600 py-2 font-medium">
-              法律资讯
+              {t('common.knowledge')}
             </Link>
+            <div className="py-2">
+              <LanguageSwitcher />
+            </div>
             <Link 
               href="/consultation" 
               className="block bg-accent-500 text-white px-6 py-3 rounded-lg text-center font-semibold hover:bg-accent-600 transition-all"
             >
-              免费咨询
+              {t('common.consultation')}
             </Link>
           </div>
         )}
