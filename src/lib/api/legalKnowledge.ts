@@ -171,3 +171,8 @@ export async function fetchPopularArticles(limit: number = 5): Promise<LegalArti
     .sort((a, b) => b.views - a.views)
     .slice(0, limit);
 }
+
+// 导出所有文章ID用于静态生成
+export function getAllArticleIds(): string[] {
+  return mockArticles.map(a => a.id);
+}

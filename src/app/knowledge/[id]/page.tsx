@@ -1,45 +1,21 @@
-"use client";
-
 import { use } from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Link from "next/link";
 import { ArrowLeft, Clock, Eye, Tag, BookOpen, Download } from "lucide-react";
-import { fetchArticleById } from "@/lib/api/legalKnowledge";
-import { useState, useEffect } from "react";
+import { fetchArticleById, getAllArticleIds } from "@/lib/api/legalKnowledge";
 
-export default function ArticleDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
-  const [article, setArticle] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+// 生成静态路径
+export async function generateStaticParams() {
+  const ids = getAllArticleIds();
+  return ids.map((id) => ({
+    id: id,
+  }));
+}
 
-  useEffect(() => {
-    loadArticle();
-  }, [id]);
-
-  const loadArticle = async () => {
-    setLoading(true);
-    const data = await fetchArticleById(id);
-    setArticle(data);
-    setLoading(false);
-  };
-
-  if (loading) {
-    return (
-      <>
-        <Header />
-        <main className="min-h-screen bg-neutral-50">
-          <div className="container mx-auto px-6 py-20">
-            <div className="text-center">
-              <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-primary-600 border-t-transparent"></div>
-              <p className="mt-4 text-neutral-600">加载中...</p>
-            </div>
-          </div>
-        </main>
-        <Footer />
-      </>
-    );
-  }
+export default async function ArticleDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const article = await fetchArticleById(id);
 
   if (!article) {
     return (
