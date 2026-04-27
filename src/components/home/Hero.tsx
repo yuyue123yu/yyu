@@ -82,15 +82,16 @@ export default function Hero() {
             <div className="grid grid-cols-3 md:grid-cols-6 gap-1.5 md:gap-2">
               {[
                 { name: '家庭法', icon: '👨‍👩‍👧' },
-                { name: '商业法', icon: '💼' },
-                { name: '房产法', icon: '🏠' },
-                { name: '刑事法', icon: '⚖️' },
-                { name: '劳动法', icon: '👔' },
-                { name: '知识产权', icon: '💡' },
+                { name: '家庭法', id: 'family', icon: '👨‍👩‍👧' },
+                { name: '商业法', id: 'business', icon: '💼' },
+                { name: '房产法', id: 'property', icon: '🏠' },
+                { name: '刑事法', id: 'criminal', icon: '⚖️' },
+                { name: '劳动法', id: 'employment', icon: '👔' },
+                { name: '知识产权', id: 'ip', icon: '💡' },
               ].map((service) => (
                 <Link
                   key={service.name}
-                  href={`/services/${service.name}`}
+                  href={`/services/${service.id}`}
                   className="bg-white/20 hover:bg-white/30 backdrop-blur-sm px-2 md:px-3 py-1.5 md:py-2 rounded-lg text-xs font-medium border border-white/30 transition-all text-center"
                 >
                   <div className="text-sm md:text-base mb-0.5">{service.icon}</div>

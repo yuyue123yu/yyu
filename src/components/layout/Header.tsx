@@ -52,10 +52,10 @@ export default function Header() {
             <Link href="/lawyers" className="text-sm font-medium text-neutral-700 hover:text-primary-600 transition-colors">
               律师团队
             </Link>
-            <Link href="/about" className="text-sm font-medium text-neutral-700 hover:text-primary-600 transition-colors">
+            <Link href="/contact" className="text-sm font-medium text-neutral-700 hover:text-primary-600 transition-colors">
               关于我们
             </Link>
-            <Link href="/blog" className="text-sm font-medium text-neutral-700 hover:text-primary-600 transition-colors">
+            <Link href="/knowledge" className="text-sm font-medium text-neutral-700 hover:text-primary-600 transition-colors">
               法律资讯
             </Link>
             <Link 
@@ -84,10 +84,10 @@ export default function Header() {
             <Link href="/lawyers" className="block text-neutral-700 hover:text-primary-600 py-2 font-medium">
               律师团队
             </Link>
-            <Link href="/about" className="block text-neutral-700 hover:text-primary-600 py-2 font-medium">
+            <Link href="/contact" className="block text-neutral-700 hover:text-primary-600 py-2 font-medium">
               关于我们
             </Link>
-            <Link href="/blog" className="block text-neutral-700 hover:text-primary-600 py-2 font-medium">
+            <Link href="/knowledge" className="block text-neutral-700 hover:text-primary-600 py-2 font-medium">
               法律资讯
             </Link>
             <Link 

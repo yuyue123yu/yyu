@@ -18,7 +18,7 @@ const services = [
     description: "公司注册、合同审查",
     cases: "1,890+ 案例",
     avgPrice: "¥2,500 起",
-    link: "/services/corporate",
+    link: "/services/business",
     color: "from-purple-400 to-purple-500",
     badge: "推荐"
   },
@@ -48,7 +48,7 @@ const services = [
     description: "劳动纠纷、合同纠纷",
     cases: "1,560+ 案例",
     avgPrice: "¥2,800 起",
-    link: "/services/labor",
+    link: "/services/employment",
     color: "from-orange-400 to-orange-500",
     badge: null
   },
