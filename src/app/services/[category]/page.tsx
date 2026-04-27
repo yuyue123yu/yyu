@@ -1,4 +1,3 @@
-import { use } from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Link from "next/link";
@@ -235,8 +234,8 @@ const serviceDetails: Record<string, any> = {
   },
 };
 
-export default function ServiceDetailPage({ params }: { params: Promise<{ category: string }> }) {
-  const { category } = use(params);
+export default async function ServiceDetailPage({ params }: { params: Promise<{ category: string }> }) {
+  const { category } = await params;
   const decodedCategory = decodeURIComponent(category);
   const service = serviceDetails[decodedCategory] || serviceDetails['family'];
 
