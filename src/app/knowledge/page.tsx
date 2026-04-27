@@ -188,9 +188,12 @@ export default function KnowledgePage() {
 
                         {/* Read More Button */}
                         <div className="mt-4">
-                          <button className="text-primary-600 hover:text-primary-700 font-medium text-sm">
+                          <Link
+                            href={`/knowledge/${article.id}`}
+                            className="text-primary-600 hover:text-primary-700 font-medium text-sm"
+                          >
                             阅读全文 →
-                          </button>
+                          </Link>
                         </div>
                       </article>
                     ))}

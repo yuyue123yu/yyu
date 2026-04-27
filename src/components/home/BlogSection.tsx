@@ -79,8 +79,10 @@ export default function BlogSection() {
                 </div>
 
                 {/* Title */}
-                <h3 className="text-xl font-bold text-neutral-900 mb-3 line-clamp-2 hover:text-primary-600 cursor-pointer">
-                  {article.titleCn || article.title}
+                <h3 className="text-xl font-bold text-neutral-900 mb-3 line-clamp-2">
+                  <Link href={`/knowledge/${article.id}`} className="hover:text-primary-600 cursor-pointer">
+                    {article.titleCn || article.title}
+                  </Link>
                 </h3>
 
                 {/* Summary */}
@@ -106,7 +108,7 @@ export default function BlogSection() {
                     作者: {article.author}
                   </span>
                   <Link
-                    href={`/knowledge`}
+                    href={`/knowledge/${article.id}`}
                     className="text-primary-600 hover:text-primary-700 font-medium text-sm"
                   >
                     阅读更多 →
