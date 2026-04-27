@@ -1,94 +1,37 @@
-import { Star, MapPin, CheckCircle, MessageCircle, Badge, ShoppingCart, Heart } from "lucide-react";
-import Link from "next/link";
+"use client";
 
-const lawyers = [
-  {
-    id: 1,
-    name: "Ahmad Abdullah",
-    specialty: "商业法",
-    rating: 4.9,
-    reviews: 156,
-    location: "Kuala Lumpur",
-    experience: "15年",
-    responseTime: "1小时",
-    available: true,
-    priceRange: "¥2,500-5,000",
-    soldCount: 156,
-    badge: "热销"
-  },
-  {
-    id: 2,
-    name: "Tan Mei Ling",
-    specialty: "家庭法",
-    rating: 4.8,
-    reviews: 203,
-    location: "Penang",
-    experience: "12年",
-    responseTime: "2小时",
-    available: true,
-    priceRange: "¥2,000-4,000",
-    soldCount: 203,
-    badge: "热销"
-  },
-  {
-    id: 3,
-    name: "Kumar Rajesh",
-    specialty: "房产法",
-    rating: 4.9,
-    reviews: 178,
-    location: "Johor Bahru",
-    experience: "18年",
-    responseTime: "30分钟",
-    available: false,
-    priceRange: "¥3,000-6,000",
-    soldCount: 178,
-    badge: "推荐"
-  },
-  {
-    id: 4,
-    name: "李明",
-    specialty: "商业法",
-    rating: 4.7,
-    reviews: 142,
-    location: "Kuala Lumpur",
-    experience: "10年",
-    responseTime: "1小时",
-    available: true,
-    priceRange: "¥2,000-4,500",
-    soldCount: 142,
-    badge: null
-  },
-  {
-    id: 5,
-    name: "Sarah Wong",
-    specialty: "家庭法",
-    rating: 4.9,
-    reviews: 189,
-    location: "Selangor",
-    experience: "14年",
-    responseTime: "2小时",
-    available: true,
-    priceRange: "¥2,500-5,000",
-    soldCount: 189,
-    badge: "热销"
-  },
-  {
-    id: 6,
-    name: "Raj Kumar",
-    specialty: "房产法",
-    rating: 4.8,
-    reviews: 165,
-    location: "Penang",
-    experience: "16年",
-    responseTime: "1.5小时",
-    available: true,
-    priceRange: "¥3,000-5,500",
-    soldCount: 165,
-    badge: null
-  },
-];
+import { useState, useEffect } from "react";
+import { Star, CheckCircle, ShoppingCart, Heart } from "lucide-react";
+import Link from "next/link";
+import { fetchTopLawyers, type Lawyer } from "@/lib/api/lawyers";
 
 export default function FeaturedLawyers() {
+  const [lawyers, setLawyers] = useState<Lawyer[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadLawyers();
+  }, []);
+
+  const loadLawyers = async () => {
+    setLoading(true);
+    const data = await fetchTopLawyers(6);
+    setLawyers(data);
+    setLoading(false);
+  };
+
+  if (loading) {
+    return (
+      <section className="py-8 bg-neutral-50 border-b border-neutral-200">
+        <div className="container mx-auto px-6">
+          <div className="text-center py-20">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-primary-600 border-t-transparent"></div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="py-8 bg-neutral-50 border-b border-neutral-200">
       <div className="container mx-auto px-6">
@@ -120,9 +63,9 @@ export default function FeaturedLawyers() {
                 {lawyer.available && (
                   <div className="absolute top-2 right-2 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
                 )}
-                {lawyer.badge && (
+                {lawyer.soldCount > 150 && (
                   <div className="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full font-bold">
-                    {lawyer.badge}
+                    热销
                   </div>
                 )}
               </div>
@@ -130,7 +73,7 @@ export default function FeaturedLawyers() {
               {/* 内容区 */}
               <div className="p-3 flex-1 flex flex-col">
                 <h3 className="text-sm font-bold text-neutral-900 truncate">{lawyer.name}</h3>
-                <p className="text-xs text-primary-600 font-medium mb-2">{lawyer.specialty}</p>
+                <p className="text-xs text-primary-600 font-medium mb-2">{lawyer.specialty[0]}</p>
                 
                 {/* 评分 */}
                 <div className="flex items-center gap-1 mb-2">

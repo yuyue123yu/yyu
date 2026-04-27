@@ -1,74 +1,40 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import { Star, ThumbsUp, MessageCircle } from "lucide-react";
+import { fetchTopReviews, fetchReviewStats, type UserReview } from "@/lib/api/reviews";
 
 export default function UserReviews() {
-  const reviews = [
-    {
-      id: 1,
-      lawyerName: "Ahmad Abdullah",
-      lawyerSpecialty: "商业法",
-      rating: 5,
-      title: "非常专业的律师，帮我解决了公司合同问题",
-      content: "响应速度快，专业知识过硬，给出的建议非常实用。价格也很合理，强烈推荐！",
-      helpful: 234,
-      verified: true,
-      date: "2024-01-15"
-    },
-    {
-      id: 2,
-      lawyerName: "Sarah Wong",
-      lawyerSpecialty: "家庭法",
-      rating: 5,
-      title: "在困难时期得到了专业的法律支持",
-      content: "律师非常有耐心，详细解释了每一个法律程序。让我在离婚过程中感到被理解和支持。",
-      helpful: 189,
-      verified: true,
-      date: "2024-01-14"
-    },
-    {
-      id: 3,
-      lawyerName: "Kumar Rajesh",
-      lawyerSpecialty: "房产法",
-      rating: 4,
-      title: "房产纠纷得到妥善解决",
-      content: "律师的谈判技巧很强，最终以满意的价格完成了房产交易。整个过程透明高效。",
-      helpful: 156,
-      verified: true,
-      date: "2024-01-13"
-    },
-    {
-      id: 4,
-      lawyerName: "Tan Mei Ling",
-      lawyerSpecialty: "家庭法",
-      rating: 5,
-      title: "完全超出预期的服务质量",
-      content: "不仅解决了法律问题，还给了我很多生活建议。这样的律师真的很难找到。",
-      helpful: 267,
-      verified: true,
-      date: "2024-01-12"
-    },
-    {
-      id: 5,
-      lawyerName: "李明",
-      lawyerSpecialty: "商业法",
-      rating: 5,
-      title: "创业者的最佳法律顾问",
-      content: "从公司注册到合同审查，全程指导。价格透明，没有隐藏费用，非常信任。",
-      helpful: 198,
-      verified: true,
-      date: "2024-01-11"
-    },
-    {
-      id: 6,
-      lawyerName: "David Tan",
-      lawyerSpecialty: "劳动法",
-      rating: 4,
-      title: "劳动纠纷处理得很专业",
-      content: "律师既懂法律又理解商业运作，给出的建议既合法又实用。推荐给其他企业主。",
-      helpful: 142,
-      verified: true,
-      date: "2024-01-10"
-    }
-  ];
+  const [reviews, setReviews] = useState<UserReview[]>([]);
+  const [stats, setStats] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const loadData = async () => {
+    setLoading(true);
+    const [reviewsData, statsData] = await Promise.all([
+      fetchTopReviews(6),
+      fetchReviewStats()
+    ]);
+    setReviews(reviewsData);
+    setStats(statsData);
+    setLoading(false);
+  };
+
+  if (loading) {
+    return (
+      <section className="py-10 bg-neutral-50">
+        <div className="container mx-auto px-6">
+          <div className="text-center py-20">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-primary-600 border-t-transparent"></div>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-10 bg-neutral-50">
@@ -84,15 +50,17 @@ export default function UserReviews() {
                 真实用户的咨询体验分享
               </p>
             </div>
-            <div className="text-right">
-              <div className="text-3xl font-bold text-neutral-900">4.9</div>
-              <div className="flex items-center gap-1 justify-end mb-1">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-4 w-4 text-yellow-500 fill-yellow-500" />
-                ))}
+            {stats && (
+              <div className="text-right">
+                <div className="text-3xl font-bold text-neutral-900">{stats.averageRating}</div>
+                <div className="flex items-center gap-1 justify-end mb-1">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="h-4 w-4 text-yellow-500 fill-yellow-500" />
+                  ))}
+                </div>
+                <p className="text-sm text-neutral-600">基于 {stats.totalReviews}+ 条评价</p>
               </div>
-              <p className="text-sm text-neutral-600">基于 12,450+ 条评价</p>
-            </div>
+            )}
           </div>
         </div>
 
@@ -136,6 +104,9 @@ export default function UserReviews() {
                 </div>
                 <span className="text-xs text-neutral-600">{review.date}</span>
               </div>
+
+              {/* 用户名 */}
+              <p className="text-xs text-neutral-500 mb-2">评价人: {review.userName}</p>
 
               {/* 标题 */}
               <h4 className="font-semibold text-neutral-900 text-sm mb-2 line-clamp-2">
