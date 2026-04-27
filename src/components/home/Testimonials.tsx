@@ -1,4 +1,7 @@
+"use client";
+
 import { Star, Quote } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const testimonials = [
   {
@@ -8,7 +11,7 @@ const testimonials = [
     content: "通过 LegalMY 找到了专业的商业律师，帮我们完成了公司重组。整个过程非常顺利，律师专业且响应迅速。强烈推荐！",
     rating: 5,
     avatar: "👨‍💼",
-    case: "商业法"
+    case: "business"
   },
   {
     name: "Sarah Ahmad",
@@ -17,7 +20,7 @@ const testimonials = [
     content: "在离婚财产分配的问题上，律师给了我很大帮助。不仅专业，而且非常有耐心，让我在困难时期感到被支持。",
     rating: 5,
     avatar: "👩",
-    case: "家庭法"
+    case: "family"
   },
   {
     name: "Kumar Rajesh",
@@ -26,7 +29,7 @@ const testimonials = [
     content: "处理房产纠纷时，律师的专业知识和谈判技巧让我印象深刻。最终以最优方案解决了问题，节省了大量时间和金钱。",
     rating: 5,
     avatar: "👨‍💼",
-    case: "房产法"
+    case: "property"
   },
   {
     name: "陈美玲",
@@ -35,7 +38,7 @@ const testimonials = [
     content: "从公司注册到合同审查，律师团队一直在帮助我们。价格透明，服务专业，是创业者的好帮手。",
     rating: 5,
     avatar: "👩‍💼",
-    case: "商业法"
+    case: "business"
   },
   {
     name: "David Tan",
@@ -44,7 +47,7 @@ const testimonials = [
     content: "劳动纠纷处理得非常专业，律师不仅懂法律，还理解商业运作。给出的建议既合法又实用。",
     rating: 5,
     avatar: "👨",
-    case: "劳动法"
+    case: "employment"
   },
   {
     name: "Fatimah Ibrahim",
@@ -53,20 +56,22 @@ const testimonials = [
     content: "第一次使用在线法律咨询，没想到这么方便。律师很专业，解答了我所有的疑问，而且价格合理。",
     rating: 5,
     avatar: "👩‍🏫",
-    case: "民事法"
+    case: "criminal"
   },
 ];
 
 export default function Testimonials() {
+  const { t } = useLanguage();
+  
   return (
     <section className="py-16 md:py-20 bg-white">
       <div className="container mx-auto px-6">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-5xl font-bold mb-4 tracking-tight text-gray-900">
-            客户真实评价
+            {t('home.realClientReviews')}
           </h2>
           <p className="text-lg md:text-xl text-gray-600">
-            超过 50,000 名客户选择信赖我们
+            {t('home.trustedByClients')}
           </p>
         </div>
 
@@ -95,7 +100,7 @@ export default function Testimonials() {
                   <p className="text-sm text-gray-600">{testimonial.company}</p>
                 </div>
                 <div className="bg-blue-100 text-blue-700 text-xs px-3 py-1 rounded-full font-medium">
-                  {testimonial.case}
+                  {t(`services.${testimonial.case}`)}
                 </div>
               </div>
             </div>
@@ -105,8 +110,8 @@ export default function Testimonials() {
         <div className="text-center mt-10">
           <div className="inline-flex items-center gap-2 bg-green-50 text-green-700 px-6 py-3 rounded-full">
             <Star className="h-5 w-5 fill-green-500 text-green-500" />
-            <span className="font-semibold">4.9/5 平均评分</span>
-            <span className="text-green-600">· 基于 12,450+ 条评价</span>
+            <span className="font-semibold">4.9/5 {t('home.averageRating')}</span>
+            <span className="text-green-600">· {t('home.basedOnReviews')} 12,450+ {t('home.reviewsCount')}</span>
           </div>
         </div>
       </div>

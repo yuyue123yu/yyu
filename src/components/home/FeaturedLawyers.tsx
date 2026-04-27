@@ -4,8 +4,10 @@ import { useState, useEffect } from "react";
 import { Star, CheckCircle, ShoppingCart, Heart } from "lucide-react";
 import Link from "next/link";
 import { fetchTopLawyers, type Lawyer } from "@/lib/api/lawyers";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function FeaturedLawyers() {
+  const { t } = useLanguage();
   const [lawyers, setLawyers] = useState<Lawyer[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -39,14 +41,14 @@ export default function FeaturedLawyers() {
         <div className="flex items-center justify-between mb-5">
           <div>
             <h2 className="text-2xl font-bold text-neutral-900 mb-1">
-              热销律师
+              {t('home.hotSalesLawyers')}
             </h2>
             <p className="text-neutral-600 text-sm">
-              根据您的需求精准推荐
+              {t('home.recommendedForYou')}
             </p>
           </div>
           <Link href="/lawyers" className="text-primary-600 hover:text-primary-700 font-semibold text-sm">
-            查看全部 →
+            {t('common.viewAll')} →
           </Link>
         </div>
 
@@ -65,7 +67,7 @@ export default function FeaturedLawyers() {
                 )}
                 {lawyer.soldCount > 150 && (
                   <div className="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full font-bold">
-                    热销
+                    {t('common.hot')}
                   </div>
                 )}
               </div>
@@ -90,7 +92,7 @@ export default function FeaturedLawyers() {
 
                 {/* 销量 */}
                 <div className="text-xs text-neutral-600 mb-2">
-                  已服务 {lawyer.soldCount} 人
+                  {t('home.served')} {lawyer.soldCount} {t('home.people')}
                 </div>
                 
                 {/* 价格 */}
@@ -102,7 +104,7 @@ export default function FeaturedLawyers() {
                 <div className="flex gap-2 mt-auto">
                   <button className="flex-1 bg-primary-600 hover:bg-primary-700 text-white text-xs py-2 rounded-lg font-semibold transition-all flex items-center justify-center gap-1">
                     <ShoppingCart className="h-3 w-3" />
-                    咨询
+                    {t('home.consult')}
                   </button>
                   <button className="px-2 py-2 border border-neutral-300 hover:border-primary-300 rounded-lg transition-all">
                     <Heart className="h-3.5 w-3.5 text-neutral-400 hover:text-red-500" />
@@ -116,7 +118,7 @@ export default function FeaturedLawyers() {
         {/* 查看全部 */}
         <div className="text-center">
           <Link href="/lawyers" className="inline-flex items-center gap-2 px-6 py-3 border border-primary-600 text-primary-600 hover:bg-primary-50 rounded-lg font-semibold text-sm transition-all">
-            查看全部律师
+            {t('common.viewAll')} {t('common.lawyers')}
             <span>→</span>
           </Link>
         </div>

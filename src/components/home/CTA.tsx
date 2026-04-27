@@ -1,7 +1,12 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowRight, Sparkles, Phone, Mail } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function CTA() {
+  const { t } = useLanguage();
+  
   return (
     <section className="py-16 md:py-20 bg-gradient-to-br from-primary-700 via-primary-600 to-primary-500 text-white relative overflow-hidden">
       {/* Background pattern */}
@@ -15,19 +20,19 @@ export default function CTA() {
         <div className="max-w-4xl mx-auto">
           <div className="inline-flex items-center gap-2 bg-accent-500/20 backdrop-blur-sm px-5 py-2.5 rounded-full text-sm mb-6 border border-accent-400/30">
             <Sparkles className="h-4 w-4 text-accent-400" />
-            <span className="font-medium">限时优惠：首次咨询完全免费</span>
+            <span className="font-medium">{t('home.freeConsultation')}</span>
           </div>
 
           <h2 className="text-3xl md:text-4xl font-bold mb-5 leading-tight">
-            准备好解决您的
+            {t('home.readyToSolve')}
             <br />
-            法律问题了吗？
+            {t('home.legalProblems')}
           </h2>
           
           <p className="text-lg mb-8 text-blue-100">
-            3 分钟内匹配专业律师，立即获得法律建议
+            {t('home.matchLawyer')}
             <br />
-            <span className="text-base mt-2 inline-block">✓ 无需注册 ✓ 完全免费 ✓ 信息保密 ✓ 满意付款</span>
+            <span className="text-base mt-2 inline-block">✓ {t('common.register')} ✓ {t('home.freeConsultation')} ✓ {t('common.confirm')} ✓ {t('common.success')}</span>
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
@@ -35,21 +40,21 @@ export default function CTA() {
               href="/consultation" 
               className="group inline-flex items-center justify-center gap-2 bg-accent-500 hover:bg-accent-600 text-white px-10 py-4 rounded-xl font-bold transition-all text-lg shadow-2xl hover:shadow-accent-500/50"
             >
-              开始免费咨询
+              {t('home.startFreeConsultation')}
               <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link 
               href="/contact" 
               className="inline-flex items-center justify-center gap-2 bg-white/10 backdrop-blur-sm text-white px-10 py-4 rounded-xl font-semibold hover:bg-white/20 transition-all text-lg border-2 border-white/30"
             >
-              联系客服
+              {t('home.contactSupport')}
             </Link>
           </div>
 
           <div className="flex flex-col md:flex-row items-center justify-center gap-6 text-sm">
             <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-5 py-3 rounded-full">
               <Phone className="h-4 w-4 text-accent-400" />
-              <span>紧急热线：+60 3-1234 5678</span>
+              <span>{t('home.emergencyHotline')}: +60 3-1234 5678</span>
             </div>
             <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-5 py-3 rounded-full">
               <Mail className="h-4 w-4 text-accent-400" />

@@ -1,80 +1,93 @@
+"use client";
+
 import { Briefcase, Home, Users, Shield, ArrowRight, TrendingUp, Scale } from "lucide-react";
 import Link from "next/link";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const services = [
   {
     icon: Scale,
-    title: "债务纠纷",
-    description: "债务追讨、破产申请、债务重组",
-    cases: "2,850+ 案例",
-    avgPrice: "¥3,500 起",
+    titleKey: "services.debt",
+    descKey: "services.debtDesc",
+    cases: "2,850+",
+    avgPrice: "RM 3,500",
     link: "/services/debt",
     color: "from-amber-400 to-amber-500",
-    badge: "热销"
+    badge: "hot"
   },
   {
     icon: Users,
-    title: "家庭法",
-    description: "离婚、监护权、财产分配",
-    cases: "2,340+ 案例",
-    avgPrice: "¥3,000 起",
+    titleKey: "services.family",
+    descKey: "services.familyDesc",
+    cases: "2,340+",
+    avgPrice: "RM 3,000",
     link: "/services/family",
     color: "from-blue-400 to-blue-500",
     badge: null
   },
   {
     icon: Briefcase,
-    title: "商业法",
-    description: "公司注册、合同审查",
-    cases: "1,890+ 案例",
-    avgPrice: "¥2,500 起",
+    titleKey: "services.business",
+    descKey: "services.businessDesc",
+    cases: "1,890+",
+    avgPrice: "RM 2,500",
     link: "/services/business",
     color: "from-purple-400 to-purple-500",
-    badge: "推荐"
+    badge: "recommended"
   },
   {
     icon: Home,
-    title: "房产法",
-    description: "房产买卖、租赁合同",
-    cases: "3,120+ 案例",
-    avgPrice: "¥2,000 起",
+    titleKey: "services.property",
+    descKey: "services.propertyDesc",
+    cases: "3,120+",
+    avgPrice: "RM 2,000",
     link: "/services/property",
     color: "from-green-400 to-green-500",
-    badge: "热销"
+    badge: "hot"
   },
   {
     icon: Shield,
-    title: "刑事法",
-    description: "刑事辩护、法律代理",
-    cases: "980+ 案例",
-    avgPrice: "¥5,000 起",
+    titleKey: "services.criminal",
+    descKey: "services.criminalDesc",
+    cases: "980+",
+    avgPrice: "RM 5,000",
     link: "/services/criminal",
     color: "from-red-400 to-red-500",
     badge: null
   },
   {
     icon: TrendingUp,
-    title: "劳动法",
-    description: "劳动纠纷、合同纠纷",
-    cases: "1,560+ 案例",
-    avgPrice: "¥2,800 起",
+    titleKey: "services.employment",
+    descKey: "services.employmentDesc",
+    cases: "1,560+",
+    avgPrice: "RM 2,800",
     link: "/services/employment",
     color: "from-orange-400 to-orange-500",
     badge: null
   },
   {
     icon: Briefcase,
-    title: "知识产权",
-    description: "专利、商标、版权",
-    cases: "890+ 案例",
-    avgPrice: "¥3,500 起",
+    titleKey: "services.ip",
+    descKey: "services.ipDesc",
+    cases: "890+",
+    avgPrice: "RM 3,500",
     link: "/services/ip",
     color: "from-indigo-400 to-indigo-500",
-    badge: "新"
+    badge: "new"
   },
 ];
 
 export default function Services() {
+  const { t } = useLanguage();
+  
+  const getBadgeText = (badge: string | null) => {
+    if (!badge) return null;
+    if (badge === 'hot') return t('common.hot') || '热销';
+    if (badge === 'recommended') return t('common.recommended') || '推荐';
+    if (badge === 'new') return t('common.new') || '新';
+    return badge;
+  };
+
   return (
     <section className="py-8 bg-white border-b border-neutral-200">
       <div className="container mx-auto px-6">
@@ -82,22 +95,24 @@ export default function Services() {
         <div className="flex items-center justify-between mb-5">
           <div>
             <h2 className="text-2xl font-bold text-neutral-900 mb-1">
-              热门法律服务
+              {t('home.hotServicesTitle')}
             </h2>
             <p className="text-neutral-600 text-sm">
-              选择您需要的法律服务类型
+              {t('home.hotServicesSubtitle')}
             </p>
           </div>
           <Link href="/services" className="text-primary-600 hover:text-primary-700 font-semibold text-sm flex items-center gap-1">
-            查看全部
+            {t('common.viewAll')}
             <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
 
-        {/* 6 列网格 - 紧凑排列 */}
+        {/* 7 列网格 - 紧凑排列 */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
           {services.map((service, index) => {
             const Icon = service.icon;
+            const badgeText = getBadgeText(service.badge);
+            
             return (
               <Link
                 href={service.link}
@@ -105,9 +120,9 @@ export default function Services() {
                 className="group bg-neutral-50 rounded-lg p-4 hover:shadow-md transition-all border border-neutral-200 hover:border-primary-300 cursor-pointer relative"
               >
                 {/* 徽章 */}
-                {service.badge && (
+                {badgeText && (
                   <div className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full font-bold">
-                    {service.badge}
+                    {badgeText}
                   </div>
                 )}
 
@@ -118,18 +133,18 @@ export default function Services() {
                 
                 {/* 标题 */}
                 <h3 className="text-base font-bold text-neutral-900 mb-1">
-                  {service.title}
+                  {t(service.titleKey)}
                 </h3>
                 
                 {/* 描述 */}
                 <p className="text-xs text-neutral-600 mb-3 line-clamp-2">
-                  {service.description}
+                  {t(service.descKey)}
                 </p>
                 
                 {/* 底部信息 */}
                 <div className="flex flex-col gap-2 text-xs text-neutral-500 pt-3 border-t border-neutral-100">
                   <div className="flex items-center justify-between">
-                    <span>{service.cases}</span>
+                    <span>{service.cases} {t('common.cases')}</span>
                     <span className="font-bold text-primary-600">{service.avgPrice}</span>
                   </div>
                 </div>

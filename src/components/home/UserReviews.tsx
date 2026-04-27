@@ -3,8 +3,10 @@
 import { useState, useEffect } from "react";
 import { Star, ThumbsUp, MessageCircle } from "lucide-react";
 import { fetchTopReviews, fetchReviewStats, type UserReview } from "@/lib/api/reviews";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function UserReviews() {
+  const { t } = useLanguage();
   const [reviews, setReviews] = useState<UserReview[]>([]);
   const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -44,10 +46,10 @@ export default function UserReviews() {
           <div className="flex items-center justify-between mb-4">
             <div>
               <h2 className="text-2xl font-bold text-neutral-900 mb-2">
-                客户评价
+                {t('home.clientReviews')}
               </h2>
               <p className="text-neutral-600 text-sm">
-                真实用户的咨询体验分享
+                {t('home.realExperience')}
               </p>
             </div>
             {stats && (
@@ -58,7 +60,7 @@ export default function UserReviews() {
                     <Star key={i} className="h-4 w-4 text-yellow-500 fill-yellow-500" />
                   ))}
                 </div>
-                <p className="text-sm text-neutral-600">基于 {stats.totalReviews}+ 条评价</p>
+                <p className="text-sm text-neutral-600">{t('home.basedOnReviews')} {stats.totalReviews}+ {t('home.reviewsCount')}</p>
               </div>
             )}
           </div>
@@ -83,7 +85,7 @@ export default function UserReviews() {
                 </div>
                 {review.verified && (
                   <span className="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full font-medium">
-                    已验证
+                    {t('home.verified')}
                   </span>
                 )}
               </div>
@@ -106,7 +108,7 @@ export default function UserReviews() {
               </div>
 
               {/* 用户名 */}
-              <p className="text-xs text-neutral-500 mb-2">评价人: {review.userName}</p>
+              <p className="text-xs text-neutral-500 mb-2">{review.userName}</p>
 
               {/* 标题 */}
               <h4 className="font-semibold text-neutral-900 text-sm mb-2 line-clamp-2">
@@ -122,11 +124,11 @@ export default function UserReviews() {
               <div className="flex items-center gap-3 pt-4 border-t border-neutral-100">
                 <button className="flex items-center gap-1 text-xs text-neutral-600 hover:text-primary-600 transition-all">
                   <ThumbsUp className="h-3.5 w-3.5" />
-                  有用 ({review.helpful})
+                  {t('home.helpful')} ({review.helpful})
                 </button>
                 <button className="flex items-center gap-1 text-xs text-neutral-600 hover:text-primary-600 transition-all">
                   <MessageCircle className="h-3.5 w-3.5" />
-                  回复
+                  {t('home.reply')}
                 </button>
               </div>
             </div>
@@ -136,7 +138,7 @@ export default function UserReviews() {
         {/* 查看全部评价 */}
         <div className="text-center">
           <button className="px-6 py-3 border border-primary-600 text-primary-600 hover:bg-primary-50 rounded-lg font-semibold text-sm transition-all">
-            查看全部评价
+            {t('home.viewAllReviews')}
           </button>
         </div>
       </div>
