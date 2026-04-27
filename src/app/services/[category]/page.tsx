@@ -1,10 +1,20 @@
-"use client";
-
 import { use } from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Link from "next/link";
 import { CheckCircle, ArrowLeft } from "lucide-react";
+
+// 生成静态路径
+export function generateStaticParams() {
+  return [
+    { category: 'family' },
+    { category: 'business' },
+    { category: 'property' },
+    { category: 'criminal' },
+    { category: 'employment' },
+    { category: 'ip' },
+  ];
+}
 
 const serviceDetails: Record<string, any> = {
   'family': {
