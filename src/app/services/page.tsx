@@ -7,6 +7,17 @@ import { Briefcase, Home, Users, Shield, TrendingUp, Scale, ArrowRight } from "l
 
 const services = [
   {
+    id: 'debt',
+    icon: Scale,
+    title: "债务纠纷",
+    titleEn: "Debt Disputes",
+    description: "债务追讨、破产申请、债务重组、债权人保护等债务法律事务",
+    cases: "2,850+ 案例",
+    avgPrice: "RM 1,200-4,500",
+    color: "from-amber-400 to-amber-500",
+    features: ["债务追讨", "破产申请", "债务重组", "债权人保护", "还款协议"]
+  },
+  {
     id: 'family',
     icon: Users,
     title: "家庭法",
@@ -18,15 +29,26 @@ const services = [
     features: ["离婚诉讼", "子女监护权", "财产分配", "婚前协议", "家庭暴力保护令"]
   },
   {
-    id: 'debt',
-    icon: Scale,
-    title: "债务纠纷",
-    titleEn: "Debt Disputes",
-    description: "债务追讨、破产申请、债务重组、债权人保护等债务法律事务",
-    cases: "2,850+ 案例",
-    avgPrice: "RM 1,200-4,500",
-    color: "from-amber-400 to-amber-500",
-    features: ["债务追讨", "破产申请", "债务重组", "债权人保护", "还款协议"]
+    id: 'business',
+    icon: Briefcase,
+    title: "商业法",
+    titleEn: "Business Law",
+    description: "公司注册、合同审查、商业纠纷、知识产权保护",
+    cases: "1,890+ 案例",
+    avgPrice: "RM 1,000-5,000",
+    color: "from-purple-400 to-purple-500",
+    features: ["公司注册", "合同起草", "商业谈判", "股权转让", "商标注册"]
+  },
+  {
+    id: 'business',
+    icon: Briefcase,
+    title: "商业法",
+    titleEn: "Business Law",
+    description: "公司注册、合同审查、商业纠纷、知识产权保护",
+    cases: "1,890+ 案例",
+    avgPrice: "RM 1,000-5,000",
+    color: "from-purple-400 to-purple-500",
+    features: ["公司注册", "合同起草", "商业谈判", "股权转让", "商标注册"]
   },
   {
     id: 'property',
@@ -87,7 +109,7 @@ export default function ServicesPage() {
                 专业法律服务
               </h1>
               <p className="text-xl text-blue-100 mb-8">
-                涵盖6大法律领域，为您提供全方位的法律支持
+                涵盖7大法律领域，为您提供全方位的法律支持
               </p>
             </div>
           </div>

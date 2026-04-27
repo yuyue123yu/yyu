@@ -6,8 +6,9 @@ import { CheckCircle, ArrowLeft } from "lucide-react";
 // 生成静态路径
 export function generateStaticParams() {
   return [
-    { category: 'family' },
     { category: 'debt' },
+    { category: 'family' },
+    { category: 'business' },
     { category: 'property' },
     { category: 'criminal' },
     { category: 'employment' },
@@ -16,42 +17,6 @@ export function generateStaticParams() {
 }
 
 const serviceDetails: Record<string, any> = {
-  'family': {
-    title: "家庭法律服务",
-    description: "专业处理离婚、监护权、财产分配等家庭法律事务",
-    services: [
-      { name: "离婚诉讼", price: "RM 2,000-5,000", duration: "3-6个月" },
-      { name: "子女监护权", price: "RM 1,500-4,000", duration: "2-4个月" },
-      { name: "财产分配", price: "RM 2,500-6,000", duration: "3-8个月" },
-      { name: "婚前协议", price: "RM 800-2,000", duration: "1-2周" },
-      { name: "家庭暴力保护令", price: "RM 1,000-2,500", duration: "1-3周" },
-    ],
-    process: [
-      "初步咨询 - 了解案情",
-      "法律分析 - 评估方案",
-      "准备文件 - 收集证据",
-      "法庭程序 - 代理诉讼",
-      "执行判决 - 后续跟进"
-    ]
-  },
-  '家庭法': {
-    title: "家庭法律服务",
-    description: "专业处理离婚、监护权、财产分配等家庭法律事务",
-    services: [
-      { name: "离婚诉讼", price: "RM 2,000-5,000", duration: "3-6个月" },
-      { name: "子女监护权", price: "RM 1,500-4,000", duration: "2-4个月" },
-      { name: "财产分配", price: "RM 2,500-6,000", duration: "3-8个月" },
-      { name: "婚前协议", price: "RM 800-2,000", duration: "1-2周" },
-      { name: "家庭暴力保护令", price: "RM 1,000-2,500", duration: "1-3周" },
-    ],
-    process: [
-      "初步咨询 - 了解案情",
-      "法律分析 - 评估方案",
-      "准备文件 - 收集证据",
-      "法庭程序 - 代理诉讼",
-      "执行判决 - 后续跟进"
-    ]
-  },
   'debt': {
     title: "债务纠纷法律服务",
     description: "专业处理债务追讨、破产申请、债务重组等债务法律事务",
@@ -88,6 +53,42 @@ const serviceDetails: Record<string, any> = {
       "协商谈判 - 与债权人沟通",
       "法律程序 - 提起诉讼或申请",
       "执行跟进 - 确保权益落实"
+    ]
+  },
+  'family': {
+    title: "家庭法律服务",
+    description: "专业处理离婚、监护权、财产分配等家庭法律事务",
+    services: [
+      { name: "离婚诉讼", price: "RM 2,000-5,000", duration: "3-6个月" },
+      { name: "子女监护权", price: "RM 1,500-4,000", duration: "2-4个月" },
+      { name: "财产分配", price: "RM 2,500-6,000", duration: "3-8个月" },
+      { name: "婚前协议", price: "RM 800-2,000", duration: "1-2周" },
+      { name: "家庭暴力保护令", price: "RM 1,000-2,500", duration: "1-3周" },
+    ],
+    process: [
+      "初步咨询 - 了解案情",
+      "法律分析 - 评估方案",
+      "准备文件 - 收集证据",
+      "法庭程序 - 代理诉讼",
+      "执行判决 - 后续跟进"
+    ]
+  },
+  '家庭法': {
+    title: "家庭法律服务",
+    description: "专业处理离婚、监护权、财产分配等家庭法律事务",
+    services: [
+      { name: "离婚诉讼", price: "RM 2,000-5,000", duration: "3-6个月" },
+      { name: "子女监护权", price: "RM 1,500-4,000", duration: "2-4个月" },
+      { name: "财产分配", price: "RM 2,500-6,000", duration: "3-8个月" },
+      { name: "婚前协议", price: "RM 800-2,000", duration: "1-2周" },
+      { name: "家庭暴力保护令", price: "RM 1,000-2,500", duration: "1-3周" },
+    ],
+    process: [
+      "初步咨询 - 了解案情",
+      "法律分析 - 评估方案",
+      "准备文件 - 收集证据",
+      "法庭程序 - 代理诉讼",
+      "执行判决 - 后续跟进"
     ]
   },
   'business': {
