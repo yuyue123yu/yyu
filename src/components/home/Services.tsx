@@ -1,15 +1,15 @@
-import { Briefcase, Home, Users, Shield, ArrowRight, TrendingUp } from "lucide-react";
+import { Briefcase, Home, Scale, Shield, ArrowRight, TrendingUp } from "lucide-react";
 import Link from "next/link";
 
 const services = [
   {
-    icon: Users,
-    title: "家庭法",
-    description: "离婚、监护权、财产分配",
-    cases: "2,340+ 案例",
-    avgPrice: "¥3,000 起",
-    link: "/services/family",
-    color: "from-blue-400 to-blue-500",
+    icon: Scale,
+    title: "债务纠纷",
+    description: "债务追讨、破产申请、债务重组",
+    cases: "2,850+ 案例",
+    avgPrice: "¥3,500 起",
+    link: "/services/debt",
+    color: "from-amber-400 to-amber-500",
     badge: "热销"
   },
   {

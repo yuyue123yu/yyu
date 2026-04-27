@@ -7,15 +7,15 @@ import { Briefcase, Home, Users, Shield, TrendingUp, Scale, ArrowRight } from "l
 
 const services = [
   {
-    id: 'family',
-    icon: Users,
-    title: "家庭法",
-    titleEn: "Family Law",
-    description: "离婚、监护权、财产分配、婚前协议等家庭法律事务",
-    cases: "2,340+ 案例",
-    avgPrice: "RM 800-3,000",
-    color: "from-blue-400 to-blue-500",
-    features: ["离婚诉讼", "子女监护权", "财产分配", "婚前协议", "家庭暴力保护令"]
+    id: 'debt',
+    icon: Scale,
+    title: "债务纠纷",
+    titleEn: "Debt Disputes",
+    description: "债务追讨、破产申请、债务重组、债权人保护等债务法律事务",
+    cases: "2,850+ 案例",
+    avgPrice: "RM 1,200-4,500",
+    color: "from-amber-400 to-amber-500",
+    features: ["债务追讨", "破产申请", "债务重组", "债权人保护", "还款协议"]
   },
   {
     id: 'business',

@@ -6,7 +6,7 @@ import { CheckCircle, ArrowLeft } from "lucide-react";
 // 生成静态路径
 export function generateStaticParams() {
   return [
-    { category: 'family' },
+    { category: 'debt' },
     { category: 'business' },
     { category: 'property' },
     { category: 'criminal' },
@@ -16,40 +16,42 @@ export function generateStaticParams() {
 }
 
 const serviceDetails: Record<string, any> = {
-  'family': {
-    title: "家庭法律服务",
-    description: "专业处理离婚、监护权、财产分配等家庭法律事务",
+  'debt': {
+    title: "债务纠纷法律服务",
+    description: "专业处理债务追讨、破产申请、债务重组等债务法律事务",
     services: [
-      { name: "离婚诉讼", price: "RM 2,000-5,000", duration: "3-6个月" },
-      { name: "子女监护权", price: "RM 1,500-4,000", duration: "2-4个月" },
-      { name: "财产分配", price: "RM 2,500-6,000", duration: "3-8个月" },
-      { name: "婚前协议", price: "RM 800-2,000", duration: "1-2周" },
-      { name: "家庭暴力保护令", price: "RM 1,000-2,500", duration: "1-3周" },
+      { name: "债务追讨", price: "RM 1,500-5,000", duration: "2-6个月" },
+      { name: "破产申请", price: "RM 3,000-8,000", duration: "3-9个月" },
+      { name: "债务重组", price: "RM 2,500-7,000", duration: "3-12个月" },
+      { name: "债权人保护", price: "RM 1,800-4,500", duration: "2-8个月" },
+      { name: "还款协议", price: "RM 800-2,500", duration: "1-3个月" },
+      { name: "债务清偿", price: "RM 2,000-6,000", duration: "3-10个月" },
     ],
     process: [
-      "初步咨询 - 了解案情",
-      "法律分析 - 评估方案",
-      "准备文件 - 收集证据",
-      "法庭程序 - 代理诉讼",
-      "执行判决 - 后续跟进"
+      "债务评估 - 分析债务状况",
+      "法律咨询 - 制定解决方案",
+      "协商谈判 - 与债权人沟通",
+      "法律程序 - 提起诉讼或申请",
+      "执行跟进 - 确保权益落实"
     ]
   },
-  '家庭法': {
-    title: "家庭法律服务",
-    description: "专业处理离婚、监护权、财产分配等家庭法律事务",
+  '债务纠纷': {
+    title: "债务纠纷法律服务",
+    description: "专业处理债务追讨、破产申请、债务重组等债务法律事务",
     services: [
-      { name: "离婚诉讼", price: "RM 2,000-5,000", duration: "3-6个月" },
-      { name: "子女监护权", price: "RM 1,500-4,000", duration: "2-4个月" },
-      { name: "财产分配", price: "RM 2,500-6,000", duration: "3-8个月" },
-      { name: "婚前协议", price: "RM 800-2,000", duration: "1-2周" },
-      { name: "家庭暴力保护令", price: "RM 1,000-2,500", duration: "1-3周" },
+      { name: "债务追讨", price: "RM 1,500-5,000", duration: "2-6个月" },
+      { name: "破产申请", price: "RM 3,000-8,000", duration: "3-9个月" },
+      { name: "债务重组", price: "RM 2,500-7,000", duration: "3-12个月" },
+      { name: "债权人保护", price: "RM 1,800-4,500", duration: "2-8个月" },
+      { name: "还款协议", price: "RM 800-2,500", duration: "1-3个月" },
+      { name: "债务清偿", price: "RM 2,000-6,000", duration: "3-10个月" },
     ],
     process: [
-      "初步咨询 - 了解案情",
-      "法律分析 - 评估方案",
-      "准备文件 - 收集证据",
-      "法庭程序 - 代理诉讼",
-      "执行判决 - 后续跟进"
+      "债务评估 - 分析债务状况",
+      "法律咨询 - 制定解决方案",
+      "协商谈判 - 与债权人沟通",
+      "法律程序 - 提起诉讼或申请",
+      "执行跟进 - 确保权益落实"
     ]
   },
   'business': {
@@ -237,7 +239,7 @@ const serviceDetails: Record<string, any> = {
 export default async function ServiceDetailPage({ params }: { params: Promise<{ category: string }> }) {
   const { category } = await params;
   const decodedCategory = decodeURIComponent(category);
-  const service = serviceDetails[decodedCategory] || serviceDetails['family'];
+  const service = serviceDetails[decodedCategory] || serviceDetails['debt'];
 
   return (
     <>
