@@ -6,6 +6,7 @@ import Footer from "@/components/layout/Footer";
 import { 
   fetchLegalTemplates, 
   templateCategories, 
+  downloadTemplate,
   type LegalTemplate 
 } from "@/lib/api/legalTemplates";
 import { Download, Search, Filter, Star, TrendingUp } from "lucide-react";
@@ -15,6 +16,7 @@ export default function TemplatesPage() {
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [downloading, setDownloading] = useState<string | null>(null);
 
   useEffect(() => {
     loadTemplates();
@@ -25,6 +27,30 @@ export default function TemplatesPage() {
     const data = await fetchLegalTemplates(selectedCategory || undefined);
     setTemplates(data);
     setLoading(false);
+  };
+
+  const handleDownload = async (id: string, title: string) => {
+    setDownloading(id);
+    try {
+      const result = await downloadTemplate(id);
+      if (result.success) {
+        // 创建一个虚拟下载链接
+        const link = document.createElement('a');
+        link.href = result.downloadUrl || '#';
+        link.download = `${title}.pdf`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        alert(`✅ ${result.message}\n\n模板: ${title}\n\n注意: 这是演示版本，实际应用中会下载真实的PDF文件。`);
+      } else {
+        alert(`❌ ${result.message}`);
+      }
+    } catch (error) {
+      alert('下载失败，请稍后重试');
+    } finally {
+      setDownloading(null);
+    }
   };
 
   const filteredTemplates = templates.filter(t =>
@@ -43,7 +69,7 @@ export default function TemplatesPage() {
               法律文书模板库
             </h1>
             <p className="text-lg text-blue-100 mb-6">
-              500+ 专业法律文书模板，符合马来西亚法律要求
+              {templates.length}+ 专业法律文书模板，符合马来西亚法律要求
             </p>
 
             {/* Search Bar */}
@@ -154,6 +180,16 @@ export default function TemplatesPage() {
                         </span>
                       </div>
 
+                      {/* File Info */}
+                      <div className="flex items-center gap-3 text-xs text-neutral-600 mb-3">
+                        {template.fileSize && (
+                          <span>📄 {template.fileSize}</span>
+                        )}
+                        {template.pages && (
+                          <span>📑 {template.pages} 页</span>
+                        )}
+                      </div>
+
                       {/* Price & Download */}
                       <div className="flex items-center justify-between pt-4 border-t border-neutral-100">
                         <div>
@@ -165,9 +201,22 @@ export default function TemplatesPage() {
                             </span>
                           )}
                         </div>
-                        <button className="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-medium transition-all flex items-center gap-2">
-                          <Download className="h-4 w-4" />
-                          下载
+                        <button 
+                          onClick={() => handleDownload(template.id, template.title)}
+                          disabled={downloading === template.id}
+                          className="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-medium transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          {downloading === template.id ? (
+                            <>
+                              <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
+                              下载中...
+                            </>
+                          ) : (
+                            <>
+                              <Download className="h-4 w-4" />
+                              下载
+                            </>
+                          )}
                         </button>
                       </div>
                     </div>
