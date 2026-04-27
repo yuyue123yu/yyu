@@ -10,8 +10,10 @@ import {
   type Lawyer 
 } from "@/lib/api/lawyers";
 import { Star, MapPin, Clock, CheckCircle, Heart, ShoppingCart, Search, Filter } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function LawyersPage() {
+  const { t } = useLanguage();
   const [lawyers, setLawyers] = useState<Lawyer[]>([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
@@ -46,10 +48,10 @@ export default function LawyersPage() {
         <section className="bg-gradient-to-br from-primary-600 to-primary-500 text-white py-12">
           <div className="container mx-auto px-6">
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
-              专业律师团队
+              {t('pages.lawyersTitle')}
             </h1>
             <p className="text-lg text-blue-100 mb-6">
-              500+ 认证律师，为您提供专业法律服务
+              500+ {t('pages.lawyersSubtitle')}
             </p>
 
             {/* Search Bar */}
@@ -58,7 +60,7 @@ export default function LawyersPage() {
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-400" />
                 <input
                   type="text"
-                  placeholder="搜索律师姓名或专业领域..."
+                  placeholder={t('pages.searchLawyerPlaceholder')}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full pl-12 pr-4 py-3 rounded-lg text-neutral-900 outline-none"
@@ -73,21 +75,21 @@ export default function LawyersPage() {
           <div className="container mx-auto px-6">
             <div className="flex items-center gap-2 mb-4">
               <Filter className="h-5 w-5 text-neutral-600" />
-              <h2 className="text-lg font-bold text-neutral-900">筛选条件</h2>
+              <h2 className="text-lg font-bold text-neutral-900">{t('pages.filterConditions')}</h2>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               {/* Specialty Filter */}
               <div>
                 <label className="block text-sm font-medium text-neutral-700 mb-2">
-                  专业领域
+                  {t('home.specialty')}
                 </label>
                 <select
                   value={filters.specialty}
                   onChange={(e) => setFilters({ ...filters, specialty: e.target.value })}
                   className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:border-primary-500"
                 >
-                  <option value="">全部领域</option>
+                  <option value="">{t('pages.allFields')}</option>
                   {lawyerSpecialties.map((spec) => (
                     <option key={spec.id} value={spec.name}>
                       {spec.nameCn} ({spec.lawyerCount})
@@ -99,14 +101,14 @@ export default function LawyersPage() {
               {/* Location Filter */}
               <div>
                 <label className="block text-sm font-medium text-neutral-700 mb-2">
-                  地区
+                  {t('home.location')}
                 </label>
                 <select
                   value={filters.location}
                   onChange={(e) => setFilters({ ...filters, location: e.target.value })}
                   className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:border-primary-500"
                 >
-                  <option value="">全部地区</option>
+                  <option value="">{t('pages.allLocations')}</option>
                   {malaysianStates.map((state) => (
                     <option key={state} value={state}>
                       {state}
@@ -118,14 +120,14 @@ export default function LawyersPage() {
               {/* Rating Filter */}
               <div>
                 <label className="block text-sm font-medium text-neutral-700 mb-2">
-                  最低评分
+                  {t('common.rating')}
                 </label>
                 <select
                   value={filters.minRating}
                   onChange={(e) => setFilters({ ...filters, minRating: Number(e.target.value) })}
                   className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:border-primary-500"
                 >
-                  <option value="0">全部评分</option>
+                  <option value="0">{t('pages.allRatings')}</option>
                   <option value="4.5">4.5+ ⭐</option>
                   <option value="4.7">4.7+ ⭐</option>
                   <option value="4.8">4.8+ ⭐</option>
@@ -136,7 +138,7 @@ export default function LawyersPage() {
               {/* Availability Filter */}
               <div>
                 <label className="block text-sm font-medium text-neutral-700 mb-2">
-                  在线状态
+                  {t('common.status')}
                 </label>
                 <select
                   value={filters.available === undefined ? "" : filters.available.toString()}
@@ -146,9 +148,9 @@ export default function LawyersPage() {
                   })}
                   className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:border-primary-500"
                 >
-                  <option value="">全部状态</option>
-                  <option value="true">在线</option>
-                  <option value="false">离线</option>
+                  <option value="">{t('pages.allStatus')}</option>
+                  <option value="true">{t('pages.online')}</option>
+                  <option value="false">{t('pages.offline')}</option>
                 </select>
               </div>
             </div>
@@ -159,7 +161,7 @@ export default function LawyersPage() {
                 onClick={() => setFilters({ specialty: "", location: "", minRating: 0, available: undefined })}
                 className="mt-4 text-sm text-primary-600 hover:text-primary-700 font-medium"
               >
-                清除所有筛选
+                {t('pages.clearAllFilters')}
               </button>
             )}
           </div>
@@ -171,17 +173,17 @@ export default function LawyersPage() {
             {loading ? (
               <div className="text-center py-20">
                 <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-primary-600 border-t-transparent"></div>
-                <p className="mt-4 text-neutral-600">加载中...</p>
+                <p className="mt-4 text-neutral-600">{t('pages.loading')}</p>
               </div>
             ) : filteredLawyers.length === 0 ? (
               <div className="text-center py-20">
-                <p className="text-neutral-600 text-lg">未找到符合条件的律师</p>
+                <p className="text-neutral-600 text-lg">{t('pages.noLawyersFound')}</p>
               </div>
             ) : (
               <>
                 <div className="flex items-center justify-between mb-6">
                   <p className="text-neutral-600">
-                    找到 <span className="font-bold text-primary-600">{filteredLawyers.length}</span> 位律师
+                    {t('pages.found')} <span className="font-bold text-primary-600">{filteredLawyers.length}</span> {t('pages.lawyersCount')}
                   </p>
                 </div>
 
@@ -224,7 +226,7 @@ export default function LawyersPage() {
                             <span className="font-bold text-neutral-900">{lawyer.rating}</span>
                           </div>
                           <span className="text-sm text-neutral-600">
-                            ({lawyer.reviews} 评价)
+                            ({lawyer.reviews} {t('common.reviews')})
                           </span>
                         </div>
 
@@ -237,18 +239,18 @@ export default function LawyersPage() {
                         {/* Response Time */}
                         <div className="flex items-center gap-1 text-sm text-neutral-600 mb-2">
                           <Clock className="h-4 w-4" />
-                          <span>响应时间: {lawyer.responseTime}</span>
+                          <span>{t('pages.responseTime')}: {lawyer.responseTime}</span>
                         </div>
 
                         {/* Experience */}
                         <div className="flex items-center gap-1 text-sm text-neutral-600 mb-3">
                           <CheckCircle className="h-4 w-4 text-green-500" />
-                          <span>{lawyer.experience} 年经验</span>
+                          <span>{lawyer.experience} {t('pages.yearsExperience')}</span>
                         </div>
 
                         {/* Clients Served */}
                         <div className="text-sm text-neutral-600 mb-3">
-                          已服务 <span className="font-bold text-primary-600">{lawyer.soldCount}</span> 位客户
+                          {t('home.served')} <span className="font-bold text-primary-600">{lawyer.soldCount}</span> {t('pages.clientsServed')}
                         </div>
 
                         {/* Price */}
@@ -260,7 +262,7 @@ export default function LawyersPage() {
                         <div className="flex gap-2">
                           <button className="flex-1 bg-primary-600 hover:bg-primary-700 text-white py-2 rounded-lg font-medium transition-all flex items-center justify-center gap-2">
                             <ShoppingCart className="h-4 w-4" />
-                            咨询
+                            {t('home.consult')}
                           </button>
                           <button className="px-3 py-2 border border-neutral-300 hover:border-primary-300 rounded-lg transition-all">
                             <Heart className="h-4 w-4 text-neutral-400 hover:text-red-500" />
