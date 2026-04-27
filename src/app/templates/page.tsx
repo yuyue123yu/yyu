@@ -33,22 +33,34 @@ export default function TemplatesPage() {
   const handleDownload = async (id: string, title: string) => {
     setDownloading(id);
     try {
-      const result = await downloadTemplate(id);
-      if (result.success) {
-        // 创建一个虚拟下载链接
-        const link = document.createElement('a');
-        link.href = result.downloadUrl || '#';
-        link.download = `${title}.pdf`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        
-        alert(`✅ ${result.message}\n\n模板: ${title}\n\n注意: 这是演示版本，实际应用中会下载真实的PDF文件。`);
-      } else {
-        alert(`❌ ${result.message}`);
+      // 获取模板详情
+      const template = templates.find(t => t.id === id);
+      if (!template) {
+        alert('模板不存在');
+        return;
       }
+      
+      // 动态导入PDF生成库（减少初始加载）
+      const { generateTemplatePDF, downloadPDF } = await import('@/lib/pdfGenerator');
+      
+      // 生成PDF
+      const pdfBlob = generateTemplatePDF({
+        id: template.id,
+        title: template.title,
+        category: template.category,
+        description: template.description,
+        language: template.language,
+      });
+      
+      // 下载PDF
+      const filename = `${template.title.replace(/[^a-z0-9]/gi, '_')}_${template.id}.pdf`;
+      downloadPDF(pdfBlob, filename);
+      
+      // 显示成功消息
+      alert(`✅ 下载成功！\n\n文件名: ${filename}\n\n文件已保存到您的下载文件夹。`);
     } catch (error) {
-      alert('下载失败，请稍后重试');
+      console.error('Download error:', error);
+      alert('❌ 下载失败，请稍后重试');
     } finally {
       setDownloading(null);
       setSelectedTemplate(null);
