@@ -4,8 +4,10 @@ import { useState } from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { FileText, Upload, CheckCircle, Clock, Shield } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function ReviewPage() {
+  const { t } = useLanguage();
   const [file, setFile] = useState<File | null>(null);
   const [formData, setFormData] = useState({
     name: "",
@@ -27,7 +29,7 @@ export default function ReviewPage() {
     e.preventDefault();
     setSubmitted(true);
     setTimeout(() => {
-      alert(`✅ 文件已提交审核！\n\n文件名: ${file?.name}\n预计完成时间: ${formData.urgency === 'urgent' ? '24小时' : '3-5个工作日'}\n\n我们的律师将仔细审核您的文件并提供专业意见。`);
+      alert(`${t('review.successMessage')}\n\n${t('common.name')}: ${file?.name}\n预计完成时间: ${formData.urgency === 'urgent' ? '24小时' : '3-5个工作日'}\n\n我们的律师将仔细审核您的文件并提供专业意见。`);
       setFile(null);
       setFormData({ name: "", email: "", phone: "", documentType: "", urgency: "normal", notes: "" });
       setSubmitted(false);
@@ -44,23 +46,23 @@ export default function ReviewPage() {
             <div className="max-w-3xl mx-auto text-center">
               <FileText className="h-16 w-16 mx-auto mb-6" />
               <h1 className="text-4xl md:text-5xl font-bold mb-4">
-                合同审核服务
+                {t('review.title')}
               </h1>
               <p className="text-xl text-purple-100 mb-8">
-                专业律师审核您的法律文件，RM 299起
+                {t('review.subtitle')}，RM 299{t('review.priceFrom')}
               </p>
               <div className="flex items-center justify-center gap-8 text-sm">
                 <div className="flex items-center gap-2">
                   <Clock className="h-5 w-5" />
-                  <span>3-5个工作日</span>
+                  <span>3-5{t('review.workingDays')}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Shield className="h-5 w-5" />
-                  <span>保密协议</span>
+                  <span>{t('review.confidential')}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-5 w-5" />
-                  <span>专业意见</span>
+                  <span>{t('review.professionalOpinion')}</span>
                 </div>
               </div>
             </div>
@@ -76,13 +78,13 @@ export default function ReviewPage() {
                 <div className="lg:col-span-2">
                   <div className="bg-white rounded-xl shadow-lg p-8">
                     <h2 className="text-2xl font-bold text-neutral-900 mb-6">
-                      提交审核文件
+                      {t('review.submitDocument')}
                     </h2>
                     <form onSubmit={handleSubmit} className="space-y-6">
                       {/* File Upload */}
                       <div>
                         <label className="block text-sm font-medium text-neutral-700 mb-2">
-                          上传文件 *
+                          {t('review.uploadFile')} *
                         </label>
                         <div className="border-2 border-dashed border-neutral-300 rounded-lg p-8 text-center hover:border-primary-500 transition-all">
                           <input
@@ -105,10 +107,10 @@ export default function ReviewPage() {
                             ) : (
                               <div>
                                 <p className="text-neutral-700 font-medium mb-2">
-                                  点击上传或拖拽文件到此处
+                                  {t('review.clickToUpload')}
                                 </p>
                                 <p className="text-sm text-neutral-500">
-                                  支持 PDF, DOC, DOCX 格式，最大 10MB
+                                  {t('review.supportedFormats')}
                                 </p>
                               </div>
                             )}
@@ -118,7 +120,7 @@ export default function ReviewPage() {
 
                       <div>
                         <label className="block text-sm font-medium text-neutral-700 mb-2">
-                          姓名 *
+                          {t('common.name')} *
                         </label>
                         <input
                           type="text"
@@ -133,7 +135,7 @@ export default function ReviewPage() {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                           <label className="block text-sm font-medium text-neutral-700 mb-2">
-                            电子邮箱 *
+                            {t('common.email')} *
                           </label>
                           <input
                             type="email"
@@ -146,7 +148,7 @@ export default function ReviewPage() {
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-neutral-700 mb-2">
-                            电话号码 *
+                            {t('auth.phone')} *
                           </label>
                           <input
                             type="tel"
@@ -162,7 +164,7 @@ export default function ReviewPage() {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                           <label className="block text-sm font-medium text-neutral-700 mb-2">
-                            文件类型 *
+                            {t('review.documentType')} *
                           </label>
                           <select
                             required
@@ -170,7 +172,7 @@ export default function ReviewPage() {
                             onChange={(e) => setFormData({ ...formData, documentType: e.target.value })}
                             className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-primary-500"
                           >
-                            <option value="">请选择文件类型</option>
+                            <option value="">{t('review.selectDocumentType')}</option>
                             <option value="employment">雇佣合同</option>
                             <option value="property">房产协议</option>
                             <option value="business">商业合同</option>
@@ -181,7 +183,7 @@ export default function ReviewPage() {
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-neutral-700 mb-2">
-                            紧急程度 *
+                            {t('review.urgency')} *
                           </label>
                           <select
                             required
@@ -189,22 +191,22 @@ export default function ReviewPage() {
                             onChange={(e) => setFormData({ ...formData, urgency: e.target.value })}
                             className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-primary-500"
                           >
-                            <option value="normal">普通 (3-5个工作日)</option>
-                            <option value="urgent">加急 (24小时)</option>
+                            <option value="normal">{t('review.normal')} (3-5{t('review.workingDays')})</option>
+                            <option value="urgent">{t('review.urgent')} (24{t('review.hours')})</option>
                           </select>
                         </div>
                       </div>
 
                       <div>
                         <label className="block text-sm font-medium text-neutral-700 mb-2">
-                          备注说明
+                          {t('review.notes')}
                         </label>
                         <textarea
                           value={formData.notes}
                           onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                           rows={4}
                           className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-primary-500"
-                          placeholder="请说明需要特别关注的条款或问题..."
+                          placeholder={t('review.notesPlaceholder')}
                         />
                       </div>
 
@@ -216,12 +218,12 @@ export default function ReviewPage() {
                         {submitted ? (
                           <>
                             <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
-                            提交中...
+                            {t('review.submitting')}
                           </>
                         ) : (
                           <>
                             <FileText className="h-5 w-5" />
-                            提交审核
+                            {t('review.submitReview')}
                           </>
                         )}
                       </button>
@@ -234,22 +236,22 @@ export default function ReviewPage() {
                   {/* Pricing Card */}
                   <div className="bg-white rounded-xl shadow-lg p-6">
                     <h3 className="text-xl font-bold text-neutral-900 mb-4">
-                      审核价格
+                      {t('review.reviewPrice')}
                     </h3>
                     <div className="space-y-4">
                       <div className="border-b border-neutral-200 pb-4">
                         <div className="flex items-baseline gap-2 mb-2">
                           <span className="text-3xl font-bold text-purple-600">RM 299</span>
-                          <span className="text-neutral-600">/份</span>
+                          <span className="text-neutral-600">{t('review.perDocument')}</span>
                         </div>
-                        <p className="text-sm text-neutral-600">普通审核 (3-5天)</p>
+                        <p className="text-sm text-neutral-600">{t('review.normalReview')} (3-5{t('review.workingDays')})</p>
                       </div>
                       <div>
                         <div className="flex items-baseline gap-2 mb-2">
                           <span className="text-3xl font-bold text-purple-600">RM 599</span>
-                          <span className="text-neutral-600">/份</span>
+                          <span className="text-neutral-600">{t('review.perDocument')}</span>
                         </div>
-                        <p className="text-sm text-neutral-600">加急审核 (24小时)</p>
+                        <p className="text-sm text-neutral-600">{t('review.urgentReview')} (24{t('review.hours')})</p>
                       </div>
                     </div>
                   </div>
@@ -257,28 +259,28 @@ export default function ReviewPage() {
                   {/* Features */}
                   <div className="bg-purple-50 rounded-xl p-6">
                     <h3 className="text-lg font-bold text-neutral-900 mb-4">
-                      审核内容
+                      {t('review.reviewContent')}
                     </h3>
                     <ul className="space-y-3">
                       <li className="flex items-start gap-2">
                         <CheckCircle className="h-5 w-5 text-purple-600 flex-shrink-0 mt-0.5" />
-                        <span className="text-sm text-neutral-700">条款合法性审查</span>
+                        <span className="text-sm text-neutral-700">{t('review.legalityReview')}</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <CheckCircle className="h-5 w-5 text-purple-600 flex-shrink-0 mt-0.5" />
-                        <span className="text-sm text-neutral-700">风险点识别</span>
+                        <span className="text-sm text-neutral-700">{t('review.riskIdentification')}</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <CheckCircle className="h-5 w-5 text-purple-600 flex-shrink-0 mt-0.5" />
-                        <span className="text-sm text-neutral-700">修改建议</span>
+                        <span className="text-sm text-neutral-700">{t('review.modificationSuggestions')}</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <CheckCircle className="h-5 w-5 text-purple-600 flex-shrink-0 mt-0.5" />
-                        <span className="text-sm text-neutral-700">书面审核报告</span>
+                        <span className="text-sm text-neutral-700">{t('review.writtenReport')}</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <CheckCircle className="h-5 w-5 text-purple-600 flex-shrink-0 mt-0.5" />
-                        <span className="text-sm text-neutral-700">一次免费修改</span>
+                        <span className="text-sm text-neutral-700">{t('review.freeRevision')}</span>
                       </li>
                     </ul>
                   </div>

@@ -5,8 +5,10 @@ import Footer from "@/components/layout/Footer";
 import Link from "next/link";
 import { ShoppingCart, Trash2, Plus, Minus } from "lucide-react";
 import { useState } from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function CartPage() {
+  const { t, language } = useLanguage();
   const [cartItems, setCartItems] = useState([
     { id: 1, name: "Ahmad Abdullah - 商业法咨询", price: 299, quantity: 1, type: "consultation" },
     { id: 2, name: "合同审核服务", price: 399, quantity: 1, type: "review" },
@@ -33,18 +35,18 @@ export default function CartPage() {
       <Header />
       <main className="min-h-screen bg-neutral-50 py-16">
         <div className="container mx-auto px-6">
-          <h1 className="text-3xl font-bold text-neutral-900 mb-8">购物车</h1>
+          <h1 className="text-3xl font-bold text-neutral-900 mb-8">{t('cart.title')}</h1>
 
           {cartItems.length === 0 ? (
             <div className="bg-white rounded-xl shadow-lg p-16 text-center">
               <ShoppingCart className="h-24 w-24 mx-auto mb-6 text-neutral-300" />
-              <h2 className="text-2xl font-bold text-neutral-900 mb-4">购物车是空的</h2>
-              <p className="text-neutral-600 mb-8">浏览我们的服务，添加您需要的法律服务</p>
+              <h2 className="text-2xl font-bold text-neutral-900 mb-4">{t('cart.emptyCart')}</h2>
+              <p className="text-neutral-600 mb-8">{t('cart.emptyCartDesc')}</p>
               <Link
                 href="/services"
                 className="inline-block px-8 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-semibold transition-all"
               >
-                浏览服务
+                {t('cart.browseServices')}
               </Link>
             </div>
           ) : (
@@ -57,7 +59,7 @@ export default function CartPage() {
                       <div className="flex-1">
                         <h3 className="text-lg font-bold text-neutral-900 mb-2">{item.name}</h3>
                         <p className="text-sm text-neutral-600 mb-4">
-                          {item.type === 'consultation' ? '在线咨询服务' : '文件审核服务'}
+                          {item.type === 'consultation' ? t('cart.consultationService') : t('cart.reviewService')}
                         </p>
                         <div className="flex items-center gap-4">
                           <div className="flex items-center gap-2 border border-neutral-300 rounded-lg">
@@ -80,7 +82,7 @@ export default function CartPage() {
                             className="text-red-600 hover:text-red-700 flex items-center gap-2"
                           >
                             <Trash2 className="h-4 w-4" />
-                            删除
+                            {t('cart.remove')}
                           </button>
                         </div>
                       </div>
@@ -97,31 +99,31 @@ export default function CartPage() {
               {/* Order Summary */}
               <div>
                 <div className="bg-white rounded-xl shadow-lg p-6 sticky top-24">
-                  <h2 className="text-xl font-bold text-neutral-900 mb-6">订单摘要</h2>
+                  <h2 className="text-xl font-bold text-neutral-900 mb-6">{t('cart.orderSummary')}</h2>
                   <div className="space-y-4 mb-6">
                     <div className="flex justify-between">
-                      <span className="text-neutral-600">小计</span>
+                      <span className="text-neutral-600">{t('cart.subtotal')}</span>
                       <span className="font-medium">RM {total}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-neutral-600">服务费</span>
+                      <span className="text-neutral-600">{t('cart.serviceFee')}</span>
                       <span className="font-medium">RM 0</span>
                     </div>
                     <div className="border-t border-neutral-200 pt-4">
                       <div className="flex justify-between">
-                        <span className="text-lg font-bold">总计</span>
+                        <span className="text-lg font-bold">{t('cart.total')}</span>
                         <span className="text-2xl font-bold text-primary-600">RM {total}</span>
                       </div>
                     </div>
                   </div>
                   <button className="w-full bg-primary-600 hover:bg-primary-700 text-white py-4 rounded-lg font-bold text-lg transition-all mb-4">
-                    结算
+                    {t('cart.checkout')}
                   </button>
                   <Link
                     href="/services"
                     className="block w-full text-center border border-primary-600 text-primary-600 hover:bg-primary-50 py-3 rounded-lg font-semibold transition-all"
                   >
-                    继续浏览
+                    {t('cart.continueBrowsing')}
                   </Link>
                 </div>
               </div>

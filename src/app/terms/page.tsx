@@ -2,18 +2,21 @@
 
 import Link from "next/link";
 import { FileText, AlertCircle, CheckCircle, XCircle, Scale } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function TermsPage() {
+  const { t } = useLanguage();
+  
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-blue-900 to-blue-700 text-white py-20">
         <div className="container mx-auto px-6">
-          <h1 className="text-5xl font-bold mb-6">服务条款</h1>
+          <h1 className="text-5xl font-bold mb-6">{t('terms.title')}</h1>
           <p className="text-xl text-blue-100 max-w-3xl">
-            欢迎使用 LegalMY。请仔细阅读以下条款，使用我们的服务即表示您同意这些条款。
+            {t('terms.subtitle')}
           </p>
-          <p className="text-sm text-blue-200 mt-4">最后更新：2026年4月 | 生效日期：2026年1月1日</p>
+          <p className="text-sm text-blue-200 mt-4">{t('terms.lastUpdated')}：2026年4月 | {t('terms.effectiveDate')}：2026年1月1日</p>
         </div>
       </section>
 
@@ -21,17 +24,17 @@ export default function TermsPage() {
       <section className="py-8 bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
         <div className="container mx-auto px-6">
           <div className="flex flex-wrap gap-4 justify-center text-sm">
-            <a href="#acceptance" className="text-blue-600 hover:text-blue-800">接受条款</a>
+            <a href="#acceptance" className="text-blue-600 hover:text-blue-800">{t('terms.acceptance')}</a>
             <span className="text-gray-300">|</span>
-            <a href="#services" className="text-blue-600 hover:text-blue-800">服务说明</a>
+            <a href="#services" className="text-blue-600 hover:text-blue-800">{t('terms.services')}</a>
             <span className="text-gray-300">|</span>
-            <a href="#account" className="text-blue-600 hover:text-blue-800">账户责任</a>
+            <a href="#account" className="text-blue-600 hover:text-blue-800">{t('terms.account')}</a>
             <span className="text-gray-300">|</span>
-            <a href="#payment" className="text-blue-600 hover:text-blue-800">支付条款</a>
+            <a href="#payment" className="text-blue-600 hover:text-blue-800">{t('terms.payment')}</a>
             <span className="text-gray-300">|</span>
-            <a href="#prohibited" className="text-blue-600 hover:text-blue-800">禁止行为</a>
+            <a href="#prohibited" className="text-blue-600 hover:text-blue-800">{t('terms.prohibited')}</a>
             <span className="text-gray-300">|</span>
-            <a href="#liability" className="text-blue-600 hover:text-blue-800">责任限制</a>
+            <a href="#liability" className="text-blue-600 hover:text-blue-800">{t('terms.liability')}</a>
           </div>
         </div>
       </section>
@@ -44,7 +47,7 @@ export default function TermsPage() {
           <div id="acceptance" className="mb-16">
             <div className="flex items-center mb-6">
               <CheckCircle className="w-8 h-8 text-green-600 mr-3" />
-              <h2 className="text-3xl font-bold text-gray-900">1. 接受条款</h2>
+              <h2 className="text-3xl font-bold text-gray-900">1. {t('terms.acceptance')}</h2>
             </div>
             <div className="bg-white p-8 rounded-xl shadow-md border-l-4 border-green-600">
               <p className="text-gray-600 leading-relaxed mb-4">
@@ -67,7 +70,7 @@ export default function TermsPage() {
           <div id="services" className="mb-16">
             <div className="flex items-center mb-6">
               <FileText className="w-8 h-8 text-blue-600 mr-3" />
-              <h2 className="text-3xl font-bold text-gray-900">2. 服务说明</h2>
+              <h2 className="text-3xl font-bold text-gray-900">2. {t('terms.services')}</h2>
             </div>
             <div className="bg-white p-8 rounded-xl shadow-md border-l-4 border-blue-600">
               <h3 className="text-xl font-bold text-gray-900 mb-4">LegalMY 提供以下服务：</h3>
@@ -107,7 +110,7 @@ export default function TermsPage() {
           <div id="account" className="mb-16">
             <div className="flex items-center mb-6">
               <AlertCircle className="w-8 h-8 text-yellow-600 mr-3" />
-              <h2 className="text-3xl font-bold text-gray-900">3. 账户责任</h2>
+              <h2 className="text-3xl font-bold text-gray-900">3. {t('terms.account')}</h2>
             </div>
             <div className="bg-white p-8 rounded-xl shadow-md border-l-4 border-yellow-600">
               <h3 className="text-xl font-bold text-gray-900 mb-4">注册和账户安全</h3>
@@ -168,7 +171,7 @@ export default function TermsPage() {
           <div id="payment" className="mb-16">
             <div className="flex items-center mb-6">
               <Scale className="w-8 h-8 text-purple-600 mr-3" />
-              <h2 className="text-3xl font-bold text-gray-900">4. 支付条款</h2>
+              <h2 className="text-3xl font-bold text-gray-900">4. {t('terms.payment')}</h2>
             </div>
             <div className="bg-white p-8 rounded-xl shadow-md border-l-4 border-purple-600">
               <h3 className="text-xl font-bold text-gray-900 mb-4">费用和支付</h3>
@@ -227,7 +230,7 @@ export default function TermsPage() {
           <div id="prohibited" className="mb-16">
             <div className="flex items-center mb-6">
               <XCircle className="w-8 h-8 text-red-600 mr-3" />
-              <h2 className="text-3xl font-bold text-gray-900">5. 禁止行为</h2>
+              <h2 className="text-3xl font-bold text-gray-900">5. {t('terms.prohibited')}</h2>
             </div>
             <div className="bg-white p-8 rounded-xl shadow-md border-l-4 border-red-600">
               <h3 className="text-xl font-bold text-gray-900 mb-4">使用我们的服务时，您不得：</h3>
@@ -288,7 +291,7 @@ export default function TermsPage() {
           <div id="liability" className="mb-16">
             <div className="flex items-center mb-6">
               <Scale className="w-8 h-8 text-gray-600 mr-3" />
-              <h2 className="text-3xl font-bold text-gray-900">6. 责任限制</h2>
+              <h2 className="text-3xl font-bold text-gray-900">6. {t('terms.liability')}</h2>
             </div>
             <div className="bg-white p-8 rounded-xl shadow-md border-l-4 border-gray-600">
               <h3 className="text-xl font-bold text-gray-900 mb-4">平台责任</h3>

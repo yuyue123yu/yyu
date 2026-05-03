@@ -3,8 +3,10 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Search, ChevronDown, ChevronUp, MessageCircle, Mail, Phone } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function HelpPage() {
+  const { t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState("");
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
 
@@ -142,9 +144,9 @@ export default function HelpPage() {
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-blue-900 to-blue-700 text-white py-20">
         <div className="container mx-auto px-6">
-          <h1 className="text-5xl font-bold mb-6 text-center">帮助中心</h1>
+          <h1 className="text-5xl font-bold mb-6 text-center">{t('help.title')}</h1>
           <p className="text-xl text-blue-100 text-center max-w-3xl mx-auto mb-8">
-            查找常见问题解答，或联系我们的客服团队获取帮助
+            {t('help.subtitle')}
           </p>
           
           {/* Search Bar */}
@@ -153,7 +155,7 @@ export default function HelpPage() {
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
                 type="text"
-                placeholder="搜索问题..."
+                placeholder={t('help.searchPlaceholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-12 pr-4 py-4 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-yellow-500"
@@ -166,11 +168,11 @@ export default function HelpPage() {
       {/* FAQ Section */}
       <section className="py-16">
         <div className="container mx-auto px-6 max-w-4xl">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8">常见问题</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-8">{t('help.faqTitle')}</h2>
           
           {filteredFAQs.length === 0 ? (
             <div className="text-center py-12 text-gray-500">
-              没有找到相关问题，请尝试其他关键词或联系客服
+              {t('help.noResults')}
             </div>
           ) : (
             <div className="space-y-8">
@@ -217,41 +219,41 @@ export default function HelpPage() {
       {/* Contact Support */}
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-6">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">还有其他问题？</h2>
+          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">{t('help.stillHaveQuestions')}</h2>
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             <div className="bg-white p-8 rounded-xl shadow-md text-center hover:shadow-xl transition-shadow">
               <MessageCircle className="w-12 h-12 text-blue-600 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-gray-900 mb-3">在线客服</h3>
-              <p className="text-gray-600 mb-4">周一至周五 9:00-18:00</p>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">{t('help.onlineSupport')}</h3>
+              <p className="text-gray-600 mb-4">{t('help.workingHours')}</p>
               <Link
                 href="/contact"
                 className="inline-block bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
               >
-                联系客服
+                {t('help.contactSupport')}
               </Link>
             </div>
             
             <div className="bg-white p-8 rounded-xl shadow-md text-center hover:shadow-xl transition-shadow">
               <Mail className="w-12 h-12 text-green-600 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-gray-900 mb-3">邮件支持</h3>
-              <p className="text-gray-600 mb-4">24小时内回复</p>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">{t('help.emailSupport')}</h3>
+              <p className="text-gray-600 mb-4">{t('help.replyWithin24h')}</p>
               <a
                 href="mailto:support@legalmy.com"
                 className="inline-block bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors"
               >
-                发送邮件
+                {t('help.sendEmail')}
               </a>
             </div>
             
             <div className="bg-white p-8 rounded-xl shadow-md text-center hover:shadow-xl transition-shadow">
               <Phone className="w-12 h-12 text-yellow-600 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-gray-900 mb-3">电话咨询</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">{t('help.phoneSupport')}</h3>
               <p className="text-gray-600 mb-4">+60 3-1234 5678</p>
               <a
                 href="tel:+60312345678"
                 className="inline-block bg-yellow-600 text-white px-6 py-2 rounded-lg hover:bg-yellow-700 transition-colors"
               >
-                立即致电
+                {t('help.callNow')}
               </a>
             </div>
           </div>

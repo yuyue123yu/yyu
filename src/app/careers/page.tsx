@@ -3,8 +3,10 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Briefcase, Users, TrendingUp, Heart, Award, Globe, Upload, Send } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function CareersPage() {
+  const { t } = useLanguage();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -19,7 +21,7 @@ export default function CareersPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    alert("申请已提交！我们会在3个工作日内与您联系。");
+    alert(t('careers.applicationSubmitted'));
     // Reset form
     setFormData({
       name: "",
@@ -52,9 +54,9 @@ export default function CareersPage() {
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-blue-900 to-blue-700 text-white py-20">
         <div className="container mx-auto px-6">
-          <h1 className="text-5xl font-bold mb-6">加入 LegalMY</h1>
+          <h1 className="text-5xl font-bold mb-6">{t('careers.title')}</h1>
           <p className="text-xl text-blue-100 max-w-3xl">
-            成为马来西亚领先法律科技平台的一员，用科技改变法律服务行业
+            {t('careers.subtitle')}
           </p>
         </div>
       </section>
@@ -62,29 +64,29 @@ export default function CareersPage() {
       {/* Why Join Us */}
       <section className="py-16">
         <div className="container mx-auto px-6">
-          <h2 className="text-4xl font-bold text-center text-gray-900 mb-12">为什么选择 LegalMY？</h2>
+          <h2 className="text-4xl font-bold text-center text-gray-900 mb-12">{t('careers.whyJoinUs')}</h2>
           <div className="grid md:grid-cols-3 gap-8">
             <div className="bg-white p-8 rounded-xl shadow-md text-center hover:shadow-xl transition-shadow">
               <TrendingUp className="w-16 h-16 text-blue-600 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-gray-900 mb-3">快速成长</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">{t('careers.fastGrowth')}</h3>
               <p className="text-gray-600">
-                加入快速发展的法律科技行业，与平台一起成长，获得更多职业发展机会
+                {t('careers.fastGrowthText')}
               </p>
             </div>
             
             <div className="bg-white p-8 rounded-xl shadow-md text-center hover:shadow-xl transition-shadow">
               <Users className="w-16 h-16 text-green-600 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-gray-900 mb-3">优秀团队</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">{t('careers.greatTeam')}</h3>
               <p className="text-gray-600">
-                与充满激情的专业人士合作，在支持性和协作性的环境中工作
+                {t('careers.greatTeamText')}
               </p>
             </div>
             
             <div className="bg-white p-8 rounded-xl shadow-md text-center hover:shadow-xl transition-shadow">
               <Heart className="w-16 h-16 text-red-500 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-gray-900 mb-3">有意义的工作</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">{t('careers.meaningfulWork')}</h3>
               <p className="text-gray-600">
-                帮助更多人获得法律服务，为社会创造真正的价值和影响
+                {t('careers.meaningfulWorkText')}
               </p>
             </div>
           </div>
@@ -94,54 +96,54 @@ export default function CareersPage() {
       {/* Benefits */}
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-6">
-          <h2 className="text-4xl font-bold text-center text-gray-900 mb-12">福利待遇</h2>
+          <h2 className="text-4xl font-bold text-center text-gray-900 mb-12">{t('careers.benefits')}</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
             <div className="bg-white p-6 rounded-lg shadow-md">
               <div className="text-3xl mb-3">💰</div>
-              <h3 className="font-bold text-gray-900 mb-2">有竞争力的薪酬</h3>
-              <p className="text-gray-600 text-sm">行业领先的薪资和绩效奖金</p>
+              <h3 className="font-bold text-gray-900 mb-2">{t('careers.competitiveSalary')}</h3>
+              <p className="text-gray-600 text-sm">{t('careers.competitiveSalaryText')}</p>
             </div>
             
             <div className="bg-white p-6 rounded-lg shadow-md">
               <div className="text-3xl mb-3">🏥</div>
-              <h3 className="font-bold text-gray-900 mb-2">医疗保险</h3>
-              <p className="text-gray-600 text-sm">全面的医疗和牙科保险</p>
+              <h3 className="font-bold text-gray-900 mb-2">{t('careers.healthInsurance')}</h3>
+              <p className="text-gray-600 text-sm">{t('careers.healthInsuranceText')}</p>
             </div>
             
             <div className="bg-white p-6 rounded-lg shadow-md">
               <div className="text-3xl mb-3">🏖️</div>
-              <h3 className="font-bold text-gray-900 mb-2">灵活假期</h3>
-              <p className="text-gray-600 text-sm">年假、病假和灵活工作安排</p>
+              <h3 className="font-bold text-gray-900 mb-2">{t('careers.flexibleLeave')}</h3>
+              <p className="text-gray-600 text-sm">{t('careers.flexibleLeaveText')}</p>
             </div>
             
             <div className="bg-white p-6 rounded-lg shadow-md">
               <div className="text-3xl mb-3">📚</div>
-              <h3 className="font-bold text-gray-900 mb-2">学习发展</h3>
-              <p className="text-gray-600 text-sm">培训预算和职业发展支持</p>
+              <h3 className="font-bold text-gray-900 mb-2">{t('careers.learningDevelopment')}</h3>
+              <p className="text-gray-600 text-sm">{t('careers.learningDevelopmentText')}</p>
             </div>
             
             <div className="bg-white p-6 rounded-lg shadow-md">
               <div className="text-3xl mb-3">💻</div>
-              <h3 className="font-bold text-gray-900 mb-2">远程工作</h3>
-              <p className="text-gray-600 text-sm">混合办公模式，工作生活平衡</p>
+              <h3 className="font-bold text-gray-900 mb-2">{t('careers.remoteWork')}</h3>
+              <p className="text-gray-600 text-sm">{t('careers.remoteWorkText')}</p>
             </div>
             
             <div className="bg-white p-6 rounded-lg shadow-md">
               <div className="text-3xl mb-3">🎉</div>
-              <h3 className="font-bold text-gray-900 mb-2">团队活动</h3>
-              <p className="text-gray-600 text-sm">定期团建和公司活动</p>
+              <h3 className="font-bold text-gray-900 mb-2">{t('careers.teamActivities')}</h3>
+              <p className="text-gray-600 text-sm">{t('careers.teamActivitiesText')}</p>
             </div>
             
             <div className="bg-white p-6 rounded-lg shadow-md">
               <div className="text-3xl mb-3">🚀</div>
-              <h3 className="font-bold text-gray-900 mb-2">股权激励</h3>
-              <p className="text-gray-600 text-sm">核心员工股权期权计划</p>
+              <h3 className="font-bold text-gray-900 mb-2">{t('careers.stockOptions')}</h3>
+              <p className="text-gray-600 text-sm">{t('careers.stockOptionsText')}</p>
             </div>
             
             <div className="bg-white p-6 rounded-lg shadow-md">
               <div className="text-3xl mb-3">☕</div>
-              <h3 className="font-bold text-gray-900 mb-2">办公环境</h3>
-              <p className="text-gray-600 text-sm">现代化办公室，免费零食饮料</p>
+              <h3 className="font-bold text-gray-900 mb-2">{t('careers.officeEnvironment')}</h3>
+              <p className="text-gray-600 text-sm">{t('careers.officeEnvironmentText')}</p>
             </div>
           </div>
         </div>
@@ -150,7 +152,7 @@ export default function CareersPage() {
       {/* Open Positions */}
       <section className="py-16">
         <div className="container mx-auto px-6">
-          <h2 className="text-4xl font-bold text-center text-gray-900 mb-12">招聘职位</h2>
+          <h2 className="text-4xl font-bold text-center text-gray-900 mb-12">{t('careers.openPositions')}</h2>
           
           <div className="max-w-4xl mx-auto space-y-6">
             {/* Lawyer Position */}
@@ -278,16 +280,16 @@ export default function CareersPage() {
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-6">
           <div className="max-w-3xl mx-auto">
-            <h2 className="text-4xl font-bold text-center text-gray-900 mb-4">提交申请</h2>
+            <h2 className="text-4xl font-bold text-center text-gray-900 mb-4">{t('careers.submitApplication')}</h2>
             <p className="text-center text-gray-600 mb-12">
-              填写以下表格，我们会在3个工作日内与您联系
+              {t('careers.submitApplicationText')}
             </p>
             
             <form onSubmit={handleSubmit} className="bg-white p-8 rounded-xl shadow-lg">
               <div className="grid md:grid-cols-2 gap-6 mb-6">
                 <div>
                   <label className="block text-gray-700 font-semibold mb-2">
-                    姓名 <span className="text-red-500">*</span>
+                    {t('careers.fullName')} <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -302,7 +304,7 @@ export default function CareersPage() {
                 
                 <div>
                   <label className="block text-gray-700 font-semibold mb-2">
-                    邮箱 <span className="text-red-500">*</span>
+                    {t('common.email')} <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="email"
@@ -319,7 +321,7 @@ export default function CareersPage() {
               <div className="grid md:grid-cols-2 gap-6 mb-6">
                 <div>
                   <label className="block text-gray-700 font-semibold mb-2">
-                    手机号 <span className="text-red-500">*</span>
+                    {t('auth.phone')} <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="tel"
@@ -334,7 +336,7 @@ export default function CareersPage() {
                 
                 <div>
                   <label className="block text-gray-700 font-semibold mb-2">
-                    申请职位 <span className="text-red-500">*</span>
+                    {t('careers.position')} <span className="text-red-500">*</span>
                   </label>
                   <select
                     name="position"
@@ -343,7 +345,7 @@ export default function CareersPage() {
                     required
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
-                    <option value="">请选择</option>
+                    <option value="">{t('careers.selectPosition')}</option>
                     <option value="lawyer">认证律师</option>
                     <option value="content-writer">法律内容编辑</option>
                     <option value="engineer">全栈工程师</option>
@@ -356,7 +358,7 @@ export default function CareersPage() {
               <div className="grid md:grid-cols-2 gap-6 mb-6">
                 <div>
                   <label className="block text-gray-700 font-semibold mb-2">
-                    工作经验（年）
+                    {t('careers.experience')}
                   </label>
                   <input
                     type="number"
@@ -400,7 +402,7 @@ export default function CareersPage() {
 
               <div className="mb-6">
                 <label className="block text-gray-700 font-semibold mb-2">
-                  简历/CV <span className="text-red-500">*</span>
+                  {t('careers.resume')} <span className="text-red-500">*</span>
                 </label>
                 <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-500 transition-colors">
                   <input
@@ -414,16 +416,16 @@ export default function CareersPage() {
                   <label htmlFor="resume-upload" className="cursor-pointer">
                     <Upload className="w-12 h-12 text-gray-400 mx-auto mb-2" />
                     <p className="text-gray-600">
-                      {resume ? resume.name : "点击上传简历（PDF, DOC, DOCX）"}
+                      {resume ? resume.name : t('careers.uploadResume')}
                     </p>
-                    <p className="text-sm text-gray-500 mt-1">最大 5MB</p>
+                    <p className="text-sm text-gray-500 mt-1">{t('careers.maxSize')}</p>
                   </label>
                 </div>
               </div>
 
               <div className="mb-6">
                 <label className="block text-gray-700 font-semibold mb-2">
-                  个人陈述
+                  {t('careers.personalStatement')}
                 </label>
                 <textarea
                   name="message"
@@ -431,7 +433,7 @@ export default function CareersPage() {
                   onChange={handleChange}
                   rows={6}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="请简要介绍您的背景、为什么想加入 LegalMY，以及您能为团队带来什么..."
+                  placeholder={t('careers.personalStatementPlaceholder')}
                 />
               </div>
 
@@ -440,7 +442,7 @@ export default function CareersPage() {
                 className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-4 rounded-lg font-semibold hover:from-blue-700 hover:to-blue-800 transition-all flex items-center justify-center gap-2"
               >
                 <Send className="w-5 h-5" />
-                提交申请
+                {t('careers.submit')}
               </button>
             </form>
           </div>
@@ -450,9 +452,9 @@ export default function CareersPage() {
       {/* Contact */}
       <section className="py-16">
         <div className="container mx-auto px-6 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">还有疑问？</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">{t('careers.stillHaveQuestions')}</h2>
           <p className="text-gray-600 mb-8">
-            如对招聘有任何疑问，欢迎联系我们的人力资源团队
+            {t('careers.questionsText')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a

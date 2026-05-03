@@ -5,8 +5,10 @@ import Footer from "@/components/layout/Footer";
 import Link from "next/link";
 import { Heart, Star, MapPin, Trash2 } from "lucide-react";
 import { useState } from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function FavoritesPage() {
+  const { t, language } = useLanguage();
   const [favorites, setFavorites] = useState([
     {
       id: 1,
@@ -37,18 +39,18 @@ export default function FavoritesPage() {
       <Header />
       <main className="min-h-screen bg-neutral-50 py-16">
         <div className="container mx-auto px-6">
-          <h1 className="text-3xl font-bold text-neutral-900 mb-8">我的收藏</h1>
+          <h1 className="text-3xl font-bold text-neutral-900 mb-8">{t('favorites.title')}</h1>
 
           {favorites.length === 0 ? (
             <div className="bg-white rounded-xl shadow-lg p-16 text-center">
               <Heart className="h-24 w-24 mx-auto mb-6 text-neutral-300" />
-              <h2 className="text-2xl font-bold text-neutral-900 mb-4">还没有收藏</h2>
-              <p className="text-neutral-600 mb-8">浏览律师列表，收藏您喜欢的律师</p>
+              <h2 className="text-2xl font-bold text-neutral-900 mb-4">{t('favorites.emptyFavorites')}</h2>
+              <p className="text-neutral-600 mb-8">{t('favorites.emptyFavoritesDesc')}</p>
               <Link
                 href="/lawyers"
                 className="inline-block px-8 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-semibold transition-all"
               >
-                浏览律师
+                {t('favorites.browseLawyers')}
               </Link>
             </div>
           ) : (
@@ -79,7 +81,7 @@ export default function FavoritesPage() {
                     <div className="flex items-center gap-2 mb-3">
                       <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
                       <span className="font-bold">{lawyer.rating}</span>
-                      <span className="text-sm text-neutral-600">({lawyer.reviews} 评价)</span>
+                      <span className="text-sm text-neutral-600">({lawyer.reviews} {t('common.reviews')})</span>
                     </div>
 
                     {/* Location */}
@@ -97,13 +99,13 @@ export default function FavoritesPage() {
                         href={`/lawyers/${lawyer.id}`}
                         className="flex-1 text-center bg-primary-600 hover:bg-primary-700 text-white py-2 rounded-lg font-medium transition-all"
                       >
-                        查看详情
+                        {t('favorites.viewDetails')}
                       </Link>
                       <Link
                         href="/consultation"
                         className="flex-1 text-center border border-primary-600 text-primary-600 hover:bg-primary-50 py-2 rounded-lg font-medium transition-all"
                       >
-                        咨询
+                        {t('favorites.consult')}
                       </Link>
                     </div>
                   </div>

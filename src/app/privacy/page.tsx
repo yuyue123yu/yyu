@@ -2,18 +2,21 @@
 
 import Link from "next/link";
 import { Shield, Lock, Eye, Database, UserCheck, FileText } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function PrivacyPage() {
+  const { t } = useLanguage();
+  
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-blue-900 to-blue-700 text-white py-20">
         <div className="container mx-auto px-6">
-          <h1 className="text-5xl font-bold mb-6">隐私政策</h1>
+          <h1 className="text-5xl font-bold mb-6">{t('privacy.title')}</h1>
           <p className="text-xl text-blue-100 max-w-3xl">
-            LegalMY 重视并保护用户隐私。本政策说明我们如何收集、使用和保护您的个人信息。
+            {t('privacy.subtitle')}
           </p>
-          <p className="text-sm text-blue-200 mt-4">最后更新：2026年4月</p>
+          <p className="text-sm text-blue-200 mt-4">{t('privacy.lastUpdated')}：2026年4月</p>
         </div>
       </section>
 
@@ -21,17 +24,17 @@ export default function PrivacyPage() {
       <section className="py-8 bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
         <div className="container mx-auto px-6">
           <div className="flex flex-wrap gap-4 justify-center text-sm">
-            <a href="#collection" className="text-blue-600 hover:text-blue-800">信息收集</a>
+            <a href="#collection" className="text-blue-600 hover:text-blue-800">{t('privacy.infoCollection')}</a>
             <span className="text-gray-300">|</span>
-            <a href="#usage" className="text-blue-600 hover:text-blue-800">信息使用</a>
+            <a href="#usage" className="text-blue-600 hover:text-blue-800">{t('privacy.infoUsage')}</a>
             <span className="text-gray-300">|</span>
-            <a href="#protection" className="text-blue-600 hover:text-blue-800">信息保护</a>
+            <a href="#protection" className="text-blue-600 hover:text-blue-800">{t('privacy.infoProtection')}</a>
             <span className="text-gray-300">|</span>
-            <a href="#sharing" className="text-blue-600 hover:text-blue-800">信息共享</a>
+            <a href="#sharing" className="text-blue-600 hover:text-blue-800">{t('privacy.infoSharing')}</a>
             <span className="text-gray-300">|</span>
-            <a href="#rights" className="text-blue-600 hover:text-blue-800">用户权利</a>
+            <a href="#rights" className="text-blue-600 hover:text-blue-800">{t('privacy.userRights')}</a>
             <span className="text-gray-300">|</span>
-            <a href="#cookies" className="text-blue-600 hover:text-blue-800">Cookie政策</a>
+            <a href="#cookies" className="text-blue-600 hover:text-blue-800">{t('privacy.cookies')}</a>
           </div>
         </div>
       </section>
@@ -44,7 +47,7 @@ export default function PrivacyPage() {
           <div id="collection" className="mb-16">
             <div className="flex items-center mb-6">
               <Database className="w-8 h-8 text-blue-600 mr-3" />
-              <h2 className="text-3xl font-bold text-gray-900">1. 信息收集</h2>
+              <h2 className="text-3xl font-bold text-gray-900">1. {t('privacy.infoCollection')}</h2>
             </div>
             <div className="bg-white p-8 rounded-xl shadow-md border-l-4 border-blue-600">
               <h3 className="text-xl font-bold text-gray-900 mb-4">我们收集的信息类型：</h3>
@@ -86,7 +89,7 @@ export default function PrivacyPage() {
           <div id="usage" className="mb-16">
             <div className="flex items-center mb-6">
               <FileText className="w-8 h-8 text-green-600 mr-3" />
-              <h2 className="text-3xl font-bold text-gray-900">2. 信息使用</h2>
+              <h2 className="text-3xl font-bold text-gray-900">2. {t('privacy.infoUsage')}</h2>
             </div>
             <div className="bg-white p-8 rounded-xl shadow-md border-l-4 border-green-600">
               <h3 className="text-xl font-bold text-gray-900 mb-4">我们使用您的信息用于：</h3>
@@ -124,7 +127,7 @@ export default function PrivacyPage() {
           <div id="protection" className="mb-16">
             <div className="flex items-center mb-6">
               <Shield className="w-8 h-8 text-red-600 mr-3" />
-              <h2 className="text-3xl font-bold text-gray-900">3. 信息保护</h2>
+              <h2 className="text-3xl font-bold text-gray-900">3. {t('privacy.infoProtection')}</h2>
             </div>
             <div className="bg-white p-8 rounded-xl shadow-md border-l-4 border-red-600">
               <h3 className="text-xl font-bold text-gray-900 mb-4">我们采取的安全措施：</h3>
@@ -176,7 +179,7 @@ export default function PrivacyPage() {
           <div id="sharing" className="mb-16">
             <div className="flex items-center mb-6">
               <UserCheck className="w-8 h-8 text-yellow-600 mr-3" />
-              <h2 className="text-3xl font-bold text-gray-900">4. 信息共享</h2>
+              <h2 className="text-3xl font-bold text-gray-900">4. {t('privacy.infoSharing')}</h2>
             </div>
             <div className="bg-white p-8 rounded-xl shadow-md border-l-4 border-yellow-600">
               <h3 className="text-xl font-bold text-gray-900 mb-4">我们可能与以下方共享信息：</h3>
@@ -215,7 +218,7 @@ export default function PrivacyPage() {
           <div id="rights" className="mb-16">
             <div className="flex items-center mb-6">
               <UserCheck className="w-8 h-8 text-purple-600 mr-3" />
-              <h2 className="text-3xl font-bold text-gray-900">5. 您的权利</h2>
+              <h2 className="text-3xl font-bold text-gray-900">5. {t('privacy.userRights')}</h2>
             </div>
             <div className="bg-white p-8 rounded-xl shadow-md border-l-4 border-purple-600">
               <h3 className="text-xl font-bold text-gray-900 mb-4">根据马来西亚个人数据保护法（PDPA），您有权：</h3>
@@ -264,7 +267,7 @@ export default function PrivacyPage() {
           <div id="cookies" className="mb-16">
             <div className="flex items-center mb-6">
               <Eye className="w-8 h-8 text-blue-600 mr-3" />
-              <h2 className="text-3xl font-bold text-gray-900">6. Cookie 政策</h2>
+              <h2 className="text-3xl font-bold text-gray-900">6. {t('privacy.cookies')}</h2>
             </div>
             <div className="bg-white p-8 rounded-xl shadow-md border-l-4 border-blue-600">
               <h3 className="text-xl font-bold text-gray-900 mb-4">我们使用 Cookie 来：</h3>

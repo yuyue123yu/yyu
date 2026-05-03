@@ -4,8 +4,10 @@ import { useState } from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Mail, Phone, MapPin, Clock, Send } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function ContactPage() {
+  const { t, language } = useLanguage();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -19,7 +21,7 @@ export default function ContactPage() {
     e.preventDefault();
     setSubmitted(true);
     setTimeout(() => {
-      alert("✅ 消息已发送！我们会尽快回复您。");
+      alert(t('contact.successMessage'));
       setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
       setSubmitted(false);
     }, 1000);
@@ -33,9 +35,9 @@ export default function ContactPage() {
         <section className="bg-gradient-to-br from-primary-600 to-primary-500 text-white py-16">
           <div className="container mx-auto px-6">
             <div className="max-w-3xl mx-auto text-center">
-              <h1 className="text-4xl md:text-5xl font-bold mb-4">联系我们</h1>
+              <h1 className="text-4xl md:text-5xl font-bold mb-4">{t('contact.title')}</h1>
               <p className="text-xl text-blue-100">
-                有任何问题？我们随时为您提供帮助
+                {t('contact.subtitle')}
               </p>
             </div>
           </div>

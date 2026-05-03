@@ -10,8 +10,10 @@ import {
   type LegalArticle 
 } from "@/lib/api/legalKnowledge";
 import { BookOpen, Clock, Eye, Tag, TrendingUp, Search } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function KnowledgePage() {
+  const { t, language } = useLanguage();
   const [articles, setArticles] = useState<LegalArticle[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string>("");
@@ -42,10 +44,10 @@ export default function KnowledgePage() {
         <section className="bg-gradient-to-br from-primary-600 to-primary-500 text-white py-12">
           <div className="container mx-auto px-6">
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
-              法律知识库
+              {t('pages.knowledgeTitle')}
             </h1>
             <p className="text-lg text-blue-100 mb-6">
-              1000+ 法律文章，帮助您了解马来西亚法律知识
+              1000+ {t('pages.knowledgeSubtitle')}
             </p>
 
             {/* Search Bar */}
@@ -54,7 +56,7 @@ export default function KnowledgePage() {
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-400" />
                 <input
                   type="text"
-                  placeholder="搜索法律知识..."
+                  placeholder={t('pages.searchKnowledge')}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full pl-12 pr-4 py-3 rounded-lg text-neutral-900 outline-none"
@@ -69,7 +71,7 @@ export default function KnowledgePage() {
           <div className="container mx-auto px-6">
             <div className="flex items-center gap-2 mb-4">
               <BookOpen className="h-5 w-5 text-neutral-600" />
-              <h2 className="text-lg font-bold text-neutral-900">知识分类</h2>
+              <h2 className="text-lg font-bold text-neutral-900">{t('pages.knowledgeCategories')}</h2>
             </div>
             <div className="flex gap-2 overflow-x-auto pb-2">
               <button
@@ -80,7 +82,7 @@ export default function KnowledgePage() {
                     : "bg-neutral-100 text-neutral-700 hover:bg-neutral-200"
                 }`}
               >
-                全部文章
+                {t('pages.allArticles')}
               </button>
               {knowledgeCategories.map((cat) => (
                 <button
@@ -105,17 +107,17 @@ export default function KnowledgePage() {
             {loading ? (
               <div className="text-center py-20">
                 <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-primary-600 border-t-transparent"></div>
-                <p className="mt-4 text-neutral-600">加载中...</p>
+                <p className="mt-4 text-neutral-600">{t('pages.loading')}</p>
               </div>
             ) : filteredArticles.length === 0 ? (
               <div className="text-center py-20">
-                <p className="text-neutral-600 text-lg">未找到相关文章</p>
+                <p className="text-neutral-600 text-lg">{t('pages.noArticlesFound')}</p>
               </div>
             ) : (
               <>
                 <div className="flex items-center justify-between mb-6">
                   <p className="text-neutral-600">
-                    找到 <span className="font-bold text-primary-600">{filteredArticles.length}</span> 篇文章
+                    {t('pages.found')} <span className="font-bold text-primary-600">{filteredArticles.length}</span> {t('pages.foundArticles')}
                   </p>
                 </div>
 
@@ -148,13 +150,13 @@ export default function KnowledgePage() {
                         <div className="flex items-center gap-4 text-sm text-neutral-600 mb-4">
                           <div className="flex items-center gap-1">
                             <Clock className="h-4 w-4" />
-                            <span>{article.readTime} 分钟阅读</span>
+                            <span>{article.readTime} {t('pages.minutesRead')}</span>
                           </div>
                           <div className="flex items-center gap-1">
                             <Eye className="h-4 w-4" />
-                            <span>{article.views.toLocaleString()} 浏览</span>
+                            <span>{article.views.toLocaleString()} {t('pages.views')}</span>
                           </div>
-                          <span>作者: {article.author}</span>
+                          <span>{t('pages.author')}: {article.author}</span>
                         </div>
 
                         {/* Tags */}
@@ -173,7 +175,7 @@ export default function KnowledgePage() {
                         {/* Related Laws */}
                         {article.relatedLaws.length > 0 && (
                           <div className="pt-4 border-t border-neutral-100">
-                            <p className="text-sm text-neutral-600 mb-2">相关法律:</p>
+                            <p className="text-sm text-neutral-600 mb-2">{t('pages.relatedLaws')}:</p>
                             <div className="flex flex-wrap gap-2">
                               {article.relatedLaws.map((law, idx) => (
                                 <span
@@ -193,7 +195,7 @@ export default function KnowledgePage() {
                             href={`/knowledge/${article.id}`}
                             className="text-primary-600 hover:text-primary-700 font-medium text-sm"
                           >
-                            阅读全文 →
+                            {t('pages.readFullArticle')} →
                           </Link>
                         </div>
                       </article>
@@ -206,7 +208,7 @@ export default function KnowledgePage() {
                     <div className="bg-white rounded-lg border border-neutral-200 p-6">
                       <div className="flex items-center gap-2 mb-4">
                         <TrendingUp className="h-5 w-5 text-primary-600" />
-                        <h3 className="font-bold text-neutral-900">热门分类</h3>
+                        <h3 className="font-bold text-neutral-900">{t('pages.popularCategoriesTitle')}</h3>
                       </div>
                       <div className="space-y-2">
                         {knowledgeCategories.slice(0, 6).map((cat) => (
@@ -231,16 +233,16 @@ export default function KnowledgePage() {
 
                     {/* Quick Links */}
                     <div className="bg-gradient-to-br from-primary-50 to-primary-100 rounded-lg border border-primary-200 p-6">
-                      <h3 className="font-bold text-neutral-900 mb-4">快速链接</h3>
+                      <h3 className="font-bold text-neutral-900 mb-4">{t('pages.quickLinks')}</h3>
                       <div className="space-y-3">
                         <a href="/templates" className="block text-sm text-primary-700 hover:text-primary-800 font-medium">
-                          📄 法律文书模板
+                          📄 {t('pages.legalDocTemplates')}
                         </a>
                         <a href="/lawyers" className="block text-sm text-primary-700 hover:text-primary-800 font-medium">
-                          👨‍⚖️ 咨询律师
+                          👨‍⚖️ {t('pages.consultLawyer')}
                         </a>
                         <a href="/consultation" className="block text-sm text-primary-700 hover:text-primary-800 font-medium">
-                          💬 在线咨询
+                          💬 {t('pages.onlineConsultation')}
                         </a>
                       </div>
                     </div>

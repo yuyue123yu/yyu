@@ -5,8 +5,10 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Link from "next/link";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function LoginPage() {
+  const { t, language } = useLanguage();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -16,7 +18,7 @@ export default function LoginPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    alert("登录功能演示 - 实际项目中需要连接后端API");
+    alert(t('auth.loginDemo'));
     console.log("Login data:", formData);
   };
 
@@ -31,10 +33,10 @@ export default function LoginPage() {
               {/* Header */}
               <div className="text-center mb-8">
                 <h1 className="text-3xl font-bold text-neutral-900 mb-2">
-                  欢迎回来
+                  {t('auth.welcomeBack')}
                 </h1>
                 <p className="text-neutral-600">
-                  登录您的账户以继续
+                  {t('auth.loginSubtitle')}
                 </p>
               </div>
 
@@ -43,7 +45,7 @@ export default function LoginPage() {
                 {/* Email */}
                 <div>
                   <label className="block text-sm font-medium text-neutral-700 mb-2">
-                    邮箱地址
+                    {t('auth.emailAddress')}
                   </label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-400" />
@@ -61,7 +63,7 @@ export default function LoginPage() {
                 {/* Password */}
                 <div>
                   <label className="block text-sm font-medium text-neutral-700 mb-2">
-                    密码
+                    {t('auth.password')}
                   </label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-400" />
@@ -92,10 +94,10 @@ export default function LoginPage() {
                       onChange={(e) => setFormData({ ...formData, remember: e.target.checked })}
                       className="w-4 h-4 text-primary-600 border-neutral-300 rounded focus:ring-primary-500"
                     />
-                    <span className="text-sm text-neutral-700">记住我</span>
+                    <span className="text-sm text-neutral-700">{t('auth.rememberMe')}</span>
                   </label>
                   <Link href="/contact" className="text-sm text-primary-600 hover:text-primary-700">
-                    忘记密码？
+                    {t('auth.forgotPassword')}
                   </Link>
                 </div>
 
@@ -104,7 +106,7 @@ export default function LoginPage() {
                   type="submit"
                   className="w-full bg-primary-600 hover:bg-primary-700 text-white py-3 rounded-lg font-semibold transition-all"
                 >
-                  登录
+                  {t('auth.loginButton')}
                 </button>
               </form>
 
@@ -114,7 +116,7 @@ export default function LoginPage() {
                   <div className="w-full border-t border-neutral-200"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-4 bg-white text-neutral-500">或</span>
+                  <span className="px-4 bg-white text-neutral-500">{t('auth.or')}</span>
                 </div>
               </div>
 
@@ -127,15 +129,15 @@ export default function LoginPage() {
                     <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                     <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
                   </svg>
-                  使用 Google 登录
+                  {t('auth.loginWithGoogle')}
                 </button>
               </div>
 
               {/* Sign Up Link */}
               <p className="text-center text-sm text-neutral-600 mt-6">
-                还没有账户？{" "}
+                {t('auth.noAccount')}{" "}
                 <Link href="/register" className="text-primary-600 hover:text-primary-700 font-semibold">
-                  立即注册
+                  {t('auth.signUpNow')}
                 </Link>
               </p>
             </div>
@@ -143,7 +145,7 @@ export default function LoginPage() {
             {/* Back to Home */}
             <div className="text-center mt-6">
               <Link href="/" className="text-sm text-neutral-600 hover:text-neutral-900">
-                ← 返回首页
+                ← {t('auth.backToHome')}
               </Link>
             </div>
           </div>
