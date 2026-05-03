@@ -94,7 +94,7 @@ export default function KnowledgePage() {
                       : "bg-neutral-100 text-neutral-700 hover:bg-neutral-200"
                   }`}
                 >
-                  {cat.icon} {cat.nameCn} ({cat.articleCount})
+                  {cat.icon} {language === 'zh' ? cat.nameCn : language === 'en' ? cat.name : cat.nameMs} ({cat.articleCount})
                 </button>
               ))}
             </div>
@@ -132,7 +132,10 @@ export default function KnowledgePage() {
                         {/* Category Badge */}
                         <div className="mb-3">
                           <span className="inline-block px-3 py-1 bg-primary-100 text-primary-700 text-xs font-medium rounded-full">
-                            {knowledgeCategories.find(c => c.id === article.category)?.nameCn}
+                            {(() => {
+                              const cat = knowledgeCategories.find(c => c.id === article.category);
+                              return cat ? (language === 'zh' ? cat.nameCn : language === 'en' ? cat.name : cat.nameMs) : '';
+                            })()}
                           </span>
                         </div>
 
@@ -220,7 +223,7 @@ export default function KnowledgePage() {
                             <span className="flex items-center gap-2">
                               <span>{cat.icon}</span>
                               <span className="text-sm font-medium text-neutral-700">
-                                {cat.nameCn}
+                                {language === 'zh' ? cat.nameCn : language === 'en' ? cat.name : cat.nameMs}
                               </span>
                             </span>
                             <span className="text-xs text-neutral-500">

@@ -17,6 +17,7 @@ export interface Lawyer {
   certifications: string[];
   bio: string;
   avatar?: string;
+  successRate?: number;
 }
 
 export interface LawyerSpecialty {
@@ -60,6 +61,7 @@ const mockLawyers: Lawyer[] = [
     available: true,
     priceRange: 'RM 500-1000',
     soldCount: 156,
+    successRate: 95,
     languages: ['English', 'Malay', 'Arabic'],
     education: ['LL.B University of Malaya', 'LL.M Harvard Law School'],
     certifications: ['Advocate & Solicitor (Malaysia)', 'Certified Corporate Lawyer'],
@@ -78,6 +80,7 @@ const mockLawyers: Lawyer[] = [
     available: true,
     priceRange: 'RM 400-800',
     soldCount: 203,
+    successRate: 92,
     languages: ['English', 'Mandarin', 'Malay', 'Hokkien'],
     education: ['LL.B National University of Singapore', 'Barrister-at-Law (Lincoln\'s Inn)'],
     certifications: ['Advocate & Solicitor (Malaysia)', 'Family Law Specialist'],
@@ -96,6 +99,7 @@ const mockLawyers: Lawyer[] = [
     available: false,
     priceRange: 'RM 600-1200',
     soldCount: 178,
+    successRate: 96,
     languages: ['English', 'Malay', 'Tamil'],
     education: ['LL.B University of London', 'LL.M University of Cambridge'],
     certifications: ['Advocate & Solicitor (Malaysia)', 'Property Law Expert'],
@@ -114,6 +118,7 @@ const mockLawyers: Lawyer[] = [
     available: true,
     priceRange: 'RM 400-900',
     soldCount: 142,
+    successRate: 91,
     languages: ['English', 'Mandarin', 'Malay', 'Cantonese'],
     education: ['LL.B Tsinghua University', 'LL.M University of Malaya'],
     certifications: ['Advocate & Solicitor (Malaysia)', 'IP Law Certified'],
@@ -132,6 +137,7 @@ const mockLawyers: Lawyer[] = [
     available: true,
     priceRange: 'RM 500-1000',
     soldCount: 189,
+    successRate: 94,
     languages: ['English', 'Mandarin', 'Malay'],
     education: ['LL.B University of Malaya', 'Mediation Certification'],
     certifications: ['Advocate & Solicitor (Malaysia)', 'Certified Mediator'],
@@ -150,6 +156,7 @@ const mockLawyers: Lawyer[] = [
     available: true,
     priceRange: 'RM 600-1100',
     soldCount: 165,
+    successRate: 93,
     languages: ['English', 'Malay', 'Tamil', 'Hindi'],
     education: ['LL.B University of Malaya', 'Conveyancing Specialist Course'],
     certifications: ['Advocate & Solicitor (Malaysia)', 'Licensed Conveyancer'],
@@ -168,6 +175,7 @@ const mockLawyers: Lawyer[] = [
     available: true,
     priceRange: 'RM 800-1500',
     soldCount: 134,
+    successRate: 90,
     languages: ['English', 'Malay'],
     education: ['LL.B International Islamic University', 'Barrister-at-Law (Gray\'s Inn)'],
     certifications: ['Advocate & Solicitor (Malaysia)', 'Criminal Law Specialist'],
@@ -186,6 +194,7 @@ const mockLawyers: Lawyer[] = [
     available: true,
     priceRange: 'RM 400-800',
     soldCount: 121,
+    successRate: 88,
     languages: ['English', 'Mandarin', 'Malay'],
     education: ['LL.B University of Malaya', 'Labor Law Certification'],
     certifications: ['Advocate & Solicitor (Malaysia)', 'Employment Law Expert'],

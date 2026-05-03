@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Shield, Lock, Eye, Database, UserCheck, FileText } from "lucide-react";
+import { Shield, Lock, Eye, Database, UserCheck, FileText, ArrowLeft } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function PrivacyPage() {
@@ -12,6 +12,13 @@ export default function PrivacyPage() {
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-blue-900 to-blue-700 text-white py-20">
         <div className="container mx-auto px-6">
+          <Link 
+            href="/"
+            className="inline-flex items-center gap-2 text-blue-100 hover:text-white mb-6 transition-colors"
+          >
+            <ArrowLeft className="w-5 h-5" />
+            <span>{t('common.back')}</span>
+          </Link>
           <h1 className="text-5xl font-bold mb-6">{t('privacy.title')}</h1>
           <p className="text-xl text-blue-100 max-w-3xl">
             {t('privacy.subtitle')}

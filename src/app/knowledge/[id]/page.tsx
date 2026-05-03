@@ -2,8 +2,9 @@ import { use } from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Link from "next/link";
-import { ArrowLeft, Clock, Eye, Tag, BookOpen, Download } from "lucide-react";
+import { ArrowLeft, Clock, Eye, Tag, BookOpen } from "lucide-react";
 import { fetchArticleById, getAllArticleIds } from "@/lib/api/legalKnowledge";
+import DownloadPDFButton from "@/components/knowledge/DownloadPDFButton";
 
 // 生成静态路径
 export async function generateStaticParams() {
@@ -263,18 +264,10 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
                       )}
 
                       {/* Download Section */}
-                      <div className="bg-primary-50 rounded-xl p-6 mt-8">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <h3 className="text-lg font-bold text-neutral-900 mb-2">下载PDF版本</h3>
-                            <p className="text-sm text-neutral-600">保存此文章以供离线阅读</p>
-                          </div>
-                          <button className="flex items-center gap-2 px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-semibold transition-all">
-                            <Download className="h-5 w-5" />
-                            下载PDF
-                          </button>
-                        </div>
-                      </div>
+                      <DownloadPDFButton 
+                        articleTitle={article.titleCn || article.title}
+                        articleContent={article.content}
+                      />
                     </div>
 
                     {/* Tags */}

@@ -55,9 +55,10 @@ export default function FeaturedLawyers() {
         {/* 6 列网格 - 电商卡片风格 */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-4">
           {lawyers.map((lawyer) => (
-            <div
+            <Link
+              href={`/lawyers/${lawyer.id}`}
               key={lawyer.id}
-              className="group bg-white rounded-lg overflow-hidden hover:shadow-lg transition-all border border-neutral-200 hover:border-primary-300 flex flex-col"
+              className="group bg-white rounded-lg overflow-hidden hover:shadow-lg transition-all border border-neutral-200 hover:border-primary-300 flex flex-col cursor-pointer"
             >
               {/* 头部 - Avatar 区域 */}
               <div className="bg-gradient-to-br from-primary-100 to-primary-50 h-20 flex items-center justify-center text-3xl relative">
@@ -102,16 +103,23 @@ export default function FeaturedLawyers() {
                 
                 {/* 按钮 */}
                 <div className="flex gap-2 mt-auto">
-                  <button className="flex-1 bg-primary-600 hover:bg-primary-700 text-white text-xs py-2 rounded-lg font-semibold transition-all flex items-center justify-center gap-1">
+                  <div className="flex-1 bg-primary-600 hover:bg-primary-700 text-white text-xs py-2 rounded-lg font-semibold transition-all flex items-center justify-center gap-1">
                     <ShoppingCart className="h-3 w-3" />
                     {t('home.consult')}
-                  </button>
-                  <button className="px-2 py-2 border border-neutral-300 hover:border-primary-300 rounded-lg transition-all">
+                  </div>
+                  <div 
+                    className="px-2 py-2 border border-neutral-300 hover:border-primary-300 rounded-lg transition-all"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      // TODO: Add to favorites
+                    }}
+                  >
                     <Heart className="h-3.5 w-3.5 text-neutral-400 hover:text-red-500" />
-                  </button>
+                  </div>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
 

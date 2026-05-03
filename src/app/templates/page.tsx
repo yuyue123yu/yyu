@@ -142,7 +142,7 @@ export default function TemplatesPage() {
                       : "bg-neutral-100 text-neutral-700 hover:bg-neutral-200"
                   }`}
                 >
-                  {cat.icon} {cat.nameCn} ({cat.count})
+                  {cat.icon} {language === 'zh' ? cat.nameCn : language === 'ms' ? cat.nameMs : cat.name} ({cat.count})
                 </button>
               ))}
             </div>
@@ -272,7 +272,7 @@ export default function TemplatesPage() {
                   className="bg-gradient-to-br from-neutral-50 to-neutral-100 hover:from-primary-50 hover:to-primary-100 border border-neutral-200 hover:border-primary-300 rounded-lg p-6 text-center transition-all"
                 >
                   <div className="text-4xl mb-3">{cat.icon}</div>
-                  <h3 className="font-bold text-neutral-900 mb-1">{cat.nameCn}</h3>
+                  <h3 className="font-bold text-neutral-900 mb-1">{language === 'zh' ? cat.nameCn : language === 'ms' ? cat.nameMs : cat.name}</h3>
                   <p className="text-sm text-neutral-600">{cat.count} {t('pages.templates')}</p>
                 </button>
               ))}

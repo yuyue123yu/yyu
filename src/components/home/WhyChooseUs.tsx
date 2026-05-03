@@ -1,48 +1,53 @@
-import { Shield, Zap, DollarSign, Users, Award, Clock } from "lucide-react";
+"use client";
 
-const features = [
-  {
-    icon: Shield,
-    title: "100% 认证保障",
-    description: "所有律师均经过严格的资质审核和背景调查，确保专业可靠"
-  },
-  {
-    icon: Zap,
-    title: "快速响应",
-    description: "平均 2 小时内获得律师回复，紧急情况可安排即时咨询"
-  },
-  {
-    icon: DollarSign,
-    title: "透明定价",
-    description: "明码标价，无隐藏费用。首次咨询免费，满意后再付费"
-  },
-  {
-    icon: Users,
-    title: "智能匹配",
-    description: "AI 算法根据您的需求，精准推荐最合适的专业律师"
-  },
-  {
-    icon: Award,
-    title: "服务保障",
-    description: "不满意全额退款，让您零风险体验专业法律服务"
-  },
-  {
-    icon: Clock,
-    title: "24/7 在线",
-    description: "随时随地在线咨询，不受时间和地点限制"
-  },
-];
+import { Shield, Zap, DollarSign, Users, Award, Clock } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function WhyChooseUs() {
+  const { t } = useLanguage();
+
+  const features = [
+    {
+      icon: Shield,
+      titleKey: "whyChoose.certificationTitle",
+      descKey: "whyChoose.certificationDesc"
+    },
+    {
+      icon: Zap,
+      titleKey: "whyChoose.quickResponseTitle",
+      descKey: "whyChoose.quickResponseDesc"
+    },
+    {
+      icon: DollarSign,
+      titleKey: "whyChoose.transparentPricingTitle",
+      descKey: "whyChoose.transparentPricingDesc"
+    },
+    {
+      icon: Users,
+      titleKey: "whyChoose.smartMatchingTitle",
+      descKey: "whyChoose.smartMatchingDesc"
+    },
+    {
+      icon: Award,
+      titleKey: "whyChoose.serviceGuaranteeTitle",
+      descKey: "whyChoose.serviceGuaranteeDesc"
+    },
+    {
+      icon: Clock,
+      titleKey: "whyChoose.alwaysOnlineTitle",
+      descKey: "whyChoose.alwaysOnlineDesc"
+    },
+  ];
+
   return (
     <section className="py-20 md:py-28 bg-gradient-to-b from-gray-50 to-white">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-5xl font-bold mb-4 tracking-tight text-gray-900">
-            为什么选择 LegalMY？
+            {t('whyChoose.title')}
           </h2>
           <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
-            我们致力于让法律服务更便捷、更透明、更可靠
+            {t('whyChoose.subtitle')}
           </p>
         </div>
 
@@ -61,10 +66,10 @@ export default function WhyChooseUs() {
                 </div>
                 
                 <h3 className="text-xl font-bold mb-3 text-gray-900">
-                  {feature.title}
+                  {t(feature.titleKey)}
                 </h3>
                 <p className="text-gray-600 leading-relaxed">
-                  {feature.description}
+                  {t(feature.descKey)}
                 </p>
               </div>
             );

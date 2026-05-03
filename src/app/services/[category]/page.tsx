@@ -1,24 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Link from "next/link";
 import { CheckCircle, ArrowLeft } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-
-// 生成静态路径
-export function generateStaticParams() {
-  return [
-    { category: 'debt' },
-    { category: 'family' },
-    { category: 'business' },
-    { category: 'property' },
-    { category: 'criminal' },
-    { category: 'employment' },
-    { category: 'ip' },
-  ];
-}
 
 // 服务详情数据（多语言）
 const serviceDetailsData: Record<string, any> = {
@@ -185,17 +173,17 @@ const processSteps: Record<string, { zh: string; en: string; ms: string }> = {
   protectionService: { zh: "维权服务 - 持续保护", en: "Protection Service - Continuous protection", ms: "Perkhidmatan Perlindungan - Perlindungan berterusan" },
 };
 
-export default function ServiceDetailPage({ params }: { params: Promise<{ category: string }> }) {
+export default function ServiceDetailPage() {
   const { t, language } = useLanguage();
-  const [category, setCategory] = useState<string>('');
+  const params = useParams();
   const [service, setService] = useState<any>(null);
 
   useEffect(() => {
-    params.then(p => {
-      const decodedCategory = decodeURIComponent(p.category);
-      setCategory(decodedCategory);
+    const category = params?.category as string;
+    if (category) {
+      const decodedCategory = decodeURIComponent(category);
       setService(serviceDetailsData[decodedCategory] || serviceDetailsData['family']);
-    });
+    }
   }, [params]);
 
   const getServiceName = (nameKey: string) => {
