@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>测试设置同步</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #333;
+      border-bottom: 2px solid #4CAF50;
+      padding-bottom: 10px;
+    }
+    .test-section {
+      margin: 20px 0;
+      padding: 15px;
+      background: #f9f9f9;
+      border-left: 4px solid #2196F3;
+    }
+    .success {
+      color: #4CAF50;
+      font-weight: bold;
+    }
+    .error {
+      color: #f44336;
+      font-weight: bold;
+    }
+    .info {
+      color: #2196F3;
+    }
+    button {
+      background: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    pre {
+      background: #263238;
+      color: #aed581;
+      padding: 15px;
+      border-radius: 5px;
+      overflow-x: auto;
+    }
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #3498db;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔍 网站设置同步诊断工具</h1>
+    
+    <div class="test-section">
+      <h3>📋 环境配置</h3>
+      <div id="env-check">检查中...</div>
+    </div>
+
+    <div class="test-section">
+      <h3>🗄️ 数据库连接</h3>
+      <div id="db-check">检查中...</div>
+    </div>
+
+    <div class="test-section">
+      <h3>📊 Settings表数据</h3>
+      <button onclick="checkSettings()">刷新检查</button>
+      <div id="settings-data">点击按钮检查...</div>
+    </div>
+
+    <div class="test-section">
+      <h3>✏️ 测试修改</h3>
+      <input type="text" id="test-name" placeholder="输入测试网站名称" style="padding: 8px; width: 300px;">
+      <button onclick="updateSettings()">保存测试</button>
+      <div id="update-result"></div>
+    </div>
+
+    <div class="test-section">
+      <h3>🔄 测试读取</h3>
+      <button onclick="readSettings()">读取设置</button>
+      <div id="read-result"></div>
+    </div>
+  </div>
+
+  <script>
+    // 从.env.local读取配置（需要手动填写）
+    const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+
+    let supabase;
+
+    // 初始化
+    window.onload = async function() {
+      // 检查环境配置
+      const envCheck = document.getElementById('env-check');
+      if (SUPABASE_URL === 'YOUR_SUPABASE_URL' || SUPABASE_ANON_KEY === 'YOUR_SUPABASE_ANON_KEY') {
+        envCheck.innerHTML = `
+          <p class="error">❌ 请先配置Supabase连接信息</p>
+          <p class="info">请打开此HTML文件，将以下信息填入代码中：</p>
+          <pre>
+SUPABASE_URL: 从 .env.local 中的 NEXT_PUBLIC_SUPABASE_URL
+SUPABASE_ANON_KEY: 从 .env.local 中的 NEXT_PUBLIC_SUPABASE_ANON_KEY
+          </pre>
+        `;
+        return;
+      }
+
+      envCheck.innerHTML = '<p class="success">✅ 环境配置已设置</p>';
+
+      // 初始化Supabase客户端
+      try {
+        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        document.getElementById('db-check').innerHTML = '<p class="success">✅ Supabase客户端初始化成功</p>';
+        
+        // 自动检查settings
+        await checkSettings();
+      } catch (error) {
+        document.getElementById('db-check').innerHTML = `<p class="error">❌ 初始化失败: ${error.message}</p>`;
+      }
+    };
+
+    async function checkSettings() {
+      const resultDiv = document.getElementById('settings-data');
+      resultDiv.innerHTML = '<div class="loading"></div> 检查中...';
+
+      try {
+        const { data, error } = await supabase
+          .from('settings')
+          .select('*')
+          .eq('key', 'site');
+
+        if (error) {
+          resultDiv.innerHTML = `<p class="error">❌ 查询失败: ${error.message}</p>`;
+          return;
+        }
+
+        if (!data || data.length === 0) {
+          resultDiv.innerHTML = `
+            <p class="error">❌ settings表中没有site记录</p>
+            <p class="info">可能原因：</p>
+            <ul>
+              <li>settings表不存在</li>
+              <li>数据没有插入</li>
+              <li>RLS策略阻止了读取</li>
+            </ul>
+          `;
+          return;
+        }
+
+        resultDiv.innerHTML = `
+          <p class="success">✅ 找到settings记录</p>
+          <pre>${JSON.stringify(data[0], null, 2)}</pre>
+        `;
+      } catch (error) {
+        resultDiv.innerHTML = `<p class="error">❌ 异常: ${error.message}</p>`;
+      }
+    }
+
+    async function updateSettings() {
+      const testName = document.getElementById('test-name').value;
+      if (!testName) {
+        alert('请输入测试网站名称');
+        return;
+      }
+
+      const resultDiv = document.getElementById('update-result');
+      resultDiv.innerHTML = '<div class="loading"></div> 保存中...';
+
+      try {
+        const { data, error } = await supabase
+          .from('settings')
+          .upsert({
+            key: 'site',
+            value: {
+              siteName: testName,
+              siteDescription: '测试描述',
+              contactEmail: 'test@example.com',
+              contactPhone: '+60 1-2345 6789',
+              defaultLanguage: 'zh'
+            }
+          }, { onConflict: 'key' });
+
+        if (error) {
+          resultDiv.innerHTML = `<p class="error">❌ 保存失败: ${error.message}</p>`;
+          return;
+        }
+
+        resultDiv.innerHTML = `
+          <p class="success">✅ 保存成功！</p>
+          <p class="info">现在刷新前端页面查看是否同步</p>
+        `;
+        
+        // 自动刷新检查
+        setTimeout(checkSettings, 1000);
+      } catch (error) {
+        resultDiv.innerHTML = `<p class="error">❌ 异常: ${error.message}</p>`;
+      }
+    }
+
+    async function readSettings() {
+      const resultDiv = document.getElementById('read-result');
+      resultDiv.innerHTML = '<div class="loading"></div> 读取中...';
+
+      try {
+        const { data, error } = await supabase
+          .from('settings')
+          .select('value')
+          .eq('key', 'site')
+          .single();
+
+        if (error) {
+          resultDiv.innerHTML = `<p class="error">❌ 读取失败: ${error.message}</p>`;
+          return;
+        }
+
+        if (data && data.value) {
+          resultDiv.innerHTML = `
+            <p class="success">✅ 读取成功</p>
+            <pre>${JSON.stringify(data.value, null, 2)}</pre>
+            <p class="info">这就是前端应该显示的数据</p>
+          `;
+        } else {
+          resultDiv.innerHTML = `<p class="error">❌ 没有数据</p>`;
+        }
+      } catch (error) {
+        resultDiv.innerHTML = `<p class="error">❌ 异常: ${error.message}</p>`;
+      }
+    }
+  </script>
+</body>
+</html>

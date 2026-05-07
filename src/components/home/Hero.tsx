@@ -3,9 +3,41 @@
 import Link from "next/link";
 import { Search, Shield, Clock, Award, ChevronRight, ShoppingCart, Heart } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useEffect, useState } from "react";
 
 export default function Hero() {
   const { t } = useLanguage();
+  const [pricing, setPricing] = useState<any>(null);
+
+  // 从 API 获取租户配置
+  useEffect(() => {
+    fetch('/api/public/tenant-config')
+      .then(res => res.json())
+      .then(data => {
+        if (data.pricing) {
+          setPricing(data.pricing);
+        }
+      })
+      .catch(err => console.error('获取配置失败:', err));
+  }, []);
+
+  // 获取咨询价格（基础咨询）
+  const getConsultationPrice = () => {
+    if (!pricing?.consultation?.basic?.price) return 'RM 99';
+    const price = pricing.consultation.basic.price;
+    const currency = pricing.currency || 'MYR';
+    const currencySymbol = currency === 'MYR' ? 'RM' : currency === 'USD' ? '$' : currency === 'SGD' ? 'S$' : '¥';
+    return `${currencySymbol} ${price}`;
+  };
+
+  // 获取合同审核价格
+  const getReviewPrice = () => {
+    if (!pricing?.documents?.contractReview?.price) return 'RM 299';
+    const price = pricing.documents.contractReview.price;
+    const currency = pricing.currency || 'MYR';
+    const currencySymbol = currency === 'MYR' ? 'RM' : currency === 'USD' ? '$' : currency === 'SGD' ? 'S$' : '¥';
+    return `${currencySymbol} ${price}`;
+  };
   return (
     <section className="relative bg-gradient-to-br from-primary-600 via-primary-500 to-primary-400 text-white overflow-hidden">
       <div className="container mx-auto px-6 py-6 md:py-10">
@@ -57,7 +89,7 @@ export default function Hero() {
               <div className="relative z-10">
                 <div className="text-accent-400 text-xs font-bold mb-0.5 md:mb-1">💬 {t('common.consultation')}</div>
                 <h3 className="text-base md:text-lg font-bold mb-0.5 md:mb-1">{t('home.onlineLawyerConsultation')}</h3>
-                <p className="text-xs text-white/90 mb-1.5 md:mb-2">RM 99 {t('home.consultationFrom')}</p>
+                <p className="text-xs text-white/90 mb-1.5 md:mb-2">{getConsultationPrice()} {t('home.consultationFrom')}</p>
                 <Link href="/consultation" className="inline-flex items-center gap-1 bg-white text-blue-600 px-2 md:px-3 py-1 md:py-1.5 rounded-lg font-bold text-xs hover:bg-neutral-100 transition-all">
                   {t('home.consultNow')}
                   <ChevronRight className="h-3 w-3" />
@@ -71,7 +103,7 @@ export default function Hero() {
               <div className="relative z-10">
                 <div className="text-accent-400 text-xs font-bold mb-0.5 md:mb-1">✅ {t('home.contractReview')}</div>
                 <h3 className="text-base md:text-lg font-bold mb-0.5 md:mb-1">{t('home.contractReview')}</h3>
-                <p className="text-xs text-white/90 mb-1.5 md:mb-2">RM 299 {t('home.reviewFrom')}</p>
+                <p className="text-xs text-white/90 mb-1.5 md:mb-2">{getReviewPrice()} {t('home.reviewFrom')}</p>
                 <Link href="/review" className="inline-flex items-center gap-1 bg-white text-purple-600 px-2 md:px-3 py-1 md:py-1.5 rounded-lg font-bold text-xs hover:bg-neutral-100 transition-all">
                   {t('home.submitReview')}
                   <ChevronRight className="h-3 w-3" />

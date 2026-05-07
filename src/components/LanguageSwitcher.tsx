@@ -10,7 +10,8 @@ export default function LanguageSwitcher() {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const languages = [
-    { code: 'zh' as const, name: '中文', flag: '🇨🇳' },
+    { code: 'tc' as const, name: '繁體中文', flag: '🇭🇰' },
+    { code: 'zh' as const, name: '简体中文', flag: '🇨🇳' },
     { code: 'en' as const, name: 'English', flag: '🇬🇧' },
     { code: 'ms' as const, name: 'Bahasa', flag: '🇲🇾' },
   ];

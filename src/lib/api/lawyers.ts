@@ -1,4 +1,4 @@
-// 马来西亚律师API
+// Malaysia Lawyers API
 export interface Lawyer {
   id: string;
   name: string;
@@ -29,24 +29,24 @@ export interface LawyerSpecialty {
   icon: string;
 }
 
-// 马来西亚律师专业领域
+// Malaysia Lawyer Specialties
 export const lawyerSpecialties: LawyerSpecialty[] = [
-  { id: 'family', name: 'Family Law', nameMs: 'Undang-undang Keluarga', nameCn: '家庭法', lawyerCount: 234, icon: '👨‍👩‍👧' },
-  { id: 'business', name: 'Business Law', nameMs: 'Undang-undang Perniagaan', nameCn: '商业法', lawyerCount: 312, icon: '💼' },
-  { id: 'property', name: 'Property Law', nameMs: 'Undang-undang Hartanah', nameCn: '房产法', lawyerCount: 198, icon: '🏠' },
-  { id: 'criminal', name: 'Criminal Law', nameMs: 'Undang-undang Jenayah', nameCn: '刑法', lawyerCount: 156, icon: '⚖️' },
-  { id: 'employment', name: 'Employment Law', nameMs: 'Undang-undang Pekerjaan', nameCn: '劳动法', lawyerCount: 187, icon: '👔' },
-  { id: 'ip', name: 'Intellectual Property', nameMs: 'Harta Intelek', nameCn: '知识产权', lawyerCount: 89, icon: '💡' },
+  { id: 'family', name: 'Family Law', nameMs: 'Undang-undang Keluarga', nameCn: 'Family Law', lawyerCount: 234, icon: '👨‍👩‍👧' },
+  { id: 'business', name: 'Business Law', nameMs: 'Undang-undang Perniagaan', nameCn: 'Business Law', lawyerCount: 312, icon: '💼' },
+  { id: 'property', name: 'Property Law', nameMs: 'Undang-undang Hartanah', nameCn: 'Property Law', lawyerCount: 198, icon: '🏠' },
+  { id: 'criminal', name: 'Criminal Law', nameMs: 'Undang-undang Jenayah', nameCn: 'Criminal Law', lawyerCount: 156, icon: '⚖️' },
+  { id: 'employment', name: 'Employment Law', nameMs: 'Undang-undang Pekerjaan', nameCn: 'Employment Law', lawyerCount: 187, icon: '👔' },
+  { id: 'ip', name: 'Intellectual Property', nameMs: 'Harta Intelek', nameCn: 'IP Law', lawyerCount: 89, icon: '💡' },
 ];
 
-// 马来西亚州属
+// Malaysian States
 export const malaysianStates = [
   'Kuala Lumpur', 'Selangor', 'Penang', 'Johor', 'Perak', 'Kedah', 
   'Kelantan', 'Terengganu', 'Pahang', 'Negeri Sembilan', 'Melaka', 
   'Sabah', 'Sarawak', 'Perlis', 'Putrajaya', 'Labuan'
 ];
 
-// 模拟马来西亚律师数据
+// Mock Malaysia Lawyers Data
 const mockLawyers: Lawyer[] = [
   {
     id: 'law-001',
@@ -57,7 +57,7 @@ const mockLawyers: Lawyer[] = [
     location: 'Kuala Lumpur',
     state: 'Kuala Lumpur',
     experience: 15,
-    responseTime: '1小时',
+    responseTime: '1 hour',
     available: true,
     priceRange: 'RM 500-1000',
     soldCount: 156,
@@ -76,7 +76,7 @@ const mockLawyers: Lawyer[] = [
     location: 'Penang',
     state: 'Penang',
     experience: 12,
-    responseTime: '2小时',
+    responseTime: '2 hours',
     available: true,
     priceRange: 'RM 400-800',
     soldCount: 203,
@@ -95,7 +95,7 @@ const mockLawyers: Lawyer[] = [
     location: 'Johor Bahru',
     state: 'Johor',
     experience: 18,
-    responseTime: '30分钟',
+    responseTime: '30 minutes',
     available: false,
     priceRange: 'RM 600-1200',
     soldCount: 178,
@@ -107,14 +107,14 @@ const mockLawyers: Lawyer[] = [
   },
   {
     id: 'law-004',
-    name: '李明 (Lee Ming)',
+    name: 'Lee Ming',
     specialty: ['Business Law', 'IP Law'],
     rating: 4.7,
     reviews: 142,
     location: 'Kuala Lumpur',
     state: 'Kuala Lumpur',
     experience: 10,
-    responseTime: '1小时',
+    responseTime: '1 hour',
     available: true,
     priceRange: 'RM 400-900',
     soldCount: 142,
@@ -133,7 +133,7 @@ const mockLawyers: Lawyer[] = [
     location: 'Selangor',
     state: 'Selangor',
     experience: 14,
-    responseTime: '2小时',
+    responseTime: '2 hours',
     available: true,
     priceRange: 'RM 500-1000',
     soldCount: 189,
@@ -152,7 +152,7 @@ const mockLawyers: Lawyer[] = [
     location: 'Penang',
     state: 'Penang',
     experience: 16,
-    responseTime: '1.5小时',
+    responseTime: '1.5 hours',
     available: true,
     priceRange: 'RM 600-1100',
     soldCount: 165,
@@ -171,7 +171,7 @@ const mockLawyers: Lawyer[] = [
     location: 'Kuala Lumpur',
     state: 'Kuala Lumpur',
     experience: 11,
-    responseTime: '3小时',
+    responseTime: '3 hours',
     available: true,
     priceRange: 'RM 800-1500',
     soldCount: 134,
@@ -190,7 +190,7 @@ const mockLawyers: Lawyer[] = [
     location: 'Selangor',
     state: 'Selangor',
     experience: 9,
-    responseTime: '2小时',
+    responseTime: '2 hours',
     available: true,
     priceRange: 'RM 400-800',
     soldCount: 121,
@@ -202,7 +202,7 @@ const mockLawyers: Lawyer[] = [
   },
 ];
 
-// 获取律师列表
+// Fetch lawyers list
 export async function fetchLawyers(filters?: {
   specialty?: string;
   location?: string;
@@ -233,13 +233,13 @@ export async function fetchLawyers(filters?: {
   return filtered;
 }
 
-// 获取单个律师详情
+// Fetch single lawyer details
 export async function fetchLawyerById(id: string): Promise<Lawyer | null> {
   await new Promise(resolve => setTimeout(resolve, 300));
   return mockLawyers.find(l => l.id === id) || null;
 }
 
-// 搜索律师
+// Search lawyers
 export async function searchLawyers(query: string): Promise<Lawyer[]> {
   await new Promise(resolve => setTimeout(resolve, 400));
   const lowerQuery = query.toLowerCase();
@@ -250,7 +250,7 @@ export async function searchLawyers(query: string): Promise<Lawyer[]> {
   );
 }
 
-// 获取热门律师
+// Fetch top lawyers
 export async function fetchTopLawyers(limit: number = 6): Promise<Lawyer[]> {
   await new Promise(resolve => setTimeout(resolve, 300));
   return [...mockLawyers]

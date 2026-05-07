@@ -1,174 +1,158 @@
-// 用户评价API
+// User Reviews API
 export interface UserReview {
   id: string;
-  lawyerId: string;
+  userName: string;
+  userAvatar?: string;
   lawyerName: string;
   lawyerSpecialty: string;
-  userId: string;
-  userName: string;
-  rating: number;
   title: string;
   content: string;
-  helpful: number;
-  verified: boolean;
+  rating: number;
+  comment: string;
   date: string;
-  images?: string[];
+  location: string;
+  serviceType: string;
+  verified: boolean;
 }
 
-// 模拟用户评价数据
+// Mock user reviews
 const mockReviews: UserReview[] = [
   {
     id: 'rev-001',
-    lawyerId: 'law-001',
-    lawyerName: 'Ahmad Abdullah',
-    lawyerSpecialty: '商业法',
-    userId: 'user-001',
-    userName: '张先生',
+    userName: 'Ahmad Ismail',
+    lawyerName: 'Dato\' Ahmad bin Abdullah',
+    lawyerSpecialty: 'Property Law',
+    title: 'Excellent Property Law Service',
+    content: 'The lawyer was very professional and helped me resolve my property dispute quickly. Highly recommended!',
     rating: 5,
-    title: '非常专业的律师，帮我解决了公司合同问题',
-    content: '响应速度快，专业知识过硬，给出的建议非常实用。价格也很合理，强烈推荐！整个咨询过程非常顺畅，律师耐心解答了我所有的疑问。',
-    helpful: 234,
+    comment: 'Excellent service! The lawyer was very professional and helped me resolve my property dispute quickly.',
+    date: '2024-01-20',
+    location: 'Kuala Lumpur',
+    serviceType: 'Property Law',
     verified: true,
-    date: '2024-01-15',
   },
   {
     id: 'rev-002',
-    lawyerId: 'law-002',
-    lawyerName: 'Sarah Wong',
-    lawyerSpecialty: '家庭法',
-    userId: 'user-002',
-    userName: '李女士',
+    userName: 'Sarah Tan',
+    lawyerName: 'Puan Siti Nurhaliza',
+    lawyerSpecialty: 'Family Law',
+    title: 'Professional Family Law Consultation',
+    content: 'Very satisfied with the legal consultation. Clear explanations and reasonable pricing. Would definitely recommend.',
     rating: 5,
-    title: '在困难时期得到了专业的法律支持',
-    content: '律师非常有耐心，详细解释了每一个法律程序。让我在离婚过程中感到被理解和支持。非常感谢她的帮助。',
-    helpful: 189,
+    comment: 'Very satisfied with the legal consultation. Clear explanations and reasonable pricing.',
+    date: '2024-01-18',
+    location: 'Penang',
+    serviceType: 'Family Law',
     verified: true,
-    date: '2024-01-14',
   },
   {
     id: 'rev-003',
-    lawyerId: 'law-003',
-    lawyerName: 'Kumar Rajesh',
-    lawyerSpecialty: '房产法',
-    userId: 'user-003',
-    userName: 'Ahmad',
+    userName: 'Kumar Raj',
+    lawyerName: 'Mr. Rajesh Kumar',
+    lawyerSpecialty: 'Business Law',
+    title: 'Knowledgeable Business Lawyer',
+    content: 'Good experience overall. The lawyer was knowledgeable and responsive to all my business law queries.',
     rating: 4,
-    title: '房产纠纷得到妥善解决',
-    content: '律师的谈判技巧很强，最终以满意的价格完成了房产交易。整个过程透明高效，值得信赖。',
-    helpful: 156,
+    comment: 'Good experience overall. The lawyer was knowledgeable and responsive.',
+    date: '2024-01-15',
+    location: 'Johor',
+    serviceType: 'Business Law',
     verified: true,
-    date: '2024-01-13',
   },
   {
     id: 'rev-004',
-    lawyerId: 'law-002',
-    lawyerName: 'Tan Mei Ling',
-    lawyerSpecialty: '家庭法',
-    userId: 'user-004',
-    userName: '王女士',
+    userName: 'Nurul Huda',
+    lawyerName: 'Puan Nurul Izzah',
+    lawyerSpecialty: 'Employment Law',
+    title: 'Great Employment Law Service',
+    content: 'Highly recommend! Professional service and great results. Helped me with my employment dispute efficiently.',
     rating: 5,
-    title: '完全超出预期的服务质量',
-    content: '不仅解决了法律问题，还给了我很多生活建议。这样的律师真的很难找到。非常感谢！',
-    helpful: 267,
-    verified: true,
+    comment: 'Highly recommend! Professional service and great results.',
     date: '2024-01-12',
+    location: 'Selangor',
+    serviceType: 'Employment Law',
+    verified: true,
   },
   {
     id: 'rev-005',
-    lawyerId: 'law-004',
-    lawyerName: '李明',
-    lawyerSpecialty: '商业法',
-    userId: 'user-005',
-    userName: 'David Tan',
+    userName: 'David Wong',
+    lawyerName: 'Mr. Wong Kah Wai',
+    lawyerSpecialty: 'Corporate Law',
+    title: 'Outstanding Corporate Legal Advice',
+    content: 'Outstanding legal advice. Very helpful and patient in explaining complex legal matters. Excellent service!',
     rating: 5,
-    title: '创业者的最佳法律顾问',
-    content: '从公司注册到合同审查，全程指导。价格透明，没有隐藏费用，非常信任。推荐给所有创业者。',
-    helpful: 198,
+    comment: 'Outstanding legal advice. Very helpful and patient in explaining complex legal matters.',
+    date: '2024-01-10',
+    location: 'Kuala Lumpur',
+    serviceType: 'Corporate Law',
     verified: true,
-    date: '2024-01-11',
   },
   {
     id: 'rev-006',
-    lawyerId: 'law-008',
-    lawyerName: 'David Tan',
-    lawyerSpecialty: '劳动法',
-    userId: 'user-006',
-    userName: 'Kumar',
+    userName: 'Fatimah Ali',
+    lawyerName: 'Puan Fatimah binti Ali',
+    lawyerSpecialty: 'Property Law',
+    title: 'Fair and Professional Service',
+    content: 'Good service and fair pricing. Would use again for future property matters. Very satisfied with the outcome.',
     rating: 4,
-    title: '劳动纠纷处理得很专业',
-    content: '律师既懂法律又理解商业运作，给出的建议既合法又实用。推荐给其他企业主。',
-    helpful: 142,
-    verified: true,
-    date: '2024-01-10',
-  },
-  {
-    id: 'rev-007',
-    lawyerId: 'law-005',
-    lawyerName: 'Sarah Wong',
-    lawyerSpecialty: '家庭法',
-    userId: 'user-007',
-    userName: '陈先生',
-    rating: 5,
-    title: '专业且富有同理心的律师',
-    content: '在处理家庭纠纷时，律师展现了极高的专业素养和同理心。帮助我们达成了双方都满意的协议。',
-    helpful: 223,
-    verified: true,
-    date: '2024-01-09',
-  },
-  {
-    id: 'rev-008',
-    lawyerId: 'law-006',
-    lawyerName: 'Raj Kumar',
-    lawyerSpecialty: '房产法',
-    userId: 'user-008',
-    userName: 'Siti',
-    rating: 5,
-    title: '房产交易顺利完成',
-    content: '律师对房产法非常熟悉，帮我避免了很多潜在的法律风险。整个交易过程非常顺利。',
-    helpful: 178,
-    verified: true,
+    comment: 'Good service and fair pricing. Would use again.',
     date: '2024-01-08',
+    location: 'Melaka',
+    serviceType: 'Property Law',
+    verified: true,
   },
 ];
 
-// 获取所有评价
-export async function fetchReviews(lawyerId?: string, limit?: number): Promise<UserReview[]> {
+// Fetch all reviews
+export async function fetchReviews(limit?: number): Promise<UserReview[]> {
   await new Promise(resolve => setTimeout(resolve, 500));
   
-  let filtered = mockReviews;
-  
-  if (lawyerId) {
-    filtered = filtered.filter(r => r.lawyerId === lawyerId);
-  }
-  
   if (limit) {
-    filtered = filtered.slice(0, limit);
+    return mockReviews.slice(0, limit);
   }
   
-  return filtered;
+  return mockReviews;
 }
 
-// 获取单个评价
-export async function fetchReviewById(id: string): Promise<UserReview | null> {
-  await new Promise(resolve => setTimeout(resolve, 300));
-  return mockReviews.find(r => r.id === id) || null;
+// Fetch reviews by service type
+export async function fetchReviewsByService(serviceType: string): Promise<UserReview[]> {
+  await new Promise(resolve => setTimeout(resolve, 400));
+  return mockReviews.filter(r => r.serviceType === serviceType);
 }
 
-// 获取热门评价
+// Calculate average rating
+export function calculateAverageRating(reviews: UserReview[]): number {
+  if (reviews.length === 0) return 0;
+  const sum = reviews.reduce((acc, review) => acc + review.rating, 0);
+  return sum / reviews.length;
+}
+
+// Fetch top reviews
 export async function fetchTopReviews(limit: number = 6): Promise<UserReview[]> {
   await new Promise(resolve => setTimeout(resolve, 300));
-  return [...mockReviews]
-    .sort((a, b) => b.helpful - a.helpful)
+  return mockReviews
+    .sort((a, b) => b.rating - a.rating)
     .slice(0, limit);
 }
 
-// 获取评价统计
-export async function fetchReviewStats() {
+// Fetch review statistics
+export interface ReviewStats {
+  totalReviews: number;
+  averageRating: number;
+  ratingDistribution: {
+    5: number;
+    4: number;
+    3: number;
+    2: number;
+    1: number;
+  };
+}
+
+export async function fetchReviewStats(): Promise<ReviewStats> {
   await new Promise(resolve => setTimeout(resolve, 300));
   
   const totalReviews = mockReviews.length;
-  const averageRating = mockReviews.reduce((sum, r) => sum + r.rating, 0) / totalReviews;
-  const verifiedCount = mockReviews.filter(r => r.verified).length;
+  const averageRating = calculateAverageRating(mockReviews);
   
   const ratingDistribution = {
     5: mockReviews.filter(r => r.rating === 5).length,
@@ -180,8 +164,7 @@ export async function fetchReviewStats() {
   
   return {
     totalReviews,
-    averageRating: Math.round(averageRating * 10) / 10,
-    verifiedCount,
+    averageRating,
     ratingDistribution,
   };
 }

@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { FaGavel, FaBars, FaTimes, FaUser } from "react-icons/fa";
+import { FaGavel, FaBars, FaTimes } from "react-icons/fa";
+import { useSiteSettings } from "@/contexts/SiteSettingsContext";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { settings, loading } = useSiteSettings();
 
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50">
@@ -13,8 +15,18 @@ export default function Header() {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            <FaGavel className="text-primary-600 text-2xl" />
-            <span className="text-xl font-bold text-gray-900">MyLegal</span>
+            {settings.logoUrl ? (
+              <img 
+                src={settings.logoUrl} 
+                alt={settings.siteName}
+                className="h-10 w-auto object-contain"
+              />
+            ) : (
+              <>
+                <FaGavel className="text-primary-600 text-2xl" />
+                <span className="text-xl font-bold text-gray-900">{settings.siteName}</span>
+              </>
+            )}
           </Link>
 
           {/* Desktop Navigation */}

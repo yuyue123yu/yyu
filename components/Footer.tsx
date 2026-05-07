@@ -1,7 +1,12 @@
+"use client";
+
 import Link from "next/link";
 import { FaGavel, FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
+import { useSiteSettings } from "@/contexts/SiteSettingsContext";
 
 export default function Footer() {
+  const { settings } = useSiteSettings();
+
   return (
     <footer className="bg-gray-900 text-gray-400 text-sm">
       <div className="container mx-auto px-4 py-12">
@@ -9,12 +14,36 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <div className="flex items-center space-x-2 mb-3">
-              <FaGavel className="text-primary-400 text-lg" />
-              <span className="text-lg font-bold text-white">MyLegal</span>
+              {settings.logoUrl ? (
+                <img 
+                  src={settings.logoUrl} 
+                  alt={settings.siteName}
+                  className="h-8 w-auto object-contain brightness-0 invert"
+                />
+              ) : (
+                <>
+                  <FaGavel className="text-primary-400 text-lg" />
+                  <span className="text-lg font-bold text-white">{settings.siteName}</span>
+                </>
+              )}
             </div>
             <p className="text-xs leading-relaxed">
-              马来西亚在线法律咨询平台
+              {settings.siteDescription}
             </p>
+            <div className="mt-4 space-y-1">
+              <p className="text-xs">
+                <span className="text-white">邮箱：</span>
+                <a href={`mailto:${settings.contactEmail}`} className="hover:text-primary-400 transition-colors">
+                  {settings.contactEmail}
+                </a>
+              </p>
+              <p className="text-xs">
+                <span className="text-white">电话：</span>
+                <a href={`tel:${settings.contactPhone}`} className="hover:text-primary-400 transition-colors">
+                  {settings.contactPhone}
+                </a>
+              </p>
+            </div>
           </div>
 
           {/* Quick Links */}
@@ -49,7 +78,7 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-gray-800 pt-8 text-center text-xs">
-          <p>&copy; 2026 MyLegal. 保留所有权利。</p>
+          <p>&copy; 2026 {settings.siteName}. 保留所有权利。</p>
           <p className="mt-2">符合马来西亚个人数据保护法（PDPA）</p>
         </div>
       </div>

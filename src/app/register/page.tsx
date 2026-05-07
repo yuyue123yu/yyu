@@ -4,13 +4,20 @@ import { useState } from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Link from "next/link";
-import { Mail, Lock, User, Phone, Eye, EyeOff } from "lucide-react";
+import { Mail, Lock, User, Phone, Eye, EyeOff, AlertCircle, CheckCircle } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { useRouter } from "next/navigation";
 
 export default function RegisterPage() {
   const { t, language } = useLanguage();
+  const { signUp, loading: authLoading } = useAuth();
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -21,21 +28,48 @@ export default function RegisterPage() {
     agree: false,
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
     
     if (formData.password !== formData.confirmPassword) {
-      alert(t('auth.passwordMismatch'));
+      setError(t('auth.passwordMismatch') || 'Passwords do not match');
       return;
     }
     
     if (!formData.agree) {
-      alert(t('auth.agreeToTermsRequired'));
+      setError(t('auth.agreeToTermsRequired') || 'You must agree to the terms');
+      return;
+    }
+
+    if (formData.password.length < 8) {
+      setError(t('auth.passwordTooShort') || 'Password must be at least 8 characters');
       return;
     }
     
-    alert(t('auth.registerDemo'));
-    console.log("Register data:", formData);
+    setLoading(true);
+
+    try {
+      const { error } = await signUp(
+        formData.email,
+        formData.password,
+        formData.name,
+        formData.phone
+      );
+      
+      if (error) {
+        setError(error.message);
+      } else {
+        setSuccess(true);
+        setTimeout(() => {
+          router.push('/login');
+        }, 2000);
+      }
+    } catch (err) {
+      setError('An unexpected error occurred');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -58,6 +92,24 @@ export default function RegisterPage() {
 
               {/* Form */}
               <form onSubmit={handleSubmit} className="space-y-5">
+                {/* Error Message */}
+                {error && (
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
+                    <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
+                    <div className="text-sm text-red-800">{error}</div>
+                  </div>
+                )}
+
+                {/* Success Message */}
+                {success && (
+                  <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-start gap-3">
+                    <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                    <div className="text-sm text-green-800">
+                      {t('auth.registerSuccess') || 'Registration successful! Redirecting to login...'}
+                    </div>
+                  </div>
+                )}
+
                 {/* User Type */}
                 <div>
                   <label className="block text-sm font-medium text-neutral-700 mb-2">
@@ -220,9 +272,10 @@ export default function RegisterPage() {
                 {/* Submit Button */}
                 <button
                   type="submit"
-                  className="w-full bg-primary-600 hover:bg-primary-700 text-white py-3 rounded-lg font-semibold transition-all"
+                  disabled={loading || authLoading || success}
+                  className="w-full bg-primary-600 hover:bg-primary-700 disabled:bg-neutral-400 disabled:cursor-not-allowed text-white py-3 rounded-lg font-semibold transition-all"
                 >
-                  {t('auth.registerButton')}
+                  {loading ? t('common.loading') : success ? t('auth.registerSuccess') : t('auth.registerButton')}
                 </button>
               </form>
 

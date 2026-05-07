@@ -5,10 +5,12 @@ import { useState } from "react";
 import { Menu, X, Scale, Phone } from "lucide-react";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useSiteSettings } from "@/contexts/SiteSettingsContext";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { t } = useLanguage();
+  const { settings } = useSiteSettings();
 
   return (
     <header className="bg-white border-b border-neutral-200 sticky top-0 z-50 shadow-sm">
@@ -17,7 +19,7 @@ export default function Header() {
           <div className="flex items-center gap-6">
             <span className="flex items-center gap-2">
               <Phone className="h-4 w-4" />
-              24/7 {t('common.contact')}: +60 3-1234 5678
+              24/7 {t('common.contact')}: {settings.contactPhone}
             </span>
           </div>
           <div className="hidden md:flex items-center gap-4">
@@ -41,9 +43,9 @@ export default function Header() {
             </div>
             <div>
               <span className="text-2xl font-bold text-primary-700 tracking-tight">
-                LegalMY
+                {settings.siteName}
               </span>
-              <p className="text-xs text-neutral-500">{t('home.heroTitle')}</p>
+              <p className="text-xs text-neutral-500">{settings.siteDescription}</p>
             </div>
           </Link>
 

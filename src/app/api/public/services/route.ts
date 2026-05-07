@@ -1,0 +1,59 @@
+import { createClient } from '@/lib/supabase/server';
+import { getTenantId } from '@/lib/tenant';
+import { NextResponse } from 'next/server';
+
+/**
+ * 公開的服務列表 API
+ * 不需要登錄即可訪問
+ * 用於前台頁面顯示服務列表
+ * 
+ * GET /api/public/services
+ */
+export async function GET(request: Request) {
+  try {
+    const supabase = await createClient();
+
+    // 從 Middleware 獲取租戶 ID（基於域名識別）
+    const tenantId = await getTenantId();
+
+    if (!tenantId) {
+      console.error('未找到租戶');
+      return NextResponse.json(
+        { error: '未找到租戶' },
+        { status: 404 }
+      );
+    }
+
+    // 獲取活躍的服務列表
+    const { data: services, error: servicesError } = await supabase
+      .from('services')
+      .select('*')
+      .eq('tenant_id', tenantId)
+      .eq('is_active', true)
+      .order('display_order', { ascending: true });
+
+    if (servicesError) {
+      console.error('獲取服務列表失敗:', servicesError);
+      return NextResponse.json(
+        { error: '獲取服務列表失敗' },
+        { status: 500 }
+      );
+    }
+
+    // 返回服務列表（添加緩存頭）
+    return NextResponse.json(
+      { services: services || [] },
+      {
+        headers: {
+          'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+        },
+      }
+    );
+  } catch (error) {
+    console.error('獲取服務列表失敗:', error);
+    return NextResponse.json(
+      { error: '服務器錯誤' },
+      { status: 500 }
+    );
+  }
+}

@@ -5,9 +5,12 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { MessageCircle, Clock, CheckCircle, Star, Send } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { createClient } from "@/lib/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function ConsultationPage() {
   const { t } = useLanguage();
+  const { user } = useAuth();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -16,15 +19,48 @@ export default function ConsultationPage() {
     description: "",
   });
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
-    setTimeout(() => {
-      alert(t('consultation.successMessage'));
+    setError(null);
+    setSuccess(false);
+
+    const supabase = await createClient();
+
+    try {
+      const { error: insertError } = await supabase
+        .from('consultations')
+        .insert([
+          {
+            client_id: user?.id || null,
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone,
+            consultation_type: formData.category,
+            case_description: formData.description,
+            status: 'pending'
+          }
+        ]);
+
+      if (insertError) throw insertError;
+
+      setSuccess(true);
       setFormData({ name: "", email: "", phone: "", category: "", description: "" });
+      
+      // 显示成功消息3秒后隐藏
+      setTimeout(() => {
+        setSuccess(false);
+      }, 3000);
+
+    } catch (err: any) {
+      console.error('Error submitting consultation:', err);
+      setError(err.message || '提交失败，请重试');
+    } finally {
       setSubmitted(false);
-    }, 1000);
+    }
   };
 
   return (
@@ -71,6 +107,27 @@ export default function ConsultationPage() {
                     <h2 className="text-2xl font-bold text-neutral-900 mb-6">
                       {t('pages.submitRequest')}
                     </h2>
+
+                    {/* Success Message */}
+                    {success && (
+                      <div className="mb-6 bg-green-50 border border-green-200 rounded-lg p-4 flex items-start gap-3">
+                        <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                        <div>
+                          <div className="text-sm font-medium text-green-800">提交成功！</div>
+                          <div className="text-sm text-green-700 mt-1">
+                            我们已收到您的咨询请求，律师将在30分钟内与您联系。
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Error Message */}
+                    {error && (
+                      <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
+                        <div className="text-sm text-red-800">{error}</div>
+                      </div>
+                    )}
+
                     <form onSubmit={handleSubmit} className="space-y-6">
                       <div>
                         <label className="block text-sm font-medium text-neutral-700 mb-2">

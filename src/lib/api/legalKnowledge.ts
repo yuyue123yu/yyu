@@ -1,4 +1,4 @@
-// 马来西亚法律知识库API
+// Malaysia Legal Knowledge API
 export interface LegalArticle {
   id: string;
   title: string;
@@ -24,25 +24,25 @@ export interface KnowledgeCategory {
   icon: string;
 }
 
-// 马来西亚法律知识分类
+// Malaysia Legal Knowledge Categories
 export const knowledgeCategories: KnowledgeCategory[] = [
-  { id: 'employment', name: 'Employment Law', nameMs: 'Undang-undang Pekerjaan', nameCn: '劳动法', articleCount: 156, icon: '👔' },
-  { id: 'property', name: 'Property Law', nameMs: 'Undang-undang Hartanah', nameCn: '房产法', articleCount: 142, icon: '🏠' },
-  { id: 'family', name: 'Family Law', nameMs: 'Undang-undang Keluarga', nameCn: '家庭法', articleCount: 98, icon: '👨‍👩‍👧' },
-  { id: 'business', name: 'Business Law', nameMs: 'Undang-undang Perniagaan', nameCn: '商业法', articleCount: 203, icon: '💼' },
-  { id: 'criminal', name: 'Criminal Law', nameMs: 'Undang-undang Jenayah', nameCn: '刑法', articleCount: 87, icon: '⚖️' },
-  { id: 'consumer', name: 'Consumer Rights', nameMs: 'Hak Pengguna', nameCn: '消费者权益', articleCount: 76, icon: '🛒' },
-  { id: 'immigration', name: 'Immigration Law', nameMs: 'Undang-undang Imigresen', nameCn: '移民法', articleCount: 54, icon: '✈️' },
-  { id: 'tax', name: 'Tax Law', nameMs: 'Undang-undang Cukai', nameCn: '税法', articleCount: 92, icon: '💰' },
+  { id: 'employment', name: 'Employment Law', nameMs: 'Undang-undang Pekerjaan', nameCn: 'Employment Law', articleCount: 156, icon: '👔' },
+  { id: 'property', name: 'Property Law', nameMs: 'Undang-undang Hartanah', nameCn: 'Property Law', articleCount: 142, icon: '🏠' },
+  { id: 'family', name: 'Family Law', nameMs: 'Undang-undang Keluarga', nameCn: 'Family Law', articleCount: 98, icon: '👨‍👩‍👧' },
+  { id: 'business', name: 'Business Law', nameMs: 'Undang-undang Perniagaan', nameCn: 'Business Law', articleCount: 203, icon: '💼' },
+  { id: 'criminal', name: 'Criminal Law', nameMs: 'Undang-undang Jenayah', nameCn: 'Criminal Law', articleCount: 87, icon: '⚖️' },
+  { id: 'consumer', name: 'Consumer Rights', nameMs: 'Hak Pengguna', nameCn: 'Consumer Rights', articleCount: 76, icon: '🛒' },
+  { id: 'immigration', name: 'Immigration Law', nameMs: 'Undang-undang Imigresen', nameCn: 'Immigration Law', articleCount: 54, icon: '✈️' },
+  { id: 'tax', name: 'Tax Law', nameMs: 'Undang-undang Cukai', nameCn: 'Tax Law', articleCount: 92, icon: '💰' },
 ];
 
-// 模拟马来西亚法律知识文章
+// Mock Malaysia Legal Knowledge Articles
 const mockArticles: LegalArticle[] = [
   {
     id: 'art-001',
     title: 'Understanding the Employment Act 1955 in Malaysia',
     titleMs: 'Memahami Akta Kerja 1955 di Malaysia',
-    titleCn: '了解马来西亚1955年雇佣法',
+    titleCn: 'Understanding Employment Act 1955',
     category: 'employment',
     summary: 'A comprehensive guide to employee rights and employer obligations under Malaysian law',
     content: 'The Employment Act 1955 is the main legislation governing employment in Malaysia...',
@@ -57,7 +57,7 @@ const mockArticles: LegalArticle[] = [
     id: 'art-002',
     title: 'Property Ownership Rights in Malaysia',
     titleMs: 'Hak Pemilikan Hartanah di Malaysia',
-    titleCn: '马来西亚的房产所有权',
+    titleCn: 'Property Ownership Rights',
     category: 'property',
     summary: 'Learn about property ownership, transfer procedures, and legal requirements',
     content: 'Property ownership in Malaysia is governed by the National Land Code 1965...',
@@ -72,7 +72,7 @@ const mockArticles: LegalArticle[] = [
     id: 'art-003',
     title: 'Divorce Procedures in Malaysia',
     titleMs: 'Prosedur Perceraian di Malaysia',
-    titleCn: '马来西亚的离婚程序',
+    titleCn: 'Divorce Procedures',
     category: 'family',
     summary: 'Understanding divorce laws, procedures, and child custody arrangements',
     content: 'Divorce in Malaysia is governed by different laws depending on religion...',
@@ -87,7 +87,7 @@ const mockArticles: LegalArticle[] = [
     id: 'art-004',
     title: 'Starting a Business in Malaysia: Legal Requirements',
     titleMs: 'Memulakan Perniagaan di Malaysia: Keperluan Undang-undang',
-    titleCn: '在马来西亚创业：法律要求',
+    titleCn: 'Starting a Business',
     category: 'business',
     summary: 'Complete guide to business registration, licenses, and compliance',
     content: 'Starting a business in Malaysia requires understanding various legal requirements...',
@@ -102,7 +102,7 @@ const mockArticles: LegalArticle[] = [
     id: 'art-005',
     title: 'Consumer Protection Rights in Malaysia',
     titleMs: 'Hak Perlindungan Pengguna di Malaysia',
-    titleCn: '马来西亚的消费者保护权',
+    titleCn: 'Consumer Protection Rights',
     category: 'consumer',
     summary: 'Know your rights as a consumer and how to file complaints',
     content: 'The Consumer Protection Act 1999 provides comprehensive protection...',
@@ -117,7 +117,7 @@ const mockArticles: LegalArticle[] = [
     id: 'art-006',
     title: 'Work Permit and Employment Pass Requirements',
     titleMs: 'Keperluan Permit Kerja dan Pas Pekerjaan',
-    titleCn: '工作许可和就业准证要求',
+    titleCn: 'Work Permit Requirements',
     category: 'immigration',
     summary: 'Guide for foreign workers and employers on work permits in Malaysia',
     content: 'Foreign nationals working in Malaysia must obtain proper work authorization...',
@@ -130,7 +130,7 @@ const mockArticles: LegalArticle[] = [
   },
 ];
 
-// 获取所有文章
+// Fetch all articles
 export async function fetchLegalArticles(category?: string, limit?: number): Promise<LegalArticle[]> {
   await new Promise(resolve => setTimeout(resolve, 500));
   
@@ -147,13 +147,13 @@ export async function fetchLegalArticles(category?: string, limit?: number): Pro
   return filtered;
 }
 
-// 获取单篇文章
+// Fetch single article
 export async function fetchArticleById(id: string): Promise<LegalArticle | null> {
   await new Promise(resolve => setTimeout(resolve, 300));
   return mockArticles.find(a => a.id === id) || null;
 }
 
-// 搜索文章
+// Search articles
 export async function searchArticles(query: string): Promise<LegalArticle[]> {
   await new Promise(resolve => setTimeout(resolve, 400));
   const lowerQuery = query.toLowerCase();
@@ -164,7 +164,7 @@ export async function searchArticles(query: string): Promise<LegalArticle[]> {
   );
 }
 
-// 获取热门文章
+// Fetch popular articles
 export async function fetchPopularArticles(limit: number = 5): Promise<LegalArticle[]> {
   await new Promise(resolve => setTimeout(resolve, 300));
   return [...mockArticles]
@@ -172,7 +172,7 @@ export async function fetchPopularArticles(limit: number = 5): Promise<LegalArti
     .slice(0, limit);
 }
 
-// 导出所有文章ID用于静态生成
+// Export all article IDs for static generation
 export function getAllArticleIds(): string[] {
   return mockArticles.map(a => a.id);
 }

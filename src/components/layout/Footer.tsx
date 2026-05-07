@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useSiteSettings } from "@/contexts/SiteSettingsContext";
 
 export default function Footer() {
   const { t } = useLanguage();
+  const { settings } = useSiteSettings();
   
   return (
     <footer className="bg-gray-50 text-gray-600 border-t border-gray-200">
@@ -62,8 +64,12 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-gray-200 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500">
-          <p>{t('footer.copyright')}</p>
-          <p className="mt-4 md:mt-0">{t('footer.location')}</p>
+          <p>© 2026 {settings.siteName}. {t('footer.copyright')}</p>
+          <div className="mt-4 md:mt-0 flex flex-col md:flex-row gap-2 md:gap-4 items-center">
+            <p>{t('footer.location')}</p>
+            <p>{settings.contactEmail}</p>
+            <p>{settings.contactPhone}</p>
+          </div>
         </div>
       </div>
     </footer>

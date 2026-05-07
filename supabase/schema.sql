@@ -1,0 +1,339 @@
+-- =============================================
+-- LegalMY Database Schema
+-- =============================================
+
+-- Enable UUID extension
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+-- =============================================
+-- 1. PROFILES TABLE (用户资料表)
+-- =============================================
+CREATE TABLE IF NOT EXISTS public.profiles (
+  id UUID REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
+  email TEXT UNIQUE NOT NULL,
+  full_name TEXT,
+  phone TEXT,
+  avatar_url TEXT,
+  user_type TEXT DEFAULT 'client' CHECK (user_type IN ('client', 'lawyer', 'admin')),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Enable Row Level Security
+ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
+
+-- Profiles policies
+CREATE POLICY "Public profiles are viewable by everyone"
+  ON public.profiles FOR SELECT
+  USING (true);
+
+CREATE POLICY "Users can insert their own profile"
+  ON public.profiles FOR INSERT
+  WITH CHECK (auth.uid() = id);
+
+CREATE POLICY "Users can update their own profile"
+  ON public.profiles FOR UPDATE
+  USING (auth.uid() = id);
+
+-- =============================================
+-- 2. LAWYERS TABLE (律师表)
+-- =============================================
+CREATE TABLE IF NOT EXISTS public.lawyers (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  user_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  specialty TEXT[] NOT NULL,
+  experience INTEGER NOT NULL,
+  rating DECIMAL(2,1) DEFAULT 0.0,
+  reviews INTEGER DEFAULT 0,
+  price_range TEXT NOT NULL,
+  location TEXT NOT NULL,
+  languages TEXT[] NOT NULL,
+  bio TEXT,
+  education TEXT,
+  certification TEXT,
+  available BOOLEAN DEFAULT true,
+  response_time TEXT DEFAULT '2小时',
+  success_rate INTEGER DEFAULT 0,
+  sold_count INTEGER DEFAULT 0,
+  avatar_url TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+ALTER TABLE public.lawyers ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Lawyers are viewable by everyone"
+  ON public.lawyers FOR SELECT
+  USING (true);
+
+CREATE POLICY "Only lawyers can update their profile"
+  ON public.lawyers FOR UPDATE
+  USING (auth.uid() = user_id);
+
+-- =============================================
+-- 3. SERVICES TABLE (服务表)
+-- =============================================
+CREATE TABLE IF NOT EXISTS public.services (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  category TEXT NOT NULL,
+  name_zh TEXT NOT NULL,
+  name_en TEXT NOT NULL,
+  name_ms TEXT NOT NULL,
+  description_zh TEXT,
+  description_en TEXT,
+  description_ms TEXT,
+  price_range TEXT NOT NULL,
+  estimated_time TEXT,
+  icon TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+ALTER TABLE public.services ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Services are viewable by everyone"
+  ON public.services FOR SELECT
+  USING (true);
+
+-- =============================================
+-- 4. CONSULTATIONS TABLE (咨询记录表)
+-- =============================================
+CREATE TABLE IF NOT EXISTS public.consultations (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  client_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE,
+  lawyer_id UUID REFERENCES public.lawyers(id) ON DELETE SET NULL,
+  service_id UUID REFERENCES public.services(id) ON DELETE SET NULL,
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  phone TEXT NOT NULL,
+  consultation_type TEXT NOT NULL,
+  preferred_date DATE,
+  preferred_time TIME,
+  case_description TEXT NOT NULL,
+  status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'confirmed', 'completed', 'cancelled')),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+ALTER TABLE public.consultations ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view their own consultations"
+  ON public.consultations FOR SELECT
+  USING (auth.uid() = client_id);
+
+CREATE POLICY "Users can create consultations"
+  ON public.consultations FOR INSERT
+  WITH CHECK (true);
+
+CREATE POLICY "Users can update their own consultations"
+  ON public.consultations FOR UPDATE
+  USING (auth.uid() = client_id);
+
+-- =============================================
+-- 5. ORDERS TABLE (订单表)
+-- =============================================
+CREATE TABLE IF NOT EXISTS public.orders (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  user_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE,
+  lawyer_id UUID REFERENCES public.lawyers(id) ON DELETE SET NULL,
+  service_id UUID REFERENCES public.services(id) ON DELETE SET NULL,
+  consultation_id UUID REFERENCES public.consultations(id) ON DELETE SET NULL,
+  amount DECIMAL(10,2) NOT NULL,
+  currency TEXT DEFAULT 'MYR',
+  status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'paid', 'cancelled', 'refunded')),
+  payment_method TEXT,
+  payment_id TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+ALTER TABLE public.orders ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view their own orders"
+  ON public.orders FOR SELECT
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can create orders"
+  ON public.orders FOR INSERT
+  WITH CHECK (auth.uid() = user_id);
+
+-- =============================================
+-- 6. REVIEWS TABLE (评价表)
+-- =============================================
+CREATE TABLE IF NOT EXISTS public.reviews (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  lawyer_id UUID REFERENCES public.lawyers(id) ON DELETE CASCADE,
+  user_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE,
+  order_id UUID REFERENCES public.orders(id) ON DELETE SET NULL,
+  rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
+  comment TEXT,
+  helpful_count INTEGER DEFAULT 0,
+  verified BOOLEAN DEFAULT false,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+ALTER TABLE public.reviews ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Reviews are viewable by everyone"
+  ON public.reviews FOR SELECT
+  USING (true);
+
+CREATE POLICY "Users can create reviews for their orders"
+  ON public.reviews FOR INSERT
+  WITH CHECK (auth.uid() = user_id);
+
+-- =============================================
+-- 7. TEMPLATES TABLE (文档模板表)
+-- =============================================
+CREATE TABLE IF NOT EXISTS public.templates (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  category TEXT NOT NULL,
+  title_zh TEXT NOT NULL,
+  title_en TEXT NOT NULL,
+  title_ms TEXT NOT NULL,
+  description_zh TEXT,
+  description_en TEXT,
+  description_ms TEXT,
+  file_url TEXT NOT NULL,
+  file_size TEXT,
+  language TEXT DEFAULT 'ms',
+  downloads INTEGER DEFAULT 0,
+  is_free BOOLEAN DEFAULT true,
+  price DECIMAL(10,2) DEFAULT 0,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+ALTER TABLE public.templates ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Templates are viewable by everyone"
+  ON public.templates FOR SELECT
+  USING (true);
+
+-- =============================================
+-- 8. ARTICLES TABLE (法律文章表)
+-- =============================================
+CREATE TABLE IF NOT EXISTS public.articles (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  category TEXT NOT NULL,
+  title_zh TEXT NOT NULL,
+  title_en TEXT NOT NULL,
+  title_ms TEXT NOT NULL,
+  content_zh TEXT NOT NULL,
+  content_en TEXT NOT NULL,
+  content_ms TEXT NOT NULL,
+  excerpt_zh TEXT,
+  excerpt_en TEXT,
+  excerpt_ms TEXT,
+  author TEXT,
+  read_time INTEGER,
+  views INTEGER DEFAULT 0,
+  image_url TEXT,
+  published BOOLEAN DEFAULT true,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+ALTER TABLE public.articles ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Published articles are viewable by everyone"
+  ON public.articles FOR SELECT
+  USING (published = true);
+
+-- =============================================
+-- 9. FAVORITES TABLE (收藏表)
+-- =============================================
+CREATE TABLE IF NOT EXISTS public.favorites (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  user_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE,
+  lawyer_id UUID REFERENCES public.lawyers(id) ON DELETE CASCADE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  UNIQUE(user_id, lawyer_id)
+);
+
+ALTER TABLE public.favorites ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view their own favorites"
+  ON public.favorites FOR SELECT
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can add favorites"
+  ON public.favorites FOR INSERT
+  WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can remove favorites"
+  ON public.favorites FOR DELETE
+  USING (auth.uid() = user_id);
+
+-- =============================================
+-- 10. CART TABLE (购物车表)
+-- =============================================
+CREATE TABLE IF NOT EXISTS public.cart (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  user_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE,
+  lawyer_id UUID REFERENCES public.lawyers(id) ON DELETE CASCADE,
+  service_type TEXT NOT NULL,
+  price DECIMAL(10,2) NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  UNIQUE(user_id, lawyer_id, service_type)
+);
+
+ALTER TABLE public.cart ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view their own cart"
+  ON public.cart FOR SELECT
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can add to cart"
+  ON public.cart FOR INSERT
+  WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can update their cart"
+  ON public.cart FOR UPDATE
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can remove from cart"
+  ON public.cart FOR DELETE
+  USING (auth.uid() = user_id);
+
+-- =============================================
+-- FUNCTIONS & TRIGGERS
+-- =============================================
+
+-- Function to update updated_at timestamp
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = NOW();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Triggers for updated_at
+CREATE TRIGGER update_profiles_updated_at BEFORE UPDATE ON public.profiles
+  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_lawyers_updated_at BEFORE UPDATE ON public.lawyers
+  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_consultations_updated_at BEFORE UPDATE ON public.consultations
+  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_orders_updated_at BEFORE UPDATE ON public.orders
+  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_articles_updated_at BEFORE UPDATE ON public.articles
+  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- =============================================
+-- INDEXES for better performance
+-- =============================================
+CREATE INDEX IF NOT EXISTS idx_lawyers_specialty ON public.lawyers USING GIN (specialty);
+CREATE INDEX IF NOT EXISTS idx_lawyers_location ON public.lawyers(location);
+CREATE INDEX IF NOT EXISTS idx_lawyers_rating ON public.lawyers(rating DESC);
+CREATE INDEX IF NOT EXISTS idx_consultations_client ON public.consultations(client_id);
+CREATE INDEX IF NOT EXISTS idx_consultations_lawyer ON public.consultations(lawyer_id);
+CREATE INDEX IF NOT EXISTS idx_orders_user ON public.orders(user_id);
+CREATE INDEX IF NOT EXISTS idx_reviews_lawyer ON public.reviews(lawyer_id);
+CREATE INDEX IF NOT EXISTS idx_articles_category ON public.articles(category);
+CREATE INDEX IF NOT EXISTS idx_favorites_user ON public.favorites(user_id);
+CREATE INDEX IF NOT EXISTS idx_cart_user ON public.cart(user_id);

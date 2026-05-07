@@ -20,4 +20,14 @@
   .btn-secondary {
     @apply border-2 border-blue-600 text-blue-600 px-8 py-3.5 rounded-full font-medium hover:bg-blue-600 hover:text-white transition-all;
   }
+
+  /* 隐藏滚动条但保持滚动功能 */
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;  /* Chrome, Safari and Opera */
+  }
 }

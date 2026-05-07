@@ -1,236 +1,159 @@
-"use client";
+import { Metadata } from 'next';
+import { Mail, Phone, MapPin, Clock } from 'lucide-react';
 
-import { useState } from "react";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
-import { Mail, Phone, MapPin, Clock, Send } from "lucide-react";
-import { useLanguage } from "@/contexts/LanguageContext";
+export const metadata: Metadata = {
+  title: '联系我们 | LegalMY',
+  description: '联系 LegalMY - 我们随时为您提供帮助',
+};
 
 export default function ContactPage() {
-  const { t, language } = useLanguage();
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    subject: "",
-    message: "",
-  });
-  const [submitted, setSubmitted] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => {
-      alert(t('contact.successMessage'));
-      setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
-      setSubmitted(false);
-    }, 1000);
-  };
-
   return (
-    <>
-      <Header />
-      <main className="min-h-screen bg-neutral-50">
-        {/* Hero */}
-        <section className="bg-gradient-to-br from-primary-600 to-primary-500 text-white py-16">
-          <div className="container mx-auto px-6">
-            <div className="max-w-3xl mx-auto text-center">
-              <h1 className="text-4xl md:text-5xl font-bold mb-4">{t('contact.title')}</h1>
-              <p className="text-xl text-blue-100">
-                {t('contact.subtitle')}
+    <div className="min-h-screen bg-gray-50 py-12">
+      <div className="container mx-auto px-6 max-w-6xl">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">联系我们</h1>
+          <p className="text-xl text-gray-600">
+            我们随时为您提供帮助。请通过以下方式联系我们。
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-8">
+          {/* 联系信息 */}
+          <div className="bg-white rounded-lg shadow-sm p-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">联系信息</h2>
+            
+            <div className="space-y-6">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <Mail className="w-6 h-6 text-primary-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-1">电子邮件</h3>
+                  <p className="text-gray-600">support@legalmy.com</p>
+                  <p className="text-sm text-gray-500 mt-1">我们会在 24 小时内回复</p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <Phone className="w-6 h-6 text-primary-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-1">电话</h3>
+                  <p className="text-gray-600">+60 3-1234 5678</p>
+                  <p className="text-sm text-gray-500 mt-1">周一至周五 9:00 - 18:00</p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <MapPin className="w-6 h-6 text-primary-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-1">地址</h3>
+                  <p className="text-gray-600">
+                    Level 10, Menara ABC<br />
+                    Jalan Ampang<br />
+                    50450 Kuala Lumpur<br />
+                    Malaysia
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <Clock className="w-6 h-6 text-primary-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-1">营业时间</h3>
+                  <p className="text-gray-600">
+                    周一至周五：9:00 - 18:00<br />
+                    周六：9:00 - 13:00<br />
+                    周日及公共假期：休息
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 联系表单 */}
+          <div className="bg-white rounded-lg shadow-sm p-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">发送消息</h2>
+            
+            <form className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  姓名 *
+                </label>
+                <input
+                  type="text"
+                  required
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  placeholder="您的姓名"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  电子邮件 *
+                </label>
+                <input
+                  type="email"
+                  required
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  placeholder="your@email.com"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  电话
+                </label>
+                <input
+                  type="tel"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  placeholder="+60 12-345 6789"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  主题 *
+                </label>
+                <input
+                  type="text"
+                  required
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  placeholder="您的问题主题"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  消息 *
+                </label>
+                <textarea
+                  required
+                  rows={5}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  placeholder="请详细描述您的问题..."
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="w-full bg-primary-600 text-white py-3 rounded-lg hover:bg-primary-700 transition-colors font-medium"
+              >
+                发送消息
+              </button>
+
+              <p className="text-sm text-gray-500 text-center">
+                我们会在 24 小时内回复您的消息
               </p>
-            </div>
+            </form>
           </div>
-        </section>
-
-        {/* Contact Info & Form */}
-        <section className="py-16">
-          <div className="container mx-auto px-6">
-            <div className="max-w-6xl mx-auto">
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* Contact Info */}
-                <div className="space-y-6">
-                  <div className="bg-white rounded-xl shadow-lg p-6">
-                    <div className="flex items-start gap-4">
-                      <div className="bg-primary-100 p-3 rounded-lg">
-                        <Phone className="h-6 w-6 text-primary-600" />
-                      </div>
-                      <div>
-                        <h3 className="font-bold text-neutral-900 mb-2">电话</h3>
-                        <p className="text-neutral-600">+60 3-1234 5678</p>
-                        <p className="text-neutral-600">+60 12-345 6789</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="bg-white rounded-xl shadow-lg p-6">
-                    <div className="flex items-start gap-4">
-                      <div className="bg-primary-100 p-3 rounded-lg">
-                        <Mail className="h-6 w-6 text-primary-600" />
-                      </div>
-                      <div>
-                        <h3 className="font-bold text-neutral-900 mb-2">电子邮箱</h3>
-                        <p className="text-neutral-600">info@legalmy.com</p>
-                        <p className="text-neutral-600">support@legalmy.com</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="bg-white rounded-xl shadow-lg p-6">
-                    <div className="flex items-start gap-4">
-                      <div className="bg-primary-100 p-3 rounded-lg">
-                        <MapPin className="h-6 w-6 text-primary-600" />
-                      </div>
-                      <div>
-                        <h3 className="font-bold text-neutral-900 mb-2">地址</h3>
-                        <p className="text-neutral-600">
-                          Level 10, Menara ABC<br />
-                          Jalan Ampang<br />
-                          50450 Kuala Lumpur<br />
-                          Malaysia
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="bg-white rounded-xl shadow-lg p-6">
-                    <div className="flex items-start gap-4">
-                      <div className="bg-primary-100 p-3 rounded-lg">
-                        <Clock className="h-6 w-6 text-primary-600" />
-                      </div>
-                      <div>
-                        <h3 className="font-bold text-neutral-900 mb-2">营业时间</h3>
-                        <p className="text-neutral-600">周一至周五: 9:00 - 18:00</p>
-                        <p className="text-neutral-600">周六: 9:00 - 13:00</p>
-                        <p className="text-neutral-600">周日: 休息</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Contact Form */}
-                <div className="lg:col-span-2">
-                  <div className="bg-white rounded-xl shadow-lg p-8">
-                    <h2 className="text-2xl font-bold text-neutral-900 mb-6">
-                      发送消息
-                    </h2>
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                      <div>
-                        <label className="block text-sm font-medium text-neutral-700 mb-2">
-                          姓名 *
-                        </label>
-                        <input
-                          type="text"
-                          required
-                          value={formData.name}
-                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                          className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
-                          placeholder="请输入您的姓名"
-                        />
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                          <label className="block text-sm font-medium text-neutral-700 mb-2">
-                            电子邮箱 *
-                          </label>
-                          <input
-                            type="email"
-                            required
-                            value={formData.email}
-                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                            className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
-                            placeholder="your@email.com"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-neutral-700 mb-2">
-                            电话号码
-                          </label>
-                          <input
-                            type="tel"
-                            value={formData.phone}
-                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                            className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
-                            placeholder="+60 12-345 6789"
-                          />
-                        </div>
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-neutral-700 mb-2">
-                          主题 *
-                        </label>
-                        <input
-                          type="text"
-                          required
-                          value={formData.subject}
-                          onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                          className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
-                          placeholder="请输入主题"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-neutral-700 mb-2">
-                          消息 *
-                        </label>
-                        <textarea
-                          required
-                          value={formData.message}
-                          onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                          rows={6}
-                          className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
-                          placeholder="请输入您的消息..."
-                        />
-                      </div>
-
-                      <button
-                        type="submit"
-                        disabled={submitted}
-                        className="w-full bg-primary-600 hover:bg-primary-700 text-white py-4 rounded-lg font-bold text-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50"
-                      >
-                        {submitted ? (
-                          <>
-                            <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
-                            发送中...
-                          </>
-                        ) : (
-                          <>
-                            <Send className="h-5 w-5" />
-                            发送消息
-                          </>
-                        )}
-                      </button>
-                    </form>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Map Section */}
-        <section className="py-16 bg-white">
-          <div className="container mx-auto px-6">
-            <div className="max-w-6xl mx-auto">
-              <h2 className="text-3xl font-bold text-neutral-900 mb-8 text-center">
-                我们的位置
-              </h2>
-              <div className="bg-neutral-200 rounded-xl overflow-hidden" style={{ height: '400px' }}>
-                <div className="w-full h-full flex items-center justify-center text-neutral-600">
-                  <div className="text-center">
-                    <MapPin className="h-16 w-16 mx-auto mb-4" />
-                    <p className="text-lg">地图加载中...</p>
-                    <p className="text-sm mt-2">Level 10, Menara ABC, Jalan Ampang, KL</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      </main>
-      <Footer />
-    </>
+        </div>
+      </div>
+    </div>
   );
 }
