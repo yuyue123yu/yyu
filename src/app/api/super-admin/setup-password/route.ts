@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const user = users.users.find(u => u.email === email);
+    const user = users.users.find((u: any) => u.email === email);
 
     if (!user) {
       console.error('❌ 用户不存在:', email);
