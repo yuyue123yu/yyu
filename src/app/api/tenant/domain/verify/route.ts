@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: '域名配置不存在' }, { status: 400 });
     }
 
-    const domainConfig = settings.value;
+    const domainConfig = settings.setting_value;
 
     // 模拟 DNS 验证（实际项目中需要真实的 DNS 查询）
     // 这里我们简化处理，假设验证成功
