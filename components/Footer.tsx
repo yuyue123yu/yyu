@@ -14,18 +14,8 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <div className="flex items-center space-x-2 mb-3">
-              {settings.logoUrl ? (
-                <img 
-                  src={settings.logoUrl} 
-                  alt={settings.siteName}
-                  className="h-8 w-auto object-contain brightness-0 invert"
-                />
-              ) : (
-                <>
-                  <FaGavel className="text-primary-400 text-lg" />
-                  <span className="text-lg font-bold text-white">{settings.siteName}</span>
-                </>
-              )}
+              <FaGavel className="text-primary-400 text-lg" />
+              <span className="text-lg font-bold text-white">{settings.siteName}</span>
             </div>
             <p className="text-xs leading-relaxed">
               {settings.siteDescription}

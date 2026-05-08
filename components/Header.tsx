@@ -15,18 +15,8 @@ export default function Header() {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            {settings.logoUrl ? (
-              <img 
-                src={settings.logoUrl} 
-                alt={settings.siteName}
-                className="h-10 w-auto object-contain"
-              />
-            ) : (
-              <>
-                <FaGavel className="text-primary-600 text-2xl" />
-                <span className="text-xl font-bold text-gray-900">{settings.siteName}</span>
-              </>
-            )}
+            <FaGavel className="text-primary-600 text-2xl" />
+            <span className="text-xl font-bold text-gray-900">{settings.siteName}</span>
           </Link>
 
           {/* Desktop Navigation */}
