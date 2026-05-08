@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: '通知配置不存在' }, { status: 400 });
     }
 
-    const config = settings.value;
+    const config = settings.setting_value;
 
     // 模拟发送测试通知
     // 实际项目中需要真实的邮件/短信发送逻辑
