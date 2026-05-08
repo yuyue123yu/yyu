@@ -13,6 +13,7 @@ export interface UserReview {
   location: string;
   serviceType: string;
   verified: boolean;
+  helpful?: number;
 }
 
 // Mock user reviews
@@ -30,6 +31,7 @@ const mockReviews: UserReview[] = [
     location: 'Kuala Lumpur',
     serviceType: 'Property Law',
     verified: true,
+    helpful: 24,
   },
   {
     id: 'rev-002',
@@ -44,6 +46,7 @@ const mockReviews: UserReview[] = [
     location: 'Penang',
     serviceType: 'Family Law',
     verified: true,
+    helpful: 18,
   },
   {
     id: 'rev-003',
@@ -58,6 +61,7 @@ const mockReviews: UserReview[] = [
     location: 'Johor',
     serviceType: 'Business Law',
     verified: true,
+    helpful: 15,
   },
   {
     id: 'rev-004',
@@ -72,6 +76,7 @@ const mockReviews: UserReview[] = [
     location: 'Selangor',
     serviceType: 'Employment Law',
     verified: true,
+    helpful: 32,
   },
   {
     id: 'rev-005',
@@ -86,6 +91,7 @@ const mockReviews: UserReview[] = [
     location: 'Kuala Lumpur',
     serviceType: 'Corporate Law',
     verified: true,
+    helpful: 28,
   },
   {
     id: 'rev-006',
@@ -100,6 +106,7 @@ const mockReviews: UserReview[] = [
     location: 'Melaka',
     serviceType: 'Property Law',
     verified: true,
+    helpful: 12,
   },
 ];
 
