@@ -1,14 +1,25 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // 注意：使用 Supabase 时不能用 output: 'export'
-  // output: 'export',
-  
-  // Docker 部署支持
-  output: 'standalone',
-  
+  // Vercel 部署配置
   reactStrictMode: true,
+  
+  // 图片优化配置
   images: {
     unoptimized: true,
+  },
+  
+  // 实验性功能
+  experimental: {
+    // 跳过静态生成错误
+    staticPageGenerationTimeout: 180,
+  },
+  
+  // TypeScript 和 ESLint 配置
+  typescript: {
+    ignoreBuildErrors: false,
+  },
+  eslint: {
+    ignoreDuringBuilds: false,
   },
   // 本地开发时注释掉 basePath
   // basePath: '/yyu',
