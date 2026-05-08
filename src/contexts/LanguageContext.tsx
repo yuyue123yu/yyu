@@ -733,22 +733,6 @@ const translations = {
     'whyChoose.title': '为什么选择我们',
     'whyChoose.subtitle': '专业、可靠、值得信赖',
 
-    // 网页端通用
-    'common.templates': '模板',
-    'common.no': '否',
-    'common.user': '用户',
-    'common.tenant': '租户',
-    'common.type': '类型',
-    'common.status': '状态',
-    'common.created': '创建时间',
-    'common.actions': '操作',
-    'common.viewDetails': '查看详情',
-    'common.activate': '激活',
-    'common.deactivate': '停用',
-    'common.unknown': '未知',
-    'common.system': '系统',
-    'common.na': '不适用',
-
     // 租户向导
     'wizard.basicInfo': '基本信息',
     'wizard.oemConfig': 'OEM配置',
@@ -1544,25 +1528,6 @@ const translations = {
     // Why Choose Us
     'whyChoose.title': 'Why Choose Us',
     'whyChoose.subtitle': 'Professional, Reliable, Trustworthy',
-
-    // Public Website Common
-    'common.templates': 'Templates',
-    'common.submit': 'Submit',
-    'common.confirm': 'Confirm',
-    'common.yes': 'Yes',
-    'common.no': 'No',
-    'common.user': 'User',
-    'common.tenant': 'Tenant',
-    'common.type': 'Type',
-    'common.status': 'Status',
-    'common.created': 'Created',
-    'common.actions': 'Actions',
-    'common.viewDetails': 'View Details',
-    'common.activate': 'Activate',
-    'common.deactivate': 'Deactivate',
-    'common.unknown': 'Unknown',
-    'common.system': 'System',
-    'common.na': 'N/A',
 
     // Tenant Wizard
     'wizard.basicInfo': 'Basic Information',
