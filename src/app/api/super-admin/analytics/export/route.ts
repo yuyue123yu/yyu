@@ -1,3 +1,7 @@
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 import { NextRequest, NextResponse } from 'next/server';
 import { requireSuperAdmin } from '@/lib/middleware/super-admin';
 
@@ -82,16 +86,16 @@ function generateCSV(data: any): string {
   
   // System Metrics
   lines.push('系统指标');
-  lines.push('指标,数值');
+  lines.push('指标,数�?);
   lines.push(`总用户数,${data.systemMetrics.totalUsers}`);
   lines.push(`总咨询数,${data.systemMetrics.totalConsultations}`);
-  lines.push(`总收入,${data.systemMetrics.totalRevenue}`);
+  lines.push(`总收�?${data.systemMetrics.totalRevenue}`);
   lines.push(`活跃律师,${data.systemMetrics.activeLawyers}`);
   lines.push('');
   
   // Tenant Metrics
   lines.push('租户指标');
-  lines.push('租户名称,用户数,咨询数,收入,活跃律师');
+  lines.push('租户名称,用户�?咨询�?收入,活跃律师');
   data.tenantMetrics.forEach((tenant: any) => {
     lines.push(
       `${tenant.tenantName},${tenant.userCount},${tenant.consultationCount},${tenant.revenue},${tenant.activeLawyers}`
@@ -113,15 +117,15 @@ function generateTextReport(data: any): string {
   lines.push('系统指标:');
   lines.push(`  总用户数: ${data.systemMetrics.totalUsers.toLocaleString()}`);
   lines.push(`  总咨询数: ${data.systemMetrics.totalConsultations.toLocaleString()}`);
-  lines.push(`  总收入: ¥${data.systemMetrics.totalRevenue.toLocaleString()}`);
+  lines.push(`  总收�? ¥${data.systemMetrics.totalRevenue.toLocaleString()}`);
   lines.push(`  活跃律师: ${data.systemMetrics.activeLawyers}`);
   lines.push('');
   
   lines.push('租户指标:');
   data.tenantMetrics.forEach((tenant: any, index: number) => {
     lines.push(`  ${index + 1}. ${tenant.tenantName}`);
-    lines.push(`     用户数: ${tenant.userCount.toLocaleString()}`);
-    lines.push(`     咨询数: ${tenant.consultationCount.toLocaleString()}`);
+    lines.push(`     用户�? ${tenant.userCount.toLocaleString()}`);
+    lines.push(`     咨询�? ${tenant.consultationCount.toLocaleString()}`);
     lines.push(`     收入: ¥${tenant.revenue.toLocaleString()}`);
     lines.push(`     活跃律师: ${tenant.activeLawyers}`);
     lines.push('');

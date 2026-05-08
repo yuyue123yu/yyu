@@ -1,3 +1,7 @@
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 import { NextRequest, NextResponse } from 'next/server';
 import { requireSuperAdmin } from '@/lib/middleware/super-admin';
 
@@ -31,12 +35,12 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: '所有必需的环境变量都已配置',
+      message: '所有必需的环境变量都已配�?,
     });
   } catch (error) {
     return NextResponse.json({
       success: false,
-      message: `检查失败: ${error}`,
+      message: `检查失�? ${error}`,
     });
   }
 }

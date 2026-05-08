@@ -1,3 +1,7 @@
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase/server';
 
@@ -9,10 +13,10 @@ export async function GET(request: NextRequest) {
     // 验证用户登录
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) {
-      return NextResponse.json({ error: '未登录' }, { status: 401 });
+      return NextResponse.json({ error: '未登�? }, { status: 401 });
     }
 
-    // 获取用户的租户信息
+    // 获取用户的租户信�?
     const { data: profile } = await supabase
       .from('profiles')
       .select('tenant_id, user_type')
@@ -20,7 +24,7 @@ export async function GET(request: NextRequest) {
       .single();
 
     if (!profile?.tenant_id) {
-      return NextResponse.json({ error: '用户未关联租户' }, { status: 400 });
+      return NextResponse.json({ error: '用户未关联租�? }, { status: 400 });
     }
 
     // 获取 SEO 配置
@@ -41,7 +45,7 @@ export async function GET(request: NextRequest) {
       // 基础 SEO
       basic: {
         site_title: '专业法律咨询服务',
-        site_description: '为您提供全方位的法律支持与解决方案，拥有经验丰富的律师团队',
+        site_description: '为您提供全方位的法律支持与解决方案，拥有经验丰富的律师团�?,
         keywords: ['法律咨询', '律师服务', '法律顾问', '合同审查', '诉讼代理'],
         author: '',
         language: 'zh-CN',
@@ -49,13 +53,13 @@ export async function GET(request: NextRequest) {
       
       // Favicon
       favicon: {
-        favicon_url: '', // 16x16 或 32x32
+        favicon_url: '', // 16x16 �?32x32
         apple_touch_icon_url: '', // 180x180
         favicon_32_url: '',
         favicon_16_url: '',
       },
       
-      // Open Graph (Facebook, LinkedIn 等)
+      // Open Graph (Facebook, LinkedIn �?
       open_graph: {
         enabled: true,
         og_title: '',
@@ -77,7 +81,7 @@ export async function GET(request: NextRequest) {
         twitter_image: '', // 推荐 1200x600
       },
       
-      // 结构化数据 (Schema.org)
+      // 结构化数�?(Schema.org)
       structured_data: {
         enabled: true,
         organization: {
@@ -122,7 +126,7 @@ export async function GET(request: NextRequest) {
     });
   } catch (error: any) {
     console.error('Error in GET /api/tenant/seo:', error);
-    return NextResponse.json({ error: '服务器错误' }, { status: 500 });
+    return NextResponse.json({ error: '服务器错�? }, { status: 500 });
   }
 }
 
@@ -134,7 +138,7 @@ export async function PUT(request: NextRequest) {
     // 验证用户登录
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) {
-      return NextResponse.json({ error: '未登录' }, { status: 401 });
+      return NextResponse.json({ error: '未登�? }, { status: 401 });
     }
 
     // 获取用户的租户信息和权限
@@ -145,10 +149,10 @@ export async function PUT(request: NextRequest) {
       .single();
 
     if (!profile?.tenant_id) {
-      return NextResponse.json({ error: '用户未关联租户' }, { status: 400 });
+      return NextResponse.json({ error: '用户未关联租�? }, { status: 400 });
     }
 
-    // 检查权限：必须是 owner 或 admin
+    // 检查权限：必须�?owner �?admin
     if (profile.user_type !== 'owner' && profile.user_type !== 'admin') {
       return NextResponse.json({ error: '权限不足' }, { status: 403 });
     }
@@ -165,7 +169,7 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: '网站描述不能为空' }, { status: 400 });
     }
 
-    // 保存或更新 SEO 配置
+    // 保存或更�?SEO 配置
     const { error } = await supabase
       .from('tenant_settings')
       .upsert({
@@ -197,10 +201,10 @@ export async function PUT(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: 'SEO 配置已保存',
+      message: 'SEO 配置已保�?,
     });
   } catch (error: any) {
     console.error('Error in PUT /api/tenant/seo:', error);
-    return NextResponse.json({ error: '服务器错误' }, { status: 500 });
+    return NextResponse.json({ error: '服务器错�? }, { status: 500 });
   }
 }

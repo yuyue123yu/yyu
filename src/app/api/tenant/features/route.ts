@@ -1,7 +1,11 @@
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase/server';
 
-// GET - 获取功能开关配置
+// GET - 获取功能开关配�?
 export async function GET(request: NextRequest) {
   try {
     const supabase = await createServerClient();
@@ -9,10 +13,10 @@ export async function GET(request: NextRequest) {
     // 验证用户登录
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) {
-      return NextResponse.json({ error: '未登录' }, { status: 401 });
+      return NextResponse.json({ error: '未登�? }, { status: 401 });
     }
 
-    // 获取用户的租户信息
+    // 获取用户的租户信�?
     const { data: profile } = await supabase
       .from('profiles')
       .select('tenant_id, user_type')
@@ -20,10 +24,10 @@ export async function GET(request: NextRequest) {
       .single();
 
     if (!profile?.tenant_id) {
-      return NextResponse.json({ error: '用户未关联租户' }, { status: 400 });
+      return NextResponse.json({ error: '用户未关联租�? }, { status: 400 });
     }
 
-    // 获取功能开关配置
+    // 获取功能开关配�?
     const { data: settings, error } = await supabase
       .from('tenant_settings')
       .select('setting_value')
@@ -124,11 +128,11 @@ export async function GET(request: NextRequest) {
     });
   } catch (error: any) {
     console.error('Error in GET /api/tenant/features:', error);
-    return NextResponse.json({ error: '服务器错误' }, { status: 500 });
+    return NextResponse.json({ error: '服务器错�? }, { status: 500 });
   }
 }
 
-// PUT - 更新功能开关配置
+// PUT - 更新功能开关配�?
 export async function PUT(request: NextRequest) {
   try {
     const supabase = await createServerClient();
@@ -136,7 +140,7 @@ export async function PUT(request: NextRequest) {
     // 验证用户登录
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) {
-      return NextResponse.json({ error: '未登录' }, { status: 401 });
+      return NextResponse.json({ error: '未登�? }, { status: 401 });
     }
 
     // 获取用户的租户信息和权限
@@ -147,10 +151,10 @@ export async function PUT(request: NextRequest) {
       .single();
 
     if (!profile?.tenant_id) {
-      return NextResponse.json({ error: '用户未关联租户' }, { status: 400 });
+      return NextResponse.json({ error: '用户未关联租�? }, { status: 400 });
     }
 
-    // 检查权限：必须是 owner 或 admin
+    // 检查权限：必须�?owner �?admin
     if (profile.user_type !== 'owner' && profile.user_type !== 'admin') {
       return NextResponse.json({ error: '权限不足' }, { status: 403 });
     }
@@ -158,7 +162,7 @@ export async function PUT(request: NextRequest) {
     // 获取请求数据
     const features = await request.json();
 
-    // 保存或更新功能开关配置
+    // 保存或更新功能开关配�?
     const { error } = await supabase
       .from('tenant_settings')
       .upsert({
@@ -194,6 +198,6 @@ export async function PUT(request: NextRequest) {
     });
   } catch (error: any) {
     console.error('Error in PUT /api/tenant/features:', error);
-    return NextResponse.json({ error: '服务器错误' }, { status: 500 });
+    return NextResponse.json({ error: '服务器错�? }, { status: 500 });
   }
 }

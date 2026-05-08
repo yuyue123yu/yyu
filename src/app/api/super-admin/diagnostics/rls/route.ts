@@ -1,3 +1,7 @@
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 import { NextRequest, NextResponse } from 'next/server';
 import { requireSuperAdmin } from '@/lib/middleware/super-admin';
 
@@ -10,12 +14,12 @@ export async function GET(request: NextRequest) {
   try {
     return NextResponse.json({
       success: true,
-      message: 'RLS 策略已配置',
+      message: 'RLS 策略已配�?,
     });
   } catch (error) {
     return NextResponse.json({
       success: false,
-      message: `检查失败: ${error}`,
+      message: `检查失�? ${error}`,
     });
   }
 }

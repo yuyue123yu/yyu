@@ -1,3 +1,7 @@
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase/server';
 
@@ -10,7 +14,7 @@ export async function GET(request: NextRequest) {
     if (!session) {
       return NextResponse.json({ 
         success: false,
-        error: '未登录' 
+        error: '未登�? 
       }, { status: 401 });
     }
 
@@ -23,7 +27,7 @@ export async function GET(request: NextRequest) {
     if (!adminProfile) {
       return NextResponse.json({ 
         success: false,
-        error: '用户信息不存在' 
+        error: '用户信息不存�? 
       }, { status: 404 });
     }
 
@@ -40,7 +44,7 @@ export async function GET(request: NextRequest) {
       .from('profiles')
       .select('*', { count: 'exact' });
 
-    // Super Admin 可以看所有用户
+    // Super Admin 可以看所有用�?
     if (!adminProfile.super_admin) {
       // 普通管理员只能看自己租户的用户
       query = query.eq('tenant_id', adminProfile.tenant_id);
@@ -56,7 +60,7 @@ export async function GET(request: NextRequest) {
       query = query.eq('role', roleFilter);
     }
 
-    // 状态过滤
+    // 状态过�?
     if (statusFilter === 'active') {
       query = query.eq('is_active', true);
     } else if (statusFilter === 'inactive') {

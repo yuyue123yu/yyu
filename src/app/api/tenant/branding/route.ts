@@ -1,3 +1,7 @@
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase/server';
 
@@ -9,10 +13,10 @@ export async function GET(request: NextRequest) {
     // 验证用户登录
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) {
-      return NextResponse.json({ error: '未登录' }, { status: 401 });
+      return NextResponse.json({ error: '未登�? }, { status: 401 });
     }
 
-    // 获取用户的租户信息
+    // 获取用户的租户信�?
     const { data: profile } = await supabase
       .from('profiles')
       .select('tenant_id, user_type')
@@ -20,7 +24,7 @@ export async function GET(request: NextRequest) {
       .single();
 
     if (!profile?.tenant_id) {
-      return NextResponse.json({ error: '用户未关联租户' }, { status: 400 });
+      return NextResponse.json({ error: '用户未关联租�? }, { status: 400 });
     }
 
     // 获取品牌设置
@@ -60,7 +64,7 @@ export async function GET(request: NextRequest) {
     });
   } catch (error: any) {
     console.error('Error in GET /api/tenant/branding:', error);
-    return NextResponse.json({ error: '服务器错误' }, { status: 500 });
+    return NextResponse.json({ error: '服务器错�? }, { status: 500 });
   }
 }
 
@@ -72,7 +76,7 @@ export async function PUT(request: NextRequest) {
     // 验证用户登录
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) {
-      return NextResponse.json({ error: '未登录' }, { status: 401 });
+      return NextResponse.json({ error: '未登�? }, { status: 401 });
     }
 
     // 获取用户的租户信息和权限
@@ -83,10 +87,10 @@ export async function PUT(request: NextRequest) {
       .single();
 
     if (!profile?.tenant_id) {
-      return NextResponse.json({ error: '用户未关联租户' }, { status: 400 });
+      return NextResponse.json({ error: '用户未关联租�? }, { status: 400 });
     }
 
-    // 检查权限：必须是 owner 或 admin
+    // 检查权限：必须�?owner �?admin
     if (profile.user_type !== 'owner' && profile.user_type !== 'admin') {
       return NextResponse.json({ error: '权限不足' }, { status: 403 });
     }
@@ -108,7 +112,7 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: '辅色调格式不正确' }, { status: 400 });
     }
 
-    // 保存或更新品牌设置
+    // 保存或更新品牌设�?
     const { error } = await supabase
       .from('tenant_settings')
       .upsert({
@@ -136,10 +140,10 @@ export async function PUT(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: '品牌设置已保存',
+      message: '品牌设置已保�?,
     });
   } catch (error: any) {
     console.error('Error in PUT /api/tenant/branding:', error);
-    return NextResponse.json({ error: '服务器错误' }, { status: 500 });
+    return NextResponse.json({ error: '服务器错�? }, { status: 500 });
   }
 }

@@ -1,3 +1,7 @@
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 import { NextRequest, NextResponse } from 'next/server';
 import { requireSuperAdmin } from '@/lib/middleware/super-admin';
 import { createClient } from '@/lib/supabase/server';
@@ -20,18 +24,18 @@ export async function GET(request: NextRequest) {
     if (error) {
       return NextResponse.json({
         success: false,
-        message: `数据库连接失败: ${error.message}`,
+        message: `数据库连接失�? ${error.message}`,
       });
     }
 
     return NextResponse.json({
       success: true,
-      message: '数据库连接正常',
+      message: '数据库连接正�?,
     });
   } catch (error) {
     return NextResponse.json({
       success: false,
-      message: `检查失败: ${error}`,
+      message: `检查失�? ${error}`,
     });
   }
 }

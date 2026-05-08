@@ -1,3 +1,7 @@
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase/server';
 
@@ -8,7 +12,7 @@ export async function POST(request: NextRequest) {
     // 验证用户登录
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) {
-      return NextResponse.json({ error: '未登录' }, { status: 401 });
+      return NextResponse.json({ error: '未登�? }, { status: 401 });
     }
 
     // 获取用户的租户信息和权限
@@ -19,15 +23,15 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (!profile?.tenant_id) {
-      return NextResponse.json({ error: '用户未关联租户' }, { status: 400 });
+      return NextResponse.json({ error: '用户未关联租�? }, { status: 400 });
     }
 
-    // 检查权限：必须是 owner 或 admin
+    // 检查权限：必须�?owner �?admin
     if (profile.user_type !== 'owner' && profile.user_type !== 'admin') {
       return NextResponse.json({ error: '权限不足' }, { status: 403 });
     }
 
-    // 获取上传的文件
+    // 获取上传的文�?
     const formData = await request.formData();
     const file = formData.get('logo') as File;
 
@@ -39,23 +43,23 @@ export async function POST(request: NextRequest) {
     const allowedTypes = ['image/jpeg', 'image/png', 'image/svg+xml', 'image/webp', 'image/gif'];
     if (!allowedTypes.includes(file.type)) {
       return NextResponse.json({ 
-        error: '不支持的文件类型，请上传 JPG、PNG、SVG、WebP 或 GIF 格式' 
+        error: '不支持的文件类型，请上传 JPG、PNG、SVG、WebP �?GIF 格式' 
       }, { status: 400 });
     }
 
-    // 验证文件大小（5MB）
+    // 验证文件大小�?MB�?
     const maxSize = 5 * 1024 * 1024;
     if (file.size > maxSize) {
       return NextResponse.json({ 
-        error: '文件太大，最大支持 5MB' 
+        error: '文件太大，最大支�?5MB' 
       }, { status: 400 });
     }
 
-    // 生成文件名
+    // 生成文件�?
     const fileExt = file.name.split('.').pop();
     const fileName = `${profile.tenant_id}/logo-${Date.now()}.${fileExt}`;
 
-    // 上传到 Supabase Storage
+    // 上传�?Supabase Storage
     const { data: uploadData, error: uploadError } = await supabase.storage
       .from('tenant-assets')
       .upload(fileName, file, {
@@ -111,6 +115,6 @@ export async function POST(request: NextRequest) {
     });
   } catch (error: any) {
     console.error('Error in POST /api/tenant/branding/upload-logo:', error);
-    return NextResponse.json({ error: '服务器错误' }, { status: 500 });
+    return NextResponse.json({ error: '服务器错�? }, { status: 500 });
   }
 }

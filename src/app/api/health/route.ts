@@ -1,9 +1,13 @@
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
 export async function GET() {
   try {
-    // 检查环境变量
+    // 检查环境变�?
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
@@ -34,7 +38,7 @@ export async function GET() {
       );
     }
 
-    // 一切正常
+    // 一切正�?
     return NextResponse.json({
       status: 'ok',
       message: 'Service is healthy',

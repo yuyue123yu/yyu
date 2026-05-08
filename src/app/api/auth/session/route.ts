@@ -1,3 +1,7 @@
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 
@@ -5,7 +9,7 @@ export async function GET() {
   try {
     const supabase = await createClient();
     
-    // 检查认证服务是否可用
+    // 检查认证服务是否可�?
     const { data: { session }, error } = await supabase.auth.getSession();
 
     if (error) {
@@ -25,7 +29,7 @@ export async function GET() {
   } catch (error) {
     return NextResponse.json({
       success: false,
-      message: '认证服务检查失败',
+      message: '认证服务检查失�?,
       error: error instanceof Error ? error.message : 'Unknown error',
     }, { status: 500 });
   }

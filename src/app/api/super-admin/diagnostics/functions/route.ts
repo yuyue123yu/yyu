@@ -1,3 +1,7 @@
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 
@@ -5,7 +9,7 @@ export async function GET() {
   try {
     const supabase = await createClient();
 
-    // 必需的辅助函数
+    // 必需的辅助函�?
     const requiredFunctions = ['is_super_admin', 'get_user_tenant_id'];
 
     const existingFunctions: string[] = [];
