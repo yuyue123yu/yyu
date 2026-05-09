@@ -1,1 +1,94 @@
-// Force dynamic renderingexport const dynamic = 'force-dynamic';export const runtime = 'nodejs';import { NextRequest, NextResponse } from 'next/server';import { createServerClient } from '@/lib/supabase/server';import { createClient } from '@supabase/supabase-js';export async function POST(request: NextRequest) {  try {    const supabase = await createServerClient();        // 1. 验证当前用户权限    const { data: { session } } = await supabase.auth.getSession();    if (!session) {      return NextResponse.json({         success: false,        error: 'Not authenticated?       }, { status: 401 });    }    const { data: adminProfile } = await supabase      .from('profiles')      .select('tenant_id, role, super_admin')      .eq('id', session.user.id)      .single();    if (!adminProfile) {      return NextResponse.json({         success: false,        error: '用户信息不存?       }, { status: 404 });    }    // 检查权限：必须?owner/admin ?super_admin    const hasPermission =       adminProfile.super_admin ||       adminProfile.role === 'owner' ||       adminProfile.role === 'admin';    if (!hasPermission) {      return NextResponse.json({         success: false,        error: 'Insufficient permissions，只有管理员可以创建子账?       }, { status: 403 });    }    // 2. 获取请求数据    const { email, full_name, role, permissions } = await request.json();    // 3. 验证数据    if (!email || !full_name || !role) {      return NextResponse.json({         success: false,        error: '请填写所有必填字?       }, { status: 400 });    }    // 验证邮箱格式    if (!isValidEmail(email)) {      return NextResponse.json({         success: false,        error: '邮箱格式不正?       }, { status: 400 });    }    // 验证角色    const validRoles = ['admin', 'manager', 'user'];    if (!validRoles.includes(role)) {      return NextResponse.json({         success: false,        error: '无效的角?       }, { status: 400 });    }    // 4. 检查邮箱是否已存在    const { data: existingUser } = await supabase      .from('profiles')      .select('id')      .eq('email', email)      .single();    if (existingUser) {      return NextResponse.json({         success: false,        error: '该邮箱已被使?       }, { status: 400 });    }    // 5. 生成随机密码    const temporaryPassword = generateRandomPassword();    // 6. 使用 service role 创建 Supabase Auth 用户    const supabaseAdmin = createClient(      process.env.NEXT_PUBLIC_SUPABASE_URL!,      process.env.SUPABASE_SERVICE_ROLE_KEY!,      {        auth: {          autoRefreshToken: false,          persistSession: false,        },      }    );    const { data: authUser, error: authError } = await supabaseAdmin.auth.admin.createUser({      email,      password: temporaryPassword,      email_confirm: true, // 自动确认邮箱      user_metadata: {        full_name,      },    });    if (authError || !authUser.user) {      console.error('Auth error:', authError);      return NextResponse.json({         success: false,        error: authError?.message || '创建用户失败'       }, { status: 500 });    }    // 7. 创建 profile 记录    const { error: profileError } = await supabase      .from('profiles')      .insert({        id: authUser.user.id,        email,        full_name,        user_type: 'user',        role,        tenant_id: adminProfile.tenant_id,        parent_user_id: session.user.id,        permissions: permissions || {},        is_active: true,      });    if (profileError) {      console.error('Profile error:', profileError);      // 回滚：删?Auth 用户      await supabaseAdmin.auth.admin.deleteUser(authUser.user.id);      return NextResponse.json({         success: false,        error: '创建用户资料失败'       }, { status: 500 });    }    // 8. 发送欢迎邮件（包含临时密码?    // TODO: 实现邮件发?    console.log(`Welcome email should be sent to ${email} with password: ${temporaryPassword}`);    // 9. 记录审计日志    await supabase.from('audit_logs').insert({      user_id: session.user.id,      action: 'create_sub_account',      resource_type: 'user',      resource_id: authUser.user.id,      details: {         email,         full_name,         role,        tenant_id: adminProfile.tenant_id,      },    });    return NextResponse.json({      success: true,      user: {        id: authUser.user.id,        email,        full_name,        role,      },      temporaryPassword, // 仅在响应中显示一?      message: '子账号创建成?,    });  } catch (error: any) {    console.error('Error creating sub-account:', error);    return NextResponse.json({      success: false,      error: '创建子账号失败，请稍后重?,    }, { status: 500 });  }}function isValidEmail(email: string): boolean {  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;  return emailRegex.test(email);}function generateRandomPassword(length: number = 12): string {  const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';  const lowercase = 'abcdefghijklmnopqrstuvwxyz';  const numbers = '0123456789';  const special = '!@#$%^&*';  const all = uppercase + lowercase + numbers + special;  let password = '';    // 确保包含每种类型的字?  password += uppercase[Math.floor(Math.random() * uppercase.length)];  password += lowercase[Math.floor(Math.random() * lowercase.length)];  password += numbers[Math.floor(Math.random() * numbers.length)];  password += special[Math.floor(Math.random() * special.length)];  // 填充剩余长度  for (let i = password.length; i < length; i++) {    password += all[Math.floor(Math.random() * all.length)];  }  // 打乱顺序  return password.split('').sort(() => Math.random() - 0.5).join('');}
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
+import { NextRequest, NextResponse } from 'next/server';
+import { createClient } from '@/lib/supabase/server';
+
+export async function POST(request: NextRequest) {
+  try {
+    const supabase = await createClient();
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    if (!session) {
+      return NextResponse.json(
+        { error: 'Not authenticated' },
+        { status: 401 }
+      );
+    }
+
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('tenant_id, user_type')
+      .eq('id', session.user.id)
+      .single();
+
+    if (!profile?.tenant_id) {
+      return NextResponse.json(
+        { error: 'User not associated with tenant' },
+        { status: 400 }
+      );
+    }
+
+    if (profile.user_type !== 'owner' && profile.user_type !== 'admin') {
+      return NextResponse.json(
+        { error: 'Insufficient permissions' },
+        { status: 403 }
+      );
+    }
+
+    const { email, full_name, user_type, password } = await request.json();
+
+    if (!email || !password) {
+      return NextResponse.json(
+        { error: 'Email and password are required' },
+        { status: 400 }
+      );
+    }
+
+    // Create user in Supabase Auth
+    const { data: newUser, error: authError } =
+      await supabase.auth.admin.createUser({
+        email,
+        password,
+        email_confirm: true,
+      });
+
+    if (authError) {
+      return NextResponse.json(
+        { error: `Failed to create user: ${authError.message}` },
+        { status: 500 }
+      );
+    }
+
+    // Create profile
+    const { error: profileError } = await supabase.from('profiles').insert({
+      id: newUser.user.id,
+      email,
+      full_name,
+      user_type: user_type || 'user',
+      tenant_id: profile.tenant_id,
+    });
+
+    if (profileError) {
+      return NextResponse.json(
+        { error: 'Failed to create profile' },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: 'User created successfully',
+      user: {
+        id: newUser.user.id,
+        email,
+        full_name,
+        user_type,
+      },
+    });
+  } catch (error: any) {
+    return NextResponse.json({ error: 'Server error' }, { status: 500 });
+  }
+}
