@@ -10,10 +10,10 @@ export async function POST() {
   try {
     const supabase = await createServerClient();
     
-    // 登出 Supabase session
+    // Sign out from Supabase session
     await supabase.auth.signOut();
     
-    // 清除自定�?cookies
+    // Clear custom cookies
     const cookieStore = await cookies();
     cookieStore.delete('sb-access-token');
     cookieStore.delete('sb-refresh-token');
@@ -26,6 +26,6 @@ export async function POST() {
 }
 
 export async function GET() {
-  // 支持 GET 请求（用�?form action�?
+  // Support GET request (for form action)
   return POST();
 }

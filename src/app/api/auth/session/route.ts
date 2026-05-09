@@ -9,27 +9,27 @@ export async function GET() {
   try {
     const supabase = await createClient();
     
-    // 检查认证服务是否可�?
+    // Check if auth service is available
     const { data: { session }, error } = await supabase.auth.getSession();
 
     if (error) {
       return NextResponse.json({
         success: false,
-        message: '认证服务异常',
+        message: 'Authentication service error',
         error: error.message,
       }, { status: 500 });
     }
 
     return NextResponse.json({
       success: true,
-      message: '认证服务正常',
+      message: 'Authentication service is working',
       authenticated: !!session,
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
     return NextResponse.json({
       success: false,
-      message: '认证服务检查失�?,
+      message: 'Authentication service check failed',
       error: error instanceof Error ? error.message : 'Unknown error',
     }, { status: 500 });
   }
