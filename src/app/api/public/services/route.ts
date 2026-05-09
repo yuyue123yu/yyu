@@ -7,28 +7,28 @@ import { getTenantId } from '@/lib/tenant';
 import { NextResponse } from 'next/server';
 
 /**
- * 公開的服務列�?API
- * 不需要登錄即可訪�?
- * 用於前台頁面顯示服務列表
- * 
+ * Public services list API
+ * No login required
+ * Used for frontend page to display service list
+ *
  * GET /api/public/services
  */
 export async function GET(request: Request) {
   try {
     const supabase = await createClient();
 
-    // �?Middleware 獲取租戶 ID（基於域名識別）
+    // Get tenant ID from Middleware (based on domain identification)
     const tenantId = await getTenantId();
 
     if (!tenantId) {
-      console.error('未找到租�?);
+      console.error('Tenant not found');
       return NextResponse.json(
-        { error: '未找到租�? },
+        { error: 'Tenant not found' },
         { status: 404 }
       );
     }
 
-    // 獲取活躍的服務列�?
+    // Get active service list
     const { data: services, error: servicesError } = await supabase
       .from('services')
       .select('*')
@@ -37,14 +37,14 @@ export async function GET(request: Request) {
       .order('display_order', { ascending: true });
 
     if (servicesError) {
-      console.error('獲取服務列表失敗:', servicesError);
+      console.error('Failed to get service list:', servicesError);
       return NextResponse.json(
-        { error: '獲取服務列表失敗' },
+        { error: 'Failed to get service list' },
         { status: 500 }
       );
     }
 
-    // 返回服務列表（添加緩存頭�?
+    // Return service list (add cache headers)
     return NextResponse.json(
       { services: services || [] },
       {
@@ -54,9 +54,9 @@ export async function GET(request: Request) {
       }
     );
   } catch (error) {
-    console.error('獲取服務列表失敗:', error);
+    console.error('Failed to get service list:', error);
     return NextResponse.json(
-      { error: '服務器錯�? },
+      { error: 'Server error' },
       { status: 500 }
     );
   }

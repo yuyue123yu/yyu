@@ -5,10 +5,12 @@ const ROOT_DIR = path.join(__dirname, '..')
 
 // Files that were reported as having UTF-8 errors in Vercel builds
 const CORRUPTED_FILES = [
+  'src/app/api/auth/forgot-password/route.ts',
   'src/app/api/auth/session/route.ts',
   'src/app/api/auth/signout/route.ts',
   'src/app/api/health/database/route.ts',
   'src/app/api/health/email/route.ts',
+  'src/app/api/public/services/route.ts',
   'src/app/api/public/tenant-config/route.ts',
   'src/app/api/super-admin/analytics/export/route.ts',
   'src/app/api/super-admin/diagnostics/database/route.ts',
