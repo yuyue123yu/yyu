@@ -6,7 +6,7 @@ import { NextResponse } from 'next/server';
 
 export async function GET() {
   try {
-    // 检查邮件服务配�?
+    // Check email service configuration
     const emailConfigured = !!(
       process.env.SMTP_HOST &&
       process.env.SMTP_PORT &&
@@ -14,17 +14,17 @@ export async function GET() {
     );
 
     return NextResponse.json({
-      success: true, // 邮件服务是可选的，所以总是返回成功
+      success: true, // Email service is optional, so always return success
       configured: emailConfigured,
       message: emailConfigured 
-        ? '邮件服务已配�? 
-        : '邮件服务未配置（可选）',
+        ? 'Email service is configured' 
+        : 'Email service not configured (optional)',
     });
   } catch (error) {
     return NextResponse.json({
       success: true,
       configured: false,
-      message: '邮件服务检查失�?,
+      message: 'Email service check failed',
       error: error instanceof Error ? error.message : 'Unknown error',
     });
   }
