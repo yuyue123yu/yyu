@@ -1,64 +1,64 @@
-'use client';
+'use client'
 
-import { useEffect, useState } from 'react';
-import { useRouter, useParams } from 'next/navigation';
-import { withSuperAdminAuth } from '@/lib/auth/withSuperAdminAuth';
-import SuperAdminLayout from '@/components/super-admin/SuperAdminLayout';
-import OEMConfigForm from '@/components/super-admin/OEMConfigForm';
+import { useEffect, useState } from 'react'
+import { useRouter, useParams } from 'next/navigation'
+import { withSuperAdminAuth } from '@/lib/auth/withSuperAdminAuth'
+import SuperAdminLayout from '@/components/super-admin/SuperAdminLayout'
+import OEMConfigForm from '@/components/super-admin/OEMConfigForm'
 
 interface Tenant {
-  id: string;
-  name: string;
-  subdomain: string;
+  id: string
+  name: string
+  subdomain: string
 }
 
 function TenantSettingsPage() {
-  const router = useRouter();
-  const params = useParams();
-  const tenantId = params?.id as string;
+  const router = useRouter()
+  const params = useParams()
+  const tenantId = params?.id as string
 
-  const [tenant, setTenant] = useState<Tenant | null>(null);
-  const [settings, setSettings] = useState<Record<string, any>>({});
-  const [isLoading, setIsLoading] = useState(true);
-  const [isSaving, setIsSaving] = useState(false);
+  const [tenant, setTenant] = useState<Tenant | null>(null)
+  const [settings, setSettings] = useState<Record<string, any>>({})
+  const [isLoading, setIsLoading] = useState(true)
+  const [isSaving, setIsSaving] = useState(false)
 
   useEffect(() => {
     if (tenantId) {
-      fetchTenantAndSettings();
+      fetchTenantAndSettings()
     }
-  }, [tenantId]);
+  }, [tenantId])
 
   const fetchTenantAndSettings = async () => {
     try {
-      setIsLoading(true);
+      setIsLoading(true)
 
       // Fetch tenant info
-      const tenantResponse = await fetch(`/api/super-admin/tenants/${tenantId}`);
-      const tenantData = await tenantResponse.json();
+      const tenantResponse = await fetch(`/api/super-admin/tenants/${tenantId}`)
+      const tenantData = await tenantResponse.json()
 
       if (tenantData.success) {
-        setTenant(tenantData.tenant);
+        setTenant(tenantData.tenant)
       }
 
       // Fetch settings
       const settingsResponse = await fetch(
-        `/api/super-admin/tenants/${tenantId}/settings`
-      );
-      const settingsData = await settingsResponse.json();
+        `/api/super-admin/tenants/${tenantId}/settings`,
+      )
+      const settingsData = await settingsResponse.json()
 
       if (settingsData.success) {
-        setSettings(settingsData.settings);
+        setSettings(settingsData.settings)
       }
     } catch (error) {
-      console.error('Error fetching tenant settings:', error);
+      console.error('Error fetching tenant settings:', error)
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   const handleSave = async (newSettings: Record<string, any>) => {
     try {
-      setIsSaving(true);
+      setIsSaving(true)
 
       const response = await fetch(
         `/api/super-admin/tenants/${tenantId}/settings/bulk`,
@@ -66,24 +66,24 @@ function TenantSettingsPage() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ settings: newSettings }),
-        }
-      );
+        },
+      )
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (data.success) {
-        setSettings(newSettings);
-        alert('Settings saved successfully');
+        setSettings(newSettings)
+        alert('Settings saved successfully')
       } else {
-        alert(data.error || 'Failed to save settings');
+        alert(data.error || 'Failed to save settings')
       }
     } catch (error) {
-      console.error('Error saving settings:', error);
-      alert('Failed to save settings');
+      console.error('Error saving settings:', error)
+      alert('Failed to save settings')
     } finally {
-      setIsSaving(false);
+      setIsSaving(false)
     }
-  };
+  }
 
   if (isLoading) {
     return (
@@ -92,7 +92,7 @@ function TenantSettingsPage() {
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div>
         </div>
       </SuperAdminLayout>
-    );
+    )
   }
 
   if (!tenant) {
@@ -108,7 +108,7 @@ function TenantSettingsPage() {
           </button>
         </div>
       </SuperAdminLayout>
-    );
+    )
   }
 
   return (
@@ -122,7 +122,9 @@ function TenantSettingsPage() {
           >
             ← Back to Tenant Details
           </button>
-          <h1 className="text-3xl font-bold text-gray-900">OEM Configuration</h1>
+          <h1 className="text-3xl font-bold text-gray-900">
+            OEM Configuration
+          </h1>
           <p className="text-gray-600 mt-2">
             Customize branding and settings for {tenant.name}
           </p>
@@ -137,7 +139,7 @@ function TenantSettingsPage() {
         />
       </div>
     </SuperAdminLayout>
-  );
+  )
 }
 
-export default withSuperAdminAuth(TenantSettingsPage);
+export default withSuperAdminAuth(TenantSettingsPage)

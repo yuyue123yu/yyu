@@ -1,15 +1,18 @@
-"use client";
+'use client'
 
-import { Download } from "lucide-react";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { Download } from 'lucide-react'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface DownloadPDFButtonProps {
-  articleTitle: string;
-  articleContent: string;
+  articleTitle: string
+  articleContent: string
 }
 
-export default function DownloadPDFButton({ articleTitle, articleContent }: DownloadPDFButtonProps) {
-  const { t } = useLanguage();
+export default function DownloadPDFButton({
+  articleTitle,
+  articleContent,
+}: DownloadPDFButtonProps) {
+  const { t } = useLanguage()
 
   const handleDownload = () => {
     // 创建一个简单的文本内容
@@ -21,28 +24,28 @@ ${articleContent}
 ---
 Downloaded from LegalMY
 Professional Legal Services Platform
-    `.trim();
+    `.trim()
 
     // 创建 Blob
-    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-    
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' })
+
     // 创建下载链接
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `${articleTitle.replace(/[^a-z0-9\u4e00-\u9fa5]/gi, '_')}.txt`;
-    
+    const url = window.URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `${articleTitle.replace(/[^a-z0-9\u4e00-\u9fa5]/gi, '_')}.txt`
+
     // 触发下载
-    document.body.appendChild(link);
-    link.click();
-    
+    document.body.appendChild(link)
+    link.click()
+
     // 清理
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
-    
+    document.body.removeChild(link)
+    window.URL.revokeObjectURL(url)
+
     // 显示成功提示
-    alert(t('pages.downloadSuccess') || '下载成功！');
-  };
+    alert(t('pages.downloadSuccess') || '下载成功！')
+  }
 
   return (
     <div className="bg-primary-50 rounded-xl p-6 mt-8">
@@ -55,7 +58,7 @@ Professional Legal Services Platform
             {t('pages.saveForOffline') || '保存此文章以供离线阅读'}
           </p>
         </div>
-        <button 
+        <button
           onClick={handleDownload}
           className="flex items-center gap-2 px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-semibold transition-all"
         >
@@ -64,5 +67,5 @@ Professional Legal Services Platform
         </button>
       </div>
     </div>
-  );
+  )
 }

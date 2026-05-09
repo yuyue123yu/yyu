@@ -1,26 +1,26 @@
-"use client";
+'use client'
 
-import { useState, useEffect } from "react";
-import { Star, CheckCircle, ShoppingCart, Heart } from "lucide-react";
-import Link from "next/link";
-import { fetchTopLawyers, type Lawyer } from "@/lib/api/lawyers";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useState, useEffect } from 'react'
+import { Star, CheckCircle, ShoppingCart, Heart } from 'lucide-react'
+import Link from 'next/link'
+import { fetchTopLawyers, type Lawyer } from '@/lib/api/lawyers'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 export default function FeaturedLawyers() {
-  const { t } = useLanguage();
-  const [lawyers, setLawyers] = useState<Lawyer[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { t } = useLanguage()
+  const [lawyers, setLawyers] = useState<Lawyer[]>([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    loadLawyers();
-  }, []);
+    loadLawyers()
+  }, [])
 
   const loadLawyers = async () => {
-    setLoading(true);
-    const data = await fetchTopLawyers(6);
-    setLawyers(data);
-    setLoading(false);
-  };
+    setLoading(true)
+    const data = await fetchTopLawyers(6)
+    setLawyers(data)
+    setLoading(false)
+  }
 
   if (loading) {
     return (
@@ -31,7 +31,7 @@ export default function FeaturedLawyers() {
           </div>
         </div>
       </section>
-    );
+    )
   }
 
   return (
@@ -47,7 +47,10 @@ export default function FeaturedLawyers() {
               {t('home.recommendedForYou')}
             </p>
           </div>
-          <Link href="/lawyers" className="text-primary-600 hover:text-primary-700 font-semibold text-sm">
+          <Link
+            href="/lawyers"
+            className="text-primary-600 hover:text-primary-700 font-semibold text-sm"
+          >
             {t('common.viewAll')} →
           </Link>
         </div>
@@ -72,19 +75,27 @@ export default function FeaturedLawyers() {
                   </div>
                 )}
               </div>
-              
+
               {/* 内容区 */}
               <div className="p-3 flex-1 flex flex-col">
-                <h3 className="text-sm font-bold text-neutral-900 truncate">{lawyer.name}</h3>
-                <p className="text-xs text-primary-600 font-medium mb-2">{lawyer.specialty[0]}</p>
-                
+                <h3 className="text-sm font-bold text-neutral-900 truncate">
+                  {lawyer.name}
+                </h3>
+                <p className="text-xs text-primary-600 font-medium mb-2">
+                  {lawyer.specialty[0]}
+                </p>
+
                 {/* 评分 */}
                 <div className="flex items-center gap-1 mb-2">
                   <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
-                  <span className="text-xs font-bold text-neutral-900">{lawyer.rating}</span>
-                  <span className="text-xs text-neutral-500">({lawyer.reviews})</span>
+                  <span className="text-xs font-bold text-neutral-900">
+                    {lawyer.rating}
+                  </span>
+                  <span className="text-xs text-neutral-500">
+                    ({lawyer.reviews})
+                  </span>
                 </div>
-                
+
                 {/* 响应时间 */}
                 <div className="text-xs text-neutral-600 mb-2 flex items-center gap-1">
                   <CheckCircle className="h-3 w-3 text-green-500" />
@@ -95,23 +106,23 @@ export default function FeaturedLawyers() {
                 <div className="text-xs text-neutral-600 mb-2">
                   {t('home.served')} {lawyer.soldCount} {t('home.people')}
                 </div>
-                
+
                 {/* 价格 */}
                 <div className="text-xs font-bold text-primary-600 mb-3">
                   {lawyer.priceRange}
                 </div>
-                
+
                 {/* 按钮 */}
                 <div className="flex gap-2 mt-auto">
                   <div className="flex-1 bg-primary-600 hover:bg-primary-700 text-white text-xs py-2 rounded-lg font-semibold transition-all flex items-center justify-center gap-1">
                     <ShoppingCart className="h-3 w-3" />
                     {t('home.consult')}
                   </div>
-                  <div 
+                  <div
                     className="px-2 py-2 border border-neutral-300 hover:border-primary-300 rounded-lg transition-all"
                     onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
+                      e.preventDefault()
+                      e.stopPropagation()
                       // TODO: Add to favorites
                     }}
                   >
@@ -125,12 +136,15 @@ export default function FeaturedLawyers() {
 
         {/* 查看全部 */}
         <div className="text-center">
-          <Link href="/lawyers" className="inline-flex items-center gap-2 px-6 py-3 border border-primary-600 text-primary-600 hover:bg-primary-50 rounded-lg font-semibold text-sm transition-all">
+          <Link
+            href="/lawyers"
+            className="inline-flex items-center gap-2 px-6 py-3 border border-primary-600 text-primary-600 hover:bg-primary-50 rounded-lg font-semibold text-sm transition-all"
+          >
             {t('common.viewAll')} {t('common.lawyers')}
             <span>→</span>
           </Link>
         </div>
       </div>
     </section>
-  );
+  )
 }

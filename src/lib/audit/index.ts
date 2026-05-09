@@ -1,6 +1,6 @@
 // Audit Logging System
-import { createClient } from '@/lib/supabase/server';
-import type { AuditLogEntry } from '../../../types/super-admin';
+import { createClient } from '@/lib/supabase/server'
+import type { AuditLogEntry } from '../../../types/super-admin'
 
 /**
  * Log an audit event for super admin actions
@@ -8,24 +8,24 @@ import type { AuditLogEntry } from '../../../types/super-admin';
  */
 export async function logAuditEvent(
   entry: AuditLogEntry,
-  request?: Request
+  request?: Request,
 ): Promise<void> {
   try {
-    const supabase = await createClient();
+    const supabase = await createClient()
 
     // Get authenticated user
     const {
       data: { user },
-    } = await supabase.auth.getUser();
+    } = await supabase.auth.getUser()
 
     if (!user) {
-      console.error('Cannot log audit event: No authenticated user');
-      return; // Don't throw - audit logging should not break operations
+      console.error('Cannot log audit event: No authenticated user')
+      return // Don't throw - audit logging should not break operations
     }
 
     // Extract IP address and user agent from request
-    const ip_address = extractIPAddress(request);
-    const user_agent = request?.headers.get('user-agent') || null;
+    const ip_address = extractIPAddress(request)
+    const user_agent = request?.headers.get('user-agent') || null
 
     // Log the event
     const { error } = await supabase.from('audit_logs').insert({
@@ -37,14 +37,14 @@ export async function logAuditEvent(
       ip_address,
       user_agent,
       session_id: null, // Can be added later if needed
-    });
+    })
 
     if (error) {
-      console.error('Failed to log audit event:', error);
+      console.error('Failed to log audit event:', error)
       // Don't throw - audit logging should not break operations
     }
   } catch (error) {
-    console.error('Error logging audit event:', error);
+    console.error('Error logging audit event:', error)
     // Don't throw - audit logging should not break operations
   }
 }
@@ -55,7 +55,7 @@ export async function logAuditEvent(
  */
 function extractIPAddress(request?: Request): string | null {
   if (!request) {
-    return null;
+    return null
   }
 
   // Try various headers in order of preference
@@ -65,17 +65,17 @@ function extractIPAddress(request?: Request): string | null {
     'cf-connecting-ip', // Cloudflare
     'x-client-ip',
     'x-cluster-client-ip',
-  ];
+  ]
 
   for (const header of headers) {
-    const value = request.headers.get(header);
+    const value = request.headers.get(header)
     if (value) {
       // x-forwarded-for can contain multiple IPs, take the first one
-      return value.split(',')[0].trim();
+      return value.split(',')[0].trim()
     }
   }
 
-  return null;
+  return null
 }
 
 /**
@@ -86,12 +86,12 @@ export function withAuditLog(actionType: string, targetEntity: string) {
   return function (
     target: any,
     propertyKey: string,
-    descriptor: PropertyDescriptor
+    descriptor: PropertyDescriptor,
   ) {
-    const originalMethod = descriptor.value;
+    const originalMethod = descriptor.value
 
     descriptor.value = async function (...args: any[]) {
-      const result = await originalMethod.apply(this, args);
+      const result = await originalMethod.apply(this, args)
 
       // Log after successful operation
       await logAuditEvent({
@@ -99,13 +99,13 @@ export function withAuditLog(actionType: string, targetEntity: string) {
         target_entity: targetEntity,
         target_id: result?.id,
         changes: result,
-      });
+      })
 
-      return result;
-    };
+      return result
+    }
 
-    return descriptor;
-  };
+    return descriptor
+  }
 }
 
 /**
@@ -114,22 +114,22 @@ export function withAuditLog(actionType: string, targetEntity: string) {
  */
 export async function logAuditEventBatch(
   entries: AuditLogEntry[],
-  request?: Request
+  request?: Request,
 ): Promise<void> {
   try {
-    const supabase = await createClient();
+    const supabase = await createClient()
 
     const {
       data: { user },
-    } = await supabase.auth.getUser();
+    } = await supabase.auth.getUser()
 
     if (!user) {
-      console.error('Cannot log audit events: No authenticated user');
-      return;
+      console.error('Cannot log audit events: No authenticated user')
+      return
     }
 
-    const ip_address = extractIPAddress(request);
-    const user_agent = request?.headers.get('user-agent') || null;
+    const ip_address = extractIPAddress(request)
+    const user_agent = request?.headers.get('user-agent') || null
 
     // Prepare batch insert
     const logs = entries.map((entry) => ({
@@ -141,15 +141,15 @@ export async function logAuditEventBatch(
       ip_address,
       user_agent,
       session_id: null,
-    }));
+    }))
 
-    const { error } = await supabase.from('audit_logs').insert(logs);
+    const { error } = await supabase.from('audit_logs').insert(logs)
 
     if (error) {
-      console.error('Failed to log audit events:', error);
+      console.error('Failed to log audit events:', error)
     }
   } catch (error) {
-    console.error('Error logging audit events:', error);
+    console.error('Error logging audit events:', error)
   }
 }
 
@@ -157,53 +157,53 @@ export async function logAuditEventBatch(
  * Query audit logs with filters
  */
 export async function queryAuditLogs(filters: {
-  action_type?: string;
-  target_entity?: string;
-  super_admin_id?: string;
-  start_date?: string;
-  end_date?: string;
-  page?: number;
-  limit?: number;
+  action_type?: string
+  target_entity?: string
+  super_admin_id?: string
+  start_date?: string
+  end_date?: string
+  page?: number
+  limit?: number
 }) {
-  const supabase = await createClient();
+  const supabase = await createClient()
 
   let query = supabase
     .from('audit_logs')
     .select('*', { count: 'exact' })
-    .order('created_at', { ascending: false });
+    .order('created_at', { ascending: false })
 
   // Apply filters
   if (filters.action_type) {
-    query = query.eq('action_type', filters.action_type);
+    query = query.eq('action_type', filters.action_type)
   }
 
   if (filters.target_entity) {
-    query = query.eq('target_entity', filters.target_entity);
+    query = query.eq('target_entity', filters.target_entity)
   }
 
   if (filters.super_admin_id) {
-    query = query.eq('super_admin_id', filters.super_admin_id);
+    query = query.eq('super_admin_id', filters.super_admin_id)
   }
 
   if (filters.start_date) {
-    query = query.gte('created_at', filters.start_date);
+    query = query.gte('created_at', filters.start_date)
   }
 
   if (filters.end_date) {
-    query = query.lte('created_at', filters.end_date);
+    query = query.lte('created_at', filters.end_date)
   }
 
   // Pagination
-  const page = filters.page || 1;
-  const limit = filters.limit || 50;
-  const offset = (page - 1) * limit;
+  const page = filters.page || 1
+  const limit = filters.limit || 50
+  const offset = (page - 1) * limit
 
-  query = query.range(offset, offset + limit - 1);
+  query = query.range(offset, offset + limit - 1)
 
-  const { data, error, count } = await query;
+  const { data, error, count } = await query
 
   if (error) {
-    throw error;
+    throw error
   }
 
   return {
@@ -212,22 +212,22 @@ export async function queryAuditLogs(filters: {
     page,
     limit,
     totalPages: Math.ceil((count || 0) / limit),
-  };
+  }
 }
 
 /**
  * Export audit logs to CSV format
  */
 export async function exportAuditLogsToCSV(filters: {
-  start_date?: string;
-  end_date?: string;
-  action_type?: string;
-  target_entity?: string;
+  start_date?: string
+  end_date?: string
+  action_type?: string
+  target_entity?: string
 }): Promise<string> {
   const { logs } = await queryAuditLogs({
     ...filters,
     limit: 10000, // Max export limit
-  });
+  })
 
   // CSV header
   const header = [
@@ -240,7 +240,7 @@ export async function exportAuditLogsToCSV(filters: {
     'IP Address',
     'User Agent',
     'Created At',
-  ].join(',');
+  ].join(',')
 
   // CSV rows
   const rows = logs.map((log) => {
@@ -256,25 +256,25 @@ export async function exportAuditLogsToCSV(filters: {
       log.created_at,
     ]
       .map((field) => `"${String(field).replace(/"/g, '""')}"`)
-      .join(',');
-  });
+      .join(',')
+  })
 
-  return [header, ...rows].join('\n');
+  return [header, ...rows].join('\n')
 }
 
 /**
  * Export audit logs to JSON format
  */
 export async function exportAuditLogsToJSON(filters: {
-  start_date?: string;
-  end_date?: string;
-  action_type?: string;
-  target_entity?: string;
+  start_date?: string
+  end_date?: string
+  action_type?: string
+  target_entity?: string
 }): Promise<string> {
   const { logs } = await queryAuditLogs({
     ...filters,
     limit: 10000, // Max export limit
-  });
+  })
 
-  return JSON.stringify(logs, null, 2);
+  return JSON.stringify(logs, null, 2)
 }

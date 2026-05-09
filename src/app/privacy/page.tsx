@@ -1,9 +1,9 @@
-import { Metadata } from 'next';
+import { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: '隐私政策 | LegalMY',
   description: 'LegalMY 隐私政策 - 了解我们如何收集、使用和保护您的个人信息',
-};
+}
 
 export default function PrivacyPage() {
   return (
@@ -15,10 +15,10 @@ export default function PrivacyPage() {
 
           <div className="prose prose-lg max-w-none">
             <section className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">1. 信息收集</h2>
-              <p className="text-gray-700 mb-4">
-                我们收集以下类型的信息：
-              </p>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                1. 信息收集
+              </h2>
+              <p className="text-gray-700 mb-4">我们收集以下类型的信息：</p>
               <ul className="list-disc pl-6 text-gray-700 space-y-2">
                 <li>个人信息：姓名、电子邮件、电话号码</li>
                 <li>咨询信息：法律咨询内容、案件详情</li>
@@ -28,10 +28,10 @@ export default function PrivacyPage() {
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">2. 信息使用</h2>
-              <p className="text-gray-700 mb-4">
-                我们使用收集的信息用于：
-              </p>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                2. 信息使用
+              </h2>
+              <p className="text-gray-700 mb-4">我们使用收集的信息用于：</p>
               <ul className="list-disc pl-6 text-gray-700 space-y-2">
                 <li>提供法律咨询服务</li>
                 <li>改善用户体验</li>
@@ -41,7 +41,9 @@ export default function PrivacyPage() {
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">3. 信息保护</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                3. 信息保护
+              </h2>
               <p className="text-gray-700 mb-4">
                 我们采取以下措施保护您的信息：
               </p>
@@ -54,7 +56,9 @@ export default function PrivacyPage() {
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">4. 信息共享</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                4. 信息共享
+              </h2>
               <p className="text-gray-700 mb-4">
                 我们不会出售您的个人信息。我们可能在以下情况下共享信息：
               </p>
@@ -66,7 +70,9 @@ export default function PrivacyPage() {
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">5. 您的权利</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                5. 您的权利
+              </h2>
               <p className="text-gray-700 mb-4">
                 根据马来西亚个人数据保护法（PDPA），您有权：
               </p>
@@ -80,14 +86,19 @@ export default function PrivacyPage() {
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">6. Cookie 政策</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                6. Cookie 政策
+              </h2>
               <p className="text-gray-700 mb-4">
-                我们使用 Cookie 来改善用户体验。您可以通过浏览器设置管理 Cookie。
+                我们使用 Cookie 来改善用户体验。您可以通过浏览器设置管理
+                Cookie。
               </p>
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">7. 联系我们</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                7. 联系我们
+              </h2>
               <p className="text-gray-700 mb-4">
                 如果您对本隐私政策有任何疑问，请联系我们：
               </p>
@@ -101,5 +112,5 @@ export default function PrivacyPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }

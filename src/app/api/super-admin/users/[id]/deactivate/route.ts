@@ -1,8 +1,8 @@
 // User Management API - Deactivate User
-import { NextRequest, NextResponse } from 'next/server';
-import { requireSuperAdmin } from '@/lib/middleware/super-admin';
-import { logAuditEvent } from '@/lib/audit';
-import { createClient } from '@/lib/supabase/server';
+import { NextRequest, NextResponse } from 'next/server'
+import { requireSuperAdmin } from '@/lib/middleware/super-admin'
+import { logAuditEvent } from '@/lib/audit'
+import { createClient } from '@/lib/supabase/server'
 
 /**
  * POST /api/super-admin/users/:id/deactivate
@@ -10,16 +10,16 @@ import { createClient } from '@/lib/supabase/server';
  */
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   // Verify super admin authentication
-  const authResult = await requireSuperAdmin(request);
+  const authResult = await requireSuperAdmin(request)
   if (authResult instanceof NextResponse) {
-    return authResult;
+    return authResult
   }
 
-  const { supabase } = authResult;
-  const { id } = params;
+  const { supabase } = authResult
+  const { id } = params
 
   try {
     // Get current user
@@ -27,23 +27,23 @@ export async function POST(
       .from('profiles')
       .select('*')
       .eq('id', id)
-      .single();
+      .single()
 
     if (!currentUser) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+      return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
 
     // Prevent deactivating super admins
     if (currentUser.super_admin) {
       return NextResponse.json(
         { error: 'Cannot deactivate super admin accounts' },
-        { status: 403 }
-      );
+        { status: 403 },
+      )
     }
 
     // Toggle active status
-    const newActiveStatus = !currentUser.active;
-    
+    const newActiveStatus = !currentUser.active
+
     const { data: user, error: updateError } = await supabase
       .from('profiles')
       .update({
@@ -52,10 +52,10 @@ export async function POST(
       })
       .eq('id', id)
       .select()
-      .single();
+      .single()
 
     if (updateError) {
-      throw updateError;
+      throw updateError
     }
 
     // Log audit event
@@ -71,19 +71,19 @@ export async function POST(
           active: newActiveStatus,
         },
       },
-      request
-    );
+      request,
+    )
 
     return NextResponse.json({
       success: true,
       message: `User ${newActiveStatus ? 'activated' : 'deactivated'} successfully`,
       user,
-    });
+    })
   } catch (error) {
-    console.error('Error toggling user status:', error);
+    console.error('Error toggling user status:', error)
     return NextResponse.json(
       { error: 'Failed to toggle user status' },
-      { status: 500 }
-    );
+      { status: 500 },
+    )
   }
 }

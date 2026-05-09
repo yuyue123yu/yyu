@@ -1,60 +1,61 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation'; // 在顶部导入
-import { createClient } from '@/lib/supabase/client';
-import { Mail, Lock, Eye, EyeOff, AlertCircle, Shield } from 'lucide-react';
+import { useState } from 'react'
+import { useRouter } from 'next/navigation' // 在顶部导入
+import { createClient } from '@/lib/supabase/client'
+import { Mail, Lock, Eye, EyeOff, AlertCircle, Shield } from 'lucide-react'
 
 export default function AdminLoginPage() {
-  const router = useRouter(); // 在组件顶部使用
-  const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const router = useRouter() // 在组件顶部使用
+  const [showPassword, setShowPassword] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [formData, setFormData] = useState({
     email: 'admin@legalmy.com',
     password: '',
-  });
+  })
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    setLoading(true);
+    e.preventDefault()
+    setError(null)
+    setLoading(true)
 
     try {
-      const supabase = createClient();
+      const supabase = createClient()
 
       // 步骤1: 登录前先登出，确保账号切换安全
-      await supabase.auth.signOut();
+      await supabase.auth.signOut()
 
       // 步骤2: 登录新账号
-      const { data, error: authError } = await supabase.auth.signInWithPassword({
-        email: formData.email,
-        password: formData.password,
-      });
+      const { data, error: authError } = await supabase.auth.signInWithPassword(
+        {
+          email: formData.email,
+          password: formData.password,
+        },
+      )
 
       if (authError) {
-        setError(authError.message);
-        setLoading(false);
-        return;
+        setError(authError.message)
+        setLoading(false)
+        return
       }
 
       if (!data.session) {
-        setError('登录成功但未获取到Session');
-        setLoading(false);
-        return;
+        setError('登录成功但未获取到Session')
+        setLoading(false)
+        return
       }
 
-      console.log('✅ 登录成功，Session 已自动写入 Cookie');
+      console.log('✅ 登录成功，Session 已自动写入 Cookie')
 
       // 步骤3: 跳转到 Dashboard（Supabase SSR 会自动处理 Cookie）
-      router.replace('/admin');
-      router.refresh(); // 刷新服务端组件
-
+      router.replace('/admin')
+      router.refresh() // 刷新服务端组件
     } catch (err: any) {
-      setError(err.message || '登录失败，请重试');
-      setLoading(false);
+      setError(err.message || '登录失败，请重试')
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-600 to-primary-800 flex items-center justify-center p-6">
@@ -64,7 +65,9 @@ export default function AdminLoginPage() {
           <div className="inline-flex items-center justify-center w-16 h-16 bg-white rounded-full mb-4">
             <Shield className="h-8 w-8 text-primary-600" />
           </div>
-          <h1 className="text-3xl font-bold text-white mb-2">LegalMY 管理后台</h1>
+          <h1 className="text-3xl font-bold text-white mb-2">
+            LegalMY 管理后台
+          </h1>
           <p className="text-primary-100">请使用管理员账号登录</p>
         </div>
 
@@ -90,7 +93,9 @@ export default function AdminLoginPage() {
                   type="email"
                   required
                   value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
                   className="w-full pl-10 pr-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                   placeholder="admin@legalmy.com"
                   disabled={loading}
@@ -109,7 +114,9 @@ export default function AdminLoginPage() {
                   type={showPassword ? 'text' : 'password'}
                   required
                   value={formData.password}
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, password: e.target.value })
+                  }
                   className="w-full pl-10 pr-12 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                   placeholder="••••••••"
                   disabled={loading}
@@ -120,7 +127,11 @@ export default function AdminLoginPage() {
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600"
                   tabIndex={-1}
                 >
-                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5" />
+                  ) : (
+                    <Eye className="h-5 w-5" />
+                  )}
                 </button>
               </div>
             </div>
@@ -151,5 +162,5 @@ export default function AdminLoginPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -8,13 +8,13 @@ export function generateStaticParams() {
     { category: 'criminal' },
     { category: 'employment' },
     { category: 'ip' },
-  ];
+  ]
 }
 
 export default function ServiceCategoryLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) {
-  return <>{children}</>;
+  return <>{children}</>
 }

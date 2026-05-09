@@ -3,16 +3,16 @@
 // In production, you would use libraries like jsPDF or PDFKit
 
 export interface PDFOptions {
-  title: string;
-  content: string;
-  author?: string;
-  date?: string;
+  title: string
+  content: string
+  author?: string
+  date?: string
 }
 
 export async function generatePDF(options: PDFOptions): Promise<Blob> {
   // Mock PDF generation
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  
+  await new Promise((resolve) => setTimeout(resolve, 1000))
+
   // In production, use a real PDF library
   const mockPDFContent = `
     Title: ${options.title}
@@ -21,28 +21,28 @@ export async function generatePDF(options: PDFOptions): Promise<Blob> {
     
     Content:
     ${options.content}
-  `;
-  
-  return new Blob([mockPDFContent], { type: 'application/pdf' });
+  `
+
+  return new Blob([mockPDFContent], { type: 'application/pdf' })
 }
 
 export async function downloadPDF(blob: Blob, filename: string): Promise<void> {
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = filename;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  URL.revokeObjectURL(url);
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = filename
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+  URL.revokeObjectURL(url)
 }
 
 export interface TemplatePDFOptions {
-  id: string;
-  title: string;
-  category: string;
-  description: string;
-  language: string;
+  id: string
+  title: string
+  category: string
+  description: string
+  language: string
 }
 
 export function generateTemplatePDF(options: TemplatePDFOptions): Blob {
@@ -55,7 +55,7 @@ export function generateTemplatePDF(options: TemplatePDFOptions): Blob {
     Language: ${options.language}
     
     Generated: ${new Date().toISOString()}
-  `;
-  
-  return new Blob([mockPDFContent], { type: 'application/pdf' });
+  `
+
+  return new Blob([mockPDFContent], { type: 'application/pdf' })
 }

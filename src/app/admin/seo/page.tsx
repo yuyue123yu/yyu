@@ -1,147 +1,158 @@
-"use client";
+'use client'
 
-import { useState, useEffect } from "react";
-import { Save, Search, Image, Share2, Code, Settings as SettingsIcon, X, Info } from "lucide-react";
+import { useState, useEffect } from 'react'
+import {
+  Save,
+  Search,
+  Image,
+  Share2,
+  Code,
+  Settings as SettingsIcon,
+  X,
+  Info,
+} from 'lucide-react'
 
 interface SEOSettings {
-  basic: any;
-  favicon: any;
-  open_graph: any;
-  twitter: any;
-  structured_data: any;
-  advanced: any;
+  basic: any
+  favicon: any
+  open_graph: any
+  twitter: any
+  structured_data: any
+  advanced: any
 }
 
 export default function SEOPage() {
-  const [settings, setSettings] = useState<SEOSettings | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [activeTab, setActiveTab] = useState<'basic' | 'favicon' | 'og' | 'twitter' | 'schema' | 'advanced'>('basic');
-  const [uploading, setUploading] = useState(false);
+  const [settings, setSettings] = useState<SEOSettings | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [activeTab, setActiveTab] = useState<
+    'basic' | 'favicon' | 'og' | 'twitter' | 'schema' | 'advanced'
+  >('basic')
+  const [uploading, setUploading] = useState(false)
 
   useEffect(() => {
-    loadSettings();
-  }, []);
+    loadSettings()
+  }, [])
 
   const loadSettings = async () => {
     try {
-      setLoading(true);
-      const response = await fetch('/api/tenant/seo');
-      const data = await response.json();
+      setLoading(true)
+      const response = await fetch('/api/tenant/seo')
+      const data = await response.json()
 
       if (data.success) {
-        setSettings(data.seo);
+        setSettings(data.seo)
       }
     } catch (error) {
-      console.error('Error loading settings:', error);
-      alert('加载设置失败');
+      console.error('Error loading settings:', error)
+      alert('加载设置失败')
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const handleSave = async () => {
-    if (!settings) return;
+    if (!settings) return
 
     try {
-      setSaving(true);
+      setSaving(true)
       const response = await fetch('/api/tenant/seo', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(settings),
-      });
+      })
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (data.success) {
-        alert('SEO 配置已保存！');
+        alert('SEO 配置已保存！')
       } else {
-        alert(data.error || '保存失败');
+        alert(data.error || '保存失败')
       }
     } catch (error) {
-      console.error('Error saving settings:', error);
-      alert('保存失败，请重试');
+      console.error('Error saving settings:', error)
+      alert('保存失败，请重试')
     } finally {
-      setSaving(false);
+      setSaving(false)
     }
-  };
+  }
 
   const handleFileUpload = async (file: File, type: string) => {
     try {
-      setUploading(true);
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('type', type);
+      setUploading(true)
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('type', type)
 
       const response = await fetch('/api/tenant/seo/upload-favicon', {
         method: 'POST',
         body: formData,
-      });
+      })
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (data.success) {
-        updateFavicon(type, data.url);
-        alert('上传成功！');
+        updateFavicon(type, data.url)
+        alert('上传成功！')
       } else {
-        alert(data.error || '上传失败');
+        alert(data.error || '上传失败')
       }
     } catch (error) {
-      console.error('Error uploading file:', error);
-      alert('上传失败，请重试');
+      console.error('Error uploading file:', error)
+      alert('上传失败，请重试')
     } finally {
-      setUploading(false);
+      setUploading(false)
     }
-  };
+  }
 
   const updateBasic = (field: string, value: any) => {
-    if (!settings) return;
+    if (!settings) return
     setSettings({
       ...settings,
       basic: {
         ...settings.basic,
         [field]: value,
       },
-    });
-  };
+    })
+  }
 
   const updateFavicon = (field: string, value: any) => {
-    if (!settings) return;
+    if (!settings) return
     setSettings({
       ...settings,
       favicon: {
         ...settings.favicon,
         [field]: value,
       },
-    });
-  };
+    })
+  }
 
   const updateOpenGraph = (field: string, value: any) => {
-    if (!settings) return;
+    if (!settings) return
     setSettings({
       ...settings,
       open_graph: {
         ...settings.open_graph,
         [field]: value,
       },
-    });
-  };
+    })
+  }
 
   const updateTwitter = (field: string, value: any) => {
-    if (!settings) return;
+    if (!settings) return
     setSettings({
       ...settings,
       twitter: {
         ...settings.twitter,
         [field]: value,
       },
-    });
-  };
+    })
+  }
 
   const updateStructuredData = (section: string, field: string, value: any) => {
-    if (!settings) return;
+    if (!settings) return
     setSettings({
       ...settings,
       structured_data: {
@@ -151,38 +162,40 @@ export default function SEOPage() {
           [field]: value,
         },
       },
-    });
-  };
+    })
+  }
 
   const updateAdvanced = (field: string, value: any) => {
-    if (!settings) return;
+    if (!settings) return
     setSettings({
       ...settings,
       advanced: {
         ...settings.advanced,
         [field]: value,
       },
-    });
-  };
+    })
+  }
 
   const addKeyword = () => {
-    if (!settings) return;
-    const keywords = [...settings.basic.keywords, ''];
-    updateBasic('keywords', keywords);
-  };
+    if (!settings) return
+    const keywords = [...settings.basic.keywords, '']
+    updateBasic('keywords', keywords)
+  }
 
   const removeKeyword = (index: number) => {
-    if (!settings) return;
-    const keywords = settings.basic.keywords.filter((_: any, i: number) => i !== index);
-    updateBasic('keywords', keywords);
-  };
+    if (!settings) return
+    const keywords = settings.basic.keywords.filter(
+      (_: any, i: number) => i !== index,
+    )
+    updateBasic('keywords', keywords)
+  }
 
   const updateKeyword = (index: number, value: string) => {
-    if (!settings) return;
-    const keywords = [...settings.basic.keywords];
-    keywords[index] = value;
-    updateBasic('keywords', keywords);
-  };
+    if (!settings) return
+    const keywords = [...settings.basic.keywords]
+    keywords[index] = value
+    updateBasic('keywords', keywords)
+  }
 
   if (loading || !settings) {
     return (
@@ -192,7 +205,7 @@ export default function SEOPage() {
           <p className="mt-4 text-neutral-600">加载中...</p>
         </div>
       </div>
-    );
+    )
   }
 
   const tabs = [
@@ -202,7 +215,7 @@ export default function SEOPage() {
     { id: 'twitter', label: 'Twitter Card', icon: Share2 },
     { id: 'schema', label: '结构化数据', icon: Code },
     { id: 'advanced', label: '高级设置', icon: SettingsIcon },
-  ];
+  ]
 
   return (
     <div>
@@ -210,7 +223,9 @@ export default function SEOPage() {
       <div className="mb-8 flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-neutral-900">SEO 设置</h1>
-          <p className="text-neutral-600 mt-2">优化搜索引擎排名和社交媒体分享</p>
+          <p className="text-neutral-600 mt-2">
+            优化搜索引擎排名和社交媒体分享
+          </p>
         </div>
         <button
           onClick={handleSave}
@@ -259,7 +274,8 @@ export default function SEOPage() {
                 placeholder="专业法律咨询服务"
               />
               <p className="text-xs text-neutral-500 mt-1">
-                推荐长度：50-60 字符（当前：{settings.basic.site_title.length} 字符）
+                推荐长度：50-60 字符（当前：{settings.basic.site_title.length}{' '}
+                字符）
               </p>
             </div>
 
@@ -269,13 +285,16 @@ export default function SEOPage() {
               </label>
               <textarea
                 value={settings.basic.site_description}
-                onChange={(e) => updateBasic('site_description', e.target.value)}
+                onChange={(e) =>
+                  updateBasic('site_description', e.target.value)
+                }
                 rows={3}
                 className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 placeholder="为您提供全方位的法律支持与解决方案"
               />
               <p className="text-xs text-neutral-500 mt-1">
-                推荐长度：150-160 字符（当前：{settings.basic.site_description.length} 字符）
+                推荐长度：150-160 字符（当前：
+                {settings.basic.site_description.length} 字符）
               </p>
             </div>
 
@@ -292,23 +311,25 @@ export default function SEOPage() {
                 </button>
               </div>
               <div className="space-y-2">
-                {settings.basic.keywords.map((keyword: string, index: number) => (
-                  <div key={index} className="flex items-center gap-2">
-                    <input
-                      type="text"
-                      value={keyword}
-                      onChange={(e) => updateKeyword(index, e.target.value)}
-                      className="flex-1 px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                      placeholder="输入关键词"
-                    />
-                    <button
-                      onClick={() => removeKeyword(index)}
-                      className="text-red-600 hover:text-red-700"
-                    >
-                      <X className="h-5 w-5" />
-                    </button>
-                  </div>
-                ))}
+                {settings.basic.keywords.map(
+                  (keyword: string, index: number) => (
+                    <div key={index} className="flex items-center gap-2">
+                      <input
+                        type="text"
+                        value={keyword}
+                        onChange={(e) => updateKeyword(index, e.target.value)}
+                        className="flex-1 px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                        placeholder="输入关键词"
+                      />
+                      <button
+                        onClick={() => removeKeyword(index)}
+                        className="text-red-600 hover:text-red-700"
+                      >
+                        <X className="h-5 w-5" />
+                      </button>
+                    </div>
+                  ),
+                )}
               </div>
             </div>
 
@@ -361,12 +382,31 @@ export default function SEOPage() {
             </div>
 
             {[
-              { key: 'favicon_url', label: 'Favicon (16x16 或 32x32)', type: 'favicon' },
-              { key: 'apple_touch_icon_url', label: 'Apple Touch Icon (180x180)', type: 'apple-touch-icon' },
-              { key: 'favicon_32_url', label: 'Favicon 32x32', type: 'favicon-32' },
-              { key: 'favicon_16_url', label: 'Favicon 16x16', type: 'favicon-16' },
+              {
+                key: 'favicon_url',
+                label: 'Favicon (16x16 或 32x32)',
+                type: 'favicon',
+              },
+              {
+                key: 'apple_touch_icon_url',
+                label: 'Apple Touch Icon (180x180)',
+                type: 'apple-touch-icon',
+              },
+              {
+                key: 'favicon_32_url',
+                label: 'Favicon 32x32',
+                type: 'favicon-32',
+              },
+              {
+                key: 'favicon_16_url',
+                label: 'Favicon 16x16',
+                type: 'favicon-16',
+              },
             ].map((item) => (
-              <div key={item.key} className="border border-neutral-200 rounded-lg p-4">
+              <div
+                key={item.key}
+                className="border border-neutral-200 rounded-lg p-4"
+              >
                 <label className="block text-sm font-medium text-neutral-700 mb-2">
                   {item.label}
                 </label>
@@ -383,8 +423,8 @@ export default function SEOPage() {
                       type="file"
                       accept="image/x-icon,image/png,image/jpeg,image/svg+xml"
                       onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (file) handleFileUpload(file, item.type);
+                        const file = e.target.files?.[0]
+                        if (file) handleFileUpload(file, item.type)
                       }}
                       className="block w-full text-sm text-neutral-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100"
                       disabled={uploading}
@@ -415,7 +455,9 @@ export default function SEOPage() {
                   onChange={(e) => updateOpenGraph('enabled', e.target.checked)}
                   className="rounded border-neutral-300"
                 />
-                <span className="text-sm font-medium text-neutral-700">启用 Open Graph</span>
+                <span className="text-sm font-medium text-neutral-700">
+                  启用 Open Graph
+                </span>
               </label>
             </div>
 
@@ -428,7 +470,9 @@ export default function SEOPage() {
                   <input
                     type="text"
                     value={settings.open_graph.og_title}
-                    onChange={(e) => updateOpenGraph('og_title', e.target.value)}
+                    onChange={(e) =>
+                      updateOpenGraph('og_title', e.target.value)
+                    }
                     className="w-full px-4 py-2 border border-neutral-300 rounded-lg"
                     placeholder="留空则使用网站标题"
                   />
@@ -440,7 +484,9 @@ export default function SEOPage() {
                   </label>
                   <textarea
                     value={settings.open_graph.og_description}
-                    onChange={(e) => updateOpenGraph('og_description', e.target.value)}
+                    onChange={(e) =>
+                      updateOpenGraph('og_description', e.target.value)
+                    }
                     rows={3}
                     className="w-full px-4 py-2 border border-neutral-300 rounded-lg"
                     placeholder="留空则使用网站描述"
@@ -454,7 +500,9 @@ export default function SEOPage() {
                   <input
                     type="text"
                     value={settings.open_graph.og_image}
-                    onChange={(e) => updateOpenGraph('og_image', e.target.value)}
+                    onChange={(e) =>
+                      updateOpenGraph('og_image', e.target.value)
+                    }
                     className="w-full px-4 py-2 border border-neutral-300 rounded-lg"
                     placeholder="https://example.com/og-image.jpg"
                   />
@@ -474,7 +522,9 @@ export default function SEOPage() {
                     </label>
                     <select
                       value={settings.open_graph.og_type}
-                      onChange={(e) => updateOpenGraph('og_type', e.target.value)}
+                      onChange={(e) =>
+                        updateOpenGraph('og_type', e.target.value)
+                      }
                       className="w-full px-4 py-2 border border-neutral-300 rounded-lg"
                     >
                       <option value="website">Website</option>
@@ -490,7 +540,9 @@ export default function SEOPage() {
                     <input
                       type="text"
                       value={settings.open_graph.og_locale}
-                      onChange={(e) => updateOpenGraph('og_locale', e.target.value)}
+                      onChange={(e) =>
+                        updateOpenGraph('og_locale', e.target.value)
+                      }
                       className="w-full px-4 py-2 border border-neutral-300 rounded-lg"
                       placeholder="zh_CN"
                     />
@@ -503,7 +555,9 @@ export default function SEOPage() {
                     <input
                       type="text"
                       value={settings.open_graph.og_site_name}
-                      onChange={(e) => updateOpenGraph('og_site_name', e.target.value)}
+                      onChange={(e) =>
+                        updateOpenGraph('og_site_name', e.target.value)
+                      }
                       className="w-full px-4 py-2 border border-neutral-300 rounded-lg"
                       placeholder="网站名称"
                     />
@@ -525,7 +579,9 @@ export default function SEOPage() {
                   onChange={(e) => updateTwitter('enabled', e.target.checked)}
                   className="rounded border-neutral-300"
                 />
-                <span className="text-sm font-medium text-neutral-700">启用 Twitter Card</span>
+                <span className="text-sm font-medium text-neutral-700">
+                  启用 Twitter Card
+                </span>
               </label>
             </div>
 
@@ -541,7 +597,9 @@ export default function SEOPage() {
                     className="w-full px-4 py-2 border border-neutral-300 rounded-lg"
                   >
                     <option value="summary">Summary</option>
-                    <option value="summary_large_image">Summary Large Image</option>
+                    <option value="summary_large_image">
+                      Summary Large Image
+                    </option>
                   </select>
                 </div>
 
@@ -553,7 +611,9 @@ export default function SEOPage() {
                     <input
                       type="text"
                       value={settings.twitter.twitter_site}
-                      onChange={(e) => updateTwitter('twitter_site', e.target.value)}
+                      onChange={(e) =>
+                        updateTwitter('twitter_site', e.target.value)
+                      }
                       className="w-full px-4 py-2 border border-neutral-300 rounded-lg"
                       placeholder="@username"
                     />
@@ -566,7 +626,9 @@ export default function SEOPage() {
                     <input
                       type="text"
                       value={settings.twitter.twitter_creator}
-                      onChange={(e) => updateTwitter('twitter_creator', e.target.value)}
+                      onChange={(e) =>
+                        updateTwitter('twitter_creator', e.target.value)
+                      }
                       className="w-full px-4 py-2 border border-neutral-300 rounded-lg"
                       placeholder="@username"
                     />
@@ -580,7 +642,9 @@ export default function SEOPage() {
                   <input
                     type="text"
                     value={settings.twitter.twitter_title}
-                    onChange={(e) => updateTwitter('twitter_title', e.target.value)}
+                    onChange={(e) =>
+                      updateTwitter('twitter_title', e.target.value)
+                    }
                     className="w-full px-4 py-2 border border-neutral-300 rounded-lg"
                     placeholder="留空则使用网站标题"
                   />
@@ -592,7 +656,9 @@ export default function SEOPage() {
                   </label>
                   <textarea
                     value={settings.twitter.twitter_description}
-                    onChange={(e) => updateTwitter('twitter_description', e.target.value)}
+                    onChange={(e) =>
+                      updateTwitter('twitter_description', e.target.value)
+                    }
                     rows={3}
                     className="w-full px-4 py-2 border border-neutral-300 rounded-lg"
                     placeholder="留空则使用网站描述"
@@ -606,7 +672,9 @@ export default function SEOPage() {
                   <input
                     type="text"
                     value={settings.twitter.twitter_image}
-                    onChange={(e) => updateTwitter('twitter_image', e.target.value)}
+                    onChange={(e) =>
+                      updateTwitter('twitter_image', e.target.value)
+                    }
                     className="w-full px-4 py-2 border border-neutral-300 rounded-lg"
                     placeholder="https://example.com/twitter-image.jpg"
                   />
@@ -631,17 +699,23 @@ export default function SEOPage() {
                 <input
                   type="checkbox"
                   checked={settings.structured_data.enabled}
-                  onChange={(e) => updateStructuredData('enabled', '', e.target.checked)}
+                  onChange={(e) =>
+                    updateStructuredData('enabled', '', e.target.checked)
+                  }
                   className="rounded border-neutral-300"
                 />
-                <span className="text-sm font-medium text-neutral-700">启用结构化数据</span>
+                <span className="text-sm font-medium text-neutral-700">
+                  启用结构化数据
+                </span>
               </label>
             </div>
 
             {settings.structured_data.enabled && (
               <>
                 <div className="border-t border-neutral-200 pt-6">
-                  <h3 className="text-lg font-semibold text-neutral-900 mb-4">组织信息</h3>
+                  <h3 className="text-lg font-semibold text-neutral-900 mb-4">
+                    组织信息
+                  </h3>
                   <div className="space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
@@ -651,7 +725,13 @@ export default function SEOPage() {
                         <input
                           type="text"
                           value={settings.structured_data.organization.name}
-                          onChange={(e) => updateStructuredData('organization', 'name', e.target.value)}
+                          onChange={(e) =>
+                            updateStructuredData(
+                              'organization',
+                              'name',
+                              e.target.value,
+                            )
+                          }
                           className="w-full px-4 py-2 border border-neutral-300 rounded-lg"
                         />
                       </div>
@@ -663,7 +743,13 @@ export default function SEOPage() {
                         <input
                           type="text"
                           value={settings.structured_data.organization.logo}
-                          onChange={(e) => updateStructuredData('organization', 'logo', e.target.value)}
+                          onChange={(e) =>
+                            updateStructuredData(
+                              'organization',
+                              'logo',
+                              e.target.value,
+                            )
+                          }
                           className="w-full px-4 py-2 border border-neutral-300 rounded-lg"
                         />
                       </div>
@@ -675,7 +761,13 @@ export default function SEOPage() {
                         <input
                           type="text"
                           value={settings.structured_data.organization.url}
-                          onChange={(e) => updateStructuredData('organization', 'url', e.target.value)}
+                          onChange={(e) =>
+                            updateStructuredData(
+                              'organization',
+                              'url',
+                              e.target.value,
+                            )
+                          }
                           className="w-full px-4 py-2 border border-neutral-300 rounded-lg"
                         />
                       </div>
@@ -686,8 +778,16 @@ export default function SEOPage() {
                         </label>
                         <input
                           type="text"
-                          value={settings.structured_data.organization.telephone}
-                          onChange={(e) => updateStructuredData('organization', 'telephone', e.target.value)}
+                          value={
+                            settings.structured_data.organization.telephone
+                          }
+                          onChange={(e) =>
+                            updateStructuredData(
+                              'organization',
+                              'telephone',
+                              e.target.value,
+                            )
+                          }
                           className="w-full px-4 py-2 border border-neutral-300 rounded-lg"
                         />
                       </div>
@@ -699,7 +799,13 @@ export default function SEOPage() {
                         <input
                           type="email"
                           value={settings.structured_data.organization.email}
-                          onChange={(e) => updateStructuredData('organization', 'email', e.target.value)}
+                          onChange={(e) =>
+                            updateStructuredData(
+                              'organization',
+                              'email',
+                              e.target.value,
+                            )
+                          }
                           className="w-full px-4 py-2 border border-neutral-300 rounded-lg"
                         />
                       </div>
@@ -710,8 +816,16 @@ export default function SEOPage() {
                         描述
                       </label>
                       <textarea
-                        value={settings.structured_data.organization.description}
-                        onChange={(e) => updateStructuredData('organization', 'description', e.target.value)}
+                        value={
+                          settings.structured_data.organization.description
+                        }
+                        onChange={(e) =>
+                          updateStructuredData(
+                            'organization',
+                            'description',
+                            e.target.value,
+                          )
+                        }
                         rows={3}
                         className="w-full px-4 py-2 border border-neutral-300 rounded-lg"
                       />
@@ -720,16 +834,28 @@ export default function SEOPage() {
                 </div>
 
                 <div className="border-t border-neutral-200 pt-6">
-                  <h3 className="text-lg font-semibold text-neutral-900 mb-4">本地商业信息</h3>
+                  <h3 className="text-lg font-semibold text-neutral-900 mb-4">
+                    本地商业信息
+                  </h3>
                   <div className="space-y-4">
                     <label className="flex items-center gap-2">
                       <input
                         type="checkbox"
-                        checked={settings.structured_data.local_business.enabled}
-                        onChange={(e) => updateStructuredData('local_business', 'enabled', e.target.checked)}
+                        checked={
+                          settings.structured_data.local_business.enabled
+                        }
+                        onChange={(e) =>
+                          updateStructuredData(
+                            'local_business',
+                            'enabled',
+                            e.target.checked,
+                          )
+                        }
                         className="rounded border-neutral-300"
                       />
-                      <span className="text-sm text-neutral-700">启用本地商业信息</span>
+                      <span className="text-sm text-neutral-700">
+                        启用本地商业信息
+                      </span>
                     </label>
 
                     {settings.structured_data.local_business.enabled && (
@@ -740,8 +866,17 @@ export default function SEOPage() {
                           </label>
                           <input
                             type="text"
-                            value={settings.structured_data.local_business.business_type}
-                            onChange={(e) => updateStructuredData('local_business', 'business_type', e.target.value)}
+                            value={
+                              settings.structured_data.local_business
+                                .business_type
+                            }
+                            onChange={(e) =>
+                              updateStructuredData(
+                                'local_business',
+                                'business_type',
+                                e.target.value,
+                              )
+                            }
                             className="w-full px-4 py-2 border border-neutral-300 rounded-lg"
                             placeholder="LegalService"
                           />
@@ -752,8 +887,17 @@ export default function SEOPage() {
                             价格范围
                           </label>
                           <select
-                            value={settings.structured_data.local_business.price_range}
-                            onChange={(e) => updateStructuredData('local_business', 'price_range', e.target.value)}
+                            value={
+                              settings.structured_data.local_business
+                                .price_range
+                            }
+                            onChange={(e) =>
+                              updateStructuredData(
+                                'local_business',
+                                'price_range',
+                                e.target.value,
+                              )
+                            }
                             className="w-full px-4 py-2 border border-neutral-300 rounded-lg"
                           >
                             <option value="$">$</option>
@@ -769,8 +913,17 @@ export default function SEOPage() {
                           </label>
                           <input
                             type="text"
-                            value={settings.structured_data.local_business.opening_hours}
-                            onChange={(e) => updateStructuredData('local_business', 'opening_hours', e.target.value)}
+                            value={
+                              settings.structured_data.local_business
+                                .opening_hours
+                            }
+                            onChange={(e) =>
+                              updateStructuredData(
+                                'local_business',
+                                'opening_hours',
+                                e.target.value,
+                              )
+                            }
                             className="w-full px-4 py-2 border border-neutral-300 rounded-lg"
                             placeholder="Mo-Fr 09:00-18:00"
                           />
@@ -810,7 +963,9 @@ export default function SEOPage() {
               <input
                 type="text"
                 value={settings.advanced.canonical_url}
-                onChange={(e) => updateAdvanced('canonical_url', e.target.value)}
+                onChange={(e) =>
+                  updateAdvanced('canonical_url', e.target.value)
+                }
                 className="w-full px-4 py-2 border border-neutral-300 rounded-lg"
                 placeholder="https://example.com"
               />
@@ -824,7 +979,9 @@ export default function SEOPage() {
                 <input
                   type="text"
                   value={settings.advanced.google_site_verification}
-                  onChange={(e) => updateAdvanced('google_site_verification', e.target.value)}
+                  onChange={(e) =>
+                    updateAdvanced('google_site_verification', e.target.value)
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg"
                   placeholder="验证码"
                 />
@@ -837,7 +994,9 @@ export default function SEOPage() {
                 <input
                   type="text"
                   value={settings.advanced.bing_site_verification}
-                  onChange={(e) => updateAdvanced('bing_site_verification', e.target.value)}
+                  onChange={(e) =>
+                    updateAdvanced('bing_site_verification', e.target.value)
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg"
                   placeholder="验证码"
                 />
@@ -850,7 +1009,9 @@ export default function SEOPage() {
                 <input
                   type="text"
                   value={settings.advanced.google_analytics_id}
-                  onChange={(e) => updateAdvanced('google_analytics_id', e.target.value)}
+                  onChange={(e) =>
+                    updateAdvanced('google_analytics_id', e.target.value)
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg"
                   placeholder="G-XXXXXXXXXX"
                 />
@@ -863,7 +1024,9 @@ export default function SEOPage() {
                 <input
                   type="text"
                   value={settings.advanced.google_tag_manager_id}
-                  onChange={(e) => updateAdvanced('google_tag_manager_id', e.target.value)}
+                  onChange={(e) =>
+                    updateAdvanced('google_tag_manager_id', e.target.value)
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg"
                   placeholder="GTM-XXXXXXX"
                 />
@@ -888,5 +1051,5 @@ export default function SEOPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }

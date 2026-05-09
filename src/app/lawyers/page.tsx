@@ -1,44 +1,56 @@
-"use client";
+'use client'
 
-import { useState, useEffect } from "react";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
-import { 
-  fetchLawyers, 
+import { useState, useEffect } from 'react'
+import Header from '@/components/layout/Header'
+import Footer from '@/components/layout/Footer'
+import {
+  fetchLawyers,
   lawyerSpecialties,
   malaysianStates,
-  type Lawyer 
-} from "@/lib/api/lawyers";
-import { Star, MapPin, Clock, CheckCircle, Heart, ShoppingCart, Search, Filter } from "lucide-react";
-import { useLanguage } from "@/contexts/LanguageContext";
+  type Lawyer,
+} from '@/lib/api/lawyers'
+import {
+  Star,
+  MapPin,
+  Clock,
+  CheckCircle,
+  Heart,
+  ShoppingCart,
+  Search,
+  Filter,
+} from 'lucide-react'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 export default function LawyersPage() {
-  const { t } = useLanguage();
-  const [lawyers, setLawyers] = useState<Lawyer[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { t } = useLanguage()
+  const [lawyers, setLawyers] = useState<Lawyer[]>([])
+  const [loading, setLoading] = useState(true)
   const [filters, setFilters] = useState({
-    specialty: "",
-    location: "",
+    specialty: '',
+    location: '',
     minRating: 0,
     available: undefined as boolean | undefined,
-  });
-  const [searchQuery, setSearchQuery] = useState("");
+  })
+  const [searchQuery, setSearchQuery] = useState('')
 
   useEffect(() => {
-    loadLawyers();
-  }, [filters]);
+    loadLawyers()
+  }, [filters])
 
   const loadLawyers = async () => {
-    setLoading(true);
-    const data = await fetchLawyers(filters);
-    setLawyers(data);
-    setLoading(false);
-  };
+    setLoading(true)
+    const data = await fetchLawyers(filters)
+    setLawyers(data)
+    setLoading(false)
+  }
 
-  const filteredLawyers = lawyers.filter(l =>
-    l.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    l.specialty.some(s => s.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
+  const filteredLawyers = lawyers.filter(
+    (l) =>
+      l.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      l.specialty.some((s) =>
+        s.toLowerCase().includes(searchQuery.toLowerCase()),
+      ),
+  )
 
   return (
     <>
@@ -75,9 +87,11 @@ export default function LawyersPage() {
           <div className="container mx-auto px-6">
             <div className="flex items-center gap-2 mb-4">
               <Filter className="h-5 w-5 text-neutral-600" />
-              <h2 className="text-lg font-bold text-neutral-900">{t('pages.filterConditions')}</h2>
+              <h2 className="text-lg font-bold text-neutral-900">
+                {t('pages.filterConditions')}
+              </h2>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               {/* Specialty Filter */}
               <div>
@@ -86,7 +100,9 @@ export default function LawyersPage() {
                 </label>
                 <select
                   value={filters.specialty}
-                  onChange={(e) => setFilters({ ...filters, specialty: e.target.value })}
+                  onChange={(e) =>
+                    setFilters({ ...filters, specialty: e.target.value })
+                  }
                   className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:border-primary-500"
                 >
                   <option value="">{t('pages.allFields')}</option>
@@ -105,7 +121,9 @@ export default function LawyersPage() {
                 </label>
                 <select
                   value={filters.location}
-                  onChange={(e) => setFilters({ ...filters, location: e.target.value })}
+                  onChange={(e) =>
+                    setFilters({ ...filters, location: e.target.value })
+                  }
                   className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:border-primary-500"
                 >
                   <option value="">{t('pages.allLocations')}</option>
@@ -124,7 +142,12 @@ export default function LawyersPage() {
                 </label>
                 <select
                   value={filters.minRating}
-                  onChange={(e) => setFilters({ ...filters, minRating: Number(e.target.value) })}
+                  onChange={(e) =>
+                    setFilters({
+                      ...filters,
+                      minRating: Number(e.target.value),
+                    })
+                  }
                   className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:border-primary-500"
                 >
                   <option value="0">{t('pages.allRatings')}</option>
@@ -141,11 +164,20 @@ export default function LawyersPage() {
                   {t('common.status')}
                 </label>
                 <select
-                  value={filters.available === undefined ? "" : filters.available.toString()}
-                  onChange={(e) => setFilters({ 
-                    ...filters, 
-                    available: e.target.value === "" ? undefined : e.target.value === "true" 
-                  })}
+                  value={
+                    filters.available === undefined
+                      ? ''
+                      : filters.available.toString()
+                  }
+                  onChange={(e) =>
+                    setFilters({
+                      ...filters,
+                      available:
+                        e.target.value === ''
+                          ? undefined
+                          : e.target.value === 'true',
+                    })
+                  }
                   className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:border-primary-500"
                 >
                   <option value="">{t('pages.allStatus')}</option>
@@ -156,9 +188,19 @@ export default function LawyersPage() {
             </div>
 
             {/* Clear Filters */}
-            {(filters.specialty || filters.location || filters.minRating > 0 || filters.available !== undefined) && (
+            {(filters.specialty ||
+              filters.location ||
+              filters.minRating > 0 ||
+              filters.available !== undefined) && (
               <button
-                onClick={() => setFilters({ specialty: "", location: "", minRating: 0, available: undefined })}
+                onClick={() =>
+                  setFilters({
+                    specialty: '',
+                    location: '',
+                    minRating: 0,
+                    available: undefined,
+                  })
+                }
                 className="mt-4 text-sm text-primary-600 hover:text-primary-700 font-medium"
               >
                 {t('pages.clearAllFilters')}
@@ -177,13 +219,19 @@ export default function LawyersPage() {
               </div>
             ) : filteredLawyers.length === 0 ? (
               <div className="text-center py-20">
-                <p className="text-neutral-600 text-lg">{t('pages.noLawyersFound')}</p>
+                <p className="text-neutral-600 text-lg">
+                  {t('pages.noLawyersFound')}
+                </p>
               </div>
             ) : (
               <>
                 <div className="flex items-center justify-between mb-6">
                   <p className="text-neutral-600">
-                    {t('pages.found')} <span className="font-bold text-primary-600">{filteredLawyers.length}</span> {t('pages.lawyersCount')}
+                    {t('pages.found')}{' '}
+                    <span className="font-bold text-primary-600">
+                      {filteredLawyers.length}
+                    </span>{' '}
+                    {t('pages.lawyersCount')}
                   </p>
                 </div>
 
@@ -206,7 +254,7 @@ export default function LawyersPage() {
                         <h3 className="text-lg font-bold text-neutral-900 mb-1">
                           {lawyer.name}
                         </h3>
-                        
+
                         {/* Specialties */}
                         <div className="flex flex-wrap gap-1 mb-3">
                           {lawyer.specialty.slice(0, 2).map((spec, idx) => (
@@ -223,7 +271,9 @@ export default function LawyersPage() {
                         <div className="flex items-center gap-2 mb-2">
                           <div className="flex items-center gap-1">
                             <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
-                            <span className="font-bold text-neutral-900">{lawyer.rating}</span>
+                            <span className="font-bold text-neutral-900">
+                              {lawyer.rating}
+                            </span>
                           </div>
                           <span className="text-sm text-neutral-600">
                             ({lawyer.reviews} {t('common.reviews')})
@@ -239,18 +289,26 @@ export default function LawyersPage() {
                         {/* Response Time */}
                         <div className="flex items-center gap-1 text-sm text-neutral-600 mb-2">
                           <Clock className="h-4 w-4" />
-                          <span>{t('pages.responseTime')}: {lawyer.responseTime}</span>
+                          <span>
+                            {t('pages.responseTime')}: {lawyer.responseTime}
+                          </span>
                         </div>
 
                         {/* Experience */}
                         <div className="flex items-center gap-1 text-sm text-neutral-600 mb-3">
                           <CheckCircle className="h-4 w-4 text-green-500" />
-                          <span>{lawyer.experience} {t('pages.yearsExperience')}</span>
+                          <span>
+                            {lawyer.experience} {t('pages.yearsExperience')}
+                          </span>
                         </div>
 
                         {/* Clients Served */}
                         <div className="text-sm text-neutral-600 mb-3">
-                          {t('home.served')} <span className="font-bold text-primary-600">{lawyer.soldCount}</span> {t('pages.clientsServed')}
+                          {t('home.served')}{' '}
+                          <span className="font-bold text-primary-600">
+                            {lawyer.soldCount}
+                          </span>{' '}
+                          {t('pages.clientsServed')}
                         </div>
 
                         {/* Price */}
@@ -279,5 +337,5 @@ export default function LawyersPage() {
       </main>
       <Footer />
     </>
-  );
+  )
 }

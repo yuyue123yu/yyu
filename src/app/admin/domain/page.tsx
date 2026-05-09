@@ -1,157 +1,185 @@
-"use client";
+'use client'
 
-import { useState, useEffect } from "react";
-import { Save, Globe, CheckCircle, XCircle, Clock, AlertCircle, Copy, ExternalLink, RefreshCw } from "lucide-react";
+import { useState, useEffect } from 'react'
+import {
+  Save,
+  Globe,
+  CheckCircle,
+  XCircle,
+  Clock,
+  AlertCircle,
+  Copy,
+  ExternalLink,
+  RefreshCw,
+} from 'lucide-react'
 
 interface DomainSettings {
-  subdomain: any;
-  custom_domain: any;
-  dns_records: any;
-  verification: any;
-  redirect: any;
+  subdomain: any
+  custom_domain: any
+  dns_records: any
+  verification: any
+  redirect: any
 }
 
 export default function DomainPage() {
-  const [settings, setSettings] = useState<DomainSettings | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [verifying, setVerifying] = useState(false);
-  const [activeTab, setActiveTab] = useState<'subdomain' | 'custom'>('subdomain');
+  const [settings, setSettings] = useState<DomainSettings | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [verifying, setVerifying] = useState(false)
+  const [activeTab, setActiveTab] = useState<'subdomain' | 'custom'>(
+    'subdomain',
+  )
 
   useEffect(() => {
-    loadSettings();
-  }, []);
+    loadSettings()
+  }, [])
 
   const loadSettings = async () => {
     try {
-      setLoading(true);
-      const response = await fetch('/api/tenant/domain');
-      const data = await response.json();
+      setLoading(true)
+      const response = await fetch('/api/tenant/domain')
+      const data = await response.json()
 
       if (data.success) {
-        setSettings(data.domain);
+        setSettings(data.domain)
       }
     } catch (error) {
-      console.error('Error loading settings:', error);
-      alert('加载设置失败');
+      console.error('Error loading settings:', error)
+      alert('加载设置失败')
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const handleSave = async () => {
-    if (!settings) return;
+    if (!settings) return
 
     try {
-      setSaving(true);
+      setSaving(true)
       const response = await fetch('/api/tenant/domain', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(settings),
-      });
+      })
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (data.success) {
-        alert('域名配置已保存！');
+        alert('域名配置已保存！')
       } else {
-        alert(data.error || '保存失败');
+        alert(data.error || '保存失败')
       }
     } catch (error) {
-      console.error('Error saving settings:', error);
-      alert('保存失败，请重试');
+      console.error('Error saving settings:', error)
+      alert('保存失败，请重试')
     } finally {
-      setSaving(false);
+      setSaving(false)
     }
-  };
+  }
 
   const handleVerify = async (type: 'subdomain' | 'custom_domain') => {
     try {
-      setVerifying(true);
+      setVerifying(true)
       const response = await fetch('/api/tenant/domain/verify', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ type }),
-      });
+      })
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (data.success) {
-        alert(data.message);
+        alert(data.message)
         if (data.verified) {
-          setSettings(data.domain);
+          setSettings(data.domain)
         }
       } else {
-        alert(data.error || '验证失败');
+        alert(data.error || '验证失败')
       }
     } catch (error) {
-      console.error('Error verifying domain:', error);
-      alert('验证失败，请重试');
+      console.error('Error verifying domain:', error)
+      alert('验证失败，请重试')
     } finally {
-      setVerifying(false);
+      setVerifying(false)
     }
-  };
+  }
 
   const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-    alert('已复制到剪贴板');
-  };
+    navigator.clipboard.writeText(text)
+    alert('已复制到剪贴板')
+  }
 
   const updateSubdomain = (field: string, value: any) => {
-    if (!settings) return;
+    if (!settings) return
     setSettings({
       ...settings,
       subdomain: {
         ...settings.subdomain,
         [field]: value,
       },
-    });
-  };
+    })
+  }
 
   const updateCustomDomain = (field: string, value: any) => {
-    if (!settings) return;
+    if (!settings) return
     setSettings({
       ...settings,
       custom_domain: {
         ...settings.custom_domain,
         [field]: value,
       },
-    });
-  };
+    })
+  }
 
   const updateRedirect = (field: string, value: any) => {
-    if (!settings) return;
+    if (!settings) return
     setSettings({
       ...settings,
       redirect: {
         ...settings.redirect,
         [field]: value,
       },
-    });
-  };
+    })
+  }
 
   const getStatusBadge = (status: string) => {
-    const statusConfig: { [key: string]: { icon: any; color: string; text: string } } = {
-      not_configured: { icon: AlertCircle, color: 'text-gray-600 bg-gray-100', text: '未配置' },
-      pending: { icon: Clock, color: 'text-yellow-600 bg-yellow-100', text: '待验证' },
-      active: { icon: CheckCircle, color: 'text-green-600 bg-green-100', text: '已激活' },
+    const statusConfig: {
+      [key: string]: { icon: any; color: string; text: string }
+    } = {
+      not_configured: {
+        icon: AlertCircle,
+        color: 'text-gray-600 bg-gray-100',
+        text: '未配置',
+      },
+      pending: {
+        icon: Clock,
+        color: 'text-yellow-600 bg-yellow-100',
+        text: '待验证',
+      },
+      active: {
+        icon: CheckCircle,
+        color: 'text-green-600 bg-green-100',
+        text: '已激活',
+      },
       error: { icon: XCircle, color: 'text-red-600 bg-red-100', text: '错误' },
-    };
+    }
 
-    const config = statusConfig[status] || statusConfig.not_configured;
-    const Icon = config.icon;
+    const config = statusConfig[status] || statusConfig.not_configured
+    const Icon = config.icon
 
     return (
-      <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${config.color}`}>
+      <span
+        className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${config.color}`}
+      >
         <Icon className="h-3 w-3" />
         {config.text}
       </span>
-    );
-  };
+    )
+  }
 
   if (loading || !settings) {
     return (
@@ -161,7 +189,7 @@ export default function DomainPage() {
           <p className="mt-4 text-neutral-600">加载中...</p>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -217,8 +245,12 @@ export default function DomainPage() {
           <div className="bg-white rounded-xl shadow-sm p-6 border border-neutral-200">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h2 className="text-xl font-bold text-neutral-900">子域名配置</h2>
-                <p className="text-sm text-neutral-600 mt-1">使用平台提供的子域名</p>
+                <h2 className="text-xl font-bold text-neutral-900">
+                  子域名配置
+                </h2>
+                <p className="text-sm text-neutral-600 mt-1">
+                  使用平台提供的子域名
+                </p>
               </div>
               {getStatusBadge(settings.subdomain.status)}
             </div>
@@ -229,10 +261,14 @@ export default function DomainPage() {
                   <input
                     type="checkbox"
                     checked={settings.subdomain.enabled}
-                    onChange={(e) => updateSubdomain('enabled', e.target.checked)}
+                    onChange={(e) =>
+                      updateSubdomain('enabled', e.target.checked)
+                    }
                     className="rounded border-neutral-300"
                   />
-                  <span className="text-sm font-medium text-neutral-700">启用子域名</span>
+                  <span className="text-sm font-medium text-neutral-700">
+                    启用子域名
+                  </span>
                 </label>
               </div>
 
@@ -246,7 +282,9 @@ export default function DomainPage() {
                       <input
                         type="text"
                         value={settings.subdomain.name}
-                        onChange={(e) => updateSubdomain('name', e.target.value.toLowerCase())}
+                        onChange={(e) =>
+                          updateSubdomain('name', e.target.value.toLowerCase())
+                        }
                         className="flex-1 px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                         placeholder="your-company"
                       />
@@ -262,13 +300,19 @@ export default function DomainPage() {
                       <div className="flex items-start gap-3">
                         <Globe className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
                         <div className="flex-1">
-                          <p className="text-sm font-medium text-blue-900 mb-2">您的子域名</p>
+                          <p className="text-sm font-medium text-blue-900 mb-2">
+                            您的子域名
+                          </p>
                           <div className="flex items-center gap-2">
                             <code className="text-sm bg-white px-3 py-1 rounded border border-blue-200">
                               {settings.subdomain.name}.platform.com
                             </code>
                             <button
-                              onClick={() => copyToClipboard(`${settings.subdomain.name}.platform.com`)}
+                              onClick={() =>
+                                copyToClipboard(
+                                  `${settings.subdomain.name}.platform.com`,
+                                )
+                              }
                               className="text-blue-600 hover:text-blue-700"
                             >
                               <Copy className="h-4 w-4" />
@@ -293,14 +337,19 @@ export default function DomainPage() {
                       disabled={verifying}
                       className="flex items-center gap-2 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-medium transition-all disabled:opacity-50"
                     >
-                      <RefreshCw className={`h-4 w-4 ${verifying ? 'animate-spin' : ''}`} />
+                      <RefreshCw
+                        className={`h-4 w-4 ${verifying ? 'animate-spin' : ''}`}
+                      />
                       {verifying ? '验证中...' : '验证子域名'}
                     </button>
                   )}
 
                   {settings.subdomain.verified_at && (
                     <div className="text-sm text-green-600">
-                      ✓ 已验证于 {new Date(settings.subdomain.verified_at).toLocaleString('zh-CN')}
+                      ✓ 已验证于{' '}
+                      {new Date(settings.subdomain.verified_at).toLocaleString(
+                        'zh-CN',
+                      )}
                     </div>
                   )}
                 </>
@@ -317,8 +366,12 @@ export default function DomainPage() {
           <div className="bg-white rounded-xl shadow-sm p-6 border border-neutral-200">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h2 className="text-xl font-bold text-neutral-900">自定义域名配置</h2>
-                <p className="text-sm text-neutral-600 mt-1">使用您自己的域名</p>
+                <h2 className="text-xl font-bold text-neutral-900">
+                  自定义域名配置
+                </h2>
+                <p className="text-sm text-neutral-600 mt-1">
+                  使用您自己的域名
+                </p>
               </div>
               {getStatusBadge(settings.custom_domain.status)}
             </div>
@@ -329,10 +382,14 @@ export default function DomainPage() {
                   <input
                     type="checkbox"
                     checked={settings.custom_domain.enabled}
-                    onChange={(e) => updateCustomDomain('enabled', e.target.checked)}
+                    onChange={(e) =>
+                      updateCustomDomain('enabled', e.target.checked)
+                    }
                     className="rounded border-neutral-300"
                   />
-                  <span className="text-sm font-medium text-neutral-700">启用自定义域名</span>
+                  <span className="text-sm font-medium text-neutral-700">
+                    启用自定义域名
+                  </span>
                 </label>
               </div>
 
@@ -345,7 +402,12 @@ export default function DomainPage() {
                     <input
                       type="text"
                       value={settings.custom_domain.domain}
-                      onChange={(e) => updateCustomDomain('domain', e.target.value.toLowerCase())}
+                      onChange={(e) =>
+                        updateCustomDomain(
+                          'domain',
+                          e.target.value.toLowerCase(),
+                        )
+                      }
                       className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                       placeholder="www.example.com"
                     />
@@ -361,7 +423,9 @@ export default function DomainPage() {
                         <div className="flex items-start gap-3">
                           <AlertCircle className="h-5 w-5 text-yellow-600 flex-shrink-0 mt-0.5" />
                           <div className="flex-1">
-                            <p className="text-sm font-medium text-yellow-900 mb-2">DNS 配置说明</p>
+                            <p className="text-sm font-medium text-yellow-900 mb-2">
+                              DNS 配置说明
+                            </p>
                             <p className="text-sm text-yellow-800 mb-3">
                               请在您的域名注册商处添加以下 DNS 记录：
                             </p>
@@ -370,9 +434,15 @@ export default function DomainPage() {
                               {/* A 记录 */}
                               <div className="bg-white rounded border border-yellow-200 p-3">
                                 <div className="flex items-center justify-between mb-2">
-                                  <span className="text-xs font-medium text-neutral-600">A 记录</span>
+                                  <span className="text-xs font-medium text-neutral-600">
+                                    A 记录
+                                  </span>
                                   <button
-                                    onClick={() => copyToClipboard(settings.dns_records.a_record.value)}
+                                    onClick={() =>
+                                      copyToClipboard(
+                                        settings.dns_records.a_record.value,
+                                      )
+                                    }
                                     className="text-yellow-600 hover:text-yellow-700"
                                   >
                                     <Copy className="h-3 w-3" />
@@ -380,16 +450,28 @@ export default function DomainPage() {
                                 </div>
                                 <div className="grid grid-cols-3 gap-2 text-xs">
                                   <div>
-                                    <span className="text-neutral-500">类型:</span>
-                                    <code className="ml-1 font-mono">{settings.dns_records.a_record.type}</code>
+                                    <span className="text-neutral-500">
+                                      类型:
+                                    </span>
+                                    <code className="ml-1 font-mono">
+                                      {settings.dns_records.a_record.type}
+                                    </code>
                                   </div>
                                   <div>
-                                    <span className="text-neutral-500">名称:</span>
-                                    <code className="ml-1 font-mono">{settings.dns_records.a_record.name}</code>
+                                    <span className="text-neutral-500">
+                                      名称:
+                                    </span>
+                                    <code className="ml-1 font-mono">
+                                      {settings.dns_records.a_record.name}
+                                    </code>
                                   </div>
                                   <div>
-                                    <span className="text-neutral-500">值:</span>
-                                    <code className="ml-1 font-mono">{settings.dns_records.a_record.value}</code>
+                                    <span className="text-neutral-500">
+                                      值:
+                                    </span>
+                                    <code className="ml-1 font-mono">
+                                      {settings.dns_records.a_record.value}
+                                    </code>
                                   </div>
                                 </div>
                               </div>
@@ -397,9 +479,15 @@ export default function DomainPage() {
                               {/* CNAME 记录 */}
                               <div className="bg-white rounded border border-yellow-200 p-3">
                                 <div className="flex items-center justify-between mb-2">
-                                  <span className="text-xs font-medium text-neutral-600">CNAME 记录</span>
+                                  <span className="text-xs font-medium text-neutral-600">
+                                    CNAME 记录
+                                  </span>
                                   <button
-                                    onClick={() => copyToClipboard(settings.dns_records.cname_record.value)}
+                                    onClick={() =>
+                                      copyToClipboard(
+                                        settings.dns_records.cname_record.value,
+                                      )
+                                    }
                                     className="text-yellow-600 hover:text-yellow-700"
                                   >
                                     <Copy className="h-3 w-3" />
@@ -407,16 +495,28 @@ export default function DomainPage() {
                                 </div>
                                 <div className="grid grid-cols-3 gap-2 text-xs">
                                   <div>
-                                    <span className="text-neutral-500">类型:</span>
-                                    <code className="ml-1 font-mono">{settings.dns_records.cname_record.type}</code>
+                                    <span className="text-neutral-500">
+                                      类型:
+                                    </span>
+                                    <code className="ml-1 font-mono">
+                                      {settings.dns_records.cname_record.type}
+                                    </code>
                                   </div>
                                   <div>
-                                    <span className="text-neutral-500">名称:</span>
-                                    <code className="ml-1 font-mono">{settings.dns_records.cname_record.name}</code>
+                                    <span className="text-neutral-500">
+                                      名称:
+                                    </span>
+                                    <code className="ml-1 font-mono">
+                                      {settings.dns_records.cname_record.name}
+                                    </code>
                                   </div>
                                   <div>
-                                    <span className="text-neutral-500">值:</span>
-                                    <code className="ml-1 font-mono">{settings.dns_records.cname_record.value}</code>
+                                    <span className="text-neutral-500">
+                                      值:
+                                    </span>
+                                    <code className="ml-1 font-mono">
+                                      {settings.dns_records.cname_record.value}
+                                    </code>
                                   </div>
                                 </div>
                               </div>
@@ -435,12 +535,19 @@ export default function DomainPage() {
                           <div className="flex items-start gap-3">
                             <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
                             <div className="flex-1">
-                              <p className="text-sm font-medium text-green-900 mb-1">SSL 证书状态</p>
+                              <p className="text-sm font-medium text-green-900 mb-1">
+                                SSL 证书状态
+                              </p>
                               <div className="flex items-center gap-2">
-                                {getStatusBadge(settings.custom_domain.ssl_status)}
+                                {getStatusBadge(
+                                  settings.custom_domain.ssl_status,
+                                )}
                                 {settings.custom_domain.ssl_issued_at && (
                                   <span className="text-xs text-green-700">
-                                    签发于 {new Date(settings.custom_domain.ssl_issued_at).toLocaleString('zh-CN')}
+                                    签发于{' '}
+                                    {new Date(
+                                      settings.custom_domain.ssl_issued_at,
+                                    ).toLocaleString('zh-CN')}
                                   </span>
                                 )}
                               </div>
@@ -454,13 +561,18 @@ export default function DomainPage() {
                         disabled={verifying}
                         className="flex items-center gap-2 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-medium transition-all disabled:opacity-50"
                       >
-                        <RefreshCw className={`h-4 w-4 ${verifying ? 'animate-spin' : ''}`} />
+                        <RefreshCw
+                          className={`h-4 w-4 ${verifying ? 'animate-spin' : ''}`}
+                        />
                         {verifying ? '验证中...' : '验证域名'}
                       </button>
 
                       {settings.custom_domain.verified_at && (
                         <div className="text-sm text-green-600">
-                          ✓ 已验证于 {new Date(settings.custom_domain.verified_at).toLocaleString('zh-CN')}
+                          ✓ 已验证于{' '}
+                          {new Date(
+                            settings.custom_domain.verified_at,
+                          ).toLocaleString('zh-CN')}
                         </div>
                       )}
                     </>
@@ -472,13 +584,17 @@ export default function DomainPage() {
 
           {/* 重定向设置 */}
           <div className="bg-white rounded-xl shadow-sm p-6 border border-neutral-200">
-            <h2 className="text-xl font-bold text-neutral-900 mb-4">重定向设置</h2>
+            <h2 className="text-xl font-bold text-neutral-900 mb-4">
+              重定向设置
+            </h2>
             <div className="space-y-3">
               <label className="flex items-center gap-2">
                 <input
                   type="checkbox"
                   checked={settings.redirect.force_https}
-                  onChange={(e) => updateRedirect('force_https', e.target.checked)}
+                  onChange={(e) =>
+                    updateRedirect('force_https', e.target.checked)
+                  }
                   className="rounded border-neutral-300"
                 />
                 <span className="text-sm text-neutral-700">强制使用 HTTPS</span>
@@ -488,17 +604,23 @@ export default function DomainPage() {
                 <input
                   type="checkbox"
                   checked={settings.redirect.force_www}
-                  onChange={(e) => updateRedirect('force_www', e.target.checked)}
+                  onChange={(e) =>
+                    updateRedirect('force_www', e.target.checked)
+                  }
                   className="rounded border-neutral-300"
                 />
-                <span className="text-sm text-neutral-700">强制使用 www 前缀</span>
+                <span className="text-sm text-neutral-700">
+                  强制使用 www 前缀
+                </span>
               </label>
 
               <label className="flex items-center gap-2">
                 <input
                   type="checkbox"
                   checked={settings.redirect.redirect_from_old_domain}
-                  onChange={(e) => updateRedirect('redirect_from_old_domain', e.target.checked)}
+                  onChange={(e) =>
+                    updateRedirect('redirect_from_old_domain', e.target.checked)
+                  }
                   className="rounded border-neutral-300"
                 />
                 <span className="text-sm text-neutral-700">从旧域名重定向</span>
@@ -523,5 +645,5 @@ export default function DomainPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }

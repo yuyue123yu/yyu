@@ -1,8 +1,8 @@
 // OEM Configuration API - Update Single Setting
-import { NextRequest, NextResponse } from 'next/server';
-import { requireSuperAdmin } from '@/lib/middleware/super-admin';
-import { logAuditEvent } from '@/lib/audit';
-import { createClient } from '@/lib/supabase/server';
+import { NextRequest, NextResponse } from 'next/server'
+import { requireSuperAdmin } from '@/lib/middleware/super-admin'
+import { logAuditEvent } from '@/lib/audit'
+import { createClient } from '@/lib/supabase/server'
 
 /**
  * PUT /api/super-admin/tenants/:id/settings/:key
@@ -10,26 +10,23 @@ import { createClient } from '@/lib/supabase/server';
  */
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string; key: string } }
+  { params }: { params: { id: string; key: string } },
 ) {
   // Verify super admin authentication
-  const authResult = await requireSuperAdmin(request);
+  const authResult = await requireSuperAdmin(request)
   if (authResult instanceof NextResponse) {
-    return authResult;
+    return authResult
   }
 
-  const { supabase } = authResult;
-  const { id, key } = params;
+  const { supabase } = authResult
+  const { id, key } = params
 
   try {
-    const body = await request.json();
-    const { value } = body;
+    const body = await request.json()
+    const { value } = body
 
     if (value === undefined) {
-      return NextResponse.json(
-        { error: 'Value is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Value is required' }, { status: 400 })
     }
 
     // Verify tenant exists
@@ -37,10 +34,10 @@ export async function PUT(
       .from('tenants')
       .select('id')
       .eq('id', id)
-      .single();
+      .single()
 
     if (!tenant) {
-      return NextResponse.json({ error: 'Tenant not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Tenant not found' }, { status: 404 })
     }
 
     // Get current setting value for audit log
@@ -49,7 +46,7 @@ export async function PUT(
       .select('setting_value')
       .eq('tenant_id', id)
       .eq('setting_key', key)
-      .single();
+      .single()
 
     // Upsert setting
     const { data: setting, error: upsertError } = await supabase
@@ -63,13 +60,13 @@ export async function PUT(
         },
         {
           onConflict: 'tenant_id,setting_key',
-        }
+        },
       )
       .select()
-      .single();
+      .single()
 
     if (upsertError) {
-      throw upsertError;
+      throw upsertError
     }
 
     // Log audit event
@@ -84,19 +81,19 @@ export async function PUT(
           new_value: value,
         },
       },
-      request
-    );
+      request,
+    )
 
     return NextResponse.json({
       success: true,
       message: 'Setting updated successfully',
       setting,
-    });
+    })
   } catch (error) {
-    console.error('Error updating tenant setting:', error);
+    console.error('Error updating tenant setting:', error)
     return NextResponse.json(
       { error: 'Failed to update tenant setting' },
-      { status: 500 }
-    );
+      { status: 500 },
+    )
   }
 }

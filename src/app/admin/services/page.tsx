@@ -1,42 +1,42 @@
-'use client';
+'use client'
 
-import { useState, useEffect } from 'react';
-import { Plus, Edit, Trash2, Eye, EyeOff, GripVertical } from 'lucide-react';
-import Link from 'next/link';
+import { useState, useEffect } from 'react'
+import { Plus, Edit, Trash2, Eye, EyeOff, GripVertical } from 'lucide-react'
+import Link from 'next/link'
 
 interface Service {
-  id: string;
-  name_zh: string;
-  name_en: string;
-  category: string;
-  base_price: number;
-  currency: string;
-  case_count: number;
-  is_active: boolean;
-  is_featured: boolean;
-  badge: string | null;
-  display_order: number;
+  id: string
+  name_zh: string
+  name_en: string
+  category: string
+  base_price: number
+  currency: string
+  case_count: number
+  is_active: boolean
+  is_featured: boolean
+  badge: string | null
+  display_order: number
 }
 
 export default function ServicesPage() {
-  const [services, setServices] = useState<Service[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [services, setServices] = useState<Service[]>([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetchServices();
-  }, []);
+    fetchServices()
+  }, [])
 
   const fetchServices = async () => {
     try {
-      const res = await fetch('/api/admin/services');
-      const data = await res.json();
-      setServices(data.services || []);
+      const res = await fetch('/api/admin/services')
+      const data = await res.json()
+      setServices(data.services || [])
     } catch (error) {
-      console.error('獲取服務列表失敗:', error);
+      console.error('獲取服務列表失敗:', error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const toggleActive = async (id: string, currentStatus: boolean) => {
     try {
@@ -44,58 +44,58 @@ export default function ServicesPage() {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ is_active: !currentStatus }),
-      });
-      fetchServices();
+      })
+      fetchServices()
     } catch (error) {
-      console.error('更新服務狀態失敗:', error);
+      console.error('更新服務狀態失敗:', error)
     }
-  };
+  }
 
   const deleteService = async (id: string) => {
-    if (!confirm('確定要刪除此服務嗎？')) return;
+    if (!confirm('確定要刪除此服務嗎？')) return
 
     try {
       await fetch(`/api/admin/services/${id}`, {
         method: 'DELETE',
-      });
-      fetchServices();
+      })
+      fetchServices()
     } catch (error) {
-      console.error('刪除服務失敗:', error);
+      console.error('刪除服務失敗:', error)
     }
-  };
+  }
 
   const getCurrencySymbol = (currency: string) => {
     const symbols: Record<string, string> = {
-      'MYR': 'RM',
-      'USD': '$',
-      'SGD': 'S$',
-      'CNY': '¥',
-    };
-    return symbols[currency] || currency;
-  };
+      MYR: 'RM',
+      USD: '$',
+      SGD: 'S$',
+      CNY: '¥',
+    }
+    return symbols[currency] || currency
+  }
 
   const getBadgeColor = (badge: string | null) => {
-    if (!badge) return '';
-    if (badge === 'hot') return 'bg-red-100 text-red-600';
-    if (badge === 'recommended') return 'bg-blue-100 text-blue-600';
-    if (badge === 'new') return 'bg-green-100 text-green-600';
-    return 'bg-gray-100 text-gray-600';
-  };
+    if (!badge) return ''
+    if (badge === 'hot') return 'bg-red-100 text-red-600'
+    if (badge === 'recommended') return 'bg-blue-100 text-blue-600'
+    if (badge === 'new') return 'bg-green-100 text-green-600'
+    return 'bg-gray-100 text-gray-600'
+  }
 
   const getBadgeText = (badge: string | null) => {
-    if (!badge) return '';
-    if (badge === 'hot') return '🔥 熱門';
-    if (badge === 'recommended') return '⭐ 推薦';
-    if (badge === 'new') return '✨ 新品';
-    return badge;
-  };
+    if (!badge) return ''
+    if (badge === 'hot') return '🔥 熱門'
+    if (badge === 'recommended') return '⭐ 推薦'
+    if (badge === 'new') return '✨ 新品'
+    return badge
+  }
 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="text-gray-500">加載中...</div>
       </div>
-    );
+    )
   }
 
   return (
@@ -104,7 +104,9 @@ export default function ServicesPage() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">服務管理</h1>
-          <p className="text-gray-600 mt-1">管理所有法律服務的信息、價格和顯示設置</p>
+          <p className="text-gray-600 mt-1">
+            管理所有法律服務的信息、價格和顯示設置
+          </p>
         </div>
         <Link
           href="/admin/services/new"
@@ -147,7 +149,10 @@ export default function ServicesPage() {
             <tbody className="bg-white divide-y divide-gray-200">
               {services.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-6 py-12 text-center text-gray-500">
+                  <td
+                    colSpan={7}
+                    className="px-6 py-12 text-center text-gray-500"
+                  >
                     暫無服務，點擊「添加服務」創建第一個服務
                   </td>
                 </tr>
@@ -157,33 +162,46 @@ export default function ServicesPage() {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-2">
                         <GripVertical className="w-4 h-4 text-gray-400 cursor-move" />
-                        <span className="text-sm text-gray-500">#{service.display_order}</span>
+                        <span className="text-sm text-gray-500">
+                          #{service.display_order}
+                        </span>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div>
-                        <div className="text-sm font-medium text-gray-900">{service.name_zh}</div>
-                        <div className="text-sm text-gray-500">{service.name_en}</div>
+                        <div className="text-sm font-medium text-gray-900">
+                          {service.name_zh}
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          {service.name_en}
+                        </div>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-medium text-gray-900">
-                        {getCurrencySymbol(service.currency)} {service.base_price.toLocaleString()}
+                        {getCurrencySymbol(service.currency)}{' '}
+                        {service.base_price.toLocaleString()}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">{service.case_count}+</div>
+                      <div className="text-sm text-gray-900">
+                        {service.case_count}+
+                      </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       {service.badge && (
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getBadgeColor(service.badge)}`}>
+                        <span
+                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getBadgeColor(service.badge)}`}
+                        >
                           {getBadgeText(service.badge)}
                         </span>
                       )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <button
-                        onClick={() => toggleActive(service.id, service.is_active)}
+                        onClick={() =>
+                          toggleActive(service.id, service.is_active)
+                        }
                         className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium ${
                           service.is_active
                             ? 'bg-green-100 text-green-800'
@@ -231,18 +249,20 @@ export default function ServicesPage() {
       <div className="mt-6 grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="bg-white rounded-lg shadow p-4">
           <div className="text-sm text-gray-600">總服務數</div>
-          <div className="text-2xl font-bold text-gray-900 mt-1">{services.length}</div>
+          <div className="text-2xl font-bold text-gray-900 mt-1">
+            {services.length}
+          </div>
         </div>
         <div className="bg-white rounded-lg shadow p-4">
           <div className="text-sm text-gray-600">啟用服務</div>
           <div className="text-2xl font-bold text-green-600 mt-1">
-            {services.filter(s => s.is_active).length}
+            {services.filter((s) => s.is_active).length}
           </div>
         </div>
         <div className="bg-white rounded-lg shadow p-4">
           <div className="text-sm text-gray-600">推薦服務</div>
           <div className="text-2xl font-bold text-blue-600 mt-1">
-            {services.filter(s => s.is_featured).length}
+            {services.filter((s) => s.is_featured).length}
           </div>
         </div>
         <div className="bg-white rounded-lg shadow p-4">
@@ -253,5 +273,5 @@ export default function ServicesPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }

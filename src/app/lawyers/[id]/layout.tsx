@@ -12,13 +12,13 @@ export function generateStaticParams() {
     { id: 'law-008' },
     { id: 'law-009' },
     { id: 'law-010' },
-  ];
+  ]
 }
 
 export default function LawyerDetailLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) {
-  return <>{children}</>;
+  return <>{children}</>
 }

@@ -1,8 +1,8 @@
 // User Impersonation API
-import { NextRequest, NextResponse } from 'next/server';
-import { requireSuperAdmin } from '@/lib/middleware/super-admin';
-import { logAuditEvent } from '@/lib/audit';
-import { createClient } from '@/lib/supabase/server';
+import { NextRequest, NextResponse } from 'next/server'
+import { requireSuperAdmin } from '@/lib/middleware/super-admin'
+import { logAuditEvent } from '@/lib/audit'
+import { createClient } from '@/lib/supabase/server'
 
 /**
  * POST /api/super-admin/users/:id/impersonate
@@ -10,16 +10,16 @@ import { createClient } from '@/lib/supabase/server';
  */
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   // Verify super admin authentication
-  const authResult = await requireSuperAdmin(request);
+  const authResult = await requireSuperAdmin(request)
   if (authResult instanceof NextResponse) {
-    return authResult;
+    return authResult
   }
 
-  const { supabase, user: superAdmin } = authResult;
-  const { id: targetUserId } = params;
+  const { supabase, user: superAdmin } = authResult
+  const { id: targetUserId } = params
 
   try {
     // Get target user details
@@ -27,26 +27,26 @@ export async function POST(
       .from('profiles')
       .select('*, tenants:tenant_id(name)')
       .eq('id', targetUserId)
-      .single();
+      .single()
 
     if (userError || !targetUser) {
       return NextResponse.json(
         { error: 'Target user not found' },
-        { status: 404 }
-      );
+        { status: 404 },
+      )
     }
 
     // Prevent impersonating other super admins
     if (targetUser.super_admin) {
       return NextResponse.json(
         { error: 'Cannot impersonate other super administrators' },
-        { status: 403 }
-      );
+        { status: 403 },
+      )
     }
 
     // Create impersonation token (expires in 1 hour)
-    const expiresAt = new Date();
-    expiresAt.setHours(expiresAt.getHours() + 1);
+    const expiresAt = new Date()
+    expiresAt.setHours(expiresAt.getHours() + 1)
 
     // Log audit event
     await logAuditEvent(
@@ -62,8 +62,8 @@ export async function POST(
           expires_at: expiresAt.toISOString(),
         },
       },
-      request
-    );
+      request,
+    )
 
     return NextResponse.json({
       success: true,
@@ -75,12 +75,12 @@ export async function POST(
         tenant_id: targetUser.tenant_id,
         expires_at: expiresAt.toISOString(),
       },
-    });
+    })
   } catch (error) {
-    console.error('Error creating impersonation session:', error);
+    console.error('Error creating impersonation session:', error)
     return NextResponse.json(
       { error: 'Failed to create impersonation session' },
-      { status: 500 }
-    );
+      { status: 500 },
+    )
   }
 }

@@ -1,12 +1,12 @@
 // Force dynamic rendering
-export const dynamic = 'force-dynamic';
-export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
 
 // Test endpoint for Phase 2 - Super Admin Authentication & Middleware
-import { NextRequest, NextResponse } from 'next/server';
-import { requireSuperAdmin } from '@/lib/middleware/super-admin';
-import { setTenantContext } from '@/lib/middleware/tenant-context';
-import { logAuditEvent } from '@/lib/audit';
+import { NextRequest, NextResponse } from 'next/server'
+import { requireSuperAdmin } from '@/lib/middleware/super-admin'
+import { setTenantContext } from '@/lib/middleware/tenant-context'
+import { logAuditEvent } from '@/lib/audit'
 
 /**
  * Test endpoint to verify super admin authentication
@@ -14,14 +14,14 @@ import { logAuditEvent } from '@/lib/audit';
  */
 export async function GET(request: NextRequest) {
   // Test super admin authentication
-  const authResult = await requireSuperAdmin(request);
+  const authResult = await requireSuperAdmin(request)
 
   // If authResult is a NextResponse, it means authentication failed
   if (authResult instanceof NextResponse) {
-    return authResult;
+    return authResult
   }
 
-  const { user, profile, supabase } = authResult;
+  const { user, profile, supabase } = authResult
 
   // Log audit event
   await logAuditEvent(
@@ -38,8 +38,8 @@ export async function GET(request: NextRequest) {
         },
       },
     },
-    request
-  );
+    request,
+  )
 
   return NextResponse.json({
     success: true,
@@ -54,7 +54,7 @@ export async function GET(request: NextRequest) {
       user_type: profile.user_type,
     },
     rls_bypass_enabled: true,
-  });
+  })
 }
 
 /**
@@ -63,14 +63,14 @@ export async function GET(request: NextRequest) {
  */
 export async function POST(request: NextRequest) {
   // Test tenant context
-  const contextResult = await setTenantContext(request);
+  const contextResult = await setTenantContext(request)
 
   // If contextResult is a NextResponse, it means authentication failed
   if (contextResult instanceof NextResponse) {
-    return contextResult;
+    return contextResult
   }
 
-  const { user, profile, tenantId } = contextResult;
+  const { user, profile, tenantId } = contextResult
 
   return NextResponse.json({
     success: true,
@@ -87,5 +87,5 @@ export async function POST(request: NextRequest) {
     tenant_context: {
       current_tenant_id: tenantId,
     },
-  });
+  })
 }

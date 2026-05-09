@@ -1,16 +1,24 @@
-'use client';
+'use client'
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from 'react'
 
-type Language = 'zh' | 'tc' | 'en' | 'ms';
+type Language = 'zh' | 'tc' | 'en' | 'ms'
 
 interface LanguageContextType {
-  language: Language;
-  setLanguage: (lang: Language) => void;
-  t: (key: string) => string;
+  language: Language
+  setLanguage: (lang: Language) => void
+  t: (key: string) => string
 }
 
-const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
+const LanguageContext = createContext<LanguageContextType | undefined>(
+  undefined,
+)
 
 // 翻译字典
 const translations = {
@@ -126,7 +134,7 @@ const translations = {
     'tenantDetail.confirmDeactivate': '确定要停用此租户吗？',
     'tenantDetail.confirmDelete': '确定要删除此租户吗？此操作无法撤销。',
 
-        // 用户页面
+    // 用户页面
     'users.title': '用户管理',
     'users.subtitle': '管理所有用户账户',
     'users.allTypes': '所有类型',
@@ -156,7 +164,8 @@ const translations = {
     'settings.subtitle': '配置系统参数和选项',
     'settings.configureSystem': '配置系统参数和选项',
     'settings.maintenanceMode': '维护模式',
-    'settings.maintenanceModeDesc': '启用后,只有超级管理员可以访问系统。所有其他用户将看到维护消息。',
+    'settings.maintenanceModeDesc':
+      '启用后,只有超级管理员可以访问系统。所有其他用户将看到维护消息。',
     'settings.status': '状态',
     'settings.inactive': '停用',
     'settings.active': '启用',
@@ -193,7 +202,8 @@ const translations = {
     'diagnostics.title': '系统诊断',
     'diagnostics.subtitle': '运行全面的系统检查以识别潜在问题并验证配置',
     'diagnostics.controlPanel': '诊断控制面板',
-    'diagnostics.controlPanelDesc': '点击按钮开始系统诊断,检查数据库、API、认证等组件',
+    'diagnostics.controlPanelDesc':
+      '点击按钮开始系统诊断,检查数据库、API、认证等组件',
     'diagnostics.copyResults': '复制结果',
     'diagnostics.startDiagnostics': '开始诊断',
     'diagnostics.running': '诊断中...',
@@ -261,7 +271,7 @@ const translations = {
     'common.unknown': '未知',
     'common.system': '系统',
     'common.na': '不适用',
-    
+
     // 网页端通用
     'common.contact': '联系我们',
     'common.login': '登录',
@@ -723,7 +733,8 @@ const translations = {
     'careers.uploadResume': '上传简历',
     'careers.maxSize': '最大 5MB',
     'careers.personalStatement': '个人陈述',
-    'careers.personalStatementPlaceholder': '请简要介绍您的背景和为什么想加入我们...',
+    'careers.personalStatementPlaceholder':
+      '请简要介绍您的背景和为什么想加入我们...',
     'careers.submit': '提交',
     'careers.stillHaveQuestions': '还有问题？',
     'careers.questionsText': '如有任何疑问，请随时联系我们',
@@ -761,7 +772,8 @@ const translations = {
     'wizard.adminName': '管理员姓名',
     'wizard.adminNameRequired': '管理员姓名为必填项',
     'wizard.adminPhone': '管理员电话（可选）',
-    'wizard.adminNote': '注意：激活邮件将发送到管理员邮箱，包含设置密码的说明。',
+    'wizard.adminNote':
+      '注意：激活邮件将发送到管理员邮箱，包含设置密码的说明。',
     'wizard.reviewInfo': '请在创建租户前审核信息',
     'wizard.creating': '创建中...',
     'wizard.createTenant': '创建租户',
@@ -840,8 +852,10 @@ const translations = {
     'login.loading': 'Loading...',
     'login.backToLogin': 'Back to login',
     'login.securityNotice': 'Security Notice',
-    'login.securityText': 'This is a restricted area. All access attempts are logged and monitored.',
-    'login.unauthorized': 'Unauthorized access. Super admin privileges required.',
+    'login.securityText':
+      'This is a restricted area. All access attempts are logged and monitored.',
+    'login.unauthorized':
+      'Unauthorized access. Super admin privileges required.',
     'login.mfaHint': 'Enter the 6-digit code from your authenticator app',
 
     // Dashboard
@@ -894,7 +908,8 @@ const translations = {
     'tenants.suspended': 'Suspended',
     'tenants.noTenants': 'No tenants found',
     'tenants.createFirst': 'Create your first tenant',
-    'tenants.manageConfigurations': 'Manage tenant organizations and configurations',
+    'tenants.manageConfigurations':
+      'Manage tenant organizations and configurations',
 
     // Tenant Detail
     'tenantDetail.title': 'Tenant Details',
@@ -919,8 +934,10 @@ const translations = {
     'tenantDetail.configuration': 'Configuration',
     'tenantDetail.manage': 'Manage',
     'tenantDetail.notFound': 'Tenant not found',
-    'tenantDetail.confirmDeactivate': 'Are you sure you want to deactivate this tenant?',
-    'tenantDetail.confirmDelete': 'Are you sure you want to delete this tenant? This action cannot be undone.',
+    'tenantDetail.confirmDeactivate':
+      'Are you sure you want to deactivate this tenant?',
+    'tenantDetail.confirmDelete':
+      'Are you sure you want to delete this tenant? This action cannot be undone.',
 
     // Users
     'users.title': 'User Management',
@@ -952,7 +969,8 @@ const translations = {
     'settings.subtitle': 'Configure system parameters and options',
     'settings.configureSystem': 'Configure system parameters and options',
     'settings.maintenanceMode': 'Maintenance Mode',
-    'settings.maintenanceModeDesc': 'When enabled, only super administrators can access the system. All other users will see a maintenance message.',
+    'settings.maintenanceModeDesc':
+      'When enabled, only super administrators can access the system. All other users will see a maintenance message.',
     'settings.status': 'Status',
     'settings.inactive': 'Inactive',
     'settings.active': 'Active',
@@ -987,9 +1005,11 @@ const translations = {
 
     // Diagnostics
     'diagnostics.title': 'System Diagnostics',
-    'diagnostics.subtitle': 'Run comprehensive system checks to identify potential issues and verify configuration',
+    'diagnostics.subtitle':
+      'Run comprehensive system checks to identify potential issues and verify configuration',
     'diagnostics.controlPanel': 'Diagnostics Control Panel',
-    'diagnostics.controlPanelDesc': 'Click the button to start system diagnostics, checking database, API, authentication, and more',
+    'diagnostics.controlPanelDesc':
+      'Click the button to start system diagnostics, checking database, API, authentication, and more',
     'diagnostics.copyResults': 'Copy Results',
     'diagnostics.startDiagnostics': 'Start Diagnostics',
     'diagnostics.running': 'Running...',
@@ -999,7 +1019,8 @@ const translations = {
     'diagnostics.warnings': 'Warnings',
     'diagnostics.errors': 'Errors',
     'diagnostics.readyToStart': 'Ready to Start Diagnostics',
-    'diagnostics.readyToStartDesc': 'Click "Start Diagnostics" button to run system health checks',
+    'diagnostics.readyToStartDesc':
+      'Click "Start Diagnostics" button to run system health checks',
 
     // Analytics
     'analytics.title': 'Analytics',
@@ -1057,7 +1078,7 @@ const translations = {
     'common.unknown': 'Unknown',
     'common.system': 'System',
     'common.na': 'N/A',
-    
+
     // Public Website Common
     'common.contact': 'Contact Us',
     'common.login': 'Login',
@@ -1087,7 +1108,8 @@ const translations = {
 
     // Public Website Home
     'home.heroTitle': 'Professional Legal Consultation Platform',
-    'home.heroSubtitle': 'Connect with professional lawyers to solve your legal issues',
+    'home.heroSubtitle':
+      'Connect with professional lawyers to solve your legal issues',
     'home.searchPlaceholder': 'Search lawyers, legal services...',
     'home.searchLawyers': 'Search Lawyers',
     'home.searchButton': 'Search',
@@ -1211,7 +1233,7 @@ const translations = {
     'auth.loginButton': 'Login',
     'auth.or': 'or',
     'auth.loginWithGoogle': 'Login with Google',
-    'auth.noAccount': 'Don\'t have an account?',
+    'auth.noAccount': "Don't have an account?",
     'auth.signUpNow': 'Sign Up Now',
     'auth.backToHome': 'Back to Home',
     'auth.createAccount': 'Create Account',
@@ -1243,7 +1265,8 @@ const translations = {
     'about.title': 'About Us',
     'about.subtitle': 'Learn about our mission and team',
     'about.ourMission': 'Our Mission',
-    'about.missionText': 'Provide convenient and professional legal services for everyone',
+    'about.missionText':
+      'Provide convenient and professional legal services for everyone',
     'about.ourVision': 'Our Vision',
     'about.visionText': 'Become the most trusted legal service platform',
     'about.coreValues': 'Core Values',
@@ -1260,7 +1283,8 @@ const translations = {
     'about.satisfaction': 'Satisfaction',
     'about.ourTeam': 'Our Team',
     'about.teamText': 'Professional legal service team',
-    'about.teamDescription': 'Composed of experienced lawyers and technical experts',
+    'about.teamDescription':
+      'Composed of experienced lawyers and technical experts',
     'about.learnMore': 'Learn More',
     'about.learnMoreText': 'Want to learn more about us?',
     'about.joinUs': 'Join Us',
@@ -1389,7 +1413,7 @@ const translations = {
     // Favorites Page
     'favorites.title': 'My Favorites',
     'favorites.emptyFavorites': 'No Favorites',
-    'favorites.emptyFavoritesDesc': 'You haven\'t favorited any lawyers yet',
+    'favorites.emptyFavoritesDesc': "You haven't favorited any lawyers yet",
     'favorites.browseLawyers': 'Browse Lawyers',
     'favorites.viewDetails': 'View Details',
     'favorites.consult': 'Consult',
@@ -1413,7 +1437,7 @@ const translations = {
     // Shopping Cart
     'cart.title': 'Shopping Cart',
     'cart.emptyCart': 'Cart is Empty',
-    'cart.emptyCartDesc': 'Your cart doesn\'t have any services yet',
+    'cart.emptyCartDesc': "Your cart doesn't have any services yet",
     'cart.browseServices': 'Browse Services',
     'cart.consultationService': 'Consultation Service',
     'cart.reviewService': 'Review Service',
@@ -1519,7 +1543,8 @@ const translations = {
     'careers.uploadResume': 'Upload Resume',
     'careers.maxSize': 'Max 5MB',
     'careers.personalStatement': 'Personal Statement',
-    'careers.personalStatementPlaceholder': 'Please briefly introduce your background and why you want to join us...',
+    'careers.personalStatementPlaceholder':
+      'Please briefly introduce your background and why you want to join us...',
     'careers.submit': 'Submit',
     'careers.stillHaveQuestions': 'Still Have Questions?',
     'careers.questionsText': 'Feel free to contact us with any questions',
@@ -1538,8 +1563,10 @@ const translations = {
     'wizard.tenantNameRequired': 'Tenant name is required',
     'wizard.subdomain': 'Subdomain',
     'wizard.subdomainRequired': 'Subdomain is required',
-    'wizard.subdomainInvalid': 'Subdomain can only contain lowercase letters, numbers, and hyphens',
-    'wizard.subdomainHint': 'Only lowercase letters, numbers, and hyphens allowed',
+    'wizard.subdomainInvalid':
+      'Subdomain can only contain lowercase letters, numbers, and hyphens',
+    'wizard.subdomainHint':
+      'Only lowercase letters, numbers, and hyphens allowed',
     'wizard.customDomain': 'Custom Domain (Optional)',
     'wizard.initialStatus': 'Initial Status',
     'wizard.companyName': 'Company Name',
@@ -1557,8 +1584,10 @@ const translations = {
     'wizard.adminName': 'Admin Name',
     'wizard.adminNameRequired': 'Admin name is required',
     'wizard.adminPhone': 'Admin Phone (Optional)',
-    'wizard.adminNote': 'Note: An activation email will be sent to the admin email address with instructions to set up their password.',
-    'wizard.reviewInfo': 'Please review the information before creating the tenant',
+    'wizard.adminNote':
+      'Note: An activation email will be sent to the admin email address with instructions to set up their password.',
+    'wizard.reviewInfo':
+      'Please review the information before creating the tenant',
     'wizard.creating': 'Creating...',
     'wizard.createTenant': 'Create Tenant',
     'wizard.next': 'Next',
@@ -1572,7 +1601,8 @@ const translations = {
     'oem.preview': 'Preview',
     'oem.showPreview': 'Show Preview',
     'oem.hidePreview': 'Hide Preview',
-    'oem.previewText': 'This is a preview of how your branding colors will appear.',
+    'oem.previewText':
+      'This is a preview of how your branding colors will appear.',
     'oem.primaryButton': 'Primary Button',
     'oem.secondaryButton': 'Secondary Button',
     'oem.websiteUrl': 'Website URL',
@@ -1603,8 +1633,10 @@ const translations = {
     'audit.tenantId': 'Tenant ID',
 
     // Confirm Dialogs
-    'confirm.deactivateTenant': 'Are you sure you want to deactivate this tenant?',
-    'confirm.deleteTenant': 'Are you sure you want to delete this tenant? This action cannot be undone.',
+    'confirm.deactivateTenant':
+      'Are you sure you want to deactivate this tenant?',
+    'confirm.deleteTenant':
+      'Are you sure you want to delete this tenant? This action cannot be undone.',
   },
   ms: {
     // Navigation
@@ -1669,8 +1701,10 @@ const translations = {
     'tenants.suspended': 'Digantung',
 
     // Tenant Detail
-    'tenantDetail.confirmDeactivate': 'Adakah anda pasti mahu menyahaktifkan penyewa ini?',
-    'tenantDetail.confirmDelete': 'Adakah anda pasti mahu memadam penyewa ini? Tindakan ini tidak boleh dibatalkan.',
+    'tenantDetail.confirmDeactivate':
+      'Adakah anda pasti mahu menyahaktifkan penyewa ini?',
+    'tenantDetail.confirmDelete':
+      'Adakah anda pasti mahu memadam penyewa ini? Tindakan ini tidak boleh dibatalkan.',
 
     // Users
     'users.title': 'Pengurusan Pengguna',
@@ -1692,7 +1726,8 @@ const translations = {
     'settings.title': 'Tetapan Sistem',
     'settings.configureSystem': 'Konfigurasi parameter dan pilihan sistem',
     'settings.maintenanceMode': 'Mod Penyelenggaraan',
-    'settings.maintenanceModeDesc': 'Apabila diaktifkan, hanya super admin boleh mengakses sistem',
+    'settings.maintenanceModeDesc':
+      'Apabila diaktifkan, hanya super admin boleh mengakses sistem',
     'settings.status': 'Status',
     'settings.active': 'Aktif',
     'settings.inactive': 'Tidak Aktif',
@@ -1718,7 +1753,8 @@ const translations = {
     'wizard.reviewConfirm': 'Semak & Sahkan',
     'wizard.tenantNameRequired': 'Nama penyewa diperlukan',
     'wizard.subdomainRequired': 'Subdomain diperlukan',
-    'wizard.subdomainInvalid': 'Subdomain hanya boleh mengandungi huruf kecil, nombor dan tanda sempang',
+    'wizard.subdomainInvalid':
+      'Subdomain hanya boleh mengandungi huruf kecil, nombor dan tanda sempang',
     'wizard.companyNameRequired': 'Nama syarikat diperlukan',
     'wizard.supportEmailRequired': 'E-mel sokongan diperlukan',
     'wizard.supportEmailInvalid': 'Format e-mel tidak sah',
@@ -1727,8 +1763,10 @@ const translations = {
     'wizard.adminNameRequired': 'Nama pentadbir diperlukan',
 
     // Confirm Dialogs
-    'confirm.deactivateTenant': 'Adakah anda pasti mahu menyahaktifkan penyewa ini?',
-    'confirm.deleteTenant': 'Adakah anda pasti mahu memadam penyewa ini? Tindakan ini tidak boleh dibatalkan.',
+    'confirm.deactivateTenant':
+      'Adakah anda pasti mahu menyahaktifkan penyewa ini?',
+    'confirm.deleteTenant':
+      'Adakah anda pasti mahu memadam penyewa ini? Tindakan ini tidak boleh dibatalkan.',
 
     // Common
     'common.loading': 'Memuatkan...',
@@ -1762,7 +1800,7 @@ const translations = {
     'common.unknown': 'Tidak Diketahui',
     'common.system': 'Sistem',
     'common.na': 'T/A',
-    
+
     // Public Website Common
     'common.contact': 'Hubungi Kami',
     'common.login': 'Log Masuk',
@@ -1792,7 +1830,8 @@ const translations = {
 
     // Public Website Home
     'home.heroTitle': 'Platform Perundingan Undang-undang Profesional',
-    'home.heroSubtitle': 'Hubungkan dengan peguam profesional untuk menyelesaikan isu undang-undang anda',
+    'home.heroSubtitle':
+      'Hubungkan dengan peguam profesional untuk menyelesaikan isu undang-undang anda',
     'home.searchPlaceholder': 'Cari peguam, perkhidmatan undang-undang...',
     'home.searchLawyers': 'Cari Peguam',
     'home.searchButton': 'Cari',
@@ -1831,7 +1870,8 @@ const translations = {
     'home.people': 'Orang',
     'home.consult': 'Berunding',
     'home.legalKnowledgeBase': 'Pangkalan Pengetahuan Undang-undang',
-    'home.legalKnowledgeDesc': 'Akses percuma kepada pengetahuan undang-undang profesional',
+    'home.legalKnowledgeDesc':
+      'Akses percuma kepada pengetahuan undang-undang profesional',
     'home.legalArticles': 'Artikel Undang-undang',
     'home.freeReading': 'Bacaan Percuma',
     'home.viewArticles': 'Lihat Artikel',
@@ -1948,12 +1988,15 @@ const translations = {
     'about.title': 'Tentang Kami',
     'about.subtitle': 'Ketahui misi dan pasukan kami',
     'about.ourMission': 'Misi Kami',
-    'about.missionText': 'Menyediakan perkhidmatan undang-undang yang mudah dan profesional untuk semua',
+    'about.missionText':
+      'Menyediakan perkhidmatan undang-undang yang mudah dan profesional untuk semua',
     'about.ourVision': 'Visi Kami',
-    'about.visionText': 'Menjadi platform perkhidmatan undang-undang yang paling dipercayai',
+    'about.visionText':
+      'Menjadi platform perkhidmatan undang-undang yang paling dipercayai',
     'about.coreValues': 'Nilai Teras',
     'about.professional': 'Profesional',
-    'about.professionalText': 'Menyediakan perkhidmatan undang-undang yang paling profesional',
+    'about.professionalText':
+      'Menyediakan perkhidmatan undang-undang yang paling profesional',
     'about.userFirst': 'Pengguna Utama',
     'about.userFirstText': 'Sentiasa mengutamakan keperluan pengguna',
     'about.transparent': 'Telus',
@@ -1965,7 +2008,8 @@ const translations = {
     'about.satisfaction': 'Kepuasan',
     'about.ourTeam': 'Pasukan Kami',
     'about.teamText': 'Pasukan perkhidmatan undang-undang profesional',
-    'about.teamDescription': 'Terdiri daripada peguam berpengalaman dan pakar teknikal',
+    'about.teamDescription':
+      'Terdiri daripada peguam berpengalaman dan pakar teknikal',
     'about.learnMore': 'Ketahui Lebih Lanjut',
     'about.learnMoreText': 'Ingin tahu lebih lanjut tentang kami?',
     'about.joinUs': 'Sertai Kami',
@@ -1991,7 +2035,8 @@ const translations = {
 
     // Pages Common (Malay)
     'pages.servicesTitle': 'Perkhidmatan Undang-undang',
-    'pages.servicesSubtitle': 'Penyelesaian Perkhidmatan Undang-undang Profesional',
+    'pages.servicesSubtitle':
+      'Penyelesaian Perkhidmatan Undang-undang Profesional',
     'pages.serviceContent': 'Kandungan Perkhidmatan',
     'pages.backToServices': 'Kembali ke Perkhidmatan',
     'pages.serviceItems': 'Item Perkhidmatan',
@@ -2029,7 +2074,8 @@ const translations = {
     'pages.consultationCategory': 'Kategori Perundingan',
     'pages.selectCategory': 'Pilih Kategori',
     'pages.problemDescription': 'Penerangan Masalah',
-    'pages.problemPlaceholder': 'Sila huraikan isu undang-undang anda dengan terperinci...',
+    'pages.problemPlaceholder':
+      'Sila huraikan isu undang-undang anda dengan terperinci...',
     'pages.submitting': 'Menghantar...',
     'pages.submitConsultation': 'Hantar Perundingan',
     'pages.consultationPrice': 'Harga Perundingan',
@@ -2089,7 +2135,8 @@ const translations = {
     // Contact Page (Malay)
     'contact.title': 'Hubungi Kami',
     'contact.subtitle': 'Kami sedia membantu anda',
-    'contact.successMessage': 'Mesej dihantar! Kami akan membalas tidak lama lagi.',
+    'contact.successMessage':
+      'Mesej dihantar! Kami akan membalas tidak lama lagi.',
 
     // Favorites Page (Malay)
     'favorites.title': 'Kegemaran Saya',
@@ -2195,7 +2242,8 @@ const translations = {
     'careers.greatTeam': 'Pasukan Hebat',
     'careers.greatTeamText': 'Bekerja dengan bakat terbaik',
     'careers.meaningfulWork': 'Kerja Bermakna',
-    'careers.meaningfulWorkText': 'Membantu orang menyelesaikan masalah undang-undang',
+    'careers.meaningfulWorkText':
+      'Membantu orang menyelesaikan masalah undang-undang',
     'careers.benefits': 'Faedah',
     'careers.competitiveSalary': 'Gaji Kompetitif',
     'careers.competitiveSalaryText': 'Pampasan terkemuka industri',
@@ -2224,7 +2272,8 @@ const translations = {
     'careers.uploadResume': 'Muat Naik Resume',
     'careers.maxSize': 'Maksimum 5MB',
     'careers.personalStatement': 'Kenyataan Peribadi',
-    'careers.personalStatementPlaceholder': 'Sila perkenalkan latar belakang anda dan mengapa anda ingin menyertai kami...',
+    'careers.personalStatementPlaceholder':
+      'Sila perkenalkan latar belakang anda dan mengapa anda ingin menyertai kami...',
     'careers.submit': 'Hantar',
     'careers.stillHaveQuestions': 'Masih Ada Soalan?',
     'careers.questionsText': 'Sila hubungi kami jika ada sebarang pertanyaan',
@@ -2376,7 +2425,8 @@ const translations = {
     'settings.subtitle': '配置系統參數和選項',
     'settings.configureSystem': '配置系統參數和選項',
     'settings.maintenanceMode': '維護模式',
-    'settings.maintenanceModeDesc': '啟用後,只有超級管理員可以訪問系統。所有其他用戶將看到維護消息。',
+    'settings.maintenanceModeDesc':
+      '啟用後,只有超級管理員可以訪問系統。所有其他用戶將看到維護消息。',
     'settings.status': '狀態',
     'settings.inactive': '停用',
     'settings.active': '啟用',
@@ -2413,7 +2463,8 @@ const translations = {
     'diagnostics.title': '系統診斷',
     'diagnostics.subtitle': '運行全面的系統檢查以識別潛在問題並驗證配置',
     'diagnostics.controlPanel': '診斷控制面板',
-    'diagnostics.controlPanelDesc': '點擊按鈕開始系統診斷,檢查數據庫、API、認證等組件',
+    'diagnostics.controlPanelDesc':
+      '點擊按鈕開始系統診斷,檢查數據庫、API、認證等組件',
     'diagnostics.copyResults': '複製結果',
     'diagnostics.startDiagnostics': '開始診斷',
     'diagnostics.running': '診斷中...',
@@ -2481,7 +2532,7 @@ const translations = {
     'common.unknown': '未知',
     'common.system': '系統',
     'common.na': '不適用',
-    
+
     // 網頁端通用
     'common.contact': '聯繫我們',
     'common.login': '登錄',
@@ -2611,7 +2662,7 @@ const translations = {
     'footer.privacyPolicy': '隱私政策',
     'footer.termsOfService': '服務條款',
     'footer.copyright': '版權所有',
-    
+
     // 租戶向導
     'wizard.basicInfo': '基本信息',
     'wizard.oemConfig': 'OEM配置',
@@ -2640,7 +2691,8 @@ const translations = {
     'wizard.adminName': '管理員姓名',
     'wizard.adminNameRequired': '管理員姓名為必填項',
     'wizard.adminPhone': '管理員電話（可選）',
-    'wizard.adminNote': '注意：激活郵件將發送到管理員郵箱，包含設置密碼的說明。',
+    'wizard.adminNote':
+      '注意：激活郵件將發送到管理員郵箱，包含設置密碼的說明。',
     'wizard.reviewInfo': '請在創建租戶前審核信息',
     'wizard.creating': '創建中...',
     'wizard.createTenant': '創建租戶',
@@ -2802,51 +2854,58 @@ const translations = {
     'services.employmentDesc': '勞動法律專業咨詢',
     'services.ipDesc': '知識產權保護服務',
   },
-};
+}
 
-export function LanguageProvider({ 
+export function LanguageProvider({
   children,
   storageKey = 'language',
-  defaultLanguage = 'tc'
-}: { 
-  children: ReactNode;
-  storageKey?: string;
-  defaultLanguage?: Language;
+  defaultLanguage = 'tc',
+}: {
+  children: ReactNode
+  storageKey?: string
+  defaultLanguage?: Language
 }) {
-  const [language, setLanguageState] = useState<Language>(defaultLanguage);
+  const [language, setLanguageState] = useState<Language>(defaultLanguage)
 
   // 从 localStorage 加载语言设置
   useEffect(() => {
-    const savedLanguage = localStorage.getItem(storageKey) as Language;
-    if (savedLanguage && (savedLanguage === 'zh' || savedLanguage === 'tc' || savedLanguage === 'en' || savedLanguage === 'ms')) {
-      setLanguageState(savedLanguage);
+    const savedLanguage = localStorage.getItem(storageKey) as Language
+    if (
+      savedLanguage &&
+      (savedLanguage === 'zh' ||
+        savedLanguage === 'tc' ||
+        savedLanguage === 'en' ||
+        savedLanguage === 'ms')
+    ) {
+      setLanguageState(savedLanguage)
     }
-  }, [storageKey]);
+  }, [storageKey])
 
   // 保存语言设置到 localStorage
   const setLanguage = (lang: Language) => {
-    setLanguageState(lang);
-    localStorage.setItem(storageKey, lang);
-  };
+    setLanguageState(lang)
+    localStorage.setItem(storageKey, lang)
+  }
 
   // 翻译函数
   const t = (key: string): string => {
-    const translation = translations[language][key as keyof typeof translations.zh];
+    const translation =
+      translations[language][key as keyof typeof translations.zh]
     // 如果找不到翻译，返回键本身（用于非超级管理员页面）
-    return translation || key;
-  };
+    return translation || key
+  }
 
   return (
     <LanguageContext.Provider value={{ language, setLanguage, t }}>
       {children}
     </LanguageContext.Provider>
-  );
+  )
 }
 
 export function useLanguage() {
-  const context = useContext(LanguageContext);
+  const context = useContext(LanguageContext)
   if (context === undefined) {
-    throw new Error('useLanguage must be used within LanguageProvider');
+    throw new Error('useLanguage must be used within LanguageProvider')
   }
-  return context;
+  return context
 }

@@ -1,9 +1,9 @@
-'use client';
+'use client'
 
-import { useEffect, useState } from 'react';
-import { withSuperAdminAuth } from '@/lib/auth/withSuperAdminAuth';
-import SuperAdminLayout from '@/components/super-admin/SuperAdminLayout';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useEffect, useState } from 'react'
+import { withSuperAdminAuth } from '@/lib/auth/withSuperAdminAuth'
+import SuperAdminLayout from '@/components/super-admin/SuperAdminLayout'
+import { useLanguage } from '@/contexts/LanguageContext'
 import {
   BuildingOfficeIcon,
   UsersIcon,
@@ -11,36 +11,36 @@ import {
   ShoppingCartIcon,
   ArrowTrendingUpIcon,
   ArrowTrendingDownIcon,
-} from '@heroicons/react/24/outline';
+} from '@heroicons/react/24/outline'
 
 interface DashboardStats {
   tenants: {
-    total: number;
-    active: number;
-    inactive: number;
-  };
+    total: number
+    active: number
+    inactive: number
+  }
   users: {
-    total: number;
-    new_this_month: number;
-  };
+    total: number
+    new_this_month: number
+  }
   consultations: {
-    total: number;
-    pending: number;
-  };
+    total: number
+    pending: number
+  }
   orders: {
-    total: number;
-    revenue: number;
-  };
+    total: number
+    revenue: number
+  }
 }
 
 function SuperAdminDashboard() {
-  const [stats, setStats] = useState<DashboardStats | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const { t } = useLanguage();
+  const [stats, setStats] = useState<DashboardStats | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const { t } = useLanguage()
 
   useEffect(() => {
-    fetchDashboardStats();
-  }, []);
+    fetchDashboardStats()
+  }, [])
 
   const fetchDashboardStats = async () => {
     try {
@@ -64,13 +64,13 @@ function SuperAdminDashboard() {
           total: 300,
           revenue: 150000,
         },
-      });
+      })
     } catch (error) {
-      console.error('Error fetching dashboard stats:', error);
+      console.error('Error fetching dashboard stats:', error)
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   if (isLoading) {
     return (
@@ -79,7 +79,7 @@ function SuperAdminDashboard() {
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div>
         </div>
       </SuperAdminLayout>
-    );
+    )
   }
 
   return (
@@ -87,10 +87,10 @@ function SuperAdminDashboard() {
       <div className="space-y-6">
         {/* Page Header */}
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">{t('dashboard.title')}</h1>
-          <p className="text-gray-600 mt-2">
-            {t('dashboard.subtitle')}
-          </p>
+          <h1 className="text-3xl font-bold text-gray-900">
+            {t('dashboard.title')}
+          </h1>
+          <p className="text-gray-600 mt-2">{t('dashboard.subtitle')}</p>
         </div>
 
         {/* Stats Grid */}
@@ -99,7 +99,9 @@ function SuperAdminDashboard() {
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">{t('dashboard.totalTenants')}</p>
+                <p className="text-sm font-medium text-gray-600">
+                  {t('dashboard.totalTenants')}
+                </p>
                 <p className="text-3xl font-bold text-gray-900 mt-2">
                   {stats?.tenants.total}
                 </p>
@@ -118,13 +120,15 @@ function SuperAdminDashboard() {
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">{t('dashboard.totalUsers')}</p>
+                <p className="text-sm font-medium text-gray-600">
+                  {t('dashboard.totalUsers')}
+                </p>
                 <p className="text-3xl font-bold text-gray-900 mt-2">
                   {stats?.users.total}
                 </p>
                 <p className="text-sm text-green-600 mt-2 flex items-center">
-                  <ArrowTrendingUpIcon className="w-4 h-4 mr-1" />
-                  +{stats?.users.new_this_month} {t('dashboard.newThisMonth')}
+                  <ArrowTrendingUpIcon className="w-4 h-4 mr-1" />+
+                  {stats?.users.new_this_month} {t('dashboard.newThisMonth')}
                 </p>
               </div>
               <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -137,7 +141,9 @@ function SuperAdminDashboard() {
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">{t('dashboard.consultations')}</p>
+                <p className="text-sm font-medium text-gray-600">
+                  {t('dashboard.consultations')}
+                </p>
                 <p className="text-3xl font-bold text-gray-900 mt-2">
                   {stats?.consultations.total}
                 </p>
@@ -155,7 +161,9 @@ function SuperAdminDashboard() {
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">{t('dashboard.totalRevenue')}</p>
+                <p className="text-sm font-medium text-gray-600">
+                  {t('dashboard.totalRevenue')}
+                </p>
                 <p className="text-3xl font-bold text-gray-900 mt-2">
                   ¥{stats?.orders.revenue.toLocaleString()}
                 </p>
@@ -177,11 +185,15 @@ function SuperAdminDashboard() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <button
-              onClick={() => (window.location.href = '/super-admin/tenants/new')}
+              onClick={() =>
+                (window.location.href = '/super-admin/tenants/new')
+              }
               className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-orange-500 hover:bg-orange-50 transition-colors text-left"
             >
               <BuildingOfficeIcon className="w-6 h-6 text-orange-600 mb-2" />
-              <p className="font-medium text-gray-900">{t('dashboard.createTenant')}</p>
+              <p className="font-medium text-gray-900">
+                {t('dashboard.createTenant')}
+              </p>
               <p className="text-sm text-gray-600 mt-1">
                 {t('dashboard.createTenantDesc')}
               </p>
@@ -192,7 +204,9 @@ function SuperAdminDashboard() {
               className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-colors text-left"
             >
               <UsersIcon className="w-6 h-6 text-blue-600 mb-2" />
-              <p className="font-medium text-gray-900">{t('dashboard.manageUsers')}</p>
+              <p className="font-medium text-gray-900">
+                {t('dashboard.manageUsers')}
+              </p>
               <p className="text-sm text-gray-600 mt-1">
                 {t('dashboard.manageUsersDesc')}
               </p>
@@ -203,7 +217,9 @@ function SuperAdminDashboard() {
               className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-green-500 hover:bg-green-50 transition-colors text-left"
             >
               <ChatBubbleLeftRightIcon className="w-6 h-6 text-green-600 mb-2" />
-              <p className="font-medium text-gray-900">{t('dashboard.viewAuditLogs')}</p>
+              <p className="font-medium text-gray-900">
+                {t('dashboard.viewAuditLogs')}
+              </p>
               <p className="text-sm text-gray-600 mt-1">
                 {t('dashboard.viewAuditLogsDesc')}
               </p>
@@ -222,21 +238,31 @@ function SuperAdminDashboard() {
                 <div className="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
                 <span className="text-gray-700">{t('dashboard.database')}</span>
               </div>
-              <span className="text-sm text-green-600 font-medium">{t('dashboard.operational')}</span>
+              <span className="text-sm text-green-600 font-medium">
+                {t('dashboard.operational')}
+              </span>
             </div>
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <div className="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
-                <span className="text-gray-700">{t('dashboard.apiServices')}</span>
+                <span className="text-gray-700">
+                  {t('dashboard.apiServices')}
+                </span>
               </div>
-              <span className="text-sm text-green-600 font-medium">{t('dashboard.operational')}</span>
+              <span className="text-sm text-green-600 font-medium">
+                {t('dashboard.operational')}
+              </span>
             </div>
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <div className="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
-                <span className="text-gray-700">{t('dashboard.authentication')}</span>
+                <span className="text-gray-700">
+                  {t('dashboard.authentication')}
+                </span>
               </div>
-              <span className="text-sm text-green-600 font-medium">{t('dashboard.operational')}</span>
+              <span className="text-sm text-green-600 font-medium">
+                {t('dashboard.operational')}
+              </span>
             </div>
           </div>
         </div>
@@ -250,29 +276,41 @@ function SuperAdminDashboard() {
             <div className="flex items-start">
               <div className="w-2 h-2 bg-orange-500 rounded-full mt-2 mr-3"></div>
               <div className="flex-1">
-                <p className="text-sm text-gray-900">{t('dashboard.newTenantCreated')}</p>
-                <p className="text-xs text-gray-500 mt-1">2 {t('dashboard.hoursAgo')}</p>
+                <p className="text-sm text-gray-900">
+                  {t('dashboard.newTenantCreated')}
+                </p>
+                <p className="text-xs text-gray-500 mt-1">
+                  2 {t('dashboard.hoursAgo')}
+                </p>
               </div>
             </div>
             <div className="flex items-start">
               <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3"></div>
               <div className="flex-1">
-                <p className="text-sm text-gray-900">{t('dashboard.userMigrated')}</p>
-                <p className="text-xs text-gray-500 mt-1">5 {t('dashboard.hoursAgo')}</p>
+                <p className="text-sm text-gray-900">
+                  {t('dashboard.userMigrated')}
+                </p>
+                <p className="text-xs text-gray-500 mt-1">
+                  5 {t('dashboard.hoursAgo')}
+                </p>
               </div>
             </div>
             <div className="flex items-start">
               <div className="w-2 h-2 bg-green-500 rounded-full mt-2 mr-3"></div>
               <div className="flex-1">
-                <p className="text-sm text-gray-900">{t('dashboard.settingsUpdated')}</p>
-                <p className="text-xs text-gray-500 mt-1">1 {t('dashboard.dayAgo')}</p>
+                <p className="text-sm text-gray-900">
+                  {t('dashboard.settingsUpdated')}
+                </p>
+                <p className="text-xs text-gray-500 mt-1">
+                  1 {t('dashboard.dayAgo')}
+                </p>
               </div>
             </div>
           </div>
         </div>
       </div>
     </SuperAdminLayout>
-  );
+  )
 }
 
-export default withSuperAdminAuth(SuperAdminDashboard);
+export default withSuperAdminAuth(SuperAdminDashboard)

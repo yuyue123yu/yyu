@@ -1,24 +1,24 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import {
   BellIcon,
   UserCircleIcon,
   ArrowRightOnRectangleIcon,
-} from '@heroicons/react/24/outline';
-import { useLanguage } from '@/contexts/LanguageContext';
-import LanguageSwitcher from './LanguageSwitcher';
+} from '@heroicons/react/24/outline'
+import { useLanguage } from '@/contexts/LanguageContext'
+import LanguageSwitcher from './LanguageSwitcher'
 
 export default function SuperAdminHeader() {
-  const router = useRouter();
-  const [showUserMenu, setShowUserMenu] = useState(false);
-  const { t } = useLanguage();
+  const router = useRouter()
+  const [showUserMenu, setShowUserMenu] = useState(false)
+  const { t } = useLanguage()
 
   const handleLogout = async () => {
     // TODO: Implement logout logic
-    router.push('/super-admin/login');
-  };
+    router.push('/super-admin/login')
+  }
 
   return (
     <header className="fixed top-0 left-0 right-0 h-16 bg-gradient-to-r from-orange-600 to-red-600 shadow-lg z-50">
@@ -30,7 +30,9 @@ export default function SuperAdminHeader() {
               <span className="text-orange-600 font-bold text-xl">超</span>
             </div>
             <div>
-              <h1 className="text-white font-bold text-lg">{t('header.title')}</h1>
+              <h1 className="text-white font-bold text-lg">
+                {t('header.title')}
+              </h1>
               <p className="text-orange-100 text-xs">{t('header.subtitle')}</p>
             </div>
           </div>
@@ -66,7 +68,9 @@ export default function SuperAdminHeader() {
                 ></div>
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-20">
                   <div className="px-4 py-2 border-b border-gray-200">
-                    <p className="text-sm font-medium text-gray-900">{t('header.superAdmin')}</p>
+                    <p className="text-sm font-medium text-gray-900">
+                      {t('header.superAdmin')}
+                    </p>
                     <p className="text-xs text-gray-500">admin@example.com</p>
                   </div>
                   <button
@@ -83,5 +87,5 @@ export default function SuperAdminHeader() {
         </div>
       </div>
     </header>
-  );
+  )
 }

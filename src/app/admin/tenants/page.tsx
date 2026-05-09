@@ -1,82 +1,83 @@
-'use client';
+'use client'
 
-import { useEffect, useState } from 'react';
-import { createClient } from '@/lib/supabase/client';
-import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react'
+import { createClient } from '@/lib/supabase/client'
+import { useRouter } from 'next/navigation'
 
 interface Tenant {
-  id: string;
-  name: string;
-  subdomain: string;
-  primary_domain: string | null;
-  status: 'active' | 'inactive' | 'suspended';
-  subscription_plan: 'free' | 'basic' | 'premium' | 'enterprise';
-  user_count: number;
-  created_at: string;
+  id: string
+  name: string
+  subdomain: string
+  primary_domain: string | null
+  status: 'active' | 'inactive' | 'suspended'
+  subscription_plan: 'free' | 'basic' | 'premium' | 'enterprise'
+  user_count: number
+  created_at: string
 }
 
 export default function TenantsPage() {
-  const router = useRouter();
-  const [tenants, setTenants] = useState<Tenant[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
+  const router = useRouter()
+  const [tenants, setTenants] = useState<Tenant[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+  const [searchTerm, setSearchTerm] = useState('')
 
   useEffect(() => {
-    fetchTenants();
-  }, []);
+    fetchTenants()
+  }, [])
 
   const fetchTenants = async () => {
     try {
-      const supabase = createClient();
+      const supabase = createClient()
 
       const { data, error } = await supabase
         .from('tenants')
         .select('*')
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
 
-      if (error) throw error;
+      if (error) throw error
 
-      setTenants(data || []);
+      setTenants(data || [])
     } catch (err: any) {
-      setError(err.message);
+      setError(err.message)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
-  const filteredTenants = tenants.filter(tenant =>
-    tenant.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    tenant.subdomain.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredTenants = tenants.filter(
+    (tenant) =>
+      tenant.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      tenant.subdomain.toLowerCase().includes(searchTerm.toLowerCase()),
+  )
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'active':
-        return 'bg-green-100 text-green-800';
+        return 'bg-green-100 text-green-800'
       case 'inactive':
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-100 text-gray-800'
       case 'suspended':
-        return 'bg-red-100 text-red-800';
+        return 'bg-red-100 text-red-800'
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-100 text-gray-800'
     }
-  };
+  }
 
   const getPlanColor = (plan: string) => {
     switch (plan) {
       case 'free':
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-blue-100 text-blue-800'
       case 'basic':
-        return 'bg-purple-100 text-purple-800';
+        return 'bg-purple-100 text-purple-800'
       case 'premium':
-        return 'bg-orange-100 text-orange-800';
+        return 'bg-orange-100 text-orange-800'
       case 'enterprise':
-        return 'bg-pink-100 text-pink-800';
+        return 'bg-pink-100 text-pink-800'
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-100 text-gray-800'
     }
-  };
+  }
 
   if (loading) {
     return (
@@ -86,7 +87,7 @@ export default function TenantsPage() {
           <p className="mt-4 text-gray-600">加载中...</p>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -127,13 +128,13 @@ export default function TenantsPage() {
           <div className="bg-white rounded-lg shadow p-6">
             <p className="text-sm text-gray-600 mb-1">活跃租户</p>
             <p className="text-3xl font-bold text-green-600">
-              {tenants.filter(t => t.status === 'active').length}
+              {tenants.filter((t) => t.status === 'active').length}
             </p>
           </div>
           <div className="bg-white rounded-lg shadow p-6">
             <p className="text-sm text-gray-600 mb-1">暂停租户</p>
             <p className="text-3xl font-bold text-red-600">
-              {tenants.filter(t => t.status === 'suspended').length}
+              {tenants.filter((t) => t.status === 'suspended').length}
             </p>
           </div>
           <div className="bg-white rounded-lg shadow p-6">
@@ -206,7 +207,7 @@ export default function TenantsPage() {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
                       className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(
-                        tenant.status
+                        tenant.status,
                       )}`}
                     >
                       {tenant.status === 'active' && '活跃'}
@@ -217,7 +218,7 @@ export default function TenantsPage() {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
                       className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getPlanColor(
-                        tenant.subscription_plan
+                        tenant.subscription_plan,
                       )}`}
                     >
                       {tenant.subscription_plan === 'free' && '免费版'}
@@ -240,7 +241,9 @@ export default function TenantsPage() {
                       查看
                     </button>
                     <button
-                      onClick={() => router.push(`/admin/tenants/${tenant.id}/edit`)}
+                      onClick={() =>
+                        router.push(`/admin/tenants/${tenant.id}/edit`)
+                      }
                       className="text-blue-600 hover:text-blue-900"
                     >
                       编辑
@@ -261,5 +264,5 @@ export default function TenantsPage() {
         </div>
       </main>
     </div>
-  );
+  )
 }

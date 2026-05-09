@@ -1,69 +1,71 @@
-'use client';
+'use client'
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { withSuperAdminAuth } from '@/lib/auth/withSuperAdminAuth';
-import SuperAdminLayout from '@/components/super-admin/SuperAdminLayout';
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { withSuperAdminAuth } from '@/lib/auth/withSuperAdminAuth'
+import SuperAdminLayout from '@/components/super-admin/SuperAdminLayout'
 import {
   ShieldCheckIcon,
   QrCodeIcon,
   KeyIcon,
   CheckCircleIcon,
   ExclamationCircleIcon,
-} from '@heroicons/react/24/outline';
-import Image from 'next/image';
+} from '@heroicons/react/24/outline'
+import Image from 'next/image'
 
 function MFASetupPage() {
-  const router = useRouter();
-  const [step, setStep] = useState<'generate' | 'verify' | 'complete'>('generate');
-  const [qrCodeUrl, setQrCodeUrl] = useState('');
-  const [secret, setSecret] = useState('');
-  const [backupCodes, setBackupCodes] = useState<string[]>([]);
-  const [verificationCode, setVerificationCode] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [copiedBackupCodes, setCopiedBackupCodes] = useState(false);
+  const router = useRouter()
+  const [step, setStep] = useState<'generate' | 'verify' | 'complete'>(
+    'generate',
+  )
+  const [qrCodeUrl, setQrCodeUrl] = useState('')
+  const [secret, setSecret] = useState('')
+  const [backupCodes, setBackupCodes] = useState<string[]>([])
+  const [verificationCode, setVerificationCode] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [copiedBackupCodes, setCopiedBackupCodes] = useState(false)
 
   const handleGenerateSecret = async () => {
     try {
-      setIsLoading(true);
-      setError('');
+      setIsLoading(true)
+      setError('')
 
       const response = await fetch('/api/super-admin/mfa/setup', {
         method: 'POST',
-      });
+      })
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (data.success) {
-        setQrCodeUrl(data.qrCode);
-        setSecret(data.secret);
+        setQrCodeUrl(data.qrCode)
+        setSecret(data.secret)
         // Generate backup codes (8 random codes)
         const codes = Array.from({ length: 8 }, () =>
-          Math.random().toString(36).substring(2, 10).toUpperCase()
-        );
-        setBackupCodes(codes);
-        setStep('verify');
+          Math.random().toString(36).substring(2, 10).toUpperCase(),
+        )
+        setBackupCodes(codes)
+        setStep('verify')
       } else {
-        setError(data.error || 'Failed to generate MFA secret');
+        setError(data.error || 'Failed to generate MFA secret')
       }
     } catch (error) {
-      console.error('Error generating MFA secret:', error);
-      setError('Failed to generate MFA secret');
+      console.error('Error generating MFA secret:', error)
+      setError('Failed to generate MFA secret')
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   const handleVerifyCode = async () => {
     try {
-      setIsLoading(true);
-      setError('');
+      setIsLoading(true)
+      setError('')
 
       if (!verificationCode || verificationCode.length !== 6) {
-        setError('Please enter a 6-digit code');
-        setIsLoading(false);
-        return;
+        setError('Please enter a 6-digit code')
+        setIsLoading(false)
+        return
       }
 
       const response = await fetch('/api/super-admin/mfa/verify', {
@@ -72,33 +74,33 @@ function MFASetupPage() {
         body: JSON.stringify({
           token: verificationCode,
         }),
-      });
+      })
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (data.success) {
-        setStep('complete');
+        setStep('complete')
       } else {
-        setError(data.error || 'Invalid verification code');
+        setError(data.error || 'Invalid verification code')
       }
     } catch (error) {
-      console.error('Error verifying MFA code:', error);
-      setError('Failed to verify code');
+      console.error('Error verifying MFA code:', error)
+      setError('Failed to verify code')
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   const handleCopyBackupCodes = () => {
-    const codesText = backupCodes.join('\n');
-    navigator.clipboard.writeText(codesText);
-    setCopiedBackupCodes(true);
-    setTimeout(() => setCopiedBackupCodes(false), 3000);
-  };
+    const codesText = backupCodes.join('\n')
+    navigator.clipboard.writeText(codesText)
+    setCopiedBackupCodes(true)
+    setTimeout(() => setCopiedBackupCodes(false), 3000)
+  }
 
   const handleComplete = () => {
-    router.push('/super-admin');
-  };
+    router.push('/super-admin')
+  }
 
   return (
     <SuperAdminLayout>
@@ -146,8 +148,8 @@ function MFASetupPage() {
                   step === 'verify'
                     ? 'bg-orange-600 text-white'
                     : step === 'complete'
-                    ? 'bg-green-600 text-white'
-                    : 'bg-gray-200 text-gray-600'
+                      ? 'bg-green-600 text-white'
+                      : 'bg-gray-200 text-gray-600'
                 }`}
               >
                 2
@@ -199,9 +201,9 @@ function MFASetupPage() {
                 Enable Two-Factor Authentication
               </h2>
               <p className="text-gray-600 mb-8">
-                Two-factor authentication adds an extra layer of security to your
-                account. You'll need an authenticator app like Google Authenticator
-                or Authy.
+                Two-factor authentication adds an extra layer of security to
+                your account. You'll need an authenticator app like Google
+                Authenticator or Authy.
               </p>
               <button
                 onClick={handleGenerateSecret}
@@ -263,7 +265,9 @@ function MFASetupPage() {
                   type="text"
                   value={verificationCode}
                   onChange={(e) =>
-                    setVerificationCode(e.target.value.replace(/\D/g, '').slice(0, 6))
+                    setVerificationCode(
+                      e.target.value.replace(/\D/g, '').slice(0, 6),
+                    )
                   }
                   placeholder="000000"
                   maxLength={6}
@@ -288,8 +292,8 @@ function MFASetupPage() {
                 </h2>
               </div>
               <p className="text-gray-600 mb-4">
-                Save these backup codes in a safe place. You can use them to access
-                your account if you lose your authenticator device.
+                Save these backup codes in a safe place. You can use them to
+                access your account if you lose your authenticator device.
               </p>
               <div className="bg-gray-50 rounded-lg p-4 mb-4">
                 <div className="grid grid-cols-2 gap-2">
@@ -322,9 +326,9 @@ function MFASetupPage() {
                 MFA Enabled Successfully!
               </h2>
               <p className="text-gray-600 mb-8">
-                Your account is now protected with two-factor authentication. You'll
-                need to enter a code from your authenticator app each time you log
-                in.
+                Your account is now protected with two-factor authentication.
+                You'll need to enter a code from your authenticator app each
+                time you log in.
               </p>
               <button
                 onClick={handleComplete}
@@ -337,7 +341,7 @@ function MFASetupPage() {
         )}
       </div>
     </SuperAdminLayout>
-  );
+  )
 }
 
-export default withSuperAdminAuth(MFASetupPage);
+export default withSuperAdminAuth(MFASetupPage)

@@ -1,11 +1,11 @@
 // Super Admin Authentication Middleware
-import { createClient } from '@/lib/supabase/server';
-import { NextResponse } from 'next/server';
+import { createClient } from '@/lib/supabase/server'
+import { NextResponse } from 'next/server'
 
 export interface SuperAdminAuthResult {
-  user: any;
-  profile: any;
-  supabase: any;
+  user: any
+  profile: any
+  supabase: any
 }
 
 /**
@@ -14,21 +14,21 @@ export interface SuperAdminAuthResult {
  * Enables RLS bypass for super admin operations
  */
 export async function requireSuperAdmin(
-  request: Request
+  request: Request,
 ): Promise<NextResponse | SuperAdminAuthResult> {
-  const supabase = await createClient();
+  const supabase = await createClient()
 
   // Get authenticated user
   const {
     data: { user },
     error: authError,
-  } = await supabase.auth.getUser();
+  } = await supabase.auth.getUser()
 
   if (authError || !user) {
     return NextResponse.json(
       { error: 'Unauthorized: Authentication required' },
-      { status: 401 }
-    );
+      { status: 401 },
+    )
   }
 
   // Check super_admin flag
@@ -36,20 +36,17 @@ export async function requireSuperAdmin(
     .from('profiles')
     .select('super_admin, tenant_id, user_type')
     .eq('id', user.id)
-    .single();
+    .single()
 
   if (profileError || !profile) {
-    return NextResponse.json(
-      { error: 'Profile not found' },
-      { status: 404 }
-    );
+    return NextResponse.json({ error: 'Profile not found' }, { status: 404 })
   }
 
   if (!profile.super_admin) {
     return NextResponse.json(
       { error: 'Forbidden: Super admin access required' },
-      { status: 403 }
-    );
+      { status: 403 },
+    )
   }
 
   // Enable RLS bypass for super admin
@@ -57,13 +54,13 @@ export async function requireSuperAdmin(
     await supabase.rpc('set_config', {
       setting: 'app.bypass_rls',
       value: 'true',
-    });
+    })
   } catch (error) {
-    console.error('Failed to enable RLS bypass:', error);
+    console.error('Failed to enable RLS bypass:', error)
     // Continue anyway - the RLS bypass is optional for some operations
   }
 
-  return { user, profile, supabase };
+  return { user, profile, supabase }
 }
 
 /**
@@ -72,26 +69,26 @@ export async function requireSuperAdmin(
  */
 export async function isSuperAdmin(): Promise<boolean> {
   try {
-    const supabase = await createClient();
+    const supabase = await createClient()
 
     const {
       data: { user },
-    } = await supabase.auth.getUser();
+    } = await supabase.auth.getUser()
 
     if (!user) {
-      return false;
+      return false
     }
 
     const { data: profile } = await supabase
       .from('profiles')
       .select('super_admin')
       .eq('id', user.id)
-      .single();
+      .single()
 
-    return profile?.super_admin === true;
+    return profile?.super_admin === true
   } catch (error) {
-    console.error('Error checking super admin status:', error);
-    return false;
+    console.error('Error checking super admin status:', error)
+    return false
   }
 }
 
@@ -100,16 +97,16 @@ export async function isSuperAdmin(): Promise<boolean> {
  * Should be called after verifying super admin status
  */
 export async function enableRLSBypass(): Promise<void> {
-  const supabase = await createClient();
+  const supabase = await createClient()
 
   try {
     await supabase.rpc('set_config', {
       setting: 'app.bypass_rls',
       value: 'true',
-    });
+    })
   } catch (error) {
-    console.error('Failed to enable RLS bypass:', error);
-    throw new Error('Failed to enable RLS bypass');
+    console.error('Failed to enable RLS bypass:', error)
+    throw new Error('Failed to enable RLS bypass')
   }
 }
 
@@ -118,15 +115,15 @@ export async function enableRLSBypass(): Promise<void> {
  * Should be called to restore normal RLS behavior
  */
 export async function disableRLSBypass(): Promise<void> {
-  const supabase = await createClient();
+  const supabase = await createClient()
 
   try {
     await supabase.rpc('set_config', {
       setting: 'app.bypass_rls',
       value: 'false',
-    });
+    })
   } catch (error) {
-    console.error('Failed to disable RLS bypass:', error);
+    console.error('Failed to disable RLS bypass:', error)
     // Don't throw - this is cleanup
   }
 }

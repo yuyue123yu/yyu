@@ -1,7 +1,7 @@
-'use client';
+'use client'
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import {
   HomeIcon,
   BuildingOfficeIcon,
@@ -12,12 +12,12 @@ import {
   Cog6ToothIcon,
   ChartBarIcon,
   WrenchScrewdriverIcon,
-} from '@heroicons/react/24/outline';
-import { useLanguage } from '@/contexts/LanguageContext';
+} from '@heroicons/react/24/outline'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 export default function SuperAdminNav() {
-  const pathname = usePathname();
-  const { t } = useLanguage();
+  const pathname = usePathname()
+  const { t } = useLanguage()
 
   const navigation = [
     {
@@ -65,14 +65,15 @@ export default function SuperAdminNav() {
       href: '/super-admin/settings',
       icon: Cog6ToothIcon,
     },
-  ];
+  ]
 
   return (
     <nav className="fixed left-0 top-16 h-[calc(100vh-4rem)] w-64 bg-white border-r border-gray-200 overflow-y-auto">
       <div className="p-4">
         <div className="space-y-1">
           {navigation.map((item) => {
-            const isActive = pathname === item.href || pathname?.startsWith(item.href + '/');
+            const isActive =
+              pathname === item.href || pathname?.startsWith(item.href + '/')
             return (
               <Link
                 key={item.name}
@@ -89,7 +90,7 @@ export default function SuperAdminNav() {
                 <item.icon className="w-5 h-5 mr-3" />
                 {item.name}
               </Link>
-            );
+            )
           })}
         </div>
       </div>
@@ -102,5 +103,5 @@ export default function SuperAdminNav() {
         </div>
       </div>
     </nav>
-  );
+  )
 }

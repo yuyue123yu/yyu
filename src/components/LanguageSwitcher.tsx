@@ -1,33 +1,37 @@
-"use client";
+'use client'
 
-import { useLanguage } from '@/contexts/LanguageContext';
-import { Globe } from 'lucide-react';
-import { useState, useRef, useEffect } from 'react';
+import { useLanguage } from '@/contexts/LanguageContext'
+import { Globe } from 'lucide-react'
+import { useState, useRef, useEffect } from 'react'
 
 export default function LanguageSwitcher() {
-  const { language, setLanguage } = useLanguage();
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const { language, setLanguage } = useLanguage()
+  const [isOpen, setIsOpen] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
 
   const languages = [
     { code: 'tc' as const, name: '繁體中文', flag: '🇭🇰' },
     { code: 'zh' as const, name: '简体中文', flag: '🇨🇳' },
     { code: 'en' as const, name: 'English', flag: '🇬🇧' },
     { code: 'ms' as const, name: 'Bahasa', flag: '🇲🇾' },
-  ];
+  ]
 
-  const currentLanguage = languages.find(lang => lang.code === language) || languages[0];
+  const currentLanguage =
+    languages.find((lang) => lang.code === language) || languages[0]
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false)
       }
     }
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -48,11 +52,13 @@ export default function LanguageSwitcher() {
             <button
               key={lang.code}
               onClick={() => {
-                setLanguage(lang.code);
-                setIsOpen(false);
+                setLanguage(lang.code)
+                setIsOpen(false)
               }}
               className={`w-full px-4 py-2 text-left hover:bg-gray-50 transition-colors flex items-center gap-3 ${
-                language === lang.code ? 'bg-blue-50 text-blue-600' : 'text-gray-700'
+                language === lang.code
+                  ? 'bg-blue-50 text-blue-600'
+                  : 'text-gray-700'
               }`}
             >
               <span className="text-xl">{lang.flag}</span>
@@ -65,5 +71,5 @@ export default function LanguageSwitcher() {
         </div>
       )}
     </div>
-  );
+  )
 }

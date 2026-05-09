@@ -1,8 +1,8 @@
 // Password Reset Token Management
-import { createClient } from '@/lib/supabase/server';
-import { generateSecureToken } from '@/lib/mfa';
+import { createClient } from '@/lib/supabase/server'
+import { generateSecureToken } from '@/lib/mfa'
 
-const TOKEN_EXPIRY_HOURS = 24;
+const TOKEN_EXPIRY_HOURS = 24
 
 /**
  * Create a password reset token
@@ -12,26 +12,26 @@ const TOKEN_EXPIRY_HOURS = 24;
  */
 export async function createPasswordResetToken(
   email: string,
-  ipAddress: string
+  ipAddress: string,
 ): Promise<{ token: string; expiresAt: Date }> {
-  const supabase = await createClient();
+  const supabase = await createClient()
 
   // Generate cryptographically secure 256-bit token
-  const token = generateSecureToken(32); // 32 bytes = 256 bits
+  const token = generateSecureToken(32) // 32 bytes = 256 bits
 
   // Calculate expiry time (24 hours from now)
-  const expiresAt = new Date();
-  expiresAt.setHours(expiresAt.getHours() + TOKEN_EXPIRY_HOURS);
+  const expiresAt = new Date()
+  expiresAt.setHours(expiresAt.getHours() + TOKEN_EXPIRY_HOURS)
 
   // Get user by email
   const { data: profiles } = await supabase
     .from('profiles')
     .select('id')
     .eq('email', email)
-    .single();
+    .single()
 
   if (!profiles) {
-    throw new Error('User not found');
+    throw new Error('User not found')
   }
 
   // Store token in database
@@ -41,13 +41,13 @@ export async function createPasswordResetToken(
     expires_at: expiresAt.toISOString(),
     ip_address: ipAddress,
     used: false,
-  });
+  })
 
   if (error) {
-    throw new Error('Failed to create password reset token');
+    throw new Error('Failed to create password reset token')
   }
 
-  return { token, expiresAt };
+  return { token, expiresAt }
 }
 
 /**
@@ -56,37 +56,37 @@ export async function createPasswordResetToken(
  * @returns Object with isValid flag and user_id
  */
 export async function validatePasswordResetToken(token: string): Promise<{
-  isValid: boolean;
-  userId?: string;
-  reason?: string;
+  isValid: boolean
+  userId?: string
+  reason?: string
 }> {
-  const supabase = await createClient();
+  const supabase = await createClient()
 
   // Get token from database
   const { data: tokenData, error } = await supabase
     .from('password_reset_tokens')
     .select('*')
     .eq('token', token)
-    .single();
+    .single()
 
   if (error || !tokenData) {
-    return { isValid: false, reason: 'Token not found' };
+    return { isValid: false, reason: 'Token not found' }
   }
 
   // Check if token has been used
   if (tokenData.used) {
-    return { isValid: false, reason: 'Token already used' };
+    return { isValid: false, reason: 'Token already used' }
   }
 
   // Check if token has expired
-  const now = new Date();
-  const expiresAt = new Date(tokenData.expires_at);
+  const now = new Date()
+  const expiresAt = new Date(tokenData.expires_at)
 
   if (now > expiresAt) {
-    return { isValid: false, reason: 'Token expired' };
+    return { isValid: false, reason: 'Token expired' }
   }
 
-  return { isValid: true, userId: tokenData.user_id };
+  return { isValid: true, userId: tokenData.user_id }
 }
 
 /**
@@ -94,7 +94,7 @@ export async function validatePasswordResetToken(token: string): Promise<{
  * @param token - Token string
  */
 export async function markTokenAsUsed(token: string): Promise<void> {
-  const supabase = await createClient();
+  const supabase = await createClient()
 
   await supabase
     .from('password_reset_tokens')
@@ -102,29 +102,29 @@ export async function markTokenAsUsed(token: string): Promise<void> {
       used: true,
       used_at: new Date().toISOString(),
     })
-    .eq('token', token);
+    .eq('token', token)
 }
 
 /**
  * Clean up expired tokens (should be run periodically)
  */
 export async function cleanupExpiredTokens(): Promise<number> {
-  const supabase = await createClient();
+  const supabase = await createClient()
 
-  const now = new Date().toISOString();
+  const now = new Date().toISOString()
 
   const { data, error } = await supabase
     .from('password_reset_tokens')
     .delete()
     .lt('expires_at', now)
-    .select('id');
+    .select('id')
 
   if (error) {
-    console.error('Error cleaning up expired tokens:', error);
-    return 0;
+    console.error('Error cleaning up expired tokens:', error)
+    return 0
   }
 
-  return data?.length || 0;
+  return data?.length || 0
 }
 
 /**
@@ -135,23 +135,23 @@ export async function cleanupExpiredTokens(): Promise<number> {
  */
 export async function getPasswordResetHistory(
   userId: string,
-  limit: number = 10
+  limit: number = 10,
 ): Promise<any[]> {
-  const supabase = await createClient();
+  const supabase = await createClient()
 
   const { data, error } = await supabase
     .from('password_reset_tokens')
     .select('*')
     .eq('user_id', userId)
     .order('created_at', { ascending: false })
-    .limit(limit);
+    .limit(limit)
 
   if (error) {
-    console.error('Error fetching password reset history:', error);
-    return [];
+    console.error('Error fetching password reset history:', error)
+    return []
   }
 
-  return data || [];
+  return data || []
 }
 
 /**
@@ -159,11 +159,11 @@ export async function getPasswordResetHistory(
  * @param userId - User ID
  */
 export async function revokeUserTokens(userId: string): Promise<void> {
-  const supabase = await createClient();
+  const supabase = await createClient()
 
   await supabase
     .from('password_reset_tokens')
     .update({ used: true, used_at: new Date().toISOString() })
     .eq('user_id', userId)
-    .eq('used', false);
+    .eq('used', false)
 }

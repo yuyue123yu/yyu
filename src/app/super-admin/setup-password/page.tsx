@@ -1,34 +1,38 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import { ShieldCheckIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/solid';
+import { useState } from 'react'
+import {
+  ShieldCheckIcon,
+  EyeIcon,
+  EyeSlashIcon,
+} from '@heroicons/react/24/solid'
 
 export default function SetupPasswordPage() {
-  const [email, setEmail] = useState('403940124@qq.com');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState('403940124@qq.com')
+  const [newPassword, setNewPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [message, setMessage] = useState('')
+  const [error, setError] = useState('')
 
   const handleSetPassword = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    setMessage('');
+    e.preventDefault()
+    setError('')
+    setMessage('')
 
     // 验证密码
     if (newPassword.length < 6) {
-      setError('密码至少需要 6 个字符');
-      return;
+      setError('密码至少需要 6 个字符')
+      return
     }
 
     if (newPassword !== confirmPassword) {
-      setError('两次输入的密码不一致');
-      return;
+      setError('两次输入的密码不一致')
+      return
     }
 
-    setIsLoading(true);
+    setIsLoading(true)
 
     try {
       // 调用 Supabase Admin API 设置密码
@@ -41,29 +45,28 @@ export default function SetupPasswordPage() {
           email,
           password: newPassword,
         }),
-      });
+      })
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || '设置密码失败');
+        throw new Error(data.error || '设置密码失败')
       }
 
-      setMessage('✅ 密码设置成功！您现在可以使用新密码登录了。');
-      setNewPassword('');
-      setConfirmPassword('');
+      setMessage('✅ 密码设置成功！您现在可以使用新密码登录了。')
+      setNewPassword('')
+      setConfirmPassword('')
 
       // 3秒后跳转到登录页
       setTimeout(() => {
-        window.location.href = '/super-admin/direct-login';
-      }, 3000);
-
+        window.location.href = '/super-admin/direct-login'
+      }, 3000)
     } catch (err: any) {
-      setError(`设置密码失败: ${err.message}`);
+      setError(`设置密码失败: ${err.message}`)
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 flex items-center justify-center p-4">
@@ -73,7 +76,9 @@ export default function SetupPasswordPage() {
           <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-orange-600 to-red-600 rounded-2xl mb-4">
             <ShieldCheckIcon className="w-10 h-10 text-white" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900">设置 Super Admin 密码</h1>
+          <h1 className="text-3xl font-bold text-gray-900">
+            设置 Super Admin 密码
+          </h1>
           <p className="text-gray-600 mt-2">为新创建的用户设置密码</p>
         </div>
 
@@ -96,7 +101,10 @@ export default function SetupPasswordPage() {
           <form onSubmit={handleSetPassword} className="space-y-6">
             {/* Email (readonly) */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 邮箱地址
               </label>
               <input
@@ -110,7 +118,10 @@ export default function SetupPasswordPage() {
 
             {/* New Password */}
             <div>
-              <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="newPassword"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 新密码
               </label>
               <div className="relative">
@@ -142,7 +153,10 @@ export default function SetupPasswordPage() {
 
             {/* Confirm Password */}
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="confirmPassword"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 确认密码
               </label>
               <input
@@ -197,7 +211,8 @@ export default function SetupPasswordPage() {
           {/* Info Notice */}
           <div className="mt-6 p-4 bg-blue-50 rounded-lg">
             <p className="text-xs text-blue-800">
-              <strong>提示:</strong> 密码至少需要 6 个字符。设置成功后会自动跳转到登录页面。
+              <strong>提示:</strong> 密码至少需要 6
+              个字符。设置成功后会自动跳转到登录页面。
             </p>
           </div>
         </div>
@@ -213,5 +228,5 @@ export default function SetupPasswordPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -1,10 +1,10 @@
-import { Metadata } from 'next';
-import { Mail, Phone, MapPin, Clock } from 'lucide-react';
+import { Metadata } from 'next'
+import { Mail, Phone, MapPin, Clock } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: '联系我们 | LegalMY',
   description: '联系 LegalMY - 我们随时为您提供帮助',
-};
+}
 
 export default function ContactPage() {
   return (
@@ -21,7 +21,7 @@ export default function ContactPage() {
           {/* 联系信息 */}
           <div className="bg-white rounded-lg shadow-sm p-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">联系信息</h2>
-            
+
             <div className="space-y-6">
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -30,7 +30,9 @@ export default function ContactPage() {
                 <div>
                   <h3 className="font-semibold text-gray-900 mb-1">电子邮件</h3>
                   <p className="text-gray-600">support@legalmy.com</p>
-                  <p className="text-sm text-gray-500 mt-1">我们会在 24 小时内回复</p>
+                  <p className="text-sm text-gray-500 mt-1">
+                    我们会在 24 小时内回复
+                  </p>
                 </div>
               </div>
 
@@ -41,7 +43,9 @@ export default function ContactPage() {
                 <div>
                   <h3 className="font-semibold text-gray-900 mb-1">电话</h3>
                   <p className="text-gray-600">+60 3-1234 5678</p>
-                  <p className="text-sm text-gray-500 mt-1">周一至周五 9:00 - 18:00</p>
+                  <p className="text-sm text-gray-500 mt-1">
+                    周一至周五 9:00 - 18:00
+                  </p>
                 </div>
               </div>
 
@@ -52,9 +56,12 @@ export default function ContactPage() {
                 <div>
                   <h3 className="font-semibold text-gray-900 mb-1">地址</h3>
                   <p className="text-gray-600">
-                    Level 10, Menara ABC<br />
-                    Jalan Ampang<br />
-                    50450 Kuala Lumpur<br />
+                    Level 10, Menara ABC
+                    <br />
+                    Jalan Ampang
+                    <br />
+                    50450 Kuala Lumpur
+                    <br />
                     Malaysia
                   </p>
                 </div>
@@ -67,8 +74,10 @@ export default function ContactPage() {
                 <div>
                   <h3 className="font-semibold text-gray-900 mb-1">营业时间</h3>
                   <p className="text-gray-600">
-                    周一至周五：9:00 - 18:00<br />
-                    周六：9:00 - 13:00<br />
+                    周一至周五：9:00 - 18:00
+                    <br />
+                    周六：9:00 - 13:00
+                    <br />
                     周日及公共假期：休息
                   </p>
                 </div>
@@ -79,7 +88,7 @@ export default function ContactPage() {
           {/* 联系表单 */}
           <div className="bg-white rounded-lg shadow-sm p-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">发送消息</h2>
-            
+
             <form className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -155,5 +164,5 @@ export default function ContactPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }

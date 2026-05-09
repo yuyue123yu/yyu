@@ -1,12 +1,12 @@
 // Force dynamic rendering
-export const dynamic = 'force-dynamic';
-export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
 
 // Tenant Management API - List and Create Tenants
-import { NextRequest, NextResponse } from 'next/server';
-import { requireSuperAdmin } from '@/lib/middleware/super-admin';
-import { logAuditEvent } from '@/lib/audit';
-import { createClient } from '@/lib/supabase/server';
+import { NextRequest, NextResponse } from 'next/server'
+import { requireSuperAdmin } from '@/lib/middleware/super-admin'
+import { logAuditEvent } from '@/lib/audit'
+import { createClient } from '@/lib/supabase/server'
 
 /**
  * GET /api/super-admin/tenants
@@ -14,46 +14,46 @@ import { createClient } from '@/lib/supabase/server';
  */
 export async function GET(request: NextRequest) {
   // Verify super admin authentication
-  const authResult = await requireSuperAdmin(request);
+  const authResult = await requireSuperAdmin(request)
   if (authResult instanceof NextResponse) {
-    return authResult;
+    return authResult
   }
 
-  const { supabase } = authResult;
-  const { searchParams } = new URL(request.url);
+  const { supabase } = authResult
+  const { searchParams } = new URL(request.url)
 
   // Parse query parameters
-  const page = parseInt(searchParams.get('page') || '1');
-  const limit = parseInt(searchParams.get('limit') || '10');
-  const status = searchParams.get('status');
-  const search = searchParams.get('search');
+  const page = parseInt(searchParams.get('page') || '1')
+  const limit = parseInt(searchParams.get('limit') || '10')
+  const status = searchParams.get('status')
+  const search = searchParams.get('search')
 
   try {
     // Build query
     let query = supabase
       .from('tenants')
       .select('*', { count: 'exact' })
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: false })
 
     // Apply filters
     if (status) {
-      query = query.eq('status', status);
+      query = query.eq('status', status)
     }
 
     if (search) {
       query = query.or(
-        `name.ilike.%${search}%,subdomain.ilike.%${search}%,primary_domain.ilike.%${search}%`
-      );
+        `name.ilike.%${search}%,subdomain.ilike.%${search}%,primary_domain.ilike.%${search}%`,
+      )
     }
 
     // Apply pagination
-    const offset = (page - 1) * limit;
-    query = query.range(offset, offset + limit - 1);
+    const offset = (page - 1) * limit
+    query = query.range(offset, offset + limit - 1)
 
-    const { data: tenants, error, count } = await query;
+    const { data: tenants, error, count } = await query
 
     if (error) {
-      throw error;
+      throw error
     }
 
     return NextResponse.json({
@@ -63,13 +63,13 @@ export async function GET(request: NextRequest) {
       page,
       limit,
       totalPages: Math.ceil((count || 0) / limit),
-    });
+    })
   } catch (error) {
-    console.error('Error fetching tenants:', error);
+    console.error('Error fetching tenants:', error)
     return NextResponse.json(
       { error: 'Failed to fetch tenants' },
-      { status: 500 }
-    );
+      { status: 500 },
+    )
   }
 }
 
@@ -79,24 +79,24 @@ export async function GET(request: NextRequest) {
  */
 export async function POST(request: NextRequest) {
   // Verify super admin authentication
-  const authResult = await requireSuperAdmin(request);
+  const authResult = await requireSuperAdmin(request)
   if (authResult instanceof NextResponse) {
-    return authResult;
+    return authResult
   }
 
-  const { user, supabase } = authResult;
+  const { user, supabase } = authResult
 
   try {
-    const body = await request.json();
+    const body = await request.json()
     const { name, subdomain, primary_domain, subscription_plan, metadata } =
-      body;
+      body
 
     // Validate required fields
     if (!name || !subdomain) {
       return NextResponse.json(
         { error: 'Name and subdomain are required' },
-        { status: 400 }
-      );
+        { status: 400 },
+      )
     }
 
     // Check if subdomain is unique
@@ -104,13 +104,13 @@ export async function POST(request: NextRequest) {
       .from('tenants')
       .select('id')
       .eq('subdomain', subdomain)
-      .single();
+      .single()
 
     if (existingTenant) {
       return NextResponse.json(
         { error: 'Subdomain already exists' },
-        { status: 409 }
-      );
+        { status: 409 },
+      )
     }
 
     // Check if primary_domain is unique (if provided)
@@ -119,13 +119,13 @@ export async function POST(request: NextRequest) {
         .from('tenants')
         .select('id')
         .eq('primary_domain', primary_domain)
-        .single();
+        .single()
 
       if (existingDomain) {
         return NextResponse.json(
           { error: 'Primary domain already exists' },
-          { status: 409 }
-        );
+          { status: 409 },
+        )
       }
     }
 
@@ -142,10 +142,10 @@ export async function POST(request: NextRequest) {
         metadata: metadata || {},
       })
       .select()
-      .single();
+      .single()
 
     if (createError) {
-      throw createError;
+      throw createError
     }
 
     // Log audit event
@@ -161,8 +161,8 @@ export async function POST(request: NextRequest) {
           subscription_plan: tenant.subscription_plan,
         },
       },
-      request
-    );
+      request,
+    )
 
     return NextResponse.json(
       {
@@ -170,13 +170,13 @@ export async function POST(request: NextRequest) {
         message: 'Tenant created successfully',
         tenant,
       },
-      { status: 201 }
-    );
+      { status: 201 },
+    )
   } catch (error) {
-    console.error('Error creating tenant:', error);
+    console.error('Error creating tenant:', error)
     return NextResponse.json(
       { error: 'Failed to create tenant' },
-      { status: 500 }
-    );
+      { status: 500 },
+    )
   }
 }

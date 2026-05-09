@@ -1,46 +1,59 @@
-"use client";
+'use client'
 
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
-import Link from "next/link";
-import { ShoppingCart, Trash2, Plus, Minus } from "lucide-react";
-import { useState } from "react";
-import { useLanguage } from "@/contexts/LanguageContext";
+import Header from '@/components/layout/Header'
+import Footer from '@/components/layout/Footer'
+import Link from 'next/link'
+import { ShoppingCart, Trash2, Plus, Minus } from 'lucide-react'
+import { useState } from 'react'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 export default function CartPage() {
-  const { t, language } = useLanguage();
+  const { t, language } = useLanguage()
   const [cartItems, setCartItems] = useState([
-    { id: 1, name: "Ahmad Abdullah - 商业法咨询", price: 299, quantity: 1, type: "consultation" },
-    { id: 2, name: "合同审核服务", price: 399, quantity: 1, type: "review" },
-  ]);
+    {
+      id: 1,
+      name: 'Ahmad Abdullah - 商业法咨询',
+      price: 299,
+      quantity: 1,
+      type: 'consultation',
+    },
+    { id: 2, name: '合同审核服务', price: 399, quantity: 1, type: 'review' },
+  ])
 
   const updateQuantity = (id: number, delta: number) => {
-    setCartItems(items =>
-      items.map(item =>
+    setCartItems((items) =>
+      items.map((item) =>
         item.id === id
           ? { ...item, quantity: Math.max(1, item.quantity + delta) }
-          : item
-      )
-    );
-  };
+          : item,
+      ),
+    )
+  }
 
   const removeItem = (id: number) => {
-    setCartItems(items => items.filter(item => item.id !== id));
-  };
+    setCartItems((items) => items.filter((item) => item.id !== id))
+  }
 
-  const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const total = cartItems.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0,
+  )
 
   return (
     <>
       <Header />
       <main className="min-h-screen bg-neutral-50 py-16">
         <div className="container mx-auto px-6">
-          <h1 className="text-3xl font-bold text-neutral-900 mb-8">{t('cart.title')}</h1>
+          <h1 className="text-3xl font-bold text-neutral-900 mb-8">
+            {t('cart.title')}
+          </h1>
 
           {cartItems.length === 0 ? (
             <div className="bg-white rounded-xl shadow-lg p-16 text-center">
               <ShoppingCart className="h-24 w-24 mx-auto mb-6 text-neutral-300" />
-              <h2 className="text-2xl font-bold text-neutral-900 mb-4">{t('cart.emptyCart')}</h2>
+              <h2 className="text-2xl font-bold text-neutral-900 mb-4">
+                {t('cart.emptyCart')}
+              </h2>
               <p className="text-neutral-600 mb-8">{t('cart.emptyCartDesc')}</p>
               <Link
                 href="/services"
@@ -53,13 +66,20 @@ export default function CartPage() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Cart Items */}
               <div className="lg:col-span-2 space-y-4">
-                {cartItems.map(item => (
-                  <div key={item.id} className="bg-white rounded-xl shadow-lg p-6">
+                {cartItems.map((item) => (
+                  <div
+                    key={item.id}
+                    className="bg-white rounded-xl shadow-lg p-6"
+                  >
                     <div className="flex items-center gap-6">
                       <div className="flex-1">
-                        <h3 className="text-lg font-bold text-neutral-900 mb-2">{item.name}</h3>
+                        <h3 className="text-lg font-bold text-neutral-900 mb-2">
+                          {item.name}
+                        </h3>
                         <p className="text-sm text-neutral-600 mb-4">
-                          {item.type === 'consultation' ? t('cart.consultationService') : t('cart.reviewService')}
+                          {item.type === 'consultation'
+                            ? t('cart.consultationService')
+                            : t('cart.reviewService')}
                         </p>
                         <div className="flex items-center gap-4">
                           <div className="flex items-center gap-2 border border-neutral-300 rounded-lg">
@@ -69,7 +89,9 @@ export default function CartPage() {
                             >
                               <Minus className="h-4 w-4" />
                             </button>
-                            <span className="px-4 font-medium">{item.quantity}</span>
+                            <span className="px-4 font-medium">
+                              {item.quantity}
+                            </span>
                             <button
                               onClick={() => updateQuantity(item.id, 1)}
                               className="p-2 hover:bg-neutral-100 transition-all"
@@ -99,20 +121,30 @@ export default function CartPage() {
               {/* Order Summary */}
               <div>
                 <div className="bg-white rounded-xl shadow-lg p-6 sticky top-24">
-                  <h2 className="text-xl font-bold text-neutral-900 mb-6">{t('cart.orderSummary')}</h2>
+                  <h2 className="text-xl font-bold text-neutral-900 mb-6">
+                    {t('cart.orderSummary')}
+                  </h2>
                   <div className="space-y-4 mb-6">
                     <div className="flex justify-between">
-                      <span className="text-neutral-600">{t('cart.subtotal')}</span>
+                      <span className="text-neutral-600">
+                        {t('cart.subtotal')}
+                      </span>
                       <span className="font-medium">RM {total}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-neutral-600">{t('cart.serviceFee')}</span>
+                      <span className="text-neutral-600">
+                        {t('cart.serviceFee')}
+                      </span>
                       <span className="font-medium">RM 0</span>
                     </div>
                     <div className="border-t border-neutral-200 pt-4">
                       <div className="flex justify-between">
-                        <span className="text-lg font-bold">{t('cart.total')}</span>
-                        <span className="text-2xl font-bold text-primary-600">RM {total}</span>
+                        <span className="text-lg font-bold">
+                          {t('cart.total')}
+                        </span>
+                        <span className="text-2xl font-bold text-primary-600">
+                          RM {total}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -133,5 +165,5 @@ export default function CartPage() {
       </main>
       <Footer />
     </>
-  );
+  )
 }

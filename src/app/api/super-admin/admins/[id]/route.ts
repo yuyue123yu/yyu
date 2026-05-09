@@ -1,8 +1,8 @@
 // Admin Management API - Revoke Admin Privileges
-import { NextRequest, NextResponse } from 'next/server';
-import { requireSuperAdmin } from '@/lib/middleware/super-admin';
-import { logAuditEvent } from '@/lib/audit';
-import { createClient } from '@/lib/supabase/server';
+import { NextRequest, NextResponse } from 'next/server'
+import { requireSuperAdmin } from '@/lib/middleware/super-admin'
+import { logAuditEvent } from '@/lib/audit'
+import { createClient } from '@/lib/supabase/server'
 
 /**
  * DELETE /api/super-admin/admins/:id
@@ -10,16 +10,16 @@ import { createClient } from '@/lib/supabase/server';
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   // Verify super admin authentication
-  const authResult = await requireSuperAdmin(request);
+  const authResult = await requireSuperAdmin(request)
   if (authResult instanceof NextResponse) {
-    return authResult;
+    return authResult
   }
 
-  const { supabase } = authResult;
-  const { id } = params;
+  const { supabase } = authResult
+  const { id } = params
 
   try {
     // Get current admin
@@ -27,18 +27,18 @@ export async function DELETE(
       .from('profiles')
       .select('*')
       .eq('id', id)
-      .single();
+      .single()
 
     if (!currentAdmin) {
-      return NextResponse.json({ error: 'Admin not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Admin not found' }, { status: 404 })
     }
 
     // Verify user is an admin (not super admin)
     if (currentAdmin.user_type !== 'admin' || currentAdmin.super_admin) {
       return NextResponse.json(
         { error: 'User is not a tenant admin or is a super admin' },
-        { status: 400 }
-      );
+        { status: 400 },
+      )
     }
 
     // Revoke admin privileges by changing user_type to 'client'
@@ -50,10 +50,10 @@ export async function DELETE(
       })
       .eq('id', id)
       .select()
-      .single();
+      .single()
 
     if (updateError) {
-      throw updateError;
+      throw updateError
     }
 
     // Log audit event
@@ -69,19 +69,19 @@ export async function DELETE(
           tenant_id: currentAdmin.tenant_id,
         },
       },
-      request
-    );
+      request,
+    )
 
     return NextResponse.json({
       success: true,
       message: 'Admin privileges revoked successfully',
       user,
-    });
+    })
   } catch (error) {
-    console.error('Error revoking admin privileges:', error);
+    console.error('Error revoking admin privileges:', error)
     return NextResponse.json(
       { error: 'Failed to revoke admin privileges' },
-      { status: 500 }
-    );
+      { status: 500 },
+    )
   }
 }

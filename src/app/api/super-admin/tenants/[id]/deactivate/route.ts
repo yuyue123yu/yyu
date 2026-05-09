@@ -1,8 +1,8 @@
 // Tenant Management API - Deactivate Tenant
-import { NextRequest, NextResponse } from 'next/server';
-import { requireSuperAdmin } from '@/lib/middleware/super-admin';
-import { logAuditEvent } from '@/lib/audit';
-import { createClient } from '@/lib/supabase/server';
+import { NextRequest, NextResponse } from 'next/server'
+import { requireSuperAdmin } from '@/lib/middleware/super-admin'
+import { logAuditEvent } from '@/lib/audit'
+import { createClient } from '@/lib/supabase/server'
 
 /**
  * POST /api/super-admin/tenants/:id/deactivate
@@ -10,24 +10,24 @@ import { createClient } from '@/lib/supabase/server';
  */
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   // Verify super admin authentication
-  const authResult = await requireSuperAdmin(request);
+  const authResult = await requireSuperAdmin(request)
   if (authResult instanceof NextResponse) {
-    return authResult;
+    return authResult
   }
 
-  const { supabase } = authResult;
-  const { id } = params;
+  const { supabase } = authResult
+  const { id } = params
 
   try {
     // Prevent deactivation of default tenant
     if (id === '00000000-0000-0000-0000-000000000001') {
       return NextResponse.json(
         { error: 'Cannot deactivate default tenant' },
-        { status: 403 }
-      );
+        { status: 403 },
+      )
     }
 
     // Get current tenant
@@ -35,10 +35,10 @@ export async function POST(
       .from('tenants')
       .select('*')
       .eq('id', id)
-      .single();
+      .single()
 
     if (!currentTenant) {
-      return NextResponse.json({ error: 'Tenant not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Tenant not found' }, { status: 404 })
     }
 
     // Update tenant status to inactive
@@ -50,10 +50,10 @@ export async function POST(
       })
       .eq('id', id)
       .select()
-      .single();
+      .single()
 
     if (updateError) {
-      throw updateError;
+      throw updateError
     }
 
     // Log audit event
@@ -67,19 +67,19 @@ export async function POST(
           new_status: 'inactive',
         },
       },
-      request
-    );
+      request,
+    )
 
     return NextResponse.json({
       success: true,
       message: 'Tenant deactivated successfully',
       tenant,
-    });
+    })
   } catch (error) {
-    console.error('Error deactivating tenant:', error);
+    console.error('Error deactivating tenant:', error)
     return NextResponse.json(
       { error: 'Failed to deactivate tenant' },
-      { status: 500 }
-    );
+      { status: 500 },
+    )
   }
 }

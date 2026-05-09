@@ -1,12 +1,12 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 export default function TestPagesStatus() {
-  const router = useRouter();
-  const [results, setResults] = useState<any[]>([]);
-  const [testing, setTesting] = useState(false);
+  const router = useRouter()
+  const [results, setResults] = useState<any[]>([])
+  const [testing, setTesting] = useState(false)
 
   const pages = [
     {
@@ -49,55 +49,55 @@ export default function TestPagesStatus() {
       path: '/super-admin/dashboard-simple',
       description: 'Super Admin 简化 Dashboard - 需要登录',
     },
-  ];
+  ]
 
   const testPage = async (page: any) => {
     try {
-      const response = await fetch(page.path, { method: 'HEAD' });
+      const response = await fetch(page.path, { method: 'HEAD' })
       return {
         ...page,
         status: response.status,
         ok: response.ok,
         statusText: response.statusText,
-      };
+      }
     } catch (error: any) {
       return {
         ...page,
         status: 'Error',
         ok: false,
         statusText: error.message,
-      };
+      }
     }
-  };
+  }
 
   const runTests = async () => {
-    setTesting(true);
-    setResults([]);
+    setTesting(true)
+    setResults([])
 
-    const testResults = [];
+    const testResults = []
     for (const page of pages) {
-      const result = await testPage(page);
-      testResults.push(result);
-      setResults([...testResults]);
-      await new Promise(resolve => setTimeout(resolve, 300));
+      const result = await testPage(page)
+      testResults.push(result)
+      setResults([...testResults])
+      await new Promise((resolve) => setTimeout(resolve, 300))
     }
 
-    setTesting(false);
-  };
+    setTesting(false)
+  }
 
   const getStatusColor = (status: number | string) => {
-    if (status === 200) return 'text-green-600 bg-green-50';
-    if (status === 404) return 'text-red-600 bg-red-50';
-    if (status === 302 || status === 301) return 'text-blue-600 bg-blue-50';
-    return 'text-yellow-600 bg-yellow-50';
-  };
+    if (status === 200) return 'text-green-600 bg-green-50'
+    if (status === 404) return 'text-red-600 bg-red-50'
+    if (status === 302 || status === 301) return 'text-blue-600 bg-blue-50'
+    return 'text-yellow-600 bg-yellow-50'
+  }
 
   const getStatusIcon = (status: number | string) => {
-    if (status === 200) return '✅';
-    if (status === 404) return '❌';
-    if (status === 302 || status === 301) return '🔄';
-    return '⚠️';
-  };
+    if (status === 200) return '✅'
+    if (status === 404) return '❌'
+    if (status === 302 || status === 301) return '🔄'
+    return '⚠️'
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
@@ -134,13 +134,15 @@ export default function TestPagesStatus() {
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
-                      <span className="text-2xl">{getStatusIcon(result.status)}</span>
+                      <span className="text-2xl">
+                        {getStatusIcon(result.status)}
+                      </span>
                       <h3 className="text-lg font-semibold text-gray-900">
                         {result.name}
                       </h3>
                       <span
                         className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(
-                          result.status
+                          result.status,
                         )}`}
                       >
                         {result.status}
@@ -151,7 +153,10 @@ export default function TestPagesStatus() {
                     </p>
                     <div className="flex items-center gap-4 text-sm">
                       <span className="text-gray-500">
-                        路径: <code className="bg-gray-100 px-2 py-1 rounded">{result.path}</code>
+                        路径:{' '}
+                        <code className="bg-gray-100 px-2 py-1 rounded">
+                          {result.path}
+                        </code>
                       </span>
                       {result.statusText && (
                         <span className="text-gray-500">
@@ -175,24 +180,33 @@ export default function TestPagesStatus() {
         {/* Summary */}
         {results.length > 0 && !testing && (
           <div className="mt-8 bg-white rounded-lg shadow p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">测试摘要</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              测试摘要
+            </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="bg-green-50 rounded-lg p-4">
                 <p className="text-sm text-green-600 font-medium mb-1">正常</p>
                 <p className="text-3xl font-bold text-green-700">
-                  {results.filter(r => r.status === 200).length}
+                  {results.filter((r) => r.status === 200).length}
                 </p>
               </div>
               <div className="bg-blue-50 rounded-lg p-4">
                 <p className="text-sm text-blue-600 font-medium mb-1">重定向</p>
                 <p className="text-3xl font-bold text-blue-700">
-                  {results.filter(r => r.status === 302 || r.status === 301).length}
+                  {
+                    results.filter((r) => r.status === 302 || r.status === 301)
+                      .length
+                  }
                 </p>
               </div>
               <div className="bg-red-50 rounded-lg p-4">
                 <p className="text-sm text-red-600 font-medium mb-1">错误</p>
                 <p className="text-3xl font-bold text-red-700">
-                  {results.filter(r => r.status === 404 || r.status === 'Error').length}
+                  {
+                    results.filter(
+                      (r) => r.status === 404 || r.status === 'Error',
+                    ).length
+                  }
                 </p>
               </div>
             </div>
@@ -201,7 +215,9 @@ export default function TestPagesStatus() {
 
         {/* Manual Test Links */}
         <div className="mt-8 bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">手动测试链接</h2>
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">
+            手动测试链接
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {pages.map((page, index) => (
               <a
@@ -222,13 +238,22 @@ export default function TestPagesStatus() {
         <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-6">
           <h3 className="font-semibold text-blue-900 mb-2">📋 测试说明</h3>
           <ul className="text-sm text-blue-800 space-y-1">
-            <li>• <strong>首页、登录、注册、律师、咨询</strong> - 应该返回 200 (正常)</li>
-            <li>• <strong>Super Admin 登录</strong> - 应该显示维护页面 (200)</li>
-            <li>• <strong>Super Admin Dashboard</strong> - 应该重定向到登录 (302)</li>
-            <li>• <strong>Super Admin 简化版</strong> - 需要先登录才能访问</li>
+            <li>
+              • <strong>首页、登录、注册、律师、咨询</strong> - 应该返回 200
+              (正常)
+            </li>
+            <li>
+              • <strong>Super Admin 登录</strong> - 应该显示维护页面 (200)
+            </li>
+            <li>
+              • <strong>Super Admin Dashboard</strong> - 应该重定向到登录 (302)
+            </li>
+            <li>
+              • <strong>Super Admin 简化版</strong> - 需要先登录才能访问
+            </li>
           </ul>
         </div>
       </div>
     </div>
-  );
+  )
 }

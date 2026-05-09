@@ -1,93 +1,111 @@
-"use client";
+'use client'
 
-import { useState, useEffect } from "react";
-import { Save, ToggleLeft, ToggleRight, MessageSquare, Users, FileText, CreditCard, Crown, MessageCircle, Calendar, Upload, Mail, Gift, Star, Globe, BarChart, Info } from "lucide-react";
+import { useState, useEffect } from 'react'
+import {
+  Save,
+  ToggleLeft,
+  ToggleRight,
+  MessageSquare,
+  Users,
+  FileText,
+  CreditCard,
+  Crown,
+  MessageCircle,
+  Calendar,
+  Upload,
+  Mail,
+  Gift,
+  Star,
+  Globe,
+  BarChart,
+  Info,
+} from 'lucide-react'
 
 interface FeatureConfig {
-  enabled: boolean;
-  description: string;
-  [key: string]: any;
+  enabled: boolean
+  description: string
+  [key: string]: any
 }
 
 interface FeaturesSettings {
-  [key: string]: FeatureConfig;
+  [key: string]: FeatureConfig
 }
 
 export default function FeaturesPage() {
-  const [settings, setSettings] = useState<FeaturesSettings | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
+  const [settings, setSettings] = useState<FeaturesSettings | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
 
   useEffect(() => {
-    loadSettings();
-  }, []);
+    loadSettings()
+  }, [])
 
   const loadSettings = async () => {
     try {
-      setLoading(true);
-      const response = await fetch('/api/tenant/features');
-      const data = await response.json();
+      setLoading(true)
+      const response = await fetch('/api/tenant/features')
+      const data = await response.json()
 
       if (data.success) {
-        setSettings(data.features);
+        setSettings(data.features)
       }
     } catch (error) {
-      console.error('Error loading settings:', error);
-      alert('加载设置失败');
+      console.error('Error loading settings:', error)
+      alert('加载设置失败')
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const handleSave = async () => {
-    if (!settings) return;
+    if (!settings) return
 
     try {
-      setSaving(true);
+      setSaving(true)
       const response = await fetch('/api/tenant/features', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(settings),
-      });
+      })
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (data.success) {
-        alert('功能开关已保存！');
+        alert('功能开关已保存！')
       } else {
-        alert(data.error || '保存失败');
+        alert(data.error || '保存失败')
       }
     } catch (error) {
-      console.error('Error saving settings:', error);
-      alert('保存失败，请重试');
+      console.error('Error saving settings:', error)
+      alert('保存失败，请重试')
     } finally {
-      setSaving(false);
+      setSaving(false)
     }
-  };
+  }
 
   const toggleFeature = (key: string) => {
-    if (!settings) return;
+    if (!settings) return
     setSettings({
       ...settings,
       [key]: {
         ...settings[key],
         enabled: !settings[key].enabled,
       },
-    });
-  };
+    })
+  }
 
   const updateFeatureConfig = (key: string, field: string, value: any) => {
-    if (!settings) return;
+    if (!settings) return
     setSettings({
       ...settings,
       [key]: {
         ...settings[key],
         [field]: value,
       },
-    });
-  };
+    })
+  }
 
   if (loading || !settings) {
     return (
@@ -97,7 +115,7 @@ export default function FeaturesPage() {
           <p className="mt-4 text-neutral-600">加载中...</p>
         </div>
       </div>
-    );
+    )
   }
 
   const featureGroups = [
@@ -150,7 +168,7 @@ export default function FeaturesPage() {
         { key: 'analytics', name: '数据分析', icon: BarChart },
       ],
     },
-  ];
+  ]
 
   const getColorClasses = (color: string) => {
     const colors: { [key: string]: { bg: string; text: string } } = {
@@ -159,9 +177,9 @@ export default function FeaturesPage() {
       purple: { bg: 'bg-purple-100', text: 'text-purple-600' },
       orange: { bg: 'bg-orange-100', text: 'text-orange-600' },
       gray: { bg: 'bg-gray-100', text: 'text-gray-600' },
-    };
-    return colors[color] || colors.gray;
-  };
+    }
+    return colors[color] || colors.gray
+  }
 
   return (
     <div>
@@ -202,7 +220,7 @@ export default function FeaturesPage() {
             <div>
               <p className="text-sm text-neutral-600">已启用</p>
               <p className="text-3xl font-bold text-green-600 mt-1">
-                {Object.values(settings).filter(f => f.enabled).length}
+                {Object.values(settings).filter((f) => f.enabled).length}
               </p>
             </div>
             <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
@@ -216,7 +234,7 @@ export default function FeaturesPage() {
             <div>
               <p className="text-sm text-neutral-600">已禁用</p>
               <p className="text-3xl font-bold text-neutral-400 mt-1">
-                {Object.values(settings).filter(f => !f.enabled).length}
+                {Object.values(settings).filter((f) => !f.enabled).length}
               </p>
             </div>
             <div className="w-12 h-12 bg-neutral-100 rounded-lg flex items-center justify-center">
@@ -229,25 +247,36 @@ export default function FeaturesPage() {
       {/* 功能分组 */}
       <div className="space-y-6">
         {featureGroups.map((group) => {
-          const colorClasses = getColorClasses(group.color);
+          const colorClasses = getColorClasses(group.color)
           return (
-            <div key={group.title} className="bg-white rounded-xl shadow-sm p-6 border border-neutral-200">
+            <div
+              key={group.title}
+              className="bg-white rounded-xl shadow-sm p-6 border border-neutral-200"
+            >
               <div className="flex items-center gap-3 mb-6">
-                <div className={`w-10 h-10 ${colorClasses.bg} rounded-lg flex items-center justify-center`}>
+                <div
+                  className={`w-10 h-10 ${colorClasses.bg} rounded-lg flex items-center justify-center`}
+                >
                   <group.icon className={`h-5 w-5 ${colorClasses.text}`} />
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold text-neutral-900">{group.title}</h2>
+                  <h2 className="text-xl font-bold text-neutral-900">
+                    {group.title}
+                  </h2>
                   <p className="text-sm text-neutral-600">
-                    {group.features.filter(f => settings[f.key]?.enabled).length} / {group.features.length} 已启用
+                    {
+                      group.features.filter((f) => settings[f.key]?.enabled)
+                        .length
+                    }{' '}
+                    / {group.features.length} 已启用
                   </p>
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {group.features.map((feature) => {
-                  const config = settings[feature.key];
-                  if (!config) return null;
+                  const config = settings[feature.key]
+                  if (!config) return null
 
                   return (
                     <div
@@ -260,8 +289,12 @@ export default function FeaturesPage() {
                     >
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex items-center gap-3">
-                          <feature.icon className={`h-5 w-5 ${config.enabled ? 'text-primary-600' : 'text-neutral-400'}`} />
-                          <h3 className={`font-semibold ${config.enabled ? 'text-neutral-900' : 'text-neutral-500'}`}>
+                          <feature.icon
+                            className={`h-5 w-5 ${config.enabled ? 'text-primary-600' : 'text-neutral-400'}`}
+                          />
+                          <h3
+                            className={`font-semibold ${config.enabled ? 'text-neutral-900' : 'text-neutral-500'}`}
+                          >
                             {feature.name}
                           </h3>
                         </div>
@@ -291,7 +324,13 @@ export default function FeaturesPage() {
                                 <input
                                   type="checkbox"
                                   checked={config.online_booking}
-                                  onChange={(e) => updateFeatureConfig(feature.key, 'online_booking', e.target.checked)}
+                                  onChange={(e) =>
+                                    updateFeatureConfig(
+                                      feature.key,
+                                      'online_booking',
+                                      e.target.checked,
+                                    )
+                                  }
                                   className="rounded border-neutral-300"
                                 />
                                 <span>在线预约</span>
@@ -300,7 +339,13 @@ export default function FeaturesPage() {
                                 <input
                                   type="checkbox"
                                   checked={config.video_consultation}
-                                  onChange={(e) => updateFeatureConfig(feature.key, 'video_consultation', e.target.checked)}
+                                  onChange={(e) =>
+                                    updateFeatureConfig(
+                                      feature.key,
+                                      'video_consultation',
+                                      e.target.checked,
+                                    )
+                                  }
                                   className="rounded border-neutral-300"
                                 />
                                 <span>视频咨询</span>
@@ -315,7 +360,13 @@ export default function FeaturesPage() {
                                 <input
                                   type="checkbox"
                                   checked={config.show_profiles}
-                                  onChange={(e) => updateFeatureConfig(feature.key, 'show_profiles', e.target.checked)}
+                                  onChange={(e) =>
+                                    updateFeatureConfig(
+                                      feature.key,
+                                      'show_profiles',
+                                      e.target.checked,
+                                    )
+                                  }
                                   className="rounded border-neutral-300"
                                 />
                                 <span>显示律师资料</span>
@@ -324,7 +375,13 @@ export default function FeaturesPage() {
                                 <input
                                   type="checkbox"
                                   checked={config.show_ratings}
-                                  onChange={(e) => updateFeatureConfig(feature.key, 'show_ratings', e.target.checked)}
+                                  onChange={(e) =>
+                                    updateFeatureConfig(
+                                      feature.key,
+                                      'show_ratings',
+                                      e.target.checked,
+                                    )
+                                  }
                                   className="rounded border-neutral-300"
                                 />
                                 <span>显示评分</span>
@@ -339,7 +396,13 @@ export default function FeaturesPage() {
                                 <input
                                   type="checkbox"
                                   checked={config.allow_comments}
-                                  onChange={(e) => updateFeatureConfig(feature.key, 'allow_comments', e.target.checked)}
+                                  onChange={(e) =>
+                                    updateFeatureConfig(
+                                      feature.key,
+                                      'allow_comments',
+                                      e.target.checked,
+                                    )
+                                  }
                                   className="rounded border-neutral-300"
                                 />
                                 <span>允许评论</span>
@@ -348,7 +411,13 @@ export default function FeaturesPage() {
                                 <input
                                   type="checkbox"
                                   checked={config.show_author}
-                                  onChange={(e) => updateFeatureConfig(feature.key, 'show_author', e.target.checked)}
+                                  onChange={(e) =>
+                                    updateFeatureConfig(
+                                      feature.key,
+                                      'show_author',
+                                      e.target.checked,
+                                    )
+                                  }
                                   className="rounded border-neutral-300"
                                 />
                                 <span>显示作者</span>
@@ -362,7 +431,13 @@ export default function FeaturesPage() {
                               <input
                                 type="checkbox"
                                 checked={config.auto_renewal}
-                                onChange={(e) => updateFeatureConfig(feature.key, 'auto_renewal', e.target.checked)}
+                                onChange={(e) =>
+                                  updateFeatureConfig(
+                                    feature.key,
+                                    'auto_renewal',
+                                    e.target.checked,
+                                  )
+                                }
                                 className="rounded border-neutral-300"
                               />
                               <span>自动续费</span>
@@ -375,7 +450,13 @@ export default function FeaturesPage() {
                               <input
                                 type="checkbox"
                                 checked={config.business_hours_only}
-                                onChange={(e) => updateFeatureConfig(feature.key, 'business_hours_only', e.target.checked)}
+                                onChange={(e) =>
+                                  updateFeatureConfig(
+                                    feature.key,
+                                    'business_hours_only',
+                                    e.target.checked,
+                                  )
+                                }
                                 className="rounded border-neutral-300"
                               />
                               <span>仅营业时间</span>
@@ -388,7 +469,13 @@ export default function FeaturesPage() {
                               <input
                                 type="checkbox"
                                 checked={config.require_deposit}
-                                onChange={(e) => updateFeatureConfig(feature.key, 'require_deposit', e.target.checked)}
+                                onChange={(e) =>
+                                  updateFeatureConfig(
+                                    feature.key,
+                                    'require_deposit',
+                                    e.target.checked,
+                                  )
+                                }
                                 className="rounded border-neutral-300"
                               />
                               <span>需要定金</span>
@@ -404,7 +491,13 @@ export default function FeaturesPage() {
                               <input
                                 type="number"
                                 value={config.max_file_size_mb}
-                                onChange={(e) => updateFeatureConfig(feature.key, 'max_file_size_mb', parseInt(e.target.value))}
+                                onChange={(e) =>
+                                  updateFeatureConfig(
+                                    feature.key,
+                                    'max_file_size_mb',
+                                    parseInt(e.target.value),
+                                  )
+                                }
                                 className="w-full px-2 py-1 text-sm border border-neutral-300 rounded"
                                 min="1"
                                 max="100"
@@ -418,7 +511,13 @@ export default function FeaturesPage() {
                               <input
                                 type="checkbox"
                                 checked={config.require_verification}
-                                onChange={(e) => updateFeatureConfig(feature.key, 'require_verification', e.target.checked)}
+                                onChange={(e) =>
+                                  updateFeatureConfig(
+                                    feature.key,
+                                    'require_verification',
+                                    e.target.checked,
+                                  )
+                                }
                                 className="rounded border-neutral-300"
                               />
                               <span>需要验证</span>
@@ -427,11 +526,11 @@ export default function FeaturesPage() {
                         </div>
                       )}
                     </div>
-                  );
+                  )
                 })}
               </div>
             </div>
-          );
+          )
         })}
       </div>
 
@@ -449,5 +548,5 @@ export default function FeaturesPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -1,40 +1,44 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { LockClosedIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
-import PasswordStrengthIndicator from '@/components/auth/PasswordStrengthIndicator';
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import {
+  LockClosedIcon,
+  EyeIcon,
+  EyeSlashIcon,
+} from '@heroicons/react/24/outline'
+import PasswordStrengthIndicator from '@/components/auth/PasswordStrengthIndicator'
 
 export default function SecuritySettingsPage() {
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-  
-  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
-  const [showNewPassword, setShowNewPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const router = useRouter()
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
+
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false)
+  const [showNewPassword, setShowNewPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   const [formData, setFormData] = useState({
     currentPassword: '',
     newPassword: '',
     confirmPassword: '',
-  });
+  })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
-    });
-    setError('');
-    setSuccess('');
-  };
+    })
+    setError('')
+    setSuccess('')
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    setSuccess('');
-    setIsLoading(true);
+    e.preventDefault()
+    setError('')
+    setSuccess('')
+    setIsLoading(true)
 
     try {
       const response = await fetch('/api/auth/change-password', {
@@ -43,31 +47,31 @@ export default function SecuritySettingsPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
-      });
+      })
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (data.success) {
-        setSuccess('密码修改成功！');
+        setSuccess('密码修改成功！')
         setFormData({
           currentPassword: '',
           newPassword: '',
           confirmPassword: '',
-        });
-        
+        })
+
         // 3秒后跳转
         setTimeout(() => {
-          router.push('/dashboard');
-        }, 3000);
+          router.push('/dashboard')
+        }, 3000)
       } else {
-        setError(data.error || '密码修改失败');
+        setError(data.error || '密码修改失败')
       }
     } catch (err: any) {
-      setError('网络错误，请稍后重试');
+      setError('网络错误，请稍后重试')
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -110,7 +114,10 @@ export default function SecuritySettingsPage() {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Current Password */}
             <div>
-              <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="currentPassword"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 当前密码 *
               </label>
               <div className="relative">
@@ -140,7 +147,10 @@ export default function SecuritySettingsPage() {
 
             {/* New Password */}
             <div>
-              <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="newPassword"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 新密码 *
               </label>
               <div className="relative">
@@ -166,7 +176,7 @@ export default function SecuritySettingsPage() {
                   )}
                 </button>
               </div>
-              
+
               {/* Password Strength Indicator */}
               {formData.newPassword && (
                 <div className="mt-3">
@@ -177,7 +187,10 @@ export default function SecuritySettingsPage() {
 
             {/* Confirm Password */}
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="confirmPassword"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 确认新密码 *
               </label>
               <div className="relative">
@@ -203,14 +216,19 @@ export default function SecuritySettingsPage() {
                   )}
                 </button>
               </div>
-              {formData.confirmPassword && formData.newPassword !== formData.confirmPassword && (
-                <p className="mt-2 text-sm text-red-600">两次输入的密码不一致</p>
-              )}
+              {formData.confirmPassword &&
+                formData.newPassword !== formData.confirmPassword && (
+                  <p className="mt-2 text-sm text-red-600">
+                    两次输入的密码不一致
+                  </p>
+                )}
             </div>
 
             {/* Security Tips */}
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <h3 className="text-sm font-medium text-blue-900 mb-2">安全提示</h3>
+              <h3 className="text-sm font-medium text-blue-900 mb-2">
+                安全提示
+              </h3>
               <ul className="text-sm text-blue-800 space-y-1">
                 <li>• 密码修改后，您需要在所有设备上重新登录</li>
                 <li>• 建议定期更换密码以保护账号安全</li>
@@ -229,7 +247,9 @@ export default function SecuritySettingsPage() {
               </button>
               <button
                 type="submit"
-                disabled={isLoading || formData.newPassword !== formData.confirmPassword}
+                disabled={
+                  isLoading || formData.newPassword !== formData.confirmPassword
+                }
                 className="flex-1 px-6 py-3 bg-gradient-to-r from-orange-600 to-red-600 text-white rounded-lg hover:from-orange-700 hover:to-red-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isLoading ? '修改中...' : '修改密码'}
@@ -239,5 +259,5 @@ export default function SecuritySettingsPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }

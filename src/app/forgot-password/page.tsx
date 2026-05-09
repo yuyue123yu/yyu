@@ -1,21 +1,21 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { EnvelopeIcon, ArrowLeftIcon } from '@heroicons/react/24/outline';
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import { EnvelopeIcon, ArrowLeftIcon } from '@heroicons/react/24/outline'
 
 export default function ForgotPasswordPage() {
-  const router = useRouter();
-  const [email, setEmail] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [error, setError] = useState('');
+  const router = useRouter()
+  const [email, setEmail] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [error, setError] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    setIsLoading(true);
+    e.preventDefault()
+    setError('')
+    setIsLoading(true)
 
     try {
       const response = await fetch('/api/auth/forgot-password', {
@@ -24,21 +24,21 @@ export default function ForgotPasswordPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email }),
-      });
+      })
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (data.success) {
-        setIsSubmitted(true);
+        setIsSubmitted(true)
       } else {
-        setError(data.error || '发送失败，请稍后重试');
+        setError(data.error || '发送失败，请稍后重试')
       }
     } catch (err: any) {
-      setError('网络错误，请稍后重试');
+      setError('网络错误，请稍后重试')
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   if (isSubmitted) {
     return (
@@ -65,8 +65,8 @@ export default function ForgotPasswordPage() {
               </Link>
               <button
                 onClick={() => {
-                  setIsSubmitted(false);
-                  setEmail('');
+                  setIsSubmitted(false)
+                  setEmail('')
                 }}
                 className="block w-full px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
               >
@@ -76,7 +76,7 @@ export default function ForgotPasswordPage() {
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -87,9 +87,7 @@ export default function ForgotPasswordPage() {
           <div className="mx-auto w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mb-4">
             <EnvelopeIcon className="w-8 h-8 text-orange-600" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            忘记密码
-          </h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">忘记密码</h1>
           <p className="text-gray-600">
             请输入您的邮箱地址，我们将发送密码重置链接到您的邮箱
           </p>
@@ -105,7 +103,10 @@ export default function ForgotPasswordPage() {
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               邮箱地址
             </label>
             <input
@@ -149,5 +150,5 @@ export default function ForgotPasswordPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }

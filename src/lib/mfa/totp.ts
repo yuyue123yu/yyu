@@ -1,13 +1,13 @@
-import * as OTPAuth from 'otpauth';
-import QRCode from 'qrcode';
+import * as OTPAuth from 'otpauth'
+import QRCode from 'qrcode'
 
 /**
  * Generate MFA secret and QR code for a user
  */
 export async function generateMFASecret(email: string) {
   // Generate a random secret
-  const secret = new OTPAuth.Secret({ size: 20 });
-  
+  const secret = new OTPAuth.Secret({ size: 20 })
+
   // Create TOTP instance
   const totp = new OTPAuth.TOTP({
     issuer: 'LegalMY Super Admin',
@@ -16,19 +16,19 @@ export async function generateMFASecret(email: string) {
     digits: 6,
     period: 30,
     secret: secret,
-  });
-  
+  })
+
   // Generate URI for QR code
-  const uri = totp.toString();
-  
+  const uri = totp.toString()
+
   // Generate QR code as data URL
-  const qrCode = await QRCode.toDataURL(uri);
-  
+  const qrCode = await QRCode.toDataURL(uri)
+
   return {
     secret: secret.base32,
     qrCode,
     uri,
-  };
+  }
 }
 
 /**
@@ -41,16 +41,16 @@ export function verifyMFAToken(secret: string, token: string): boolean {
       digits: 6,
       period: 30,
       secret: OTPAuth.Secret.fromBase32(secret),
-    });
-    
+    })
+
     // Validate token with a window of ±1 period (30 seconds)
     // This allows for slight time differences
-    const delta = totp.validate({ token, window: 1 });
-    
-    return delta !== null;
+    const delta = totp.validate({ token, window: 1 })
+
+    return delta !== null
   } catch (error) {
-    console.error('Error verifying MFA token:', error);
-    return false;
+    console.error('Error verifying MFA token:', error)
+    return false
   }
 }
 
@@ -63,7 +63,7 @@ export function generateCurrentToken(secret: string): string {
     digits: 6,
     period: 30,
     secret: OTPAuth.Secret.fromBase32(secret),
-  });
-  
-  return totp.generate();
+  })
+
+  return totp.generate()
 }

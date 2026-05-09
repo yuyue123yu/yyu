@@ -1,78 +1,80 @@
-"use client";
+'use client'
 
-import { useEffect, useState } from "react";
-import { createClient } from "@/lib/supabase/client";
-import { Search, DollarSign, Eye } from "lucide-react";
+import { useEffect, useState } from 'react'
+import { createClient } from '@/lib/supabase/client'
+import { Search, DollarSign, Eye } from 'lucide-react'
 
 interface Order {
-  id: string;
-  amount: number;
-  currency: string;
-  status: string;
-  payment_method: string;
-  created_at: string;
+  id: string
+  amount: number
+  currency: string
+  status: string
+  payment_method: string
+  created_at: string
 }
 
 export default function OrdersManagement() {
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filterStatus, setFilterStatus] = useState<string>("all");
+  const [orders, setOrders] = useState<Order[]>([])
+  const [loading, setLoading] = useState(true)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [filterStatus, setFilterStatus] = useState<string>('all')
 
   useEffect(() => {
-    loadOrders();
-  }, []);
+    loadOrders()
+  }, [])
 
   const loadOrders = async () => {
-    const supabase = await createClient();
-    setLoading(true);
+    const supabase = await createClient()
+    setLoading(true)
 
     try {
       let query = supabase
-        .from("orders")
-        .select("*")
-        .order("created_at", { ascending: false });
+        .from('orders')
+        .select('*')
+        .order('created_at', { ascending: false })
 
-      if (filterStatus !== "all") {
-        query = query.eq("status", filterStatus);
+      if (filterStatus !== 'all') {
+        query = query.eq('status', filterStatus)
       }
 
-      const { data, error } = await query;
+      const { data, error } = await query
 
-      if (error) throw error;
-      setOrders(data || []);
+      if (error) throw error
+      setOrders(data || [])
     } catch (error) {
-      console.error("Error loading orders:", error);
+      console.error('Error loading orders:', error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const getStatusBadge = (status: string) => {
     const styles = {
-      pending: "bg-yellow-100 text-yellow-700",
-      paid: "bg-green-100 text-green-700",
-      cancelled: "bg-red-100 text-red-700",
-      refunded: "bg-purple-100 text-purple-700",
-    };
+      pending: 'bg-yellow-100 text-yellow-700',
+      paid: 'bg-green-100 text-green-700',
+      cancelled: 'bg-red-100 text-red-700',
+      refunded: 'bg-purple-100 text-purple-700',
+    }
 
     const labels = {
-      pending: "待支付",
-      paid: "已支付",
-      cancelled: "已取消",
-      refunded: "已退款",
-    };
+      pending: '待支付',
+      paid: '已支付',
+      cancelled: '已取消',
+      refunded: '已退款',
+    }
 
     return (
-      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${styles[status as keyof typeof styles]}`}>
+      <span
+        className={`px-3 py-1 rounded-full text-xs font-semibold ${styles[status as keyof typeof styles]}`}
+      >
         {labels[status as keyof typeof labels]}
       </span>
-    );
-  };
+    )
+  }
 
   const totalRevenue = orders
-    .filter((o) => o.status === "paid")
-    .reduce((sum, o) => sum + Number(o.amount), 0);
+    .filter((o) => o.status === 'paid')
+    .reduce((sum, o) => sum + Number(o.amount), 0)
 
   return (
     <div>
@@ -99,8 +101,8 @@ export default function OrdersManagement() {
           <select
             value={filterStatus}
             onChange={(e) => {
-              setFilterStatus(e.target.value);
-              loadOrders();
+              setFilterStatus(e.target.value)
+              loadOrders()
             }}
             className="px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
           >
@@ -115,23 +117,27 @@ export default function OrdersManagement() {
         {/* Stats */}
         <div className="grid grid-cols-4 gap-4 pt-6 border-t border-neutral-200">
           <div>
-            <div className="text-2xl font-bold text-neutral-900">{orders.length}</div>
+            <div className="text-2xl font-bold text-neutral-900">
+              {orders.length}
+            </div>
             <div className="text-sm text-neutral-600">总订单数</div>
           </div>
           <div>
             <div className="text-2xl font-bold text-green-600">
-              {orders.filter((o) => o.status === "paid").length}
+              {orders.filter((o) => o.status === 'paid').length}
             </div>
             <div className="text-sm text-neutral-600">已支付</div>
           </div>
           <div>
             <div className="text-2xl font-bold text-yellow-600">
-              {orders.filter((o) => o.status === "pending").length}
+              {orders.filter((o) => o.status === 'pending').length}
             </div>
             <div className="text-sm text-neutral-600">待支付</div>
           </div>
           <div>
-            <div className="text-2xl font-bold text-primary-600">RM {totalRevenue.toFixed(2)}</div>
+            <div className="text-2xl font-bold text-primary-600">
+              RM {totalRevenue.toFixed(2)}
+            </div>
             <div className="text-sm text-neutral-600">总收入</div>
           </div>
         </div>
@@ -188,13 +194,13 @@ export default function OrdersManagement() {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-neutral-600">
-                      {order.payment_method || "未指定"}
+                      {order.payment_method || '未指定'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       {getStatusBadge(order.status)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-neutral-500">
-                      {new Date(order.created_at).toLocaleString("zh-CN")}
+                      {new Date(order.created_at).toLocaleString('zh-CN')}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <button className="text-primary-600 hover:text-primary-900 flex items-center gap-1">
@@ -210,5 +216,5 @@ export default function OrdersManagement() {
         )}
       </div>
     </div>
-  );
+  )
 }

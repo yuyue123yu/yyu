@@ -1,60 +1,74 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import Link from "next/link";
-import { Briefcase, Users, TrendingUp, Heart, Award, Globe, Upload, Send, ArrowLeft } from "lucide-react";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useState } from 'react'
+import Link from 'next/link'
+import {
+  Briefcase,
+  Users,
+  TrendingUp,
+  Heart,
+  Award,
+  Globe,
+  Upload,
+  Send,
+  ArrowLeft,
+} from 'lucide-react'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 export default function CareersPage() {
-  const { t } = useLanguage();
+  const { t } = useLanguage()
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    position: "",
-    experience: "",
-    barCouncilNumber: "",
-    specialization: "",
-    message: ""
-  });
-  const [resume, setResume] = useState<File | null>(null);
+    name: '',
+    email: '',
+    phone: '',
+    position: '',
+    experience: '',
+    barCouncilNumber: '',
+    specialization: '',
+    message: '',
+  })
+  const [resume, setResume] = useState<File | null>(null)
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    alert(t('careers.applicationSubmitted'));
+    e.preventDefault()
+    alert(t('careers.applicationSubmitted'))
     // Reset form
     setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      position: "",
-      experience: "",
-      barCouncilNumber: "",
-      specialization: "",
-      message: ""
-    });
-    setResume(null);
-  };
+      name: '',
+      email: '',
+      phone: '',
+      position: '',
+      experience: '',
+      barCouncilNumber: '',
+      specialization: '',
+      message: '',
+    })
+    setResume(null)
+  }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
+      [e.target.name]: e.target.value,
+    })
+  }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setResume(e.target.files[0]);
+      setResume(e.target.files[0])
     }
-  };
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-blue-900 to-blue-700 text-white py-20">
         <div className="container mx-auto px-6">
-          <Link 
+          <Link
             href="/"
             className="inline-flex items-center gap-2 text-blue-100 hover:text-white mb-6 transition-colors"
           >
@@ -71,30 +85,32 @@ export default function CareersPage() {
       {/* Why Join Us */}
       <section className="py-16">
         <div className="container mx-auto px-6">
-          <h2 className="text-4xl font-bold text-center text-gray-900 mb-12">{t('careers.whyJoinUs')}</h2>
+          <h2 className="text-4xl font-bold text-center text-gray-900 mb-12">
+            {t('careers.whyJoinUs')}
+          </h2>
           <div className="grid md:grid-cols-3 gap-8">
             <div className="bg-white p-8 rounded-xl shadow-md text-center hover:shadow-xl transition-shadow">
               <TrendingUp className="w-16 h-16 text-blue-600 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-gray-900 mb-3">{t('careers.fastGrowth')}</h3>
-              <p className="text-gray-600">
-                {t('careers.fastGrowthText')}
-              </p>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">
+                {t('careers.fastGrowth')}
+              </h3>
+              <p className="text-gray-600">{t('careers.fastGrowthText')}</p>
             </div>
-            
+
             <div className="bg-white p-8 rounded-xl shadow-md text-center hover:shadow-xl transition-shadow">
               <Users className="w-16 h-16 text-green-600 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-gray-900 mb-3">{t('careers.greatTeam')}</h3>
-              <p className="text-gray-600">
-                {t('careers.greatTeamText')}
-              </p>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">
+                {t('careers.greatTeam')}
+              </h3>
+              <p className="text-gray-600">{t('careers.greatTeamText')}</p>
             </div>
-            
+
             <div className="bg-white p-8 rounded-xl shadow-md text-center hover:shadow-xl transition-shadow">
               <Heart className="w-16 h-16 text-red-500 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-gray-900 mb-3">{t('careers.meaningfulWork')}</h3>
-              <p className="text-gray-600">
-                {t('careers.meaningfulWorkText')}
-              </p>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">
+                {t('careers.meaningfulWork')}
+              </h3>
+              <p className="text-gray-600">{t('careers.meaningfulWorkText')}</p>
             </div>
           </div>
         </div>
@@ -103,54 +119,88 @@ export default function CareersPage() {
       {/* Benefits */}
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-6">
-          <h2 className="text-4xl font-bold text-center text-gray-900 mb-12">{t('careers.benefits')}</h2>
+          <h2 className="text-4xl font-bold text-center text-gray-900 mb-12">
+            {t('careers.benefits')}
+          </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
             <div className="bg-white p-6 rounded-lg shadow-md">
               <div className="text-3xl mb-3">💰</div>
-              <h3 className="font-bold text-gray-900 mb-2">{t('careers.competitiveSalary')}</h3>
-              <p className="text-gray-600 text-sm">{t('careers.competitiveSalaryText')}</p>
+              <h3 className="font-bold text-gray-900 mb-2">
+                {t('careers.competitiveSalary')}
+              </h3>
+              <p className="text-gray-600 text-sm">
+                {t('careers.competitiveSalaryText')}
+              </p>
             </div>
-            
+
             <div className="bg-white p-6 rounded-lg shadow-md">
               <div className="text-3xl mb-3">🏥</div>
-              <h3 className="font-bold text-gray-900 mb-2">{t('careers.healthInsurance')}</h3>
-              <p className="text-gray-600 text-sm">{t('careers.healthInsuranceText')}</p>
+              <h3 className="font-bold text-gray-900 mb-2">
+                {t('careers.healthInsurance')}
+              </h3>
+              <p className="text-gray-600 text-sm">
+                {t('careers.healthInsuranceText')}
+              </p>
             </div>
-            
+
             <div className="bg-white p-6 rounded-lg shadow-md">
               <div className="text-3xl mb-3">🏖️</div>
-              <h3 className="font-bold text-gray-900 mb-2">{t('careers.flexibleLeave')}</h3>
-              <p className="text-gray-600 text-sm">{t('careers.flexibleLeaveText')}</p>
+              <h3 className="font-bold text-gray-900 mb-2">
+                {t('careers.flexibleLeave')}
+              </h3>
+              <p className="text-gray-600 text-sm">
+                {t('careers.flexibleLeaveText')}
+              </p>
             </div>
-            
+
             <div className="bg-white p-6 rounded-lg shadow-md">
               <div className="text-3xl mb-3">📚</div>
-              <h3 className="font-bold text-gray-900 mb-2">{t('careers.learningDevelopment')}</h3>
-              <p className="text-gray-600 text-sm">{t('careers.learningDevelopmentText')}</p>
+              <h3 className="font-bold text-gray-900 mb-2">
+                {t('careers.learningDevelopment')}
+              </h3>
+              <p className="text-gray-600 text-sm">
+                {t('careers.learningDevelopmentText')}
+              </p>
             </div>
-            
+
             <div className="bg-white p-6 rounded-lg shadow-md">
               <div className="text-3xl mb-3">💻</div>
-              <h3 className="font-bold text-gray-900 mb-2">{t('careers.remoteWork')}</h3>
-              <p className="text-gray-600 text-sm">{t('careers.remoteWorkText')}</p>
+              <h3 className="font-bold text-gray-900 mb-2">
+                {t('careers.remoteWork')}
+              </h3>
+              <p className="text-gray-600 text-sm">
+                {t('careers.remoteWorkText')}
+              </p>
             </div>
-            
+
             <div className="bg-white p-6 rounded-lg shadow-md">
               <div className="text-3xl mb-3">🎉</div>
-              <h3 className="font-bold text-gray-900 mb-2">{t('careers.teamActivities')}</h3>
-              <p className="text-gray-600 text-sm">{t('careers.teamActivitiesText')}</p>
+              <h3 className="font-bold text-gray-900 mb-2">
+                {t('careers.teamActivities')}
+              </h3>
+              <p className="text-gray-600 text-sm">
+                {t('careers.teamActivitiesText')}
+              </p>
             </div>
-            
+
             <div className="bg-white p-6 rounded-lg shadow-md">
               <div className="text-3xl mb-3">🚀</div>
-              <h3 className="font-bold text-gray-900 mb-2">{t('careers.stockOptions')}</h3>
-              <p className="text-gray-600 text-sm">{t('careers.stockOptionsText')}</p>
+              <h3 className="font-bold text-gray-900 mb-2">
+                {t('careers.stockOptions')}
+              </h3>
+              <p className="text-gray-600 text-sm">
+                {t('careers.stockOptionsText')}
+              </p>
             </div>
-            
+
             <div className="bg-white p-6 rounded-lg shadow-md">
               <div className="text-3xl mb-3">☕</div>
-              <h3 className="font-bold text-gray-900 mb-2">{t('careers.officeEnvironment')}</h3>
-              <p className="text-gray-600 text-sm">{t('careers.officeEnvironmentText')}</p>
+              <h3 className="font-bold text-gray-900 mb-2">
+                {t('careers.officeEnvironment')}
+              </h3>
+              <p className="text-gray-600 text-sm">
+                {t('careers.officeEnvironmentText')}
+              </p>
             </div>
           </div>
         </div>
@@ -159,18 +209,28 @@ export default function CareersPage() {
       {/* Open Positions */}
       <section className="py-16">
         <div className="container mx-auto px-6">
-          <h2 className="text-4xl font-bold text-center text-gray-900 mb-12">{t('careers.openPositions')}</h2>
-          
+          <h2 className="text-4xl font-bold text-center text-gray-900 mb-12">
+            {t('careers.openPositions')}
+          </h2>
+
           <div className="max-w-4xl mx-auto space-y-6">
             {/* Lawyer Position */}
             <div className="bg-white p-8 rounded-xl shadow-md border-l-4 border-blue-600 hover:shadow-xl transition-shadow">
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">认证律师</h3>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                    认证律师
+                  </h3>
                   <div className="flex flex-wrap gap-3 text-sm">
-                    <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">全职/兼职</span>
-                    <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full">吉隆坡/远程</span>
-                    <span className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full">经验不限</span>
+                    <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">
+                      全职/兼职
+                    </span>
+                    <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full">
+                      吉隆坡/远程
+                    </span>
+                    <span className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full">
+                      经验不限
+                    </span>
                   </div>
                 </div>
                 <Briefcase className="w-8 h-8 text-blue-600 flex-shrink-0" />
@@ -203,11 +263,19 @@ export default function CareersPage() {
             <div className="bg-white p-8 rounded-xl shadow-md border-l-4 border-green-600 hover:shadow-xl transition-shadow">
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">法律内容编辑</h3>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                    法律内容编辑
+                  </h3>
                   <div className="flex flex-wrap gap-3 text-sm">
-                    <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">全职</span>
-                    <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full">吉隆坡</span>
-                    <span className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full">2年以上经验</span>
+                    <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">
+                      全职
+                    </span>
+                    <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full">
+                      吉隆坡
+                    </span>
+                    <span className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full">
+                      2年以上经验
+                    </span>
                   </div>
                 </div>
                 <Award className="w-8 h-8 text-green-600 flex-shrink-0" />
@@ -230,11 +298,19 @@ export default function CareersPage() {
             <div className="bg-white p-8 rounded-xl shadow-md border-l-4 border-purple-600 hover:shadow-xl transition-shadow">
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">全栈工程师</h3>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                    全栈工程师
+                  </h3>
                   <div className="flex flex-wrap gap-3 text-sm">
-                    <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">全职</span>
-                    <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full">吉隆坡/远程</span>
-                    <span className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full">3年以上经验</span>
+                    <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">
+                      全职
+                    </span>
+                    <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full">
+                      吉隆坡/远程
+                    </span>
+                    <span className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full">
+                      3年以上经验
+                    </span>
                   </div>
                 </div>
                 <Globe className="w-8 h-8 text-purple-600 flex-shrink-0" />
@@ -257,11 +333,19 @@ export default function CareersPage() {
             <div className="bg-white p-8 rounded-xl shadow-md border-l-4 border-yellow-600 hover:shadow-xl transition-shadow">
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">客户服务专员</h3>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                    客户服务专员
+                  </h3>
                   <div className="flex flex-wrap gap-3 text-sm">
-                    <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">全职</span>
-                    <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full">吉隆坡</span>
-                    <span className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full">1年以上经验</span>
+                    <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full">
+                      全职
+                    </span>
+                    <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full">
+                      吉隆坡
+                    </span>
+                    <span className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full">
+                      1年以上经验
+                    </span>
                   </div>
                 </div>
                 <Users className="w-8 h-8 text-yellow-600 flex-shrink-0" />
@@ -287,16 +371,22 @@ export default function CareersPage() {
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-6">
           <div className="max-w-3xl mx-auto">
-            <h2 className="text-4xl font-bold text-center text-gray-900 mb-4">{t('careers.submitApplication')}</h2>
+            <h2 className="text-4xl font-bold text-center text-gray-900 mb-4">
+              {t('careers.submitApplication')}
+            </h2>
             <p className="text-center text-gray-600 mb-12">
               {t('careers.submitApplicationText')}
             </p>
-            
-            <form onSubmit={handleSubmit} className="bg-white p-8 rounded-xl shadow-lg">
+
+            <form
+              onSubmit={handleSubmit}
+              className="bg-white p-8 rounded-xl shadow-lg"
+            >
               <div className="grid md:grid-cols-2 gap-6 mb-6">
                 <div>
                   <label className="block text-gray-700 font-semibold mb-2">
-                    {t('careers.fullName')} <span className="text-red-500">*</span>
+                    {t('careers.fullName')}{' '}
+                    <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -308,7 +398,7 @@ export default function CareersPage() {
                     placeholder="您的全名"
                   />
                 </div>
-                
+
                 <div>
                   <label className="block text-gray-700 font-semibold mb-2">
                     {t('common.email')} <span className="text-red-500">*</span>
@@ -340,10 +430,11 @@ export default function CareersPage() {
                     placeholder="+60 12-345 6789"
                   />
                 </div>
-                
+
                 <div>
                   <label className="block text-gray-700 font-semibold mb-2">
-                    {t('careers.position')} <span className="text-red-500">*</span>
+                    {t('careers.position')}{' '}
+                    <span className="text-red-500">*</span>
                   </label>
                   <select
                     name="position"
@@ -377,7 +468,7 @@ export default function CareersPage() {
                     placeholder="0"
                   />
                 </div>
-                
+
                 <div>
                   <label className="block text-gray-700 font-semibold mb-2">
                     律师公会编号（仅律师）
@@ -425,7 +516,9 @@ export default function CareersPage() {
                     <p className="text-gray-600">
                       {resume ? resume.name : t('careers.uploadResume')}
                     </p>
-                    <p className="text-sm text-gray-500 mt-1">{t('careers.maxSize')}</p>
+                    <p className="text-sm text-gray-500 mt-1">
+                      {t('careers.maxSize')}
+                    </p>
                   </label>
                 </div>
               </div>
@@ -459,10 +552,10 @@ export default function CareersPage() {
       {/* Contact */}
       <section className="py-16">
         <div className="container mx-auto px-6 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">{t('careers.stillHaveQuestions')}</h2>
-          <p className="text-gray-600 mb-8">
-            {t('careers.questionsText')}
-          </p>
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            {t('careers.stillHaveQuestions')}
+          </h2>
+          <p className="text-gray-600 mb-8">{t('careers.questionsText')}</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
               href="mailto:careers@legalmy.com"
@@ -480,5 +573,5 @@ export default function CareersPage() {
         </div>
       </section>
     </div>
-  );
+  )
 }

@@ -1,11 +1,11 @@
 // Email Service using Resend
-import { Resend } from 'resend';
+import { Resend } from 'resend'
 
 // Initialize Resend with API key from environment
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY)
 
-const FROM_EMAIL = process.env.EMAIL_FROM || 'noreply@malai.com';
-const COMPANY_NAME = 'Malai';
+const FROM_EMAIL = process.env.EMAIL_FROM || 'noreply@malai.com'
+const COMPANY_NAME = 'Malai'
 
 /**
  * Send welcome email to new tenant admin
@@ -18,7 +18,7 @@ export async function sendTenantAdminWelcome(
   email: string,
   tenantName: string,
   activationLink: string,
-  ipAddress: string
+  ipAddress: string,
 ): Promise<{ success: boolean; error?: string }> {
   try {
     const timestamp = new Date().toLocaleString('en-US', {
@@ -28,7 +28,7 @@ export async function sendTenantAdminWelcome(
       hour: '2-digit',
       minute: '2-digit',
       timeZone: 'UTC',
-    });
+    })
 
     await resend.emails.send({
       from: FROM_EMAIL,
@@ -97,15 +97,15 @@ export async function sendTenantAdminWelcome(
           </body>
         </html>
       `,
-    });
+    })
 
-    return { success: true };
+    return { success: true }
   } catch (error) {
-    console.error('Error sending tenant admin welcome email:', error);
+    console.error('Error sending tenant admin welcome email:', error)
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Failed to send email',
-    };
+    }
   }
 }
 
@@ -118,7 +118,7 @@ export async function sendTenantAdminWelcome(
 export async function sendPasswordResetEmail(
   email: string,
   resetLink: string,
-  ipAddress: string
+  ipAddress: string,
 ): Promise<{ success: boolean; error?: string }> {
   try {
     const timestamp = new Date().toLocaleString('en-US', {
@@ -128,7 +128,7 @@ export async function sendPasswordResetEmail(
       hour: '2-digit',
       minute: '2-digit',
       timeZone: 'UTC',
-    });
+    })
 
     await resend.emails.send({
       from: FROM_EMAIL,
@@ -197,15 +197,15 @@ export async function sendPasswordResetEmail(
           </body>
         </html>
       `,
-    });
+    })
 
-    return { success: true };
+    return { success: true }
   } catch (error) {
-    console.error('Error sending password reset email:', error);
+    console.error('Error sending password reset email:', error)
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Failed to send email',
-    };
+    }
   }
 }
 
@@ -220,7 +220,7 @@ export async function sendUserMigrationNotification(
   email: string,
   oldTenantName: string,
   newTenantName: string,
-  migratedBy: string
+  migratedBy: string,
 ): Promise<{ success: boolean; error?: string }> {
   try {
     const timestamp = new Date().toLocaleString('en-US', {
@@ -230,7 +230,7 @@ export async function sendUserMigrationNotification(
       hour: '2-digit',
       minute: '2-digit',
       timeZone: 'UTC',
-    });
+    })
 
     await resend.emails.send({
       from: FROM_EMAIL,
@@ -298,15 +298,15 @@ export async function sendUserMigrationNotification(
           </body>
         </html>
       `,
-    });
+    })
 
-    return { success: true };
+    return { success: true }
   } catch (error) {
-    console.error('Error sending user migration notification:', error);
+    console.error('Error sending user migration notification:', error)
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Failed to send email',
-    };
+    }
   }
 }
 
@@ -315,7 +315,7 @@ export async function sendUserMigrationNotification(
  * @param email - User email address
  */
 export async function sendMFAEnabledNotification(
-  email: string
+  email: string,
 ): Promise<{ success: boolean; error?: string }> {
   try {
     const timestamp = new Date().toLocaleString('en-US', {
@@ -325,7 +325,7 @@ export async function sendMFAEnabledNotification(
       hour: '2-digit',
       minute: '2-digit',
       timeZone: 'UTC',
-    });
+    })
 
     await resend.emails.send({
       from: FROM_EMAIL,
@@ -376,14 +376,14 @@ export async function sendMFAEnabledNotification(
           </body>
         </html>
       `,
-    });
+    })
 
-    return { success: true };
+    return { success: true }
   } catch (error) {
-    console.error('Error sending MFA enabled notification:', error);
+    console.error('Error sending MFA enabled notification:', error)
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Failed to send email',
-    };
+    }
   }
 }

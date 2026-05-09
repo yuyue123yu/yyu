@@ -1,54 +1,56 @@
-'use client';
+'use client'
 
-import { useState, useEffect } from 'react';
-import { useRouter, useParams } from 'next/navigation';
-import { ArrowLeft, Save, Loader2 } from 'lucide-react';
-import Link from 'next/link';
+import { useState, useEffect } from 'react'
+import { useRouter, useParams } from 'next/navigation'
+import { ArrowLeft, Save, Loader2 } from 'lucide-react'
+import Link from 'next/link'
 
 interface ServiceFormData {
   // 基本信息
-  name_zh: string;
-  name_en: string;
-  name_tc: string;
-  name_ms: string;
-  description_zh: string;
-  description_en: string;
-  description_tc: string;
-  description_ms: string;
-  category: string;
-  icon_name: string;
-  
+  name_zh: string
+  name_en: string
+  name_tc: string
+  name_ms: string
+  description_zh: string
+  description_en: string
+  description_tc: string
+  description_ms: string
+  category: string
+  icon_name: string
+
   // 價格設置
-  base_price: number;
-  currency: string;
-  
+  base_price: number
+  currency: string
+
   // 顯示設置
-  case_count: number;
-  is_active: boolean;
-  is_featured: boolean;
-  badge: string;
-  display_order: number;
-  
+  case_count: number
+  is_active: boolean
+  is_featured: boolean
+  badge: string
+  display_order: number
+
   // SEO 設置
-  meta_title_zh: string;
-  meta_title_en: string;
-  meta_title_tc: string;
-  meta_title_ms: string;
-  meta_description_zh: string;
-  meta_description_en: string;
-  meta_description_tc: string;
-  meta_description_ms: string;
-  slug: string;
+  meta_title_zh: string
+  meta_title_en: string
+  meta_title_tc: string
+  meta_title_ms: string
+  meta_description_zh: string
+  meta_description_en: string
+  meta_description_tc: string
+  meta_description_ms: string
+  slug: string
 }
 
 export default function EditServicePage() {
-  const router = useRouter();
-  const params = useParams();
-  const serviceId = params.id as string;
-  
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [activeTab, setActiveTab] = useState<'basic' | 'price' | 'display' | 'seo'>('basic');
+  const router = useRouter()
+  const params = useParams()
+  const serviceId = params.id as string
+
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [activeTab, setActiveTab] = useState<
+    'basic' | 'price' | 'display' | 'seo'
+  >('basic')
   const [formData, setFormData] = useState<ServiceFormData>({
     name_zh: '',
     name_en: '',
@@ -76,61 +78,61 @@ export default function EditServicePage() {
     meta_description_tc: '',
     meta_description_ms: '',
     slug: '',
-  });
+  })
 
   useEffect(() => {
-    fetchService();
-  }, [serviceId]);
+    fetchService()
+  }, [serviceId])
 
   const fetchService = async () => {
     try {
-      const res = await fetch(`/api/admin/services/${serviceId}`);
+      const res = await fetch(`/api/admin/services/${serviceId}`)
       if (res.ok) {
-        const data = await res.json();
-        setFormData(data.service);
+        const data = await res.json()
+        setFormData(data.service)
       }
     } catch (error) {
-      console.error('獲取服務失敗:', error);
+      console.error('獲取服務失敗:', error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSaving(true);
+    e.preventDefault()
+    setSaving(true)
 
     try {
       const res = await fetch(`/api/admin/services/${serviceId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
-      });
+      })
 
       if (res.ok) {
-        alert('保存成功！');
-        router.push('/admin/services');
+        alert('保存成功！')
+        router.push('/admin/services')
       } else {
-        alert('保存失敗');
+        alert('保存失敗')
       }
     } catch (error) {
-      console.error('保存失敗:', error);
-      alert('保存失敗');
+      console.error('保存失敗:', error)
+      alert('保存失敗')
     } finally {
-      setSaving(false);
+      setSaving(false)
     }
-  };
+  }
 
   const updateField = (field: keyof ServiceFormData, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
+    setFormData((prev) => ({ ...prev, [field]: value }))
+  }
 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
         <Loader2 className="w-8 h-8 animate-spin text-orange-500" />
       </div>
-    );
+    )
   }
 
   return (
@@ -274,7 +276,9 @@ export default function EditServicePage() {
                   </label>
                   <textarea
                     value={formData.description_tc}
-                    onChange={(e) => updateField('description_tc', e.target.value)}
+                    onChange={(e) =>
+                      updateField('description_tc', e.target.value)
+                    }
                     rows={4}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     required
@@ -286,7 +290,9 @@ export default function EditServicePage() {
                   </label>
                   <textarea
                     value={formData.description_zh}
-                    onChange={(e) => updateField('description_zh', e.target.value)}
+                    onChange={(e) =>
+                      updateField('description_zh', e.target.value)
+                    }
                     rows={4}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   />
@@ -297,7 +303,9 @@ export default function EditServicePage() {
                   </label>
                   <textarea
                     value={formData.description_en}
-                    onChange={(e) => updateField('description_en', e.target.value)}
+                    onChange={(e) =>
+                      updateField('description_en', e.target.value)
+                    }
                     rows={4}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   />
@@ -308,7 +316,9 @@ export default function EditServicePage() {
                   </label>
                   <textarea
                     value={formData.description_ms}
-                    onChange={(e) => updateField('description_ms', e.target.value)}
+                    onChange={(e) =>
+                      updateField('description_ms', e.target.value)
+                    }
                     rows={4}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   />
@@ -361,13 +371,17 @@ export default function EditServicePage() {
                   <input
                     type="number"
                     value={formData.base_price}
-                    onChange={(e) => updateField('base_price', parseFloat(e.target.value))}
+                    onChange={(e) =>
+                      updateField('base_price', parseFloat(e.target.value))
+                    }
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     min="0"
                     step="0.01"
                     required
                   />
-                  <p className="text-sm text-gray-500 mt-1">此價格將顯示在前台服務卡片上</p>
+                  <p className="text-sm text-gray-500 mt-1">
+                    此價格將顯示在前台服務卡片上
+                  </p>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -387,7 +401,9 @@ export default function EditServicePage() {
               </div>
 
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <h3 className="font-medium text-blue-900 mb-2">💡 價格設置說明</h3>
+                <h3 className="font-medium text-blue-900 mb-2">
+                  💡 價格設置說明
+                </h3>
                 <ul className="text-sm text-blue-800 space-y-1">
                   <li>• 基礎價格會顯示在前台服務卡片上</li>
                   <li>• 用戶點擊服務後可以看到詳細的價格說明</li>
@@ -408,11 +424,15 @@ export default function EditServicePage() {
                   <input
                     type="number"
                     value={formData.case_count}
-                    onChange={(e) => updateField('case_count', parseInt(e.target.value))}
+                    onChange={(e) =>
+                      updateField('case_count', parseInt(e.target.value))
+                    }
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     min="0"
                   />
-                  <p className="text-sm text-gray-500 mt-1">顯示為 "XXX+ 案件"</p>
+                  <p className="text-sm text-gray-500 mt-1">
+                    顯示為 "XXX+ 案件"
+                  </p>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -421,7 +441,9 @@ export default function EditServicePage() {
                   <input
                     type="number"
                     value={formData.display_order}
-                    onChange={(e) => updateField('display_order', parseInt(e.target.value))}
+                    onChange={(e) =>
+                      updateField('display_order', parseInt(e.target.value))
+                    }
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     min="0"
                   />
@@ -454,7 +476,10 @@ export default function EditServicePage() {
                     onChange={(e) => updateField('is_active', e.target.checked)}
                     className="w-5 h-5 text-orange-500 rounded focus:ring-orange-500"
                   />
-                  <label htmlFor="is_active" className="text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="is_active"
+                    className="text-sm font-medium text-gray-700"
+                  >
                     啟用此服務（前台可見）
                   </label>
                 </div>
@@ -463,10 +488,15 @@ export default function EditServicePage() {
                     type="checkbox"
                     id="is_featured"
                     checked={formData.is_featured}
-                    onChange={(e) => updateField('is_featured', e.target.checked)}
+                    onChange={(e) =>
+                      updateField('is_featured', e.target.checked)
+                    }
                     className="w-5 h-5 text-orange-500 rounded focus:ring-orange-500"
                   />
-                  <label htmlFor="is_featured" className="text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="is_featured"
+                    className="text-sm font-medium text-gray-700"
+                  >
                     設為推薦服務
                   </label>
                 </div>
@@ -501,7 +531,9 @@ export default function EditServicePage() {
                   <input
                     type="text"
                     value={formData.meta_title_tc}
-                    onChange={(e) => updateField('meta_title_tc', e.target.value)}
+                    onChange={(e) =>
+                      updateField('meta_title_tc', e.target.value)
+                    }
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     maxLength={60}
                   />
@@ -514,7 +546,9 @@ export default function EditServicePage() {
                   <input
                     type="text"
                     value={formData.meta_title_en}
-                    onChange={(e) => updateField('meta_title_en', e.target.value)}
+                    onChange={(e) =>
+                      updateField('meta_title_en', e.target.value)
+                    }
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     maxLength={60}
                   />
@@ -528,12 +562,16 @@ export default function EditServicePage() {
                   </label>
                   <textarea
                     value={formData.meta_description_tc}
-                    onChange={(e) => updateField('meta_description_tc', e.target.value)}
+                    onChange={(e) =>
+                      updateField('meta_description_tc', e.target.value)
+                    }
                     rows={3}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     maxLength={160}
                   />
-                  <p className="text-xs text-gray-500 mt-1">建議 150-160 字符</p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    建議 150-160 字符
+                  </p>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -541,7 +579,9 @@ export default function EditServicePage() {
                   </label>
                   <textarea
                     value={formData.meta_description_en}
-                    onChange={(e) => updateField('meta_description_en', e.target.value)}
+                    onChange={(e) =>
+                      updateField('meta_description_en', e.target.value)
+                    }
                     rows={3}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                     maxLength={160}
@@ -553,5 +593,5 @@ export default function EditServicePage() {
         </form>
       </div>
     </div>
-  );
+  )
 }

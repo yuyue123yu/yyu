@@ -1,21 +1,21 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import { useLanguage } from '@/contexts/LanguageContext';
-import { LanguageIcon } from '@heroicons/react/24/outline';
+import { useState } from 'react'
+import { useLanguage } from '@/contexts/LanguageContext'
+import { LanguageIcon } from '@heroicons/react/24/outline'
 
 export default function LanguageSwitcher() {
-  const { language, setLanguage } = useLanguage();
-  const [showMenu, setShowMenu] = useState(false);
+  const { language, setLanguage } = useLanguage()
+  const [showMenu, setShowMenu] = useState(false)
 
   const languages = [
     { code: 'tc' as const, name: '繁體中文', flag: '🇭🇰' },
     { code: 'zh' as const, name: '简体中文', flag: '🇨🇳' },
     { code: 'en' as const, name: 'English', flag: '🇺🇸' },
     { code: 'ms' as const, name: 'Bahasa', flag: '🇲🇾' },
-  ];
+  ]
 
-  const currentLanguage = languages.find((lang) => lang.code === language);
+  const currentLanguage = languages.find((lang) => lang.code === language)
 
   return (
     <div className="relative">
@@ -38,8 +38,8 @@ export default function LanguageSwitcher() {
               <button
                 key={lang.code}
                 onClick={() => {
-                  setLanguage(lang.code);
-                  setShowMenu(false);
+                  setLanguage(lang.code)
+                  setShowMenu(false)
                 }}
                 className={`w-full flex items-center px-4 py-2 text-sm hover:bg-gray-100 ${
                   language === lang.code
@@ -58,5 +58,5 @@ export default function LanguageSwitcher() {
         </>
       )}
     </div>
-  );
+  )
 }

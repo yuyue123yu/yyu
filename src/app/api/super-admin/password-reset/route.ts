@@ -1,13 +1,13 @@
 // Force dynamic rendering
-export const dynamic = 'force-dynamic';
-export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
 
 // Password Reset API - Initiate Reset
-import { NextRequest, NextResponse } from 'next/server';
-import { requireSuperAdmin } from '@/lib/middleware/super-admin';
-import { logAuditEvent } from '@/lib/audit';
-import { createPasswordResetToken } from '@/lib/auth/password-reset';
-import { createClient } from '@/lib/supabase/server';
+import { NextRequest, NextResponse } from 'next/server'
+import { requireSuperAdmin } from '@/lib/middleware/super-admin'
+import { logAuditEvent } from '@/lib/audit'
+import { createPasswordResetToken } from '@/lib/auth/password-reset'
+import { createClient } from '@/lib/supabase/server'
 
 /**
  * POST /api/super-admin/password-reset
@@ -15,22 +15,22 @@ import { createClient } from '@/lib/supabase/server';
  */
 export async function POST(request: NextRequest) {
   // Verify super admin authentication
-  const authResult = await requireSuperAdmin(request);
+  const authResult = await requireSuperAdmin(request)
   if (authResult instanceof NextResponse) {
-    return authResult;
+    return authResult
   }
 
-  const { user, supabase } = authResult;
+  const { user, supabase } = authResult
 
   try {
-    const body = await request.json();
-    const { user_id } = body;
+    const body = await request.json()
+    const { user_id } = body
 
     if (!user_id) {
       return NextResponse.json(
         { error: 'user_id is required' },
-        { status: 400 }
-      );
+        { status: 400 },
+      )
     }
 
     // Get target user
@@ -38,26 +38,23 @@ export async function POST(request: NextRequest) {
       .from('profiles')
       .select('id, email, full_name')
       .eq('id', user_id)
-      .single();
+      .single()
 
     if (!targetUser) {
-      return NextResponse.json(
-        { error: 'User not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
 
     // Create password reset token
     const { token, expires_at, reset_link } = await createPasswordResetToken(
       user_id,
-      user.id
-    );
+      user.id,
+    )
 
     // Extract IP address
     const ip_address =
       request.headers.get('x-forwarded-for') ||
       request.headers.get('x-real-ip') ||
-      'unknown';
+      'unknown'
 
     // Log audit event
     await logAuditEvent(
@@ -71,8 +68,8 @@ export async function POST(request: NextRequest) {
           expires_at: expires_at.toISOString(),
         },
       },
-      request
-    );
+      request,
+    )
 
     return NextResponse.json({
       success: true,
@@ -86,12 +83,12 @@ export async function POST(request: NextRequest) {
         full_name: targetUser.full_name,
       },
       note: 'Please send the reset link to the user via email',
-    });
+    })
   } catch (error) {
-    console.error('Error initiating password reset:', error);
+    console.error('Error initiating password reset:', error)
     return NextResponse.json(
       { error: 'Failed to initiate password reset' },
-      { status: 500 }
-    );
+      { status: 500 },
+    )
   }
 }

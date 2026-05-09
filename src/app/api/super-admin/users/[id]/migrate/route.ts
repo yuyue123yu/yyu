@@ -1,8 +1,8 @@
 // User Management API - Migrate User to Different Tenant
-import { NextRequest, NextResponse } from 'next/server';
-import { requireSuperAdmin } from '@/lib/middleware/super-admin';
-import { logAuditEvent } from '@/lib/audit';
-import { createClient } from '@/lib/supabase/server';
+import { NextRequest, NextResponse } from 'next/server'
+import { requireSuperAdmin } from '@/lib/middleware/super-admin'
+import { logAuditEvent } from '@/lib/audit'
+import { createClient } from '@/lib/supabase/server'
 
 /**
  * POST /api/super-admin/users/:id/migrate
@@ -10,26 +10,26 @@ import { createClient } from '@/lib/supabase/server';
  */
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   // Verify super admin authentication
-  const authResult = await requireSuperAdmin(request);
+  const authResult = await requireSuperAdmin(request)
   if (authResult instanceof NextResponse) {
-    return authResult;
+    return authResult
   }
 
-  const { supabase } = authResult;
-  const { id } = params;
+  const { supabase } = authResult
+  const { id } = params
 
   try {
-    const body = await request.json();
-    const { target_tenant_id } = body;
+    const body = await request.json()
+    const { target_tenant_id } = body
 
     if (!target_tenant_id) {
       return NextResponse.json(
         { error: 'target_tenant_id is required' },
-        { status: 400 }
-      );
+        { status: 400 },
+      )
     }
 
     // Get current user
@@ -37,10 +37,10 @@ export async function POST(
       .from('profiles')
       .select('*, tenants:tenant_id(name)')
       .eq('id', id)
-      .single();
+      .single()
 
     if (!currentUser) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+      return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
 
     // Verify target tenant exists
@@ -48,28 +48,28 @@ export async function POST(
       .from('tenants')
       .select('id, name, status')
       .eq('id', target_tenant_id)
-      .single();
+      .single()
 
     if (!targetTenant) {
       return NextResponse.json(
         { error: 'Target tenant not found' },
-        { status: 404 }
-      );
+        { status: 404 },
+      )
     }
 
     if (targetTenant.status !== 'active') {
       return NextResponse.json(
         { error: 'Target tenant is not active' },
-        { status: 400 }
-      );
+        { status: 400 },
+      )
     }
 
     // Check if already in target tenant
     if (currentUser.tenant_id === target_tenant_id) {
       return NextResponse.json(
         { error: 'User is already in the target tenant' },
-        { status: 400 }
-      );
+        { status: 400 },
+      )
     }
 
     // Update user's tenant_id
@@ -81,46 +81,46 @@ export async function POST(
       })
       .eq('id', id)
       .select()
-      .single();
+      .single()
 
     if (updateError) {
-      throw updateError;
+      throw updateError
     }
 
     // Migrate related data
-    let migratedDataCount = 0;
+    let migratedDataCount = 0
 
     // Migrate consultations
     const { error: consultationsError } = await supabase
       .from('consultations')
       .update({ tenant_id: target_tenant_id })
-      .eq('user_id', id);
+      .eq('user_id', id)
 
-    if (!consultationsError) migratedDataCount++;
+    if (!consultationsError) migratedDataCount++
 
     // Migrate orders
     const { error: ordersError } = await supabase
       .from('orders')
       .update({ tenant_id: target_tenant_id })
-      .eq('user_id', id);
+      .eq('user_id', id)
 
-    if (!ordersError) migratedDataCount++;
+    if (!ordersError) migratedDataCount++
 
     // Migrate favorites
     const { error: favoritesError } = await supabase
       .from('favorites')
       .update({ tenant_id: target_tenant_id })
-      .eq('user_id', id);
+      .eq('user_id', id)
 
-    if (!favoritesError) migratedDataCount++;
+    if (!favoritesError) migratedDataCount++
 
     // Migrate cart
     const { error: cartError } = await supabase
       .from('cart')
       .update({ tenant_id: target_tenant_id })
-      .eq('user_id', id);
+      .eq('user_id', id)
 
-    if (!cartError) migratedDataCount++;
+    if (!cartError) migratedDataCount++
 
     // Log audit event
     await logAuditEvent(
@@ -137,8 +137,8 @@ export async function POST(
           migrated_data_count: migratedDataCount,
         },
       },
-      request
-    );
+      request,
+    )
 
     return NextResponse.json({
       success: true,
@@ -153,12 +153,12 @@ export async function POST(
         id: targetTenant.id,
         name: targetTenant.name,
       },
-    });
+    })
   } catch (error) {
-    console.error('Error migrating user:', error);
+    console.error('Error migrating user:', error)
     return NextResponse.json(
       { error: 'Failed to migrate user' },
-      { status: 500 }
-    );
+      { status: 500 },
+    )
   }
 }

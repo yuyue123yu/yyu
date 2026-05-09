@@ -1,34 +1,34 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
-import { MessageCircle, Clock, CheckCircle, Star, Send } from "lucide-react";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { createClient } from "@/lib/supabase/client";
-import { useAuth } from "@/contexts/AuthContext";
+import { useState } from 'react'
+import Header from '@/components/layout/Header'
+import Footer from '@/components/layout/Footer'
+import { MessageCircle, Clock, CheckCircle, Star, Send } from 'lucide-react'
+import { useLanguage } from '@/contexts/LanguageContext'
+import { createClient } from '@/lib/supabase/client'
+import { useAuth } from '@/contexts/AuthContext'
 
 export default function ConsultationPage() {
-  const { t } = useLanguage();
-  const { user } = useAuth();
+  const { t } = useLanguage()
+  const { user } = useAuth()
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    category: "",
-    description: "",
-  });
-  const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
+    name: '',
+    email: '',
+    phone: '',
+    category: '',
+    description: '',
+  })
+  const [submitted, setSubmitted] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitted(true);
-    setError(null);
-    setSuccess(false);
+    e.preventDefault()
+    setSubmitted(true)
+    setError(null)
+    setSuccess(false)
 
-    const supabase = await createClient();
+    const supabase = await createClient()
 
     try {
       const { error: insertError } = await supabase
@@ -41,27 +41,32 @@ export default function ConsultationPage() {
             phone: formData.phone,
             consultation_type: formData.category,
             case_description: formData.description,
-            status: 'pending'
-          }
-        ]);
+            status: 'pending',
+          },
+        ])
 
-      if (insertError) throw insertError;
+      if (insertError) throw insertError
 
-      setSuccess(true);
-      setFormData({ name: "", email: "", phone: "", category: "", description: "" });
-      
+      setSuccess(true)
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        category: '',
+        description: '',
+      })
+
       // 显示成功消息3秒后隐藏
       setTimeout(() => {
-        setSuccess(false);
-      }, 3000);
-
+        setSuccess(false)
+      }, 3000)
     } catch (err: any) {
-      console.error('Error submitting consultation:', err);
-      setError(err.message || '提交失败，请重试');
+      console.error('Error submitting consultation:', err)
+      setError(err.message || '提交失败，请重试')
     } finally {
-      setSubmitted(false);
+      setSubmitted(false)
     }
-  };
+  }
 
   return (
     <>
@@ -76,7 +81,8 @@ export default function ConsultationPage() {
                 {t('pages.consultationTitle')}
               </h1>
               <p className="text-xl text-blue-100 mb-8">
-                {t('pages.consultationSubtitle')}, RM 99{t('pages.consultationFrom')}
+                {t('pages.consultationSubtitle')}, RM 99
+                {t('pages.consultationFrom')}
               </p>
               <div className="flex items-center justify-center gap-8 text-sm">
                 <div className="flex items-center gap-2">
@@ -113,7 +119,9 @@ export default function ConsultationPage() {
                       <div className="mb-6 bg-green-50 border border-green-200 rounded-lg p-4 flex items-start gap-3">
                         <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
                         <div>
-                          <div className="text-sm font-medium text-green-800">提交成功！</div>
+                          <div className="text-sm font-medium text-green-800">
+                            提交成功！
+                          </div>
                           <div className="text-sm text-green-700 mt-1">
                             我们已收到您的咨询请求，律师将在30分钟内与您联系。
                           </div>
@@ -137,7 +145,9 @@ export default function ConsultationPage() {
                           type="text"
                           required
                           value={formData.name}
-                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                          onChange={(e) =>
+                            setFormData({ ...formData, name: e.target.value })
+                          }
                           className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
                           placeholder={t('pages.yourName')}
                         />
@@ -152,7 +162,12 @@ export default function ConsultationPage() {
                             type="email"
                             required
                             value={formData.email}
-                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                            onChange={(e) =>
+                              setFormData({
+                                ...formData,
+                                email: e.target.value,
+                              })
+                            }
                             className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
                             placeholder="your@email.com"
                           />
@@ -165,7 +180,12 @@ export default function ConsultationPage() {
                             type="tel"
                             required
                             value={formData.phone}
-                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                            onChange={(e) =>
+                              setFormData({
+                                ...formData,
+                                phone: e.target.value,
+                              })
+                            }
                             className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
                             placeholder="+60 12-345 6789"
                           />
@@ -179,16 +199,29 @@ export default function ConsultationPage() {
                         <select
                           required
                           value={formData.category}
-                          onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              category: e.target.value,
+                            })
+                          }
                           className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
                         >
                           <option value="">{t('pages.selectCategory')}</option>
                           <option value="debt">{t('services.debt')}</option>
                           <option value="family">{t('services.family')}</option>
-                          <option value="business">{t('services.business')}</option>
-                          <option value="property">{t('services.property')}</option>
-                          <option value="criminal">{t('services.criminal')}</option>
-                          <option value="employment">{t('services.employment')}</option>
+                          <option value="business">
+                            {t('services.business')}
+                          </option>
+                          <option value="property">
+                            {t('services.property')}
+                          </option>
+                          <option value="criminal">
+                            {t('services.criminal')}
+                          </option>
+                          <option value="employment">
+                            {t('services.employment')}
+                          </option>
                           <option value="ip">{t('services.ip')}</option>
                         </select>
                       </div>
@@ -200,7 +233,12 @@ export default function ConsultationPage() {
                         <textarea
                           required
                           value={formData.description}
-                          onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              description: e.target.value,
+                            })
+                          }
                           rows={6}
                           className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
                           placeholder={t('pages.problemPlaceholder')}
@@ -238,24 +276,42 @@ export default function ConsultationPage() {
                     <div className="space-y-4">
                       <div className="border-b border-neutral-200 pb-4">
                         <div className="flex items-baseline gap-2 mb-2">
-                          <span className="text-3xl font-bold text-primary-600">RM 99</span>
-                          <span className="text-neutral-600">/{t('pages.perSession')}</span>
+                          <span className="text-3xl font-bold text-primary-600">
+                            RM 99
+                          </span>
+                          <span className="text-neutral-600">
+                            /{t('pages.perSession')}
+                          </span>
                         </div>
-                        <p className="text-sm text-neutral-600">{t('pages.basicConsultation')}</p>
+                        <p className="text-sm text-neutral-600">
+                          {t('pages.basicConsultation')}
+                        </p>
                       </div>
                       <div className="border-b border-neutral-200 pb-4">
                         <div className="flex items-baseline gap-2 mb-2">
-                          <span className="text-3xl font-bold text-primary-600">RM 299</span>
-                          <span className="text-neutral-600">/{t('pages.perSession')}</span>
+                          <span className="text-3xl font-bold text-primary-600">
+                            RM 299
+                          </span>
+                          <span className="text-neutral-600">
+                            /{t('pages.perSession')}
+                          </span>
                         </div>
-                        <p className="text-sm text-neutral-600">{t('pages.deepAnalysis')}</p>
+                        <p className="text-sm text-neutral-600">
+                          {t('pages.deepAnalysis')}
+                        </p>
                       </div>
                       <div>
                         <div className="flex items-baseline gap-2 mb-2">
-                          <span className="text-3xl font-bold text-primary-600">RM 999</span>
-                          <span className="text-neutral-600">/{t('pages.perMonth')}</span>
+                          <span className="text-3xl font-bold text-primary-600">
+                            RM 999
+                          </span>
+                          <span className="text-neutral-600">
+                            /{t('pages.perMonth')}
+                          </span>
                         </div>
-                        <p className="text-sm text-neutral-600">{t('pages.monthlyAdvisor')}</p>
+                        <p className="text-sm text-neutral-600">
+                          {t('pages.monthlyAdvisor')}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -268,23 +324,33 @@ export default function ConsultationPage() {
                     <ul className="space-y-3">
                       <li className="flex items-start gap-2">
                         <CheckCircle className="h-5 w-5 text-primary-600 flex-shrink-0 mt-0.5" />
-                        <span className="text-sm text-neutral-700">30 {t('pages.quickResponse')}</span>
+                        <span className="text-sm text-neutral-700">
+                          30 {t('pages.quickResponse')}
+                        </span>
                       </li>
                       <li className="flex items-start gap-2">
                         <CheckCircle className="h-5 w-5 text-primary-600 flex-shrink-0 mt-0.5" />
-                        <span className="text-sm text-neutral-700">{t('pages.professionalTeam')}</span>
+                        <span className="text-sm text-neutral-700">
+                          {t('pages.professionalTeam')}
+                        </span>
                       </li>
                       <li className="flex items-start gap-2">
                         <CheckCircle className="h-5 w-5 text-primary-600 flex-shrink-0 mt-0.5" />
-                        <span className="text-sm text-neutral-700">{t('pages.confidentialityAgreement')}</span>
+                        <span className="text-sm text-neutral-700">
+                          {t('pages.confidentialityAgreement')}
+                        </span>
                       </li>
                       <li className="flex items-start gap-2">
                         <CheckCircle className="h-5 w-5 text-primary-600 flex-shrink-0 mt-0.5" />
-                        <span className="text-sm text-neutral-700">{t('pages.writtenOpinion')}</span>
+                        <span className="text-sm text-neutral-700">
+                          {t('pages.writtenOpinion')}
+                        </span>
                       </li>
                       <li className="flex items-start gap-2">
                         <CheckCircle className="h-5 w-5 text-primary-600 flex-shrink-0 mt-0.5" />
-                        <span className="text-sm text-neutral-700">{t('pages.followUpService')}</span>
+                        <span className="text-sm text-neutral-700">
+                          {t('pages.followUpService')}
+                        </span>
                       </li>
                     </ul>
                   </div>
@@ -296,5 +362,5 @@ export default function ConsultationPage() {
       </main>
       <Footer />
     </>
-  );
+  )
 }

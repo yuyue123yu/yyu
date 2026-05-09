@@ -1,37 +1,46 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import { XMarkIcon, ClipboardDocumentIcon, CheckIcon } from '@heroicons/react/24/outline';
+import { useState } from 'react'
+import {
+  XMarkIcon,
+  ClipboardDocumentIcon,
+  CheckIcon,
+} from '@heroicons/react/24/outline'
 
 interface CreateSubAccountModalProps {
-  onClose: () => void;
-  onSuccess: () => void;
+  onClose: () => void
+  onSuccess: () => void
 }
 
-export default function CreateSubAccountModal({ onClose, onSuccess }: CreateSubAccountModalProps) {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [temporaryPassword, setTemporaryPassword] = useState('');
-  const [copied, setCopied] = useState(false);
+export default function CreateSubAccountModal({
+  onClose,
+  onSuccess,
+}: CreateSubAccountModalProps) {
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [temporaryPassword, setTemporaryPassword] = useState('')
+  const [copied, setCopied] = useState(false)
 
   const [formData, setFormData] = useState({
     email: '',
     full_name: '',
     role: 'user',
-  });
+  })
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
-    });
-    setError('');
-  };
+    })
+    setError('')
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    setIsLoading(true);
+    e.preventDefault()
+    setError('')
+    setIsLoading(true)
 
     try {
       const response = await fetch('/api/tenant/users/create', {
@@ -40,31 +49,31 @@ export default function CreateSubAccountModal({ onClose, onSuccess }: CreateSubA
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
-      });
+      })
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (data.success) {
-        setTemporaryPassword(data.temporaryPassword);
+        setTemporaryPassword(data.temporaryPassword)
       } else {
-        setError(data.error || '创建失败');
-        setIsLoading(false);
+        setError(data.error || '创建失败')
+        setIsLoading(false)
       }
     } catch (err: any) {
-      setError('网络错误，请稍后重试');
-      setIsLoading(false);
+      setError('网络错误，请稍后重试')
+      setIsLoading(false)
     }
-  };
+  }
 
   const handleCopyPassword = () => {
-    navigator.clipboard.writeText(temporaryPassword);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+    navigator.clipboard.writeText(temporaryPassword)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
 
   const handleFinish = () => {
-    onSuccess();
-  };
+    onSuccess()
+  }
 
   // 显示临时密码
   if (temporaryPassword) {
@@ -78,9 +87,7 @@ export default function CreateSubAccountModal({ onClose, onSuccess }: CreateSubA
             <h2 className="text-2xl font-bold text-gray-900 mb-2">
               子账号创建成功
             </h2>
-            <p className="text-gray-600 mb-6">
-              请将以下临时密码发送给用户
-            </p>
+            <p className="text-gray-600 mb-6">请将以下临时密码发送给用户</p>
 
             {/* Temporary Password */}
             <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6">
@@ -115,17 +122,24 @@ export default function CreateSubAccountModal({ onClose, onSuccess }: CreateSubA
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span className="text-gray-600">邮箱:</span>
-                  <span className="font-medium text-gray-900">{formData.email}</span>
+                  <span className="font-medium text-gray-900">
+                    {formData.email}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">姓名:</span>
-                  <span className="font-medium text-gray-900">{formData.full_name}</span>
+                  <span className="font-medium text-gray-900">
+                    {formData.full_name}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">角色:</span>
                   <span className="font-medium text-gray-900">
-                    {formData.role === 'admin' ? '管理员' : 
-                     formData.role === 'manager' ? '经理' : '普通用户'}
+                    {formData.role === 'admin'
+                      ? '管理员'
+                      : formData.role === 'manager'
+                        ? '经理'
+                        : '普通用户'}
                   </span>
                 </div>
               </div>
@@ -140,7 +154,7 @@ export default function CreateSubAccountModal({ onClose, onSuccess }: CreateSubA
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   // 创建表单
@@ -169,7 +183,10 @@ export default function CreateSubAccountModal({ onClose, onSuccess }: CreateSubA
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Email */}
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               邮箱 *
             </label>
             <input
@@ -186,7 +203,10 @@ export default function CreateSubAccountModal({ onClose, onSuccess }: CreateSubA
 
           {/* Full Name */}
           <div>
-            <label htmlFor="full_name" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="full_name"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               姓名 *
             </label>
             <input
@@ -203,7 +223,10 @@ export default function CreateSubAccountModal({ onClose, onSuccess }: CreateSubA
 
           {/* Role */}
           <div>
-            <label htmlFor="role" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="role"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               角色 *
             </label>
             <select
@@ -252,5 +275,5 @@ export default function CreateSubAccountModal({ onClose, onSuccess }: CreateSubA
         </form>
       </div>
     </div>
-  );
+  )
 }

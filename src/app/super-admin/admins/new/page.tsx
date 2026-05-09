@@ -1,161 +1,161 @@
-'use client';
+'use client'
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { withSuperAdminAuth } from '@/lib/auth/withSuperAdminAuth';
-import SuperAdminLayout from '@/components/super-admin/SuperAdminLayout';
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { withSuperAdminAuth } from '@/lib/auth/withSuperAdminAuth'
+import SuperAdminLayout from '@/components/super-admin/SuperAdminLayout'
 import {
   ArrowLeftIcon,
   CheckCircleIcon,
   ExclamationCircleIcon,
-} from '@heroicons/react/24/outline';
+} from '@heroicons/react/24/outline'
 
 interface Tenant {
-  id: string;
-  name: string;
-  subdomain: string;
-  status: string;
+  id: string
+  name: string
+  subdomain: string
+  status: string
 }
 
 function NewAdminPage() {
-  const router = useRouter();
-  const [tenants, setTenants] = useState<Tenant[]>([]);
-  const [isLoadingTenants, setIsLoadingTenants] = useState(true);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [showError, setShowError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [activationLink, setActivationLink] = useState('');
+  const router = useRouter()
+  const [tenants, setTenants] = useState<Tenant[]>([])
+  const [isLoadingTenants, setIsLoadingTenants] = useState(true)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [showSuccess, setShowSuccess] = useState(false)
+  const [showError, setShowError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
+  const [activationLink, setActivationLink] = useState('')
 
   const [formData, setFormData] = useState({
     email: '',
     full_name: '',
     phone: '',
     tenant_id: '',
-  });
+  })
 
   const [errors, setErrors] = useState({
     email: '',
     full_name: '',
     tenant_id: '',
-  });
+  })
 
   useEffect(() => {
-    fetchTenants();
-  }, []);
+    fetchTenants()
+  }, [])
 
   const fetchTenants = async () => {
     try {
-      setIsLoadingTenants(true);
-      const response = await fetch('/api/super-admin/tenants?limit=1000');
-      const data = await response.json();
+      setIsLoadingTenants(true)
+      const response = await fetch('/api/super-admin/tenants?limit=1000')
+      const data = await response.json()
 
       if (data.success) {
         // Filter only active tenants
         const activeTenants = data.tenants.filter(
-          (t: Tenant) => t.status === 'active'
-        );
-        setTenants(activeTenants);
+          (t: Tenant) => t.status === 'active',
+        )
+        setTenants(activeTenants)
       }
     } catch (error) {
-      console.error('Error fetching tenants:', error);
+      console.error('Error fetching tenants:', error)
     } finally {
-      setIsLoadingTenants(false);
+      setIsLoadingTenants(false)
     }
-  };
+  }
 
   const validateForm = () => {
     const newErrors = {
       email: '',
       full_name: '',
       tenant_id: '',
-    };
+    }
 
-    let isValid = true;
+    let isValid = true
 
     // Email validation
     if (!formData.email) {
-      newErrors.email = 'Email is required';
-      isValid = false;
+      newErrors.email = 'Email is required'
+      isValid = false
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email address';
-      isValid = false;
+      newErrors.email = 'Please enter a valid email address'
+      isValid = false
     }
 
     // Full name validation
     if (!formData.full_name.trim()) {
-      newErrors.full_name = 'Full name is required';
-      isValid = false;
+      newErrors.full_name = 'Full name is required'
+      isValid = false
     }
 
     // Tenant validation
     if (!formData.tenant_id) {
-      newErrors.tenant_id = 'Please select a tenant';
-      isValid = false;
+      newErrors.tenant_id = 'Please select a tenant'
+      isValid = false
     }
 
-    setErrors(newErrors);
-    return isValid;
-  };
+    setErrors(newErrors)
+    return isValid
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
 
     if (!validateForm()) {
-      return;
+      return
     }
 
-    setIsSubmitting(true);
-    setShowError(false);
-    setShowSuccess(false);
+    setIsSubmitting(true)
+    setShowError(false)
+    setShowSuccess(false)
 
     try {
       const response = await fetch('/api/super-admin/admins', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
-      });
+      })
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (data.success) {
-        setActivationLink(data.activation_link);
-        setShowSuccess(true);
+        setActivationLink(data.activation_link)
+        setShowSuccess(true)
         // Reset form
         setFormData({
           email: '',
           full_name: '',
           phone: '',
           tenant_id: '',
-        });
+        })
       } else {
-        setErrorMessage(data.error || 'Failed to create admin account');
-        setShowError(true);
+        setErrorMessage(data.error || 'Failed to create admin account')
+        setShowError(true)
       }
     } catch (error) {
-      console.error('Error creating admin:', error);
-      setErrorMessage('An unexpected error occurred. Please try again.');
-      setShowError(true);
+      console.error('Error creating admin:', error)
+      setErrorMessage('An unexpected error occurred. Please try again.')
+      setShowError(true)
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false)
     }
-  };
+  }
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
     // Clear error for this field
     if (errors[name as keyof typeof errors]) {
-      setErrors((prev) => ({ ...prev, [name]: '' }));
+      setErrors((prev) => ({ ...prev, [name]: '' }))
     }
-  };
+  }
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(activationLink);
-    alert('Activation link copied to clipboard!');
-  };
+    navigator.clipboard.writeText(activationLink)
+    alert('Activation link copied to clipboard!')
+  }
 
   return (
     <SuperAdminLayout>
@@ -365,7 +365,7 @@ function NewAdminPage() {
         </div>
       </div>
     </SuperAdminLayout>
-  );
+  )
 }
 
-export default withSuperAdminAuth(NewAdminPage);
+export default withSuperAdminAuth(NewAdminPage)

@@ -1,18 +1,21 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
-import { SiteSettingsProvider, useSiteSettings } from '@/contexts/SiteSettingsContext';
-import Link from 'next/link';
-import { 
-  LayoutDashboard, 
-  Users, 
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { createClient } from '@/lib/supabase/client'
+import {
+  SiteSettingsProvider,
+  useSiteSettings,
+} from '@/contexts/SiteSettingsContext'
+import Link from 'next/link'
+import {
+  LayoutDashboard,
+  Users,
   UserPlus,
-  Briefcase, 
-  MessageSquare, 
-  ShoppingCart, 
-  FileText, 
+  Briefcase,
+  MessageSquare,
+  ShoppingCart,
+  FileText,
   Newspaper,
   Palette,
   DollarSign,
@@ -24,49 +27,55 @@ import {
   Settings,
   LogOut,
   Menu,
-  X
-} from 'lucide-react';
-import { User } from '@supabase/supabase-js';
+  X,
+} from 'lucide-react'
+import { User } from '@supabase/supabase-js'
 
 interface AdminLayoutClientProps {
-  user: User;
-  profile: any;
-  children: React.ReactNode;
+  user: User
+  profile: any
+  children: React.ReactNode
 }
 
-function AdminLayoutContent({ user, profile, children }: AdminLayoutClientProps) {
-  const { settings } = useSiteSettings();
-  const router = useRouter();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+function AdminLayoutContent({
+  user,
+  profile,
+  children,
+}: AdminLayoutClientProps) {
+  const { settings } = useSiteSettings()
+  const router = useRouter()
+  const [sidebarOpen, setSidebarOpen] = useState(true)
 
   const handleSignOut = async () => {
-    const supabase = createClient();
-    await supabase.auth.signOut();
-    router.push('/admin/login');
-  };
+    const supabase = createClient()
+    await supabase.auth.signOut()
+    router.push('/admin/login')
+  }
 
   const menuGroups = [
     {
       title: '概览',
-      items: [
-        { icon: LayoutDashboard, label: '仪表板', href: '/admin' },
-      ]
+      items: [{ icon: LayoutDashboard, label: '仪表板', href: '/admin' }],
     },
     {
       title: '业务管理',
       items: [
         { icon: Briefcase, label: '服务管理', href: '/admin/services' },
         { icon: Users, label: '律师管理', href: '/admin/lawyers' },
-        { icon: MessageSquare, label: '咨询管理', href: '/admin/consultations' },
+        {
+          icon: MessageSquare,
+          label: '咨询管理',
+          href: '/admin/consultations',
+        },
         { icon: ShoppingCart, label: '订单管理', href: '/admin/orders' },
-      ]
+      ],
     },
     {
       title: '内容管理',
       items: [
         { icon: FileText, label: '模板管理', href: '/admin/templates' },
         { icon: Newspaper, label: '文章管理', href: '/admin/articles' },
-      ]
+      ],
     },
     {
       title: '网站设置',
@@ -75,17 +84,21 @@ function AdminLayoutContent({ user, profile, children }: AdminLayoutClientProps)
         { icon: Globe, label: '域名配置', href: '/admin/domain' },
         { icon: Search, label: 'SEO 设置', href: '/admin/seo' },
         { icon: Bell, label: '通知设置', href: '/admin/notifications' },
-      ]
+      ],
     },
     {
       title: '系统管理',
       items: [
         { icon: Users, label: '用户管理', href: '/admin/users' },
-        { icon: UserPlus, label: '子账号管理', href: '/admin/users/sub-accounts' },
+        {
+          icon: UserPlus,
+          label: '子账号管理',
+          href: '/admin/users/sub-accounts',
+        },
         { icon: Settings, label: '系统设置', href: '/admin/settings' },
-      ]
+      ],
     },
-  ];
+  ]
 
   return (
     <div className="min-h-screen bg-neutral-100">
@@ -109,7 +122,10 @@ function AdminLayoutContent({ user, profile, children }: AdminLayoutClientProps)
         </div>
 
         {/* Navigation */}
-        <nav className="p-4 space-y-6 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 180px)' }}>
+        <nav
+          className="p-4 space-y-6 overflow-y-auto"
+          style={{ maxHeight: 'calc(100vh - 180px)' }}
+        >
           {menuGroups.map((group, groupIndex) => (
             <div key={groupIndex}>
               <div className="px-4 mb-2">
@@ -192,15 +208,19 @@ function AdminLayoutContent({ user, profile, children }: AdminLayoutClientProps)
         />
       )}
     </div>
-  );
+  )
 }
 
-export default function AdminLayoutClient({ user, profile, children }: AdminLayoutClientProps) {
+export default function AdminLayoutClient({
+  user,
+  profile,
+  children,
+}: AdminLayoutClientProps) {
   return (
     <SiteSettingsProvider>
       <AdminLayoutContent user={user} profile={profile}>
         {children}
       </AdminLayoutContent>
     </SiteSettingsProvider>
-  );
+  )
 }

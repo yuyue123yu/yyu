@@ -1,7 +1,7 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import T from '@/components/super-admin/T';
+import { useState } from 'react'
+import T from '@/components/super-admin/T'
 import {
   ClockIcon,
   UserIcon,
@@ -9,48 +9,48 @@ import {
   ChevronDownIcon,
   ChevronUpIcon,
   GlobeAltIcon,
-} from '@heroicons/react/24/outline';
+} from '@heroicons/react/24/outline'
 
 interface AuditLog {
-  id: string;
-  action_type: string;
-  target_entity: string;
-  target_id: string | null;
-  user_id: string | null;
-  tenant_id: string | null;
-  ip_address: string | null;
-  user_agent: string | null;
-  changes: Record<string, any> | null;
-  created_at: string;
+  id: string
+  action_type: string
+  target_entity: string
+  target_id: string | null
+  user_id: string | null
+  tenant_id: string | null
+  ip_address: string | null
+  user_agent: string | null
+  changes: Record<string, any> | null
+  created_at: string
 }
 
 interface AuditLogTableProps {
-  logs: AuditLog[];
+  logs: AuditLog[]
 }
 
 export default function AuditLogTable({ logs }: AuditLogTableProps) {
-  const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
+  const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set())
 
   const toggleRow = (logId: string) => {
-    const newExpanded = new Set(expandedRows);
+    const newExpanded = new Set(expandedRows)
     if (newExpanded.has(logId)) {
-      newExpanded.delete(logId);
+      newExpanded.delete(logId)
     } else {
-      newExpanded.add(logId);
+      newExpanded.add(logId)
     }
-    setExpandedRows(newExpanded);
-  };
+    setExpandedRows(newExpanded)
+  }
 
   const getActionColor = (actionType: string): string => {
-    if (actionType.includes('create')) return 'text-green-600 bg-green-100';
-    if (actionType.includes('update')) return 'text-blue-600 bg-blue-100';
-    if (actionType.includes('delete')) return 'text-red-600 bg-red-100';
-    if (actionType.includes('login')) return 'text-purple-600 bg-purple-100';
-    return 'text-gray-600 bg-gray-100';
-  };
+    if (actionType.includes('create')) return 'text-green-600 bg-green-100'
+    if (actionType.includes('update')) return 'text-blue-600 bg-blue-100'
+    if (actionType.includes('delete')) return 'text-red-600 bg-red-100'
+    if (actionType.includes('login')) return 'text-purple-600 bg-purple-100'
+    return 'text-gray-600 bg-gray-100'
+  }
 
   const formatTimestamp = (timestamp: string): string => {
-    const date = new Date(timestamp);
+    const date = new Date(timestamp)
     return date.toLocaleString('en-US', {
       year: 'numeric',
       month: 'short',
@@ -58,21 +58,23 @@ export default function AuditLogTable({ logs }: AuditLogTableProps) {
       hour: '2-digit',
       minute: '2-digit',
       second: '2-digit',
-    });
-  };
+    })
+  }
 
   const formatUserAgent = (userAgent: string | null): string => {
-    if (!userAgent) return 'N/A';
-    
+    if (!userAgent) return 'N/A'
+
     // Extract browser and OS info
-    const browserMatch = userAgent.match(/(Chrome|Firefox|Safari|Edge|Opera)\/[\d.]+/);
-    const osMatch = userAgent.match(/(Windows|Mac OS|Linux|Android|iOS)/);
-    
-    const browser = browserMatch ? browserMatch[1] : 'Unknown';
-    const os = osMatch ? osMatch[1] : 'Unknown';
-    
-    return `${browser} on ${os}`;
-  };
+    const browserMatch = userAgent.match(
+      /(Chrome|Firefox|Safari|Edge|Opera)\/[\d.]+/,
+    )
+    const osMatch = userAgent.match(/(Windows|Mac OS|Linux|Android|iOS)/)
+
+    const browser = browserMatch ? browserMatch[1] : 'Unknown'
+    const os = osMatch ? osMatch[1] : 'Unknown'
+
+    return `${browser} on ${os}`
+  }
 
   return (
     <div className="bg-white rounded-lg shadow overflow-hidden">
@@ -102,8 +104,8 @@ export default function AuditLogTable({ logs }: AuditLogTableProps) {
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {logs.map((log) => {
-              const isExpanded = expandedRows.has(log.id);
-              
+              const isExpanded = expandedRows.has(log.id)
+
               return (
                 <>
                   <tr
@@ -129,7 +131,7 @@ export default function AuditLogTable({ logs }: AuditLogTableProps) {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
                         className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getActionColor(
-                          log.action_type
+                          log.action_type,
                         )}`}
                       >
                         {log.action_type}
@@ -139,7 +141,10 @@ export default function AuditLogTable({ logs }: AuditLogTableProps) {
                       <div className="flex items-center text-sm text-gray-900">
                         <UserIcon className="w-4 h-4 mr-2 text-gray-400" />
                         {log.user_id ? (
-                          <span className="truncate max-w-[150px]" title={log.user_id}>
+                          <span
+                            className="truncate max-w-[150px]"
+                            title={log.user_id}
+                          >
                             {log.user_id.substring(0, 8)}...
                           </span>
                         ) : (
@@ -153,7 +158,10 @@ export default function AuditLogTable({ logs }: AuditLogTableProps) {
                         <div>
                           <div className="font-medium">{log.target_entity}</div>
                           {log.target_id && (
-                            <div className="text-xs text-gray-500 truncate max-w-[150px]" title={log.target_id}>
+                            <div
+                              className="text-xs text-gray-500 truncate max-w-[150px]"
+                              title={log.target_id}
+                            >
                               {log.target_id.substring(0, 8)}...
                             </div>
                           )}
@@ -167,7 +175,7 @@ export default function AuditLogTable({ logs }: AuditLogTableProps) {
                       </div>
                     </td>
                   </tr>
-                  
+
                   {/* Expanded row with change details */}
                   {isExpanded && log.changes && (
                     <tr key={`${log.id}-details`} className="bg-gray-50">
@@ -184,7 +192,7 @@ export default function AuditLogTable({ logs }: AuditLogTableProps) {
                                 </pre>
                               </div>
                             </div>
-                            
+
                             {log.user_agent && (
                               <div className="flex-1">
                                 <h4 className="text-sm font-semibold text-gray-700 mb-2">
@@ -201,7 +209,7 @@ export default function AuditLogTable({ logs }: AuditLogTableProps) {
                               </div>
                             )}
                           </div>
-                          
+
                           {log.tenant_id && (
                             <div>
                               <h4 className="text-sm font-semibold text-gray-700 mb-2">
@@ -219,11 +227,11 @@ export default function AuditLogTable({ logs }: AuditLogTableProps) {
                     </tr>
                   )}
                 </>
-              );
+              )
             })}
           </tbody>
         </table>
       </div>
     </div>
-  );
+  )
 }

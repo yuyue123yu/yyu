@@ -1,114 +1,129 @@
-"use client";
+'use client'
 
-import { useState, useEffect } from "react";
-import { Save, Mail, MessageSquare, Bell, Users, Send, Plus, X, Info, AlertCircle } from "lucide-react";
+import { useState, useEffect } from 'react'
+import {
+  Save,
+  Mail,
+  MessageSquare,
+  Bell,
+  Users,
+  Send,
+  Plus,
+  X,
+  Info,
+  AlertCircle,
+} from 'lucide-react'
 
 interface NotificationSettings {
-  email: any;
-  sms: any;
-  recipients: any;
-  triggers: any;
-  rate_limit: any;
+  email: any
+  sms: any
+  recipients: any
+  triggers: any
+  rate_limit: any
 }
 
 export default function NotificationsPage() {
-  const [settings, setSettings] = useState<NotificationSettings | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [testing, setTesting] = useState(false);
-  const [activeTab, setActiveTab] = useState<'email' | 'sms' | 'recipients' | 'triggers'>('email');
+  const [settings, setSettings] = useState<NotificationSettings | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [testing, setTesting] = useState(false)
+  const [activeTab, setActiveTab] = useState<
+    'email' | 'sms' | 'recipients' | 'triggers'
+  >('email')
 
   useEffect(() => {
-    loadSettings();
-  }, []);
+    loadSettings()
+  }, [])
 
   const loadSettings = async () => {
     try {
-      setLoading(true);
-      const response = await fetch('/api/tenant/notifications');
-      const data = await response.json();
+      setLoading(true)
+      const response = await fetch('/api/tenant/notifications')
+      const data = await response.json()
 
       if (data.success) {
-        setSettings(data.notifications);
+        setSettings(data.notifications)
       }
     } catch (error) {
-      console.error('Error loading settings:', error);
-      alert('加载设置失败');
+      console.error('Error loading settings:', error)
+      alert('加载设置失败')
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const handleSave = async () => {
-    if (!settings) return;
+    if (!settings) return
 
     try {
-      setSaving(true);
+      setSaving(true)
       const response = await fetch('/api/tenant/notifications', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(settings),
-      });
+      })
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (data.success) {
-        alert('通知配置已保存！');
+        alert('通知配置已保存！')
       } else {
-        alert(data.error || '保存失败');
+        alert(data.error || '保存失败')
       }
     } catch (error) {
-      console.error('Error saving settings:', error);
-      alert('保存失败，请重试');
+      console.error('Error saving settings:', error)
+      alert('保存失败，请重试')
     } finally {
-      setSaving(false);
+      setSaving(false)
     }
-  };
+  }
 
   const handleTest = async (type: 'email' | 'sms') => {
-    const recipient = prompt(`请输入测试${type === 'email' ? '邮箱' : '手机号'}：`);
-    if (!recipient) return;
+    const recipient = prompt(
+      `请输入测试${type === 'email' ? '邮箱' : '手机号'}：`,
+    )
+    if (!recipient) return
 
     try {
-      setTesting(true);
+      setTesting(true)
       const response = await fetch('/api/tenant/notifications/test', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ type, recipient }),
-      });
+      })
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (data.success) {
-        alert(data.message);
+        alert(data.message)
       } else {
-        alert(data.error || '测试失败');
+        alert(data.error || '测试失败')
       }
     } catch (error) {
-      console.error('Error testing notification:', error);
-      alert('测试失败，请重试');
+      console.error('Error testing notification:', error)
+      alert('测试失败，请重试')
     } finally {
-      setTesting(false);
+      setTesting(false)
     }
-  };
+  }
 
   const updateEmail = (field: string, value: any) => {
-    if (!settings) return;
+    if (!settings) return
     setSettings({
       ...settings,
       email: {
         ...settings.email,
         [field]: value,
       },
-    });
-  };
+    })
+  }
 
   const updateEmailNested = (parent: string, field: string, value: any) => {
-    if (!settings) return;
+    if (!settings) return
     setSettings({
       ...settings,
       email: {
@@ -118,22 +133,22 @@ export default function NotificationsPage() {
           [field]: value,
         },
       },
-    });
-  };
+    })
+  }
 
   const updateSMS = (field: string, value: any) => {
-    if (!settings) return;
+    if (!settings) return
     setSettings({
       ...settings,
       sms: {
         ...settings.sms,
         [field]: value,
       },
-    });
-  };
+    })
+  }
 
   const updateSMSNested = (parent: string, field: string, value: any) => {
-    if (!settings) return;
+    if (!settings) return
     setSettings({
       ...settings,
       sms: {
@@ -143,11 +158,11 @@ export default function NotificationsPage() {
           [field]: value,
         },
       },
-    });
-  };
+    })
+  }
 
   const updateTrigger = (trigger: string, field: string, value: any) => {
-    if (!settings) return;
+    if (!settings) return
     setSettings({
       ...settings,
       triggers: {
@@ -157,34 +172,36 @@ export default function NotificationsPage() {
           [field]: value,
         },
       },
-    });
-  };
+    })
+  }
 
   const addRecipient = (type: string) => {
-    if (!settings) return;
-    const email = prompt('请输入邮箱地址：');
-    if (!email) return;
-    
+    if (!settings) return
+    const email = prompt('请输入邮箱地址：')
+    if (!email) return
+
     setSettings({
       ...settings,
       recipients: {
         ...settings.recipients,
         [type]: [...settings.recipients[type], email],
       },
-    });
-  };
+    })
+  }
 
   const removeRecipient = (type: string, index: number) => {
-    if (!settings) return;
-    const newRecipients = settings.recipients[type].filter((_: any, i: number) => i !== index);
+    if (!settings) return
+    const newRecipients = settings.recipients[type].filter(
+      (_: any, i: number) => i !== index,
+    )
     setSettings({
       ...settings,
       recipients: {
         ...settings.recipients,
         [type]: newRecipients,
       },
-    });
-  };
+    })
+  }
 
   if (loading || !settings) {
     return (
@@ -194,7 +211,7 @@ export default function NotificationsPage() {
           <p className="mt-4 text-neutral-600">加载中...</p>
         </div>
       </div>
-    );
+    )
   }
 
   const tabs = [
@@ -202,7 +219,7 @@ export default function NotificationsPage() {
     { id: 'sms', label: '短信通知', icon: MessageSquare },
     { id: 'recipients', label: '接收人', icon: Users },
     { id: 'triggers', label: '触发条件', icon: Bell },
-  ];
+  ]
 
   return (
     <div>
@@ -255,7 +272,9 @@ export default function NotificationsPage() {
                   onChange={(e) => updateEmail('enabled', e.target.checked)}
                   className="rounded border-neutral-300"
                 />
-                <span className="text-sm font-medium text-neutral-700">启用邮件通知</span>
+                <span className="text-sm font-medium text-neutral-700">
+                  启用邮件通知
+                </span>
               </label>
               {settings.email.enabled && (
                 <button
@@ -272,7 +291,9 @@ export default function NotificationsPage() {
             {settings.email.enabled && (
               <>
                 <div className="border-t border-neutral-200 pt-6">
-                  <h3 className="text-lg font-semibold text-neutral-900 mb-4">SMTP 服务器配置</h3>
+                  <h3 className="text-lg font-semibold text-neutral-900 mb-4">
+                    SMTP 服务器配置
+                  </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-neutral-700 mb-2">
@@ -281,7 +302,9 @@ export default function NotificationsPage() {
                       <input
                         type="text"
                         value={settings.email.smtp.host}
-                        onChange={(e) => updateEmailNested('smtp', 'host', e.target.value)}
+                        onChange={(e) =>
+                          updateEmailNested('smtp', 'host', e.target.value)
+                        }
                         className="w-full px-4 py-2 border border-neutral-300 rounded-lg"
                         placeholder="smtp.gmail.com"
                       />
@@ -294,7 +317,13 @@ export default function NotificationsPage() {
                       <input
                         type="number"
                         value={settings.email.smtp.port}
-                        onChange={(e) => updateEmailNested('smtp', 'port', parseInt(e.target.value))}
+                        onChange={(e) =>
+                          updateEmailNested(
+                            'smtp',
+                            'port',
+                            parseInt(e.target.value),
+                          )
+                        }
                         className="w-full px-4 py-2 border border-neutral-300 rounded-lg"
                         placeholder="587"
                       />
@@ -307,7 +336,12 @@ export default function NotificationsPage() {
                       <input
                         type="text"
                         value={settings.email.smtp.auth.user}
-                        onChange={(e) => updateEmailNested('smtp', 'auth', { ...settings.email.smtp.auth, user: e.target.value })}
+                        onChange={(e) =>
+                          updateEmailNested('smtp', 'auth', {
+                            ...settings.email.smtp.auth,
+                            user: e.target.value,
+                          })
+                        }
                         className="w-full px-4 py-2 border border-neutral-300 rounded-lg"
                         placeholder="your-email@gmail.com"
                       />
@@ -320,7 +354,12 @@ export default function NotificationsPage() {
                       <input
                         type="password"
                         value={settings.email.smtp.auth.pass}
-                        onChange={(e) => updateEmailNested('smtp', 'auth', { ...settings.email.smtp.auth, pass: e.target.value })}
+                        onChange={(e) =>
+                          updateEmailNested('smtp', 'auth', {
+                            ...settings.email.smtp.auth,
+                            pass: e.target.value,
+                          })
+                        }
                         className="w-full px-4 py-2 border border-neutral-300 rounded-lg"
                         placeholder="••••••••"
                       />
@@ -332,16 +371,22 @@ export default function NotificationsPage() {
                       <input
                         type="checkbox"
                         checked={settings.email.smtp.secure}
-                        onChange={(e) => updateEmailNested('smtp', 'secure', e.target.checked)}
+                        onChange={(e) =>
+                          updateEmailNested('smtp', 'secure', e.target.checked)
+                        }
                         className="rounded border-neutral-300"
                       />
-                      <span className="text-sm text-neutral-700">使用 SSL/TLS（端口 465）</span>
+                      <span className="text-sm text-neutral-700">
+                        使用 SSL/TLS（端口 465）
+                      </span>
                     </label>
                   </div>
                 </div>
 
                 <div className="border-t border-neutral-200 pt-6">
-                  <h3 className="text-lg font-semibold text-neutral-900 mb-4">发件人信息</h3>
+                  <h3 className="text-lg font-semibold text-neutral-900 mb-4">
+                    发件人信息
+                  </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-neutral-700 mb-2">
@@ -350,7 +395,9 @@ export default function NotificationsPage() {
                       <input
                         type="text"
                         value={settings.email.from.name}
-                        onChange={(e) => updateEmailNested('from', 'name', e.target.value)}
+                        onChange={(e) =>
+                          updateEmailNested('from', 'name', e.target.value)
+                        }
                         className="w-full px-4 py-2 border border-neutral-300 rounded-lg"
                         placeholder="法律咨询平台"
                       />
@@ -363,7 +410,9 @@ export default function NotificationsPage() {
                       <input
                         type="email"
                         value={settings.email.from.email}
-                        onChange={(e) => updateEmailNested('from', 'email', e.target.value)}
+                        onChange={(e) =>
+                          updateEmailNested('from', 'email', e.target.value)
+                        }
                         className="w-full px-4 py-2 border border-neutral-300 rounded-lg"
                         placeholder="noreply@example.com"
                       />
@@ -372,71 +421,87 @@ export default function NotificationsPage() {
                 </div>
 
                 <div className="border-t border-neutral-200 pt-6">
-                  <h3 className="text-lg font-semibold text-neutral-900 mb-4">邮件模板</h3>
+                  <h3 className="text-lg font-semibold text-neutral-900 mb-4">
+                    邮件模板
+                  </h3>
                   <div className="space-y-4">
-                    {Object.entries(settings.email.templates).map(([key, template]: [string, any]) => (
-                      <div key={key} className="border border-neutral-200 rounded-lg p-4">
-                        <div className="flex items-center justify-between mb-3">
-                          <label className="flex items-center gap-2">
-                            <input
-                              type="checkbox"
-                              checked={template.enabled}
-                              onChange={(e) => {
-                                const newTemplates = { ...settings.email.templates };
-                                newTemplates[key].enabled = e.target.checked;
-                                updateEmail('templates', newTemplates);
-                              }}
-                              className="rounded border-neutral-300"
-                            />
-                            <span className="font-medium text-neutral-900">
-                              {key === 'new_consultation' && '新咨询请求'}
-                              {key === 'consultation_confirmed' && '咨询已确认'}
-                              {key === 'payment_received' && '付款成功'}
-                              {key === 'document_ready' && '文档已准备好'}
-                            </span>
-                          </label>
-                        </div>
-
-                        {template.enabled && (
-                          <div className="space-y-3">
-                            <div>
-                              <label className="block text-xs font-medium text-neutral-600 mb-1">
-                                邮件主题
-                              </label>
+                    {Object.entries(settings.email.templates).map(
+                      ([key, template]: [string, any]) => (
+                        <div
+                          key={key}
+                          className="border border-neutral-200 rounded-lg p-4"
+                        >
+                          <div className="flex items-center justify-between mb-3">
+                            <label className="flex items-center gap-2">
                               <input
-                                type="text"
-                                value={template.subject}
+                                type="checkbox"
+                                checked={template.enabled}
                                 onChange={(e) => {
-                                  const newTemplates = { ...settings.email.templates };
-                                  newTemplates[key].subject = e.target.value;
-                                  updateEmail('templates', newTemplates);
+                                  const newTemplates = {
+                                    ...settings.email.templates,
+                                  }
+                                  newTemplates[key].enabled = e.target.checked
+                                  updateEmail('templates', newTemplates)
                                 }}
-                                className="w-full px-3 py-2 text-sm border border-neutral-300 rounded-lg"
+                                className="rounded border-neutral-300"
                               />
-                            </div>
-
-                            <div>
-                              <label className="block text-xs font-medium text-neutral-600 mb-1">
-                                邮件内容
-                              </label>
-                              <textarea
-                                value={template.body}
-                                onChange={(e) => {
-                                  const newTemplates = { ...settings.email.templates };
-                                  newTemplates[key].body = e.target.value;
-                                  updateEmail('templates', newTemplates);
-                                }}
-                                rows={4}
-                                className="w-full px-3 py-2 text-sm border border-neutral-300 rounded-lg font-mono"
-                              />
-                              <p className="text-xs text-neutral-500 mt-1">
-                                可用变量：{'{{'} client_name {'}}'}, {'{{'} consultation_type {'}}'}, {'{{'} created_at {'}}'} 等
-                              </p>
-                            </div>
+                              <span className="font-medium text-neutral-900">
+                                {key === 'new_consultation' && '新咨询请求'}
+                                {key === 'consultation_confirmed' &&
+                                  '咨询已确认'}
+                                {key === 'payment_received' && '付款成功'}
+                                {key === 'document_ready' && '文档已准备好'}
+                              </span>
+                            </label>
                           </div>
-                        )}
-                      </div>
-                    ))}
+
+                          {template.enabled && (
+                            <div className="space-y-3">
+                              <div>
+                                <label className="block text-xs font-medium text-neutral-600 mb-1">
+                                  邮件主题
+                                </label>
+                                <input
+                                  type="text"
+                                  value={template.subject}
+                                  onChange={(e) => {
+                                    const newTemplates = {
+                                      ...settings.email.templates,
+                                    }
+                                    newTemplates[key].subject = e.target.value
+                                    updateEmail('templates', newTemplates)
+                                  }}
+                                  className="w-full px-3 py-2 text-sm border border-neutral-300 rounded-lg"
+                                />
+                              </div>
+
+                              <div>
+                                <label className="block text-xs font-medium text-neutral-600 mb-1">
+                                  邮件内容
+                                </label>
+                                <textarea
+                                  value={template.body}
+                                  onChange={(e) => {
+                                    const newTemplates = {
+                                      ...settings.email.templates,
+                                    }
+                                    newTemplates[key].body = e.target.value
+                                    updateEmail('templates', newTemplates)
+                                  }}
+                                  rows={4}
+                                  className="w-full px-3 py-2 text-sm border border-neutral-300 rounded-lg font-mono"
+                                />
+                                <p className="text-xs text-neutral-500 mt-1">
+                                  可用变量：{'{{'} client_name {'}}'}, {'{{'}{' '}
+                                  consultation_type {'}}'}, {'{{'} created_at{' '}
+                                  {'}}'} 等
+                                </p>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      ),
+                    )}
                   </div>
                 </div>
               </>
@@ -455,7 +520,9 @@ export default function NotificationsPage() {
                   onChange={(e) => updateSMS('enabled', e.target.checked)}
                   className="rounded border-neutral-300"
                 />
-                <span className="text-sm font-medium text-neutral-700">启用短信通知</span>
+                <span className="text-sm font-medium text-neutral-700">
+                  启用短信通知
+                </span>
               </label>
               {settings.sms.enabled && (
                 <button
@@ -472,7 +539,9 @@ export default function NotificationsPage() {
             {settings.sms.enabled && (
               <>
                 <div className="border-t border-neutral-200 pt-6">
-                  <h3 className="text-lg font-semibold text-neutral-900 mb-4">短信服务商配置</h3>
+                  <h3 className="text-lg font-semibold text-neutral-900 mb-4">
+                    短信服务商配置
+                  </h3>
                   <div className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-neutral-700 mb-2">
@@ -497,7 +566,13 @@ export default function NotificationsPage() {
                         <input
                           type="text"
                           value={settings.sms.config.account_sid}
-                          onChange={(e) => updateSMSNested('config', 'account_sid', e.target.value)}
+                          onChange={(e) =>
+                            updateSMSNested(
+                              'config',
+                              'account_sid',
+                              e.target.value,
+                            )
+                          }
                           className="w-full px-4 py-2 border border-neutral-300 rounded-lg"
                           placeholder="ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
                         />
@@ -510,7 +585,13 @@ export default function NotificationsPage() {
                         <input
                           type="password"
                           value={settings.sms.config.auth_token}
-                          onChange={(e) => updateSMSNested('config', 'auth_token', e.target.value)}
+                          onChange={(e) =>
+                            updateSMSNested(
+                              'config',
+                              'auth_token',
+                              e.target.value,
+                            )
+                          }
                           className="w-full px-4 py-2 border border-neutral-300 rounded-lg"
                           placeholder="••••••••"
                         />
@@ -523,7 +604,13 @@ export default function NotificationsPage() {
                         <input
                           type="text"
                           value={settings.sms.config.from_number}
-                          onChange={(e) => updateSMSNested('config', 'from_number', e.target.value)}
+                          onChange={(e) =>
+                            updateSMSNested(
+                              'config',
+                              'from_number',
+                              e.target.value,
+                            )
+                          }
                           className="w-full px-4 py-2 border border-neutral-300 rounded-lg"
                           placeholder="+1234567890"
                         />
@@ -533,51 +620,64 @@ export default function NotificationsPage() {
                 </div>
 
                 <div className="border-t border-neutral-200 pt-6">
-                  <h3 className="text-lg font-semibold text-neutral-900 mb-4">短信模板</h3>
+                  <h3 className="text-lg font-semibold text-neutral-900 mb-4">
+                    短信模板
+                  </h3>
                   <div className="space-y-4">
-                    {Object.entries(settings.sms.templates).map(([key, template]: [string, any]) => (
-                      <div key={key} className="border border-neutral-200 rounded-lg p-4">
-                        <div className="flex items-center justify-between mb-3">
-                          <label className="flex items-center gap-2">
-                            <input
-                              type="checkbox"
-                              checked={template.enabled}
-                              onChange={(e) => {
-                                const newTemplates = { ...settings.sms.templates };
-                                newTemplates[key].enabled = e.target.checked;
-                                updateSMS('templates', newTemplates);
-                              }}
-                              className="rounded border-neutral-300"
-                            />
-                            <span className="font-medium text-neutral-900">
-                              {key === 'consultation_reminder' && '咨询提醒'}
-                              {key === 'payment_confirmation' && '付款确认'}
-                            </span>
-                          </label>
-                        </div>
-
-                        {template.enabled && (
-                          <div>
-                            <label className="block text-xs font-medium text-neutral-600 mb-1">
-                              短信内容
+                    {Object.entries(settings.sms.templates).map(
+                      ([key, template]: [string, any]) => (
+                        <div
+                          key={key}
+                          className="border border-neutral-200 rounded-lg p-4"
+                        >
+                          <div className="flex items-center justify-between mb-3">
+                            <label className="flex items-center gap-2">
+                              <input
+                                type="checkbox"
+                                checked={template.enabled}
+                                onChange={(e) => {
+                                  const newTemplates = {
+                                    ...settings.sms.templates,
+                                  }
+                                  newTemplates[key].enabled = e.target.checked
+                                  updateSMS('templates', newTemplates)
+                                }}
+                                className="rounded border-neutral-300"
+                              />
+                              <span className="font-medium text-neutral-900">
+                                {key === 'consultation_reminder' && '咨询提醒'}
+                                {key === 'payment_confirmation' && '付款确认'}
+                              </span>
                             </label>
-                            <textarea
-                              value={template.content}
-                              onChange={(e) => {
-                                const newTemplates = { ...settings.sms.templates };
-                                newTemplates[key].content = e.target.value;
-                                updateSMS('templates', newTemplates);
-                              }}
-                              rows={3}
-                              className="w-full px-3 py-2 text-sm border border-neutral-300 rounded-lg"
-                            />
-                            <p className="text-xs text-neutral-500 mt-1">
-                              可用变量：{'{{'} time {'}}'}, {'{{'} lawyer_name {'}}'}, {'{{'} order_id {'}}'}, {'{{'} amount {'}}'} 等
-                            </p>
                           </div>
-                        )}
-                      </div>
-                    ))}
+
+                          {template.enabled && (
+                            <div>
+                              <label className="block text-xs font-medium text-neutral-600 mb-1">
+                                短信内容
+                              </label>
+                              <textarea
+                                value={template.content}
+                                onChange={(e) => {
+                                  const newTemplates = {
+                                    ...settings.sms.templates,
+                                  }
+                                  newTemplates[key].content = e.target.value
+                                  updateSMS('templates', newTemplates)
+                                }}
+                                rows={3}
+                                className="w-full px-3 py-2 text-sm border border-neutral-300 rounded-lg"
+                              />
+                              <p className="text-xs text-neutral-500 mt-1">
+                                可用变量：{'{{'} time {'}}'}, {'{{'} lawyer_name{' '}
+                                {'}}'}, {'{{'} order_id {'}}'}, {'{{'} amount{' '}
+                                {'}}'} 等
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      ),
+                    )}
                   </div>
                 </div>
               </>
@@ -589,16 +689,39 @@ export default function NotificationsPage() {
         {activeTab === 'recipients' && (
           <div className="space-y-6">
             {[
-              { key: 'admin_emails', label: '管理员邮箱', description: '接收所有通知' },
-              { key: 'consultation_emails', label: '咨询通知邮箱', description: '接收咨询相关通知' },
-              { key: 'payment_emails', label: '付款通知邮箱', description: '接收付款相关通知' },
-              { key: 'document_emails', label: '文档通知邮箱', description: '接收文档相关通知' },
+              {
+                key: 'admin_emails',
+                label: '管理员邮箱',
+                description: '接收所有通知',
+              },
+              {
+                key: 'consultation_emails',
+                label: '咨询通知邮箱',
+                description: '接收咨询相关通知',
+              },
+              {
+                key: 'payment_emails',
+                label: '付款通知邮箱',
+                description: '接收付款相关通知',
+              },
+              {
+                key: 'document_emails',
+                label: '文档通知邮箱',
+                description: '接收文档相关通知',
+              },
             ].map((item) => (
-              <div key={item.key} className="border border-neutral-200 rounded-lg p-4">
+              <div
+                key={item.key}
+                className="border border-neutral-200 rounded-lg p-4"
+              >
                 <div className="flex items-center justify-between mb-3">
                   <div>
-                    <h3 className="font-medium text-neutral-900">{item.label}</h3>
-                    <p className="text-sm text-neutral-600">{item.description}</p>
+                    <h3 className="font-medium text-neutral-900">
+                      {item.label}
+                    </h3>
+                    <p className="text-sm text-neutral-600">
+                      {item.description}
+                    </p>
                   </div>
                   <button
                     onClick={() => addRecipient(item.key)}
@@ -610,24 +733,28 @@ export default function NotificationsPage() {
                 </div>
 
                 <div className="space-y-2">
-                  {settings.recipients[item.key].map((email: string, index: number) => (
-                    <div key={index} className="flex items-center gap-2">
-                      <input
-                        type="email"
-                        value={email}
-                        readOnly
-                        className="flex-1 px-3 py-2 text-sm border border-neutral-300 rounded-lg bg-neutral-50"
-                      />
-                      <button
-                        onClick={() => removeRecipient(item.key, index)}
-                        className="text-red-600 hover:text-red-700"
-                      >
-                        <X className="h-5 w-5" />
-                      </button>
-                    </div>
-                  ))}
+                  {settings.recipients[item.key].map(
+                    (email: string, index: number) => (
+                      <div key={index} className="flex items-center gap-2">
+                        <input
+                          type="email"
+                          value={email}
+                          readOnly
+                          className="flex-1 px-3 py-2 text-sm border border-neutral-300 rounded-lg bg-neutral-50"
+                        />
+                        <button
+                          onClick={() => removeRecipient(item.key, index)}
+                          className="text-red-600 hover:text-red-700"
+                        >
+                          <X className="h-5 w-5" />
+                        </button>
+                      </div>
+                    ),
+                  )}
                   {settings.recipients[item.key].length === 0 && (
-                    <p className="text-sm text-neutral-500 italic">暂无接收人</p>
+                    <p className="text-sm text-neutral-500 italic">
+                      暂无接收人
+                    </p>
                   )}
                 </div>
               </div>
@@ -639,25 +766,64 @@ export default function NotificationsPage() {
         {activeTab === 'triggers' && (
           <div className="space-y-4">
             {[
-              { key: 'new_consultation', label: '新咨询请求', fields: ['notify_admin', 'notify_lawyer', 'notify_client'] },
-              { key: 'consultation_confirmed', label: '咨询已确认', fields: ['notify_client', 'notify_lawyer'] },
-              { key: 'consultation_cancelled', label: '咨询已取消', fields: ['notify_all'] },
-              { key: 'payment_received', label: '付款成功', fields: ['notify_admin', 'notify_client'] },
-              { key: 'payment_failed', label: '付款失败', fields: ['notify_admin', 'notify_client'] },
-              { key: 'document_uploaded', label: '文档已上传', fields: ['notify_admin', 'notify_lawyer'] },
-              { key: 'document_ready', label: '文档已准备好', fields: ['notify_client'] },
-              { key: 'new_user_registered', label: '新用户注册', fields: ['notify_admin'] },
+              {
+                key: 'new_consultation',
+                label: '新咨询请求',
+                fields: ['notify_admin', 'notify_lawyer', 'notify_client'],
+              },
+              {
+                key: 'consultation_confirmed',
+                label: '咨询已确认',
+                fields: ['notify_client', 'notify_lawyer'],
+              },
+              {
+                key: 'consultation_cancelled',
+                label: '咨询已取消',
+                fields: ['notify_all'],
+              },
+              {
+                key: 'payment_received',
+                label: '付款成功',
+                fields: ['notify_admin', 'notify_client'],
+              },
+              {
+                key: 'payment_failed',
+                label: '付款失败',
+                fields: ['notify_admin', 'notify_client'],
+              },
+              {
+                key: 'document_uploaded',
+                label: '文档已上传',
+                fields: ['notify_admin', 'notify_lawyer'],
+              },
+              {
+                key: 'document_ready',
+                label: '文档已准备好',
+                fields: ['notify_client'],
+              },
+              {
+                key: 'new_user_registered',
+                label: '新用户注册',
+                fields: ['notify_admin'],
+              },
             ].map((item) => (
-              <div key={item.key} className="border border-neutral-200 rounded-lg p-4">
+              <div
+                key={item.key}
+                className="border border-neutral-200 rounded-lg p-4"
+              >
                 <div className="flex items-center justify-between mb-3">
                   <label className="flex items-center gap-2">
                     <input
                       type="checkbox"
                       checked={settings.triggers[item.key].enabled}
-                      onChange={(e) => updateTrigger(item.key, 'enabled', e.target.checked)}
+                      onChange={(e) =>
+                        updateTrigger(item.key, 'enabled', e.target.checked)
+                      }
                       className="rounded border-neutral-300"
                     />
-                    <span className="font-medium text-neutral-900">{item.label}</span>
+                    <span className="font-medium text-neutral-900">
+                      {item.label}
+                    </span>
                   </label>
                 </div>
 
@@ -668,7 +834,9 @@ export default function NotificationsPage() {
                         <input
                           type="checkbox"
                           checked={settings.triggers[item.key][field]}
-                          onChange={(e) => updateTrigger(item.key, field, e.target.checked)}
+                          onChange={(e) =>
+                            updateTrigger(item.key, field, e.target.checked)
+                          }
                           className="rounded border-neutral-300"
                         />
                         <span className="text-sm text-neutral-700">
@@ -702,5 +870,5 @@ export default function NotificationsPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }

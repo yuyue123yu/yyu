@@ -1,12 +1,12 @@
-'use client';
+'use client'
 
-import { useEffect, useState } from 'react';
-import { withSuperAdminAuth } from '@/lib/auth/withSuperAdminAuth';
-import SuperAdminLayout from '@/components/super-admin/SuperAdminLayout';
-import AnalyticsChart from '@/components/super-admin/AnalyticsChart';
-import AnalyticsMetricsCard from '@/components/super-admin/AnalyticsMetricsCard';
-import TenantComparisonTable from '@/components/super-admin/TenantComparisonTable';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useEffect, useState } from 'react'
+import { withSuperAdminAuth } from '@/lib/auth/withSuperAdminAuth'
+import SuperAdminLayout from '@/components/super-admin/SuperAdminLayout'
+import AnalyticsChart from '@/components/super-admin/AnalyticsChart'
+import AnalyticsMetricsCard from '@/components/super-admin/AnalyticsMetricsCard'
+import TenantComparisonTable from '@/components/super-admin/TenantComparisonTable'
+import { useLanguage } from '@/contexts/LanguageContext'
 import {
   ChartBarIcon,
   UsersIcon,
@@ -15,56 +15,56 @@ import {
   BriefcaseIcon,
   ArrowDownTrayIcon,
   CalendarIcon,
-} from '@heroicons/react/24/outline';
+} from '@heroicons/react/24/outline'
 
 interface SystemMetrics {
-  totalUsers: number;
-  totalConsultations: number;
-  totalRevenue: number;
-  activeLawyers: number;
-  userGrowth: number;
-  consultationGrowth: number;
-  revenueGrowth: number;
-  lawyerGrowth: number;
+  totalUsers: number
+  totalConsultations: number
+  totalRevenue: number
+  activeLawyers: number
+  userGrowth: number
+  consultationGrowth: number
+  revenueGrowth: number
+  lawyerGrowth: number
 }
 
 interface TenantMetrics {
-  tenantId: string;
-  tenantName: string;
-  userCount: number;
-  consultationCount: number;
-  revenue: number;
-  activeLawyers: number;
+  tenantId: string
+  tenantName: string
+  userCount: number
+  consultationCount: number
+  revenue: number
+  activeLawyers: number
 }
 
 interface TrendData {
-  date: string;
-  users: number;
-  consultations: number;
-  revenue: number;
+  date: string
+  users: number
+  consultations: number
+  revenue: number
 }
 
-type DateRange = 'daily' | 'weekly' | 'monthly';
-type ChartType = 'line' | 'bar';
-type MetricType = 'users' | 'consultations' | 'revenue' | 'all';
+type DateRange = 'daily' | 'weekly' | 'monthly'
+type ChartType = 'line' | 'bar'
+type MetricType = 'users' | 'consultations' | 'revenue' | 'all'
 
 function AnalyticsPage() {
-  const [systemMetrics, setSystemMetrics] = useState<SystemMetrics | null>(null);
-  const [tenantMetrics, setTenantMetrics] = useState<TenantMetrics[]>([]);
-  const [trendData, setTrendData] = useState<TrendData[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [dateRange, setDateRange] = useState<DateRange>('monthly');
-  const [selectedTenant, setSelectedTenant] = useState<string>('all');
-  const [chartType, setChartType] = useState<ChartType>('line');
-  const [selectedMetric, setSelectedMetric] = useState<MetricType>('all');
-  const { t } = useLanguage();
+  const [systemMetrics, setSystemMetrics] = useState<SystemMetrics | null>(null)
+  const [tenantMetrics, setTenantMetrics] = useState<TenantMetrics[]>([])
+  const [trendData, setTrendData] = useState<TrendData[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [dateRange, setDateRange] = useState<DateRange>('monthly')
+  const [selectedTenant, setSelectedTenant] = useState<string>('all')
+  const [chartType, setChartType] = useState<ChartType>('line')
+  const [selectedMetric, setSelectedMetric] = useState<MetricType>('all')
+  const { t } = useLanguage()
 
   useEffect(() => {
-    fetchAnalyticsData();
-  }, [dateRange, selectedTenant]);
+    fetchAnalyticsData()
+  }, [dateRange, selectedTenant])
 
   const fetchAnalyticsData = async () => {
-    setIsLoading(true);
+    setIsLoading(true)
     try {
       // TODO: Replace with actual API calls
       // Placeholder data for now
@@ -77,7 +77,7 @@ function AnalyticsPage() {
         consultationGrowth: 8.3,
         revenueGrowth: 15.7,
         lawyerGrowth: 5.2,
-      });
+      })
 
       setTenantMetrics([
         {
@@ -104,54 +104,54 @@ function AnalyticsPage() {
           revenue: 310000,
           activeLawyers: 30,
         },
-      ]);
+      ])
 
       // Generate sample trend data
-      const trends: TrendData[] = [];
-      const days = dateRange === 'daily' ? 7 : dateRange === 'weekly' ? 12 : 12;
+      const trends: TrendData[] = []
+      const days = dateRange === 'daily' ? 7 : dateRange === 'weekly' ? 12 : 12
       for (let i = days - 1; i >= 0; i--) {
-        const date = new Date();
-        date.setDate(date.getDate() - i);
+        const date = new Date()
+        date.setDate(date.getDate() - i)
         trends.push({
           date: date.toISOString().split('T')[0],
           users: Math.floor(Math.random() * 100) + 50,
           consultations: Math.floor(Math.random() * 200) + 100,
           revenue: Math.floor(Math.random() * 50000) + 20000,
-        });
+        })
       }
-      setTrendData(trends);
+      setTrendData(trends)
     } catch (error) {
-      console.error('Error fetching analytics data:', error);
+      console.error('Error fetching analytics data:', error)
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   const handleExport = async (format: 'csv' | 'pdf') => {
     try {
       const response = await fetch(
         `/api/super-admin/analytics/export?format=${format}&dateRange=${dateRange}&tenant=${selectedTenant}`,
-        { method: 'POST' }
-      );
+        { method: 'POST' },
+      )
 
       if (response.ok) {
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `analytics-${Date.now()}.${format}`;
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(a);
+        const blob = await response.blob()
+        const url = window.URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = `analytics-${Date.now()}.${format}`
+        document.body.appendChild(a)
+        a.click()
+        window.URL.revokeObjectURL(url)
+        document.body.removeChild(a)
       } else {
-        alert('导出失败，请稍后重试');
+        alert('导出失败，请稍后重试')
       }
     } catch (error) {
-      console.error('Error exporting analytics:', error);
-      alert('导出失败，请稍后重试');
+      console.error('Error exporting analytics:', error)
+      alert('导出失败，请稍后重试')
     }
-  };
+  }
 
   if (isLoading) {
     return (
@@ -160,7 +160,7 @@ function AnalyticsPage() {
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div>
         </div>
       </SuperAdminLayout>
-    );
+    )
   }
 
   return (
@@ -182,7 +182,9 @@ function AnalyticsPage() {
               className="flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors whitespace-nowrap"
             >
               <ArrowDownTrayIcon className="w-5 h-5 mr-2 text-gray-600" />
-              <span className="text-sm font-medium text-gray-700">导出 CSV</span>
+              <span className="text-sm font-medium text-gray-700">
+                导出 CSV
+              </span>
             </button>
             <button
               onClick={() => handleExport('pdf')}
@@ -199,7 +201,9 @@ function AnalyticsPage() {
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-2">
               <CalendarIcon className="w-5 h-5 text-gray-500" />
-              <span className="text-sm font-medium text-gray-700">时间范围:</span>
+              <span className="text-sm font-medium text-gray-700">
+                时间范围:
+              </span>
             </div>
             <div className="flex space-x-2">
               {(['daily', 'weekly', 'monthly'] as DateRange[]).map((range) => (
@@ -212,7 +216,11 @@ function AnalyticsPage() {
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
-                  {range === 'daily' ? '每日' : range === 'weekly' ? '每周' : '每月'}
+                  {range === 'daily'
+                    ? '每日'
+                    : range === 'weekly'
+                      ? '每周'
+                      : '每月'}
                 </button>
               ))}
             </div>
@@ -243,7 +251,7 @@ function AnalyticsPage() {
             iconBgColor="bg-blue-100"
             iconColor="text-blue-600"
           />
-          
+
           <AnalyticsMetricsCard
             title="总咨询数"
             value={systemMetrics?.totalConsultations || 0}
@@ -252,7 +260,7 @@ function AnalyticsPage() {
             iconBgColor="bg-green-100"
             iconColor="text-green-600"
           />
-          
+
           <AnalyticsMetricsCard
             title="总收入"
             value={systemMetrics?.totalRevenue || 0}
@@ -262,7 +270,7 @@ function AnalyticsPage() {
             iconColor="text-purple-600"
             formatValue={(value) => `¥${(value as number).toLocaleString()}`}
           />
-          
+
           <AnalyticsMetricsCard
             title="活跃律师"
             value={systemMetrics?.activeLawyers || 0}
@@ -301,11 +309,13 @@ function AnalyticsPage() {
                   柱状图
                 </button>
               </div>
-              
+
               {/* Metric Selector */}
               <select
                 value={selectedMetric}
-                onChange={(e) => setSelectedMetric(e.target.value as MetricType)}
+                onChange={(e) =>
+                  setSelectedMetric(e.target.value as MetricType)
+                }
                 className="px-3 py-1 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
               >
                 <option value="all">全部指标</option>
@@ -315,7 +325,7 @@ function AnalyticsPage() {
               </select>
             </div>
           </div>
-          
+
           <div className="h-80">
             <AnalyticsChart
               data={trendData}
@@ -329,7 +339,7 @@ function AnalyticsPage() {
         <TenantComparisonTable tenants={tenantMetrics} />
       </div>
     </SuperAdminLayout>
-  );
+  )
 }
 
-export default withSuperAdminAuth(AnalyticsPage);
+export default withSuperAdminAuth(AnalyticsPage)

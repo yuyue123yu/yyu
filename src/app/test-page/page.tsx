@@ -10,13 +10,15 @@ export default function TestPage() {
         </p>
         <div className="mt-6 space-y-2">
           <p className="text-sm text-gray-500">
-            <strong>Supabase URL:</strong> {process.env.NEXT_PUBLIC_SUPABASE_URL || 'Not set'}
+            <strong>Supabase URL:</strong>{' '}
+            {process.env.NEXT_PUBLIC_SUPABASE_URL || 'Not set'}
           </p>
           <p className="text-sm text-gray-500">
-            <strong>App URL:</strong> {process.env.NEXT_PUBLIC_APP_URL || 'Not set'}
+            <strong>App URL:</strong>{' '}
+            {process.env.NEXT_PUBLIC_APP_URL || 'Not set'}
           </p>
         </div>
       </div>
     </div>
-  );
+  )
 }

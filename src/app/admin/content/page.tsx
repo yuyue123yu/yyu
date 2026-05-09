@@ -1,85 +1,107 @@
-"use client";
+'use client'
 
-import { useState, useEffect } from "react";
-import { Save, FileText, Home, Info, HelpCircle, Mail, Plus, Trash2, Eye, EyeOff } from "lucide-react";
+import { useState, useEffect } from 'react'
+import {
+  Save,
+  FileText,
+  Home,
+  Info,
+  HelpCircle,
+  Mail,
+  Plus,
+  Trash2,
+  Eye,
+  EyeOff,
+} from 'lucide-react'
 
 interface ContentSettings {
-  hero: any;
-  services: any;
-  about: any;
-  faq: any;
-  footer: any;
+  hero: any
+  services: any
+  about: any
+  faq: any
+  footer: any
 }
 
 export default function ContentPage() {
-  const [settings, setSettings] = useState<ContentSettings | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [activeTab, setActiveTab] = useState<'hero' | 'services' | 'about' | 'faq' | 'footer'>('hero');
-  const [previewMode, setPreviewMode] = useState(false);
+  const [settings, setSettings] = useState<ContentSettings | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [activeTab, setActiveTab] = useState<
+    'hero' | 'services' | 'about' | 'faq' | 'footer'
+  >('hero')
+  const [previewMode, setPreviewMode] = useState(false)
 
   useEffect(() => {
-    loadSettings();
-  }, []);
+    loadSettings()
+  }, [])
 
   const loadSettings = async () => {
     try {
-      setLoading(true);
-      const response = await fetch('/api/tenant/content');
-      const data = await response.json();
+      setLoading(true)
+      const response = await fetch('/api/tenant/content')
+      const data = await response.json()
 
       if (data.success) {
-        setSettings(data.content);
+        setSettings(data.content)
       }
     } catch (error) {
-      console.error('Error loading settings:', error);
-      alert('加载设置失败');
+      console.error('Error loading settings:', error)
+      alert('加载设置失败')
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const handleSave = async () => {
-    if (!settings) return;
+    if (!settings) return
 
     try {
-      setSaving(true);
+      setSaving(true)
       const response = await fetch('/api/tenant/content', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(settings),
-      });
+      })
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (data.success) {
-        alert('内容已保存！');
+        alert('内容已保存！')
       } else {
-        alert(data.error || '保存失败');
+        alert(data.error || '保存失败')
       }
     } catch (error) {
-      console.error('Error saving settings:', error);
-      alert('保存失败，请重试');
+      console.error('Error saving settings:', error)
+      alert('保存失败，请重试')
     } finally {
-      setSaving(false);
+      setSaving(false)
     }
-  };
+  }
 
-  const updateSection = (section: keyof ContentSettings, field: string, value: any) => {
-    if (!settings) return;
+  const updateSection = (
+    section: keyof ContentSettings,
+    field: string,
+    value: any,
+  ) => {
+    if (!settings) return
     setSettings({
       ...settings,
       [section]: {
         ...settings[section],
         [field]: value,
       },
-    });
-  };
+    })
+  }
 
-  const updateNestedField = (section: keyof ContentSettings, parent: string, field: string, value: any) => {
-    if (!settings) return;
+  const updateNestedField = (
+    section: keyof ContentSettings,
+    parent: string,
+    field: string,
+    value: any,
+  ) => {
+    if (!settings) return
     setSettings({
       ...settings,
       [section]: {
@@ -89,48 +111,62 @@ export default function ContentPage() {
           [field]: value,
         },
       },
-    });
-  };
+    })
+  }
 
-  const addArrayItem = (section: keyof ContentSettings, field: string, defaultItem: any) => {
-    if (!settings) return;
+  const addArrayItem = (
+    section: keyof ContentSettings,
+    field: string,
+    defaultItem: any,
+  ) => {
+    if (!settings) return
     setSettings({
       ...settings,
       [section]: {
         ...settings[section],
         [field]: [...settings[section][field], defaultItem],
       },
-    });
-  };
+    })
+  }
 
-  const removeArrayItem = (section: keyof ContentSettings, field: string, index: number) => {
-    if (!settings) return;
-    const newArray = [...settings[section][field]];
-    newArray.splice(index, 1);
+  const removeArrayItem = (
+    section: keyof ContentSettings,
+    field: string,
+    index: number,
+  ) => {
+    if (!settings) return
+    const newArray = [...settings[section][field]]
+    newArray.splice(index, 1)
     setSettings({
       ...settings,
       [section]: {
         ...settings[section],
         [field]: newArray,
       },
-    });
-  };
+    })
+  }
 
-  const updateArrayItem = (section: keyof ContentSettings, field: string, index: number, itemField: string, value: any) => {
-    if (!settings) return;
-    const newArray = [...settings[section][field]];
+  const updateArrayItem = (
+    section: keyof ContentSettings,
+    field: string,
+    index: number,
+    itemField: string,
+    value: any,
+  ) => {
+    if (!settings) return
+    const newArray = [...settings[section][field]]
     newArray[index] = {
       ...newArray[index],
       [itemField]: value,
-    };
+    }
     setSettings({
       ...settings,
       [section]: {
         ...settings[section],
         [field]: newArray,
       },
-    });
-  };
+    })
+  }
 
   if (loading || !settings) {
     return (
@@ -140,7 +176,7 @@ export default function ContentPage() {
           <p className="mt-4 text-neutral-600">加载中...</p>
         </div>
       </div>
-    );
+    )
   }
 
   const tabs = [
@@ -149,7 +185,7 @@ export default function ContentPage() {
     { id: 'about', label: '关于我们', icon: Info },
     { id: 'faq', label: '常见问题', icon: HelpCircle },
     { id: 'footer', label: '页脚内容', icon: Mail },
-  ];
+  ]
 
   return (
     <div>
@@ -164,7 +200,11 @@ export default function ContentPage() {
             onClick={() => setPreviewMode(!previewMode)}
             className="flex items-center gap-2 px-4 py-2 border border-neutral-300 hover:bg-neutral-50 text-neutral-700 rounded-lg font-medium transition-all"
           >
-            {previewMode ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+            {previewMode ? (
+              <EyeOff className="h-5 w-5" />
+            ) : (
+              <Eye className="h-5 w-5" />
+            )}
             {previewMode ? '编辑模式' : '预览模式'}
           </button>
           <button
@@ -223,7 +263,9 @@ export default function ContentPage() {
               <input
                 type="text"
                 value={settings.hero.subtitle}
-                onChange={(e) => updateSection('hero', 'subtitle', e.target.value)}
+                onChange={(e) =>
+                  updateSection('hero', 'subtitle', e.target.value)
+                }
                 className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 placeholder="为您提供全方位的法律支持与解决方案"
               />
@@ -235,7 +277,9 @@ export default function ContentPage() {
               </label>
               <textarea
                 value={settings.hero.description}
-                onChange={(e) => updateSection('hero', 'description', e.target.value)}
+                onChange={(e) =>
+                  updateSection('hero', 'description', e.target.value)
+                }
                 rows={4}
                 className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 placeholder="详细介绍您的服务..."
@@ -250,7 +294,9 @@ export default function ContentPage() {
                 <input
                   type="text"
                   value={settings.hero.cta_text}
-                  onChange={(e) => updateSection('hero', 'cta_text', e.target.value)}
+                  onChange={(e) =>
+                    updateSection('hero', 'cta_text', e.target.value)
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   placeholder="立即咨询"
                 />
@@ -263,7 +309,9 @@ export default function ContentPage() {
                 <input
                   type="text"
                   value={settings.hero.cta_link}
-                  onChange={(e) => updateSection('hero', 'cta_link', e.target.value)}
+                  onChange={(e) =>
+                    updateSection('hero', 'cta_link', e.target.value)
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   placeholder="/consultations"
                 />
@@ -277,7 +325,9 @@ export default function ContentPage() {
               <input
                 type="text"
                 value={settings.hero.background_image}
-                onChange={(e) => updateSection('hero', 'background_image', e.target.value)}
+                onChange={(e) =>
+                  updateSection('hero', 'background_image', e.target.value)
+                }
                 className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 placeholder="https://example.com/image.jpg"
               />
@@ -295,7 +345,9 @@ export default function ContentPage() {
               <input
                 type="text"
                 value={settings.services.title}
-                onChange={(e) => updateSection('services', 'title', e.target.value)}
+                onChange={(e) =>
+                  updateSection('services', 'title', e.target.value)
+                }
                 className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               />
             </div>
@@ -307,7 +359,9 @@ export default function ContentPage() {
               <input
                 type="text"
                 value={settings.services.subtitle}
-                onChange={(e) => updateSection('services', 'subtitle', e.target.value)}
+                onChange={(e) =>
+                  updateSection('services', 'subtitle', e.target.value)
+                }
                 className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               />
             </div>
@@ -318,11 +372,13 @@ export default function ContentPage() {
                   服务项目
                 </label>
                 <button
-                  onClick={() => addArrayItem('services', 'items', {
-                    title: '新服务',
-                    description: '服务描述',
-                    icon: 'FileText',
-                  })}
+                  onClick={() =>
+                    addArrayItem('services', 'items', {
+                      title: '新服务',
+                      description: '服务描述',
+                      icon: 'FileText',
+                    })
+                  }
                   className="flex items-center gap-2 px-3 py-1 text-sm bg-primary-600 hover:bg-primary-700 text-white rounded-lg"
                 >
                   <Plus className="h-4 w-4" />
@@ -332,11 +388,18 @@ export default function ContentPage() {
 
               <div className="space-y-4">
                 {settings.services.items.map((item: any, index: number) => (
-                  <div key={index} className="border border-neutral-200 rounded-lg p-4">
+                  <div
+                    key={index}
+                    className="border border-neutral-200 rounded-lg p-4"
+                  >
                     <div className="flex items-start justify-between mb-3">
-                      <h4 className="font-medium text-neutral-900">服务 {index + 1}</h4>
+                      <h4 className="font-medium text-neutral-900">
+                        服务 {index + 1}
+                      </h4>
                       <button
-                        onClick={() => removeArrayItem('services', 'items', index)}
+                        onClick={() =>
+                          removeArrayItem('services', 'items', index)
+                        }
                         className="text-red-600 hover:text-red-700"
                       >
                         <Trash2 className="h-4 w-4" />
@@ -347,13 +410,29 @@ export default function ContentPage() {
                       <input
                         type="text"
                         value={item.title}
-                        onChange={(e) => updateArrayItem('services', 'items', index, 'title', e.target.value)}
+                        onChange={(e) =>
+                          updateArrayItem(
+                            'services',
+                            'items',
+                            index,
+                            'title',
+                            e.target.value,
+                          )
+                        }
                         className="w-full px-3 py-2 text-sm border border-neutral-300 rounded-lg"
                         placeholder="服务标题"
                       />
                       <textarea
                         value={item.description}
-                        onChange={(e) => updateArrayItem('services', 'items', index, 'description', e.target.value)}
+                        onChange={(e) =>
+                          updateArrayItem(
+                            'services',
+                            'items',
+                            index,
+                            'description',
+                            e.target.value,
+                          )
+                        }
                         rows={2}
                         className="w-full px-3 py-2 text-sm border border-neutral-300 rounded-lg"
                         placeholder="服务描述"
@@ -361,7 +440,15 @@ export default function ContentPage() {
                       <input
                         type="text"
                         value={item.icon}
-                        onChange={(e) => updateArrayItem('services', 'items', index, 'icon', e.target.value)}
+                        onChange={(e) =>
+                          updateArrayItem(
+                            'services',
+                            'items',
+                            index,
+                            'icon',
+                            e.target.value,
+                          )
+                        }
                         className="w-full px-3 py-2 text-sm border border-neutral-300 rounded-lg"
                         placeholder="图标名称 (如: MessageSquare)"
                       />
@@ -383,7 +470,9 @@ export default function ContentPage() {
               <input
                 type="text"
                 value={settings.about.title}
-                onChange={(e) => updateSection('about', 'title', e.target.value)}
+                onChange={(e) =>
+                  updateSection('about', 'title', e.target.value)
+                }
                 className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               />
             </div>
@@ -395,7 +484,9 @@ export default function ContentPage() {
               <input
                 type="text"
                 value={settings.about.subtitle}
-                onChange={(e) => updateSection('about', 'subtitle', e.target.value)}
+                onChange={(e) =>
+                  updateSection('about', 'subtitle', e.target.value)
+                }
                 className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               />
             </div>
@@ -406,7 +497,9 @@ export default function ContentPage() {
               </label>
               <textarea
                 value={settings.about.content}
-                onChange={(e) => updateSection('about', 'content', e.target.value)}
+                onChange={(e) =>
+                  updateSection('about', 'content', e.target.value)
+                }
                 rows={6}
                 className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               />
@@ -420,7 +513,9 @@ export default function ContentPage() {
                 <input
                   type="text"
                   value={settings.about.mission}
-                  onChange={(e) => updateSection('about', 'mission', e.target.value)}
+                  onChange={(e) =>
+                    updateSection('about', 'mission', e.target.value)
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 />
               </div>
@@ -432,7 +527,9 @@ export default function ContentPage() {
                 <input
                   type="text"
                   value={settings.about.vision}
-                  onChange={(e) => updateSection('about', 'vision', e.target.value)}
+                  onChange={(e) =>
+                    updateSection('about', 'vision', e.target.value)
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 />
               </div>
@@ -446,7 +543,9 @@ export default function ContentPage() {
                 <input
                   type="text"
                   value={settings.about.team_size}
-                  onChange={(e) => updateSection('about', 'team_size', e.target.value)}
+                  onChange={(e) =>
+                    updateSection('about', 'team_size', e.target.value)
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   placeholder="20+"
                 />
@@ -459,7 +558,9 @@ export default function ContentPage() {
                 <input
                   type="text"
                   value={settings.about.years_experience}
-                  onChange={(e) => updateSection('about', 'years_experience', e.target.value)}
+                  onChange={(e) =>
+                    updateSection('about', 'years_experience', e.target.value)
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   placeholder="10+"
                 />
@@ -472,7 +573,9 @@ export default function ContentPage() {
                 <input
                   type="text"
                   value={settings.about.cases_handled}
-                  onChange={(e) => updateSection('about', 'cases_handled', e.target.value)}
+                  onChange={(e) =>
+                    updateSection('about', 'cases_handled', e.target.value)
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   placeholder="1000+"
                 />
@@ -485,7 +588,13 @@ export default function ContentPage() {
                 <input
                   type="text"
                   value={settings.about.client_satisfaction}
-                  onChange={(e) => updateSection('about', 'client_satisfaction', e.target.value)}
+                  onChange={(e) =>
+                    updateSection(
+                      'about',
+                      'client_satisfaction',
+                      e.target.value,
+                    )
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   placeholder="98%"
                 />
@@ -516,7 +625,9 @@ export default function ContentPage() {
               <input
                 type="text"
                 value={settings.faq.subtitle}
-                onChange={(e) => updateSection('faq', 'subtitle', e.target.value)}
+                onChange={(e) =>
+                  updateSection('faq', 'subtitle', e.target.value)
+                }
                 className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               />
             </div>
@@ -527,10 +638,12 @@ export default function ContentPage() {
                   问题列表
                 </label>
                 <button
-                  onClick={() => addArrayItem('faq', 'items', {
-                    question: '新问题',
-                    answer: '答案',
-                  })}
+                  onClick={() =>
+                    addArrayItem('faq', 'items', {
+                      question: '新问题',
+                      answer: '答案',
+                    })
+                  }
                   className="flex items-center gap-2 px-3 py-1 text-sm bg-primary-600 hover:bg-primary-700 text-white rounded-lg"
                 >
                   <Plus className="h-4 w-4" />
@@ -540,9 +653,14 @@ export default function ContentPage() {
 
               <div className="space-y-4">
                 {settings.faq.items.map((item: any, index: number) => (
-                  <div key={index} className="border border-neutral-200 rounded-lg p-4">
+                  <div
+                    key={index}
+                    className="border border-neutral-200 rounded-lg p-4"
+                  >
                     <div className="flex items-start justify-between mb-3">
-                      <h4 className="font-medium text-neutral-900">问题 {index + 1}</h4>
+                      <h4 className="font-medium text-neutral-900">
+                        问题 {index + 1}
+                      </h4>
                       <button
                         onClick={() => removeArrayItem('faq', 'items', index)}
                         className="text-red-600 hover:text-red-700"
@@ -555,13 +673,29 @@ export default function ContentPage() {
                       <input
                         type="text"
                         value={item.question}
-                        onChange={(e) => updateArrayItem('faq', 'items', index, 'question', e.target.value)}
+                        onChange={(e) =>
+                          updateArrayItem(
+                            'faq',
+                            'items',
+                            index,
+                            'question',
+                            e.target.value,
+                          )
+                        }
                         className="w-full px-3 py-2 text-sm border border-neutral-300 rounded-lg"
                         placeholder="问题"
                       />
                       <textarea
                         value={item.answer}
-                        onChange={(e) => updateArrayItem('faq', 'items', index, 'answer', e.target.value)}
+                        onChange={(e) =>
+                          updateArrayItem(
+                            'faq',
+                            'items',
+                            index,
+                            'answer',
+                            e.target.value,
+                          )
+                        }
                         rows={3}
                         className="w-full px-3 py-2 text-sm border border-neutral-300 rounded-lg"
                         placeholder="答案"
@@ -583,14 +717,18 @@ export default function ContentPage() {
               </label>
               <textarea
                 value={settings.footer.company_description}
-                onChange={(e) => updateSection('footer', 'company_description', e.target.value)}
+                onChange={(e) =>
+                  updateSection('footer', 'company_description', e.target.value)
+                }
                 rows={3}
                 className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               />
             </div>
 
             <div className="border-t border-neutral-200 pt-6">
-              <h3 className="text-lg font-semibold text-neutral-900 mb-4">联系信息</h3>
+              <h3 className="text-lg font-semibold text-neutral-900 mb-4">
+                联系信息
+              </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-neutral-700 mb-2">
@@ -599,7 +737,14 @@ export default function ContentPage() {
                   <input
                     type="text"
                     value={settings.footer.contact.address}
-                    onChange={(e) => updateNestedField('footer', 'contact', 'address', e.target.value)}
+                    onChange={(e) =>
+                      updateNestedField(
+                        'footer',
+                        'contact',
+                        'address',
+                        e.target.value,
+                      )
+                    }
                     className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   />
                 </div>
@@ -611,7 +756,14 @@ export default function ContentPage() {
                   <input
                     type="text"
                     value={settings.footer.contact.phone}
-                    onChange={(e) => updateNestedField('footer', 'contact', 'phone', e.target.value)}
+                    onChange={(e) =>
+                      updateNestedField(
+                        'footer',
+                        'contact',
+                        'phone',
+                        e.target.value,
+                      )
+                    }
                     className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   />
                 </div>
@@ -623,7 +775,14 @@ export default function ContentPage() {
                   <input
                     type="email"
                     value={settings.footer.contact.email}
-                    onChange={(e) => updateNestedField('footer', 'contact', 'email', e.target.value)}
+                    onChange={(e) =>
+                      updateNestedField(
+                        'footer',
+                        'contact',
+                        'email',
+                        e.target.value,
+                      )
+                    }
                     className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   />
                 </div>
@@ -635,7 +794,14 @@ export default function ContentPage() {
                   <input
                     type="text"
                     value={settings.footer.contact.business_hours}
-                    onChange={(e) => updateNestedField('footer', 'contact', 'business_hours', e.target.value)}
+                    onChange={(e) =>
+                      updateNestedField(
+                        'footer',
+                        'contact',
+                        'business_hours',
+                        e.target.value,
+                      )
+                    }
                     className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   />
                 </div>
@@ -649,7 +815,9 @@ export default function ContentPage() {
               <input
                 type="text"
                 value={settings.footer.copyright}
-                onChange={(e) => updateSection('footer', 'copyright', e.target.value)}
+                onChange={(e) =>
+                  updateSection('footer', 'copyright', e.target.value)
+                }
                 className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               />
             </div>
@@ -659,10 +827,18 @@ export default function ContentPage() {
                 <input
                   type="checkbox"
                   checked={settings.footer.show_social_links}
-                  onChange={(e) => updateSection('footer', 'show_social_links', e.target.checked)}
+                  onChange={(e) =>
+                    updateSection(
+                      'footer',
+                      'show_social_links',
+                      e.target.checked,
+                    )
+                  }
                   className="rounded border-neutral-300"
                 />
-                <span className="text-sm font-medium text-neutral-700">显示社交媒体链接</span>
+                <span className="text-sm font-medium text-neutral-700">
+                  显示社交媒体链接
+                </span>
               </label>
             </div>
           </div>
@@ -683,5 +859,5 @@ export default function ContentPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }

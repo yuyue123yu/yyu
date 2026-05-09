@@ -1,7 +1,7 @@
-'use client';
+'use client'
 
-import { useState, useEffect } from 'react';
-import T from '@/components/super-admin/T';
+import { useState, useEffect } from 'react'
+import T from '@/components/super-admin/T'
 import {
   PaintBrushIcon,
   PhotoIcon,
@@ -9,13 +9,13 @@ import {
   PhoneIcon,
   GlobeAltIcon,
   EyeIcon,
-} from '@heroicons/react/24/outline';
+} from '@heroicons/react/24/outline'
 
 interface OEMConfigFormProps {
-  settings: Record<string, any>;
-  onSave: (settings: Record<string, any>) => void;
-  isSaving: boolean;
-  tenantSubdomain: string;
+  settings: Record<string, any>
+  onSave: (settings: Record<string, any>) => void
+  isSaving: boolean
+  tenantSubdomain: string
 }
 
 export default function OEMConfigForm({
@@ -30,24 +30,24 @@ export default function OEMConfigForm({
     secondary_color: settings.secondary_color || '#DC2626',
     logo_url: settings.logo_url || '',
     company_name: settings.company_name || '',
-    
+
     // Contact
     support_email: settings.support_email || '',
     support_phone: settings.support_phone || '',
     website_url: settings.website_url || '',
-    
+
     // Features
     enable_consultations: settings.enable_consultations !== false,
     enable_orders: settings.enable_orders !== false,
     enable_reviews: settings.enable_reviews !== false,
     enable_articles: settings.enable_articles !== false,
-    
+
     // Language
     default_language: settings.default_language || 'ms',
     supported_languages: settings.supported_languages || ['ms', 'en', 'zh'],
-  });
+  })
 
-  const [showPreview, setShowPreview] = useState(false);
+  const [showPreview, setShowPreview] = useState(false)
 
   useEffect(() => {
     setFormData({
@@ -64,17 +64,17 @@ export default function OEMConfigForm({
       enable_articles: settings.enable_articles !== false,
       default_language: settings.default_language || 'ms',
       supported_languages: settings.supported_languages || ['ms', 'en', 'zh'],
-    });
-  }, [settings]);
+    })
+  }, [settings])
 
   const updateField = (field: string, value: any) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
+    setFormData((prev) => ({ ...prev, [field]: value }))
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSave(formData);
-  };
+    e.preventDefault()
+    onSave(formData)
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -130,13 +130,17 @@ export default function OEMConfigForm({
                 <input
                   type="color"
                   value={formData.secondary_color}
-                  onChange={(e) => updateField('secondary_color', e.target.value)}
+                  onChange={(e) =>
+                    updateField('secondary_color', e.target.value)
+                  }
                   className="w-12 h-10 border border-gray-300 rounded cursor-pointer"
                 />
                 <input
                   type="text"
                   value={formData.secondary_color}
-                  onChange={(e) => updateField('secondary_color', e.target.value)}
+                  onChange={(e) =>
+                    updateField('secondary_color', e.target.value)
+                  }
                   className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
                 />
               </div>
@@ -234,7 +238,10 @@ export default function OEMConfigForm({
                 <T zh="咨询服务" en="Consultations" />
               </p>
               <p className="text-sm text-gray-500">
-                <T zh="启用律师咨询预约" en="Enable lawyer consultation booking" />
+                <T
+                  zh="启用律师咨询预约"
+                  en="Enable lawyer consultation booking"
+                />
               </p>
             </div>
             <input
@@ -316,9 +323,15 @@ export default function OEMConfigForm({
               onChange={(e) => updateField('default_language', e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
             >
-              <option value="ms"><T zh="马来语" en="Malay (Bahasa Malaysia)" /></option>
-              <option value="en"><T zh="英语" en="English" /></option>
-              <option value="zh"><T zh="中文" en="Chinese (中文)" /></option>
+              <option value="ms">
+                <T zh="马来语" en="Malay (Bahasa Malaysia)" />
+              </option>
+              <option value="en">
+                <T zh="英语" en="English" />
+              </option>
+              <option value="zh">
+                <T zh="中文" en="Chinese (中文)" />
+              </option>
             </select>
           </div>
 
@@ -340,12 +353,14 @@ export default function OEMConfigForm({
                         updateField('supported_languages', [
                           ...formData.supported_languages,
                           lang,
-                        ]);
+                        ])
                       } else {
                         updateField(
                           'supported_languages',
-                          formData.supported_languages.filter((l) => l !== lang)
-                        );
+                          formData.supported_languages.filter(
+                            (l) => l !== lang,
+                          ),
+                        )
                       }
                     }}
                     className="w-4 h-4 text-orange-600 rounded focus:ring-orange-500 mr-3"
@@ -378,7 +393,12 @@ export default function OEMConfigForm({
             className="flex items-center text-orange-600 hover:text-orange-700"
           >
             <EyeIcon className="w-5 h-5 mr-1" />
-            {showPreview ? <T zh="隐藏" en="Hide" /> : <T zh="显示" en="Show" />} <T zh="预览" en="Preview" />
+            {showPreview ? (
+              <T zh="隐藏" en="Hide" />
+            ) : (
+              <T zh="显示" en="Show" />
+            )}{' '}
+            <T zh="预览" en="Preview" />
           </button>
         </div>
 
@@ -396,7 +416,10 @@ export default function OEMConfigForm({
             </div>
             <div className="bg-gray-50 p-6 rounded-b-lg">
               <p className="text-sm text-gray-600">
-                <T zh="这是您的品牌颜色预览效果。" en="This is a preview of how your branding colors will appear." />
+                <T
+                  zh="这是您的品牌颜色预览效果。"
+                  en="This is a preview of how your branding colors will appear."
+                />
               </p>
               <div className="mt-4 flex items-center space-x-4">
                 <button
@@ -433,9 +456,13 @@ export default function OEMConfigForm({
           disabled={isSaving}
           className="px-6 py-2 bg-gradient-to-r from-orange-600 to-red-600 text-white rounded-lg hover:from-orange-700 hover:to-red-700 disabled:opacity-50"
         >
-          {isSaving ? <T zh="保存中..." en="Saving..." /> : <T zh="保存配置" en="Save Configuration" />}
+          {isSaving ? (
+            <T zh="保存中..." en="Saving..." />
+          ) : (
+            <T zh="保存配置" en="Save Configuration" />
+          )}
         </button>
       </div>
     </form>
-  );
+  )
 }

@@ -1,24 +1,37 @@
-"use client";
+'use client'
 
-import { useState, useEffect } from "react";
-import { Upload, Save, Eye, Palette, Building2, Phone, Mail, MapPin, Facebook, Twitter, Linkedin, Instagram } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import { useState, useEffect } from 'react'
+import {
+  Upload,
+  Save,
+  Eye,
+  Palette,
+  Building2,
+  Phone,
+  Mail,
+  MapPin,
+  Facebook,
+  Twitter,
+  Linkedin,
+  Instagram,
+} from 'lucide-react'
+import { createClient } from '@/lib/supabase/client'
 
 interface BrandingSettings {
-  logo_url: string;
-  primary_color: string;
-  secondary_color: string;
-  company_name: string;
-  company_description: string;
-  contact_phone: string;
-  contact_email: string;
-  contact_address: string;
+  logo_url: string
+  primary_color: string
+  secondary_color: string
+  company_name: string
+  company_description: string
+  contact_phone: string
+  contact_email: string
+  contact_address: string
   social_links: {
-    facebook: string;
-    twitter: string;
-    linkedin: string;
-    instagram: string;
-  };
+    facebook: string
+    twitter: string
+    linkedin: string
+    instagram: string
+  }
 }
 
 export default function BrandingPage() {
@@ -37,108 +50,114 @@ export default function BrandingPage() {
       linkedin: '',
       instagram: '',
     },
-  });
+  })
 
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [uploading, setUploading] = useState(false);
-  const [showPreview, setShowPreview] = useState(false);
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [uploading, setUploading] = useState(false)
+  const [showPreview, setShowPreview] = useState(false)
 
   useEffect(() => {
-    loadSettings();
-  }, []);
+    loadSettings()
+  }, [])
 
   const loadSettings = async () => {
     try {
-      setLoading(true);
-      const response = await fetch('/api/tenant/branding');
-      const data = await response.json();
+      setLoading(true)
+      const response = await fetch('/api/tenant/branding')
+      const data = await response.json()
 
       if (data.success) {
-        setSettings(data.branding);
+        setSettings(data.branding)
       }
     } catch (error) {
-      console.error('Error loading settings:', error);
-      alert('加载设置失败');
+      console.error('Error loading settings:', error)
+      alert('加载设置失败')
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const file = e.target.files?.[0]
+    if (!file) return
 
     // 验证文件类型
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/svg+xml', 'image/webp', 'image/gif'];
+    const allowedTypes = [
+      'image/jpeg',
+      'image/png',
+      'image/svg+xml',
+      'image/webp',
+      'image/gif',
+    ]
     if (!allowedTypes.includes(file.type)) {
-      alert('不支持的文件类型，请上传 JPG、PNG、SVG、WebP 或 GIF 格式');
-      return;
+      alert('不支持的文件类型，请上传 JPG、PNG、SVG、WebP 或 GIF 格式')
+      return
     }
 
     // 验证文件大小
     if (file.size > 5 * 1024 * 1024) {
-      alert('文件太大，最大支持 5MB');
-      return;
+      alert('文件太大，最大支持 5MB')
+      return
     }
 
     try {
-      setUploading(true);
-      const formData = new FormData();
-      formData.append('logo', file);
+      setUploading(true)
+      const formData = new FormData()
+      formData.append('logo', file)
 
       const response = await fetch('/api/tenant/branding/upload-logo', {
         method: 'POST',
         body: formData,
-      });
+      })
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (data.success) {
-        setSettings({ ...settings, logo_url: data.logo_url });
-        alert('Logo 上传成功！');
+        setSettings({ ...settings, logo_url: data.logo_url })
+        alert('Logo 上传成功！')
       } else {
-        alert(data.error || '上传失败');
+        alert(data.error || '上传失败')
       }
     } catch (error) {
-      console.error('Error uploading logo:', error);
-      alert('上传失败，请重试');
+      console.error('Error uploading logo:', error)
+      alert('上传失败，请重试')
     } finally {
-      setUploading(false);
+      setUploading(false)
     }
-  };
+  }
 
   const handleSave = async () => {
     // 验证必填字段
     if (!settings.company_name) {
-      alert('请填写公司名称');
-      return;
+      alert('请填写公司名称')
+      return
     }
 
     try {
-      setSaving(true);
+      setSaving(true)
       const response = await fetch('/api/tenant/branding', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(settings),
-      });
+      })
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (data.success) {
-        alert('品牌设置已保存！');
+        alert('品牌设置已保存！')
       } else {
-        alert(data.error || '保存失败');
+        alert(data.error || '保存失败')
       }
     } catch (error) {
-      console.error('Error saving settings:', error);
-      alert('保存失败，请重试');
+      console.error('Error saving settings:', error)
+      alert('保存失败，请重试')
     } finally {
-      setSaving(false);
+      setSaving(false)
     }
-  };
+  }
 
   if (loading) {
     return (
@@ -148,7 +167,7 @@ export default function BrandingPage() {
           <p className="mt-4 text-neutral-600">加载中...</p>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -188,7 +207,9 @@ export default function BrandingPage() {
                 <Upload className="h-5 w-5 text-primary-600" />
               </div>
               <div>
-                <h2 className="text-xl font-bold text-neutral-900">Logo 设置</h2>
+                <h2 className="text-xl font-bold text-neutral-900">
+                  Logo 设置
+                </h2>
                 <p className="text-sm text-neutral-600">上传您的公司 Logo</p>
               </div>
             </div>
@@ -232,7 +253,8 @@ export default function BrandingPage() {
                     </label>
                   </label>
                   <p className="text-sm text-neutral-500 mt-2">
-                    支持 JPG、PNG、SVG、WebP、GIF 格式<br />
+                    支持 JPG、PNG、SVG、WebP、GIF 格式
+                    <br />
                     建议尺寸: 200x60px，最大 5MB
                   </p>
                 </div>
@@ -261,13 +283,23 @@ export default function BrandingPage() {
                   <input
                     type="color"
                     value={settings.primary_color}
-                    onChange={(e) => setSettings({ ...settings, primary_color: e.target.value })}
+                    onChange={(e) =>
+                      setSettings({
+                        ...settings,
+                        primary_color: e.target.value,
+                      })
+                    }
                     className="w-16 h-16 rounded-lg border-2 border-neutral-300 cursor-pointer"
                   />
                   <input
                     type="text"
                     value={settings.primary_color}
-                    onChange={(e) => setSettings({ ...settings, primary_color: e.target.value })}
+                    onChange={(e) =>
+                      setSettings({
+                        ...settings,
+                        primary_color: e.target.value,
+                      })
+                    }
                     className="flex-1 px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none font-mono"
                     placeholder="#1E40AF"
                   />
@@ -282,13 +314,23 @@ export default function BrandingPage() {
                   <input
                     type="color"
                     value={settings.secondary_color}
-                    onChange={(e) => setSettings({ ...settings, secondary_color: e.target.value })}
+                    onChange={(e) =>
+                      setSettings({
+                        ...settings,
+                        secondary_color: e.target.value,
+                      })
+                    }
                     className="w-16 h-16 rounded-lg border-2 border-neutral-300 cursor-pointer"
                   />
                   <input
                     type="text"
                     value={settings.secondary_color}
-                    onChange={(e) => setSettings({ ...settings, secondary_color: e.target.value })}
+                    onChange={(e) =>
+                      setSettings({
+                        ...settings,
+                        secondary_color: e.target.value,
+                      })
+                    }
                     className="flex-1 px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none font-mono"
                     placeholder="#F59E0B"
                   />
@@ -317,7 +359,9 @@ export default function BrandingPage() {
                 <input
                   type="text"
                   value={settings.company_name}
-                  onChange={(e) => setSettings({ ...settings, company_name: e.target.value })}
+                  onChange={(e) =>
+                    setSettings({ ...settings, company_name: e.target.value })
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                   placeholder="ABC律师事务所"
                   required
@@ -330,7 +374,12 @@ export default function BrandingPage() {
                 </label>
                 <textarea
                   value={settings.company_description}
-                  onChange={(e) => setSettings({ ...settings, company_description: e.target.value })}
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      company_description: e.target.value,
+                    })
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                   rows={3}
                   placeholder="专业法律服务提供商，为您提供最优质的法律解决方案"
@@ -346,7 +395,12 @@ export default function BrandingPage() {
                   <input
                     type="tel"
                     value={settings.contact_phone}
-                    onChange={(e) => setSettings({ ...settings, contact_phone: e.target.value })}
+                    onChange={(e) =>
+                      setSettings({
+                        ...settings,
+                        contact_phone: e.target.value,
+                      })
+                    }
                     className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                     placeholder="+60 3-1234 5678"
                   />
@@ -360,7 +414,12 @@ export default function BrandingPage() {
                   <input
                     type="email"
                     value={settings.contact_email}
-                    onChange={(e) => setSettings({ ...settings, contact_email: e.target.value })}
+                    onChange={(e) =>
+                      setSettings({
+                        ...settings,
+                        contact_email: e.target.value,
+                      })
+                    }
                     className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                     placeholder="info@abc-law.com"
                   />
@@ -375,7 +434,12 @@ export default function BrandingPage() {
                 <input
                   type="text"
                   value={settings.contact_address}
-                  onChange={(e) => setSettings({ ...settings, contact_address: e.target.value })}
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      contact_address: e.target.value,
+                    })
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                   placeholder="吉隆坡市中心"
                 />
@@ -404,10 +468,15 @@ export default function BrandingPage() {
                 <input
                   type="url"
                   value={settings.social_links.facebook}
-                  onChange={(e) => setSettings({ 
-                    ...settings, 
-                    social_links: { ...settings.social_links, facebook: e.target.value }
-                  })}
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      social_links: {
+                        ...settings.social_links,
+                        facebook: e.target.value,
+                      },
+                    })
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                   placeholder="https://facebook.com/your-page"
                 />
@@ -421,10 +490,15 @@ export default function BrandingPage() {
                 <input
                   type="url"
                   value={settings.social_links.twitter}
-                  onChange={(e) => setSettings({ 
-                    ...settings, 
-                    social_links: { ...settings.social_links, twitter: e.target.value }
-                  })}
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      social_links: {
+                        ...settings.social_links,
+                        twitter: e.target.value,
+                      },
+                    })
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                   placeholder="https://twitter.com/your-account"
                 />
@@ -438,10 +512,15 @@ export default function BrandingPage() {
                 <input
                   type="url"
                   value={settings.social_links.linkedin}
-                  onChange={(e) => setSettings({ 
-                    ...settings, 
-                    social_links: { ...settings.social_links, linkedin: e.target.value }
-                  })}
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      social_links: {
+                        ...settings.social_links,
+                        linkedin: e.target.value,
+                      },
+                    })
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                   placeholder="https://linkedin.com/company/your-company"
                 />
@@ -455,10 +534,15 @@ export default function BrandingPage() {
                 <input
                   type="url"
                   value={settings.social_links.instagram}
-                  onChange={(e) => setSettings({ 
-                    ...settings, 
-                    social_links: { ...settings.social_links, instagram: e.target.value }
-                  })}
+                  onChange={(e) =>
+                    setSettings({
+                      ...settings,
+                      social_links: {
+                        ...settings.social_links,
+                        instagram: e.target.value,
+                      },
+                    })
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                   placeholder="https://instagram.com/your-account"
                 />
@@ -472,10 +556,12 @@ export default function BrandingPage() {
           <div className="lg:col-span-1">
             <div className="sticky top-6">
               <div className="bg-white rounded-xl shadow-sm p-6 border border-neutral-200">
-                <h3 className="text-lg font-bold text-neutral-900 mb-4">实时预览</h3>
-                
+                <h3 className="text-lg font-bold text-neutral-900 mb-4">
+                  实时预览
+                </h3>
+
                 {/* 预览区域 */}
-                <div 
+                <div
                   className="border-2 border-neutral-200 rounded-lg p-6"
                   style={{
                     background: `linear-gradient(135deg, ${settings.primary_color}15 0%, ${settings.secondary_color}15 100%)`,
@@ -493,7 +579,7 @@ export default function BrandingPage() {
                   )}
 
                   {/* 公司名称 */}
-                  <h2 
+                  <h2
                     className="text-2xl font-bold mb-2"
                     style={{ color: settings.primary_color }}
                   >
@@ -510,8 +596,8 @@ export default function BrandingPage() {
                   {/* 按钮示例 */}
                   <button
                     className="px-6 py-2 rounded-lg text-white font-medium mb-4 w-full"
-                    style={{ 
-                      background: `linear-gradient(135deg, ${settings.primary_color} 0%, ${settings.secondary_color} 100%)` 
+                    style={{
+                      background: `linear-gradient(135deg, ${settings.primary_color} 0%, ${settings.secondary_color} 100%)`,
                     }}
                   >
                     立即咨询
@@ -521,39 +607,62 @@ export default function BrandingPage() {
                   <div className="space-y-2 text-sm text-neutral-600">
                     {settings.contact_phone && (
                       <div className="flex items-center gap-2">
-                        <Phone className="h-4 w-4" style={{ color: settings.primary_color }} />
+                        <Phone
+                          className="h-4 w-4"
+                          style={{ color: settings.primary_color }}
+                        />
                         <span>{settings.contact_phone}</span>
                       </div>
                     )}
                     {settings.contact_email && (
                       <div className="flex items-center gap-2">
-                        <Mail className="h-4 w-4" style={{ color: settings.primary_color }} />
+                        <Mail
+                          className="h-4 w-4"
+                          style={{ color: settings.primary_color }}
+                        />
                         <span>{settings.contact_email}</span>
                       </div>
                     )}
                     {settings.contact_address && (
                       <div className="flex items-center gap-2">
-                        <MapPin className="h-4 w-4" style={{ color: settings.primary_color }} />
+                        <MapPin
+                          className="h-4 w-4"
+                          style={{ color: settings.primary_color }}
+                        />
                         <span>{settings.contact_address}</span>
                       </div>
                     )}
                   </div>
 
                   {/* 社交媒体图标 */}
-                  {(settings.social_links.facebook || settings.social_links.twitter || 
-                    settings.social_links.linkedin || settings.social_links.instagram) && (
+                  {(settings.social_links.facebook ||
+                    settings.social_links.twitter ||
+                    settings.social_links.linkedin ||
+                    settings.social_links.instagram) && (
                     <div className="flex gap-3 mt-4 pt-4 border-t border-neutral-200">
                       {settings.social_links.facebook && (
-                        <Facebook className="h-5 w-5" style={{ color: settings.primary_color }} />
+                        <Facebook
+                          className="h-5 w-5"
+                          style={{ color: settings.primary_color }}
+                        />
                       )}
                       {settings.social_links.twitter && (
-                        <Twitter className="h-5 w-5" style={{ color: settings.primary_color }} />
+                        <Twitter
+                          className="h-5 w-5"
+                          style={{ color: settings.primary_color }}
+                        />
                       )}
                       {settings.social_links.linkedin && (
-                        <Linkedin className="h-5 w-5" style={{ color: settings.primary_color }} />
+                        <Linkedin
+                          className="h-5 w-5"
+                          style={{ color: settings.primary_color }}
+                        />
                       )}
                       {settings.social_links.instagram && (
-                        <Instagram className="h-5 w-5" style={{ color: settings.primary_color }} />
+                        <Instagram
+                          className="h-5 w-5"
+                          style={{ color: settings.primary_color }}
+                        />
                       )}
                     </div>
                   )}
@@ -568,5 +677,5 @@ export default function BrandingPage() {
         )}
       </div>
     </div>
-  );
+  )
 }

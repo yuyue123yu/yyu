@@ -1,26 +1,29 @@
-"use client";
+'use client'
 
-import { useState, useEffect } from "react";
-import { BookOpen, Clock, Eye, ArrowRight } from "lucide-react";
-import Link from "next/link";
-import { fetchPopularArticles, type LegalArticle } from "@/lib/api/legalKnowledge";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useState, useEffect } from 'react'
+import { BookOpen, Clock, Eye, ArrowRight } from 'lucide-react'
+import Link from 'next/link'
+import {
+  fetchPopularArticles,
+  type LegalArticle,
+} from '@/lib/api/legalKnowledge'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 export default function BlogSection() {
-  const { t } = useLanguage();
-  const [articles, setArticles] = useState<LegalArticle[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { t } = useLanguage()
+  const [articles, setArticles] = useState<LegalArticle[]>([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    loadArticles();
-  }, []);
+    loadArticles()
+  }, [])
 
   const loadArticles = async () => {
-    setLoading(true);
-    const data = await fetchPopularArticles(3);
-    setArticles(data);
-    setLoading(false);
-  };
+    setLoading(true)
+    const data = await fetchPopularArticles(3)
+    setArticles(data)
+    setLoading(false)
+  }
 
   if (loading) {
     return (
@@ -31,7 +34,7 @@ export default function BlogSection() {
           </div>
         </div>
       </section>
-    );
+    )
   }
 
   return (
@@ -42,9 +45,7 @@ export default function BlogSection() {
             <h2 className="text-3xl font-bold text-neutral-900 mb-2">
               {t('home.legalKnowledge')}
             </h2>
-            <p className="text-neutral-600">
-              {t('home.legalKnowledgeDesc')}
-            </p>
+            <p className="text-neutral-600">{t('home.legalKnowledgeDesc')}</p>
           </div>
           <Link
             href="/knowledge"
@@ -71,18 +72,28 @@ export default function BlogSection() {
                 {/* Category */}
                 <div className="mb-3">
                   <span className="inline-block px-3 py-1 bg-primary-100 text-primary-700 text-xs font-medium rounded-full">
-                    {article.category === 'employment' ? t('services.employment') :
-                     article.category === 'property' ? t('services.property') :
-                     article.category === 'family' ? t('services.family') :
-                     article.category === 'business' ? t('services.business') :
-                     article.category === 'consumer' ? t('common.knowledge') :
-                     article.category === 'immigration' ? t('common.knowledge') : t('common.knowledge')}
+                    {article.category === 'employment'
+                      ? t('services.employment')
+                      : article.category === 'property'
+                        ? t('services.property')
+                        : article.category === 'family'
+                          ? t('services.family')
+                          : article.category === 'business'
+                            ? t('services.business')
+                            : article.category === 'consumer'
+                              ? t('common.knowledge')
+                              : article.category === 'immigration'
+                                ? t('common.knowledge')
+                                : t('common.knowledge')}
                   </span>
                 </div>
 
                 {/* Title */}
                 <h3 className="text-xl font-bold text-neutral-900 mb-3 line-clamp-2">
-                  <Link href={`/knowledge/${article.id}`} className="hover:text-primary-600 cursor-pointer">
+                  <Link
+                    href={`/knowledge/${article.id}`}
+                    className="hover:text-primary-600 cursor-pointer"
+                  >
                     {article.titleCn || article.title}
                   </Link>
                 </h3>
@@ -96,7 +107,9 @@ export default function BlogSection() {
                 <div className="flex items-center gap-4 text-sm text-neutral-500 mb-4">
                   <div className="flex items-center gap-1">
                     <Clock className="h-4 w-4" />
-                    <span>{article.readTime} {t('home.minutes')}</span>
+                    <span>
+                      {article.readTime} {t('home.minutes')}
+                    </span>
                   </div>
                   <div className="flex items-center gap-1">
                     <Eye className="h-4 w-4" />
@@ -133,5 +146,5 @@ export default function BlogSection() {
         </div>
       </div>
     </section>
-  );
+  )
 }

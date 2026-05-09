@@ -1,40 +1,49 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
-import { FileText, Upload, CheckCircle, Clock, Shield } from "lucide-react";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useState } from 'react'
+import Header from '@/components/layout/Header'
+import Footer from '@/components/layout/Footer'
+import { FileText, Upload, CheckCircle, Clock, Shield } from 'lucide-react'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 export default function ReviewPage() {
-  const { t } = useLanguage();
-  const [file, setFile] = useState<File | null>(null);
+  const { t } = useLanguage()
+  const [file, setFile] = useState<File | null>(null)
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    documentType: "",
-    urgency: "normal",
-    notes: "",
-  });
-  const [submitted, setSubmitted] = useState(false);
+    name: '',
+    email: '',
+    phone: '',
+    documentType: '',
+    urgency: 'normal',
+    notes: '',
+  })
+  const [submitted, setSubmitted] = useState(false)
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
+      setFile(e.target.files[0])
     }
-  };
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitted(true);
+    e.preventDefault()
+    setSubmitted(true)
     setTimeout(() => {
-      alert(`${t('review.successMessage')}\n\n${t('common.name')}: ${file?.name}\n预计完成时间: ${formData.urgency === 'urgent' ? '24小时' : '3-5个工作日'}\n\n我们的律师将仔细审核您的文件并提供专业意见。`);
-      setFile(null);
-      setFormData({ name: "", email: "", phone: "", documentType: "", urgency: "normal", notes: "" });
-      setSubmitted(false);
-    }, 1000);
-  };
+      alert(
+        `${t('review.successMessage')}\n\n${t('common.name')}: ${file?.name}\n预计完成时间: ${formData.urgency === 'urgent' ? '24小时' : '3-5个工作日'}\n\n我们的律师将仔细审核您的文件并提供专业意见。`,
+      )
+      setFile(null)
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        documentType: '',
+        urgency: 'normal',
+        notes: '',
+      })
+      setSubmitted(false)
+    }, 1000)
+  }
 
   return (
     <>
@@ -95,11 +104,16 @@ export default function ReviewPage() {
                             className="hidden"
                             id="file-upload"
                           />
-                          <label htmlFor="file-upload" className="cursor-pointer">
+                          <label
+                            htmlFor="file-upload"
+                            className="cursor-pointer"
+                          >
                             <Upload className="h-12 w-12 mx-auto mb-4 text-neutral-400" />
                             {file ? (
                               <div>
-                                <p className="text-primary-600 font-medium mb-2">{file.name}</p>
+                                <p className="text-primary-600 font-medium mb-2">
+                                  {file.name}
+                                </p>
                                 <p className="text-sm text-neutral-600">
                                   {(file.size / 1024 / 1024).toFixed(2)} MB
                                 </p>
@@ -126,7 +140,9 @@ export default function ReviewPage() {
                           type="text"
                           required
                           value={formData.name}
-                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                          onChange={(e) =>
+                            setFormData({ ...formData, name: e.target.value })
+                          }
                           className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-primary-500"
                           placeholder="请输入您的姓名"
                         />
@@ -141,7 +157,12 @@ export default function ReviewPage() {
                             type="email"
                             required
                             value={formData.email}
-                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                            onChange={(e) =>
+                              setFormData({
+                                ...formData,
+                                email: e.target.value,
+                              })
+                            }
                             className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-primary-500"
                             placeholder="your@email.com"
                           />
@@ -154,7 +175,12 @@ export default function ReviewPage() {
                             type="tel"
                             required
                             value={formData.phone}
-                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                            onChange={(e) =>
+                              setFormData({
+                                ...formData,
+                                phone: e.target.value,
+                              })
+                            }
                             className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-primary-500"
                             placeholder="+60 12-345 6789"
                           />
@@ -169,10 +195,17 @@ export default function ReviewPage() {
                           <select
                             required
                             value={formData.documentType}
-                            onChange={(e) => setFormData({ ...formData, documentType: e.target.value })}
+                            onChange={(e) =>
+                              setFormData({
+                                ...formData,
+                                documentType: e.target.value,
+                              })
+                            }
                             className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-primary-500"
                           >
-                            <option value="">{t('review.selectDocumentType')}</option>
+                            <option value="">
+                              {t('review.selectDocumentType')}
+                            </option>
                             <option value="employment">雇佣合同</option>
                             <option value="property">房产协议</option>
                             <option value="business">商业合同</option>
@@ -188,11 +221,21 @@ export default function ReviewPage() {
                           <select
                             required
                             value={formData.urgency}
-                            onChange={(e) => setFormData({ ...formData, urgency: e.target.value })}
+                            onChange={(e) =>
+                              setFormData({
+                                ...formData,
+                                urgency: e.target.value,
+                              })
+                            }
                             className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-primary-500"
                           >
-                            <option value="normal">{t('review.normal')} (3-5{t('review.workingDays')})</option>
-                            <option value="urgent">{t('review.urgent')} (24{t('review.hours')})</option>
+                            <option value="normal">
+                              {t('review.normal')} (3-5{t('review.workingDays')}
+                              )
+                            </option>
+                            <option value="urgent">
+                              {t('review.urgent')} (24{t('review.hours')})
+                            </option>
                           </select>
                         </div>
                       </div>
@@ -203,7 +246,9 @@ export default function ReviewPage() {
                         </label>
                         <textarea
                           value={formData.notes}
-                          onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                          onChange={(e) =>
+                            setFormData({ ...formData, notes: e.target.value })
+                          }
                           rows={4}
                           className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:outline-none focus:border-primary-500"
                           placeholder={t('review.notesPlaceholder')}
@@ -241,17 +286,30 @@ export default function ReviewPage() {
                     <div className="space-y-4">
                       <div className="border-b border-neutral-200 pb-4">
                         <div className="flex items-baseline gap-2 mb-2">
-                          <span className="text-3xl font-bold text-purple-600">RM 299</span>
-                          <span className="text-neutral-600">{t('review.perDocument')}</span>
+                          <span className="text-3xl font-bold text-purple-600">
+                            RM 299
+                          </span>
+                          <span className="text-neutral-600">
+                            {t('review.perDocument')}
+                          </span>
                         </div>
-                        <p className="text-sm text-neutral-600">{t('review.normalReview')} (3-5{t('review.workingDays')})</p>
+                        <p className="text-sm text-neutral-600">
+                          {t('review.normalReview')} (3-5
+                          {t('review.workingDays')})
+                        </p>
                       </div>
                       <div>
                         <div className="flex items-baseline gap-2 mb-2">
-                          <span className="text-3xl font-bold text-purple-600">RM 599</span>
-                          <span className="text-neutral-600">{t('review.perDocument')}</span>
+                          <span className="text-3xl font-bold text-purple-600">
+                            RM 599
+                          </span>
+                          <span className="text-neutral-600">
+                            {t('review.perDocument')}
+                          </span>
                         </div>
-                        <p className="text-sm text-neutral-600">{t('review.urgentReview')} (24{t('review.hours')})</p>
+                        <p className="text-sm text-neutral-600">
+                          {t('review.urgentReview')} (24{t('review.hours')})
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -264,23 +322,33 @@ export default function ReviewPage() {
                     <ul className="space-y-3">
                       <li className="flex items-start gap-2">
                         <CheckCircle className="h-5 w-5 text-purple-600 flex-shrink-0 mt-0.5" />
-                        <span className="text-sm text-neutral-700">{t('review.legalityReview')}</span>
+                        <span className="text-sm text-neutral-700">
+                          {t('review.legalityReview')}
+                        </span>
                       </li>
                       <li className="flex items-start gap-2">
                         <CheckCircle className="h-5 w-5 text-purple-600 flex-shrink-0 mt-0.5" />
-                        <span className="text-sm text-neutral-700">{t('review.riskIdentification')}</span>
+                        <span className="text-sm text-neutral-700">
+                          {t('review.riskIdentification')}
+                        </span>
                       </li>
                       <li className="flex items-start gap-2">
                         <CheckCircle className="h-5 w-5 text-purple-600 flex-shrink-0 mt-0.5" />
-                        <span className="text-sm text-neutral-700">{t('review.modificationSuggestions')}</span>
+                        <span className="text-sm text-neutral-700">
+                          {t('review.modificationSuggestions')}
+                        </span>
                       </li>
                       <li className="flex items-start gap-2">
                         <CheckCircle className="h-5 w-5 text-purple-600 flex-shrink-0 mt-0.5" />
-                        <span className="text-sm text-neutral-700">{t('review.writtenReport')}</span>
+                        <span className="text-sm text-neutral-700">
+                          {t('review.writtenReport')}
+                        </span>
                       </li>
                       <li className="flex items-start gap-2">
                         <CheckCircle className="h-5 w-5 text-purple-600 flex-shrink-0 mt-0.5" />
-                        <span className="text-sm text-neutral-700">{t('review.freeRevision')}</span>
+                        <span className="text-sm text-neutral-700">
+                          {t('review.freeRevision')}
+                        </span>
                       </li>
                     </ul>
                   </div>
@@ -292,5 +360,5 @@ export default function ReviewPage() {
       </main>
       <Footer />
     </>
-  );
+  )
 }

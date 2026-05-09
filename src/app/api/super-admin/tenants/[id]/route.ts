@@ -1,8 +1,8 @@
 // Tenant Management API - Get, Update, Delete Tenant
-import { NextRequest, NextResponse } from 'next/server';
-import { requireSuperAdmin } from '@/lib/middleware/super-admin';
-import { logAuditEvent } from '@/lib/audit';
-import { createClient } from '@/lib/supabase/server';
+import { NextRequest, NextResponse } from 'next/server'
+import { requireSuperAdmin } from '@/lib/middleware/super-admin'
+import { logAuditEvent } from '@/lib/audit'
+import { createClient } from '@/lib/supabase/server'
 
 /**
  * GET /api/super-admin/tenants/:id
@@ -10,16 +10,16 @@ import { createClient } from '@/lib/supabase/server';
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   // Verify super admin authentication
-  const authResult = await requireSuperAdmin(request);
+  const authResult = await requireSuperAdmin(request)
   if (authResult instanceof NextResponse) {
-    return authResult;
+    return authResult
   }
 
-  const { supabase } = authResult;
-  const { id } = params;
+  const { supabase } = authResult
+  const { id } = params
 
   try {
     // Get tenant details
@@ -27,23 +27,23 @@ export async function GET(
       .from('tenants')
       .select('*')
       .eq('id', id)
-      .single();
+      .single()
 
     if (error || !tenant) {
-      return NextResponse.json({ error: 'Tenant not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Tenant not found' }, { status: 404 })
     }
 
     // Get tenant settings
     const { data: settings } = await supabase
       .from('tenant_settings')
       .select('*')
-      .eq('tenant_id', id);
+      .eq('tenant_id', id)
 
     // Get tenant stats
     const { count: userCount } = await supabase
       .from('profiles')
       .select('*', { count: 'exact', head: true })
-      .eq('tenant_id', id);
+      .eq('tenant_id', id)
 
     return NextResponse.json({
       success: true,
@@ -52,13 +52,13 @@ export async function GET(
       stats: {
         user_count: userCount || 0,
       },
-    });
+    })
   } catch (error) {
-    console.error('Error fetching tenant:', error);
+    console.error('Error fetching tenant:', error)
     return NextResponse.json(
       { error: 'Failed to fetch tenant' },
-      { status: 500 }
-    );
+      { status: 500 },
+    )
   }
 }
 
@@ -68,31 +68,37 @@ export async function GET(
  */
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   // Verify super admin authentication
-  const authResult = await requireSuperAdmin(request);
+  const authResult = await requireSuperAdmin(request)
   if (authResult instanceof NextResponse) {
-    return authResult;
+    return authResult
   }
 
-  const { supabase } = authResult;
-  const { id } = params;
+  const { supabase } = authResult
+  const { id } = params
 
   try {
-    const body = await request.json();
-    const { name, subdomain, primary_domain, status, subscription_plan, metadata } =
-      body;
+    const body = await request.json()
+    const {
+      name,
+      subdomain,
+      primary_domain,
+      status,
+      subscription_plan,
+      metadata,
+    } = body
 
     // Get current tenant data for audit log
     const { data: currentTenant } = await supabase
       .from('tenants')
       .select('*')
       .eq('id', id)
-      .single();
+      .single()
 
     if (!currentTenant) {
-      return NextResponse.json({ error: 'Tenant not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Tenant not found' }, { status: 404 })
     }
 
     // Check subdomain uniqueness if changed
@@ -102,13 +108,13 @@ export async function PATCH(
         .select('id')
         .eq('subdomain', subdomain)
         .neq('id', id)
-        .single();
+        .single()
 
       if (existingTenant) {
         return NextResponse.json(
           { error: 'Subdomain already exists' },
-          { status: 409 }
-        );
+          { status: 409 },
+        )
       }
     }
 
@@ -119,28 +125,28 @@ export async function PATCH(
         .select('id')
         .eq('primary_domain', primary_domain)
         .neq('id', id)
-        .single();
+        .single()
 
       if (existingDomain) {
         return NextResponse.json(
           { error: 'Primary domain already exists' },
-          { status: 409 }
-        );
+          { status: 409 },
+        )
       }
     }
 
     // Build update object
     const updates: any = {
       updated_at: new Date().toISOString(),
-    };
+    }
 
-    if (name !== undefined) updates.name = name;
-    if (subdomain !== undefined) updates.subdomain = subdomain;
-    if (primary_domain !== undefined) updates.primary_domain = primary_domain;
-    if (status !== undefined) updates.status = status;
+    if (name !== undefined) updates.name = name
+    if (subdomain !== undefined) updates.subdomain = subdomain
+    if (primary_domain !== undefined) updates.primary_domain = primary_domain
+    if (status !== undefined) updates.status = status
     if (subscription_plan !== undefined)
-      updates.subscription_plan = subscription_plan;
-    if (metadata !== undefined) updates.metadata = metadata;
+      updates.subscription_plan = subscription_plan
+    if (metadata !== undefined) updates.metadata = metadata
 
     // Update tenant
     const { data: tenant, error: updateError } = await supabase
@@ -148,10 +154,10 @@ export async function PATCH(
       .update(updates)
       .eq('id', id)
       .select()
-      .single();
+      .single()
 
     if (updateError) {
-      throw updateError;
+      throw updateError
     }
 
     // Log audit event
@@ -165,20 +171,20 @@ export async function PATCH(
           after: tenant,
         },
       },
-      request
-    );
+      request,
+    )
 
     return NextResponse.json({
       success: true,
       message: 'Tenant updated successfully',
       tenant,
-    });
+    })
   } catch (error) {
-    console.error('Error updating tenant:', error);
+    console.error('Error updating tenant:', error)
     return NextResponse.json(
       { error: 'Failed to update tenant' },
-      { status: 500 }
-    );
+      { status: 500 },
+    )
   }
 }
 
@@ -188,16 +194,16 @@ export async function PATCH(
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   // Verify super admin authentication
-  const authResult = await requireSuperAdmin(request);
+  const authResult = await requireSuperAdmin(request)
   if (authResult instanceof NextResponse) {
-    return authResult;
+    return authResult
   }
 
-  const { supabase } = authResult;
-  const { id } = params;
+  const { supabase } = authResult
+  const { id } = params
 
   try {
     // Get tenant data before deletion for audit log
@@ -205,28 +211,28 @@ export async function DELETE(
       .from('tenants')
       .select('*')
       .eq('id', id)
-      .single();
+      .single()
 
     if (!tenant) {
-      return NextResponse.json({ error: 'Tenant not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Tenant not found' }, { status: 404 })
     }
 
     // Prevent deletion of default tenant
     if (id === '00000000-0000-0000-0000-000000000001') {
       return NextResponse.json(
         { error: 'Cannot delete default tenant' },
-        { status: 403 }
-      );
+        { status: 403 },
+      )
     }
 
     // Delete tenant (CASCADE will handle related data)
     const { error: deleteError } = await supabase
       .from('tenants')
       .delete()
-      .eq('id', id);
+      .eq('id', id)
 
     if (deleteError) {
-      throw deleteError;
+      throw deleteError
     }
 
     // Log audit event
@@ -239,18 +245,18 @@ export async function DELETE(
           deleted_tenant: tenant,
         },
       },
-      request
-    );
+      request,
+    )
 
     return NextResponse.json({
       success: true,
       message: 'Tenant deleted successfully',
-    });
+    })
   } catch (error) {
-    console.error('Error deleting tenant:', error);
+    console.error('Error deleting tenant:', error)
     return NextResponse.json(
       { error: 'Failed to delete tenant' },
-      { status: 500 }
-    );
+      { status: 500 },
+    )
   }
 }

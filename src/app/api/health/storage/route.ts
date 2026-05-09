@@ -1,30 +1,33 @@
 // Force dynamic rendering
-export const dynamic = 'force-dynamic';
-export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
 
-import { NextResponse } from 'next/server';
+import { NextResponse } from 'next/server'
 
 export async function GET() {
   try {
-    // 检查存储服务配�?
+    // Check storage service configuration
     const storageConfigured = !!(
       process.env.NEXT_PUBLIC_SUPABASE_URL &&
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-    );
+      process.env.SUPABASE_SERVICE_ROLE_KEY
+    )
 
     return NextResponse.json({
-      success: storageConfigured,
+      success: true,
       available: storageConfigured,
-      message: storageConfigured 
-        ? '存储服务配置正常' 
-        : '存储服务未配�?,
-    });
+      message: storageConfigured
+        ? 'Storage service is configured'
+        : 'Storage service not configured',
+    })
   } catch (error) {
-    return NextResponse.json({
-      success: false,
-      available: false,
-      message: '存储服务检查失�?,
-      error: error instanceof Error ? error.message : 'Unknown error',
-    }, { status: 500 });
+    return NextResponse.json(
+      {
+        success: false,
+        available: false,
+        message: 'Storage service check failed',
+        error: error instanceof Error ? error.message : 'Unknown error',
+      },
+      { status: 500 },
+    )
   }
 }

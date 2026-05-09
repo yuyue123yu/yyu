@@ -1,30 +1,34 @@
-"use client";
+'use client'
 
-import { useState, useEffect } from "react";
-import { Star, ThumbsUp, MessageCircle } from "lucide-react";
-import { fetchTopReviews, fetchReviewStats, type UserReview } from "@/lib/api/reviews";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useState, useEffect } from 'react'
+import { Star, ThumbsUp, MessageCircle } from 'lucide-react'
+import {
+  fetchTopReviews,
+  fetchReviewStats,
+  type UserReview,
+} from '@/lib/api/reviews'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 export default function UserReviews() {
-  const { t } = useLanguage();
-  const [reviews, setReviews] = useState<UserReview[]>([]);
-  const [stats, setStats] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const { t } = useLanguage()
+  const [reviews, setReviews] = useState<UserReview[]>([])
+  const [stats, setStats] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    loadData();
-  }, []);
+    loadData()
+  }, [])
 
   const loadData = async () => {
-    setLoading(true);
+    setLoading(true)
     const [reviewsData, statsData] = await Promise.all([
       fetchTopReviews(6),
-      fetchReviewStats()
-    ]);
-    setReviews(reviewsData);
-    setStats(statsData);
-    setLoading(false);
-  };
+      fetchReviewStats(),
+    ])
+    setReviews(reviewsData)
+    setStats(statsData)
+    setLoading(false)
+  }
 
   if (loading) {
     return (
@@ -35,7 +39,7 @@ export default function UserReviews() {
           </div>
         </div>
       </section>
-    );
+    )
   }
 
   return (
@@ -54,13 +58,21 @@ export default function UserReviews() {
             </div>
             {stats && (
               <div className="text-right">
-                <div className="text-3xl font-bold text-neutral-900">{stats.averageRating}</div>
+                <div className="text-3xl font-bold text-neutral-900">
+                  {stats.averageRating}
+                </div>
                 <div className="flex items-center gap-1 justify-end mb-1">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-4 w-4 text-yellow-500 fill-yellow-500" />
+                    <Star
+                      key={i}
+                      className="h-4 w-4 text-yellow-500 fill-yellow-500"
+                    />
                   ))}
                 </div>
-                <p className="text-sm text-neutral-600">{t('home.basedOnReviews')} {stats.totalReviews}+ {t('home.reviewsCount')}</p>
+                <p className="text-sm text-neutral-600">
+                  {t('home.basedOnReviews')} {stats.totalReviews}+{' '}
+                  {t('home.reviewsCount')}
+                </p>
               </div>
             )}
           </div>
@@ -98,8 +110,8 @@ export default function UserReviews() {
                       key={i}
                       className={`h-3.5 w-3.5 ${
                         i < review.rating
-                          ? "text-yellow-500 fill-yellow-500"
-                          : "text-neutral-300"
+                          ? 'text-yellow-500 fill-yellow-500'
+                          : 'text-neutral-300'
                       }`}
                     />
                   ))}
@@ -143,5 +155,5 @@ export default function UserReviews() {
         </div>
       </div>
     </section>
-  );
+  )
 }

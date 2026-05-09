@@ -1,29 +1,29 @@
-'use client';
+'use client'
 
-import { MagnifyingGlassIcon, FunnelIcon } from '@heroicons/react/24/outline';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { MagnifyingGlassIcon, FunnelIcon } from '@heroicons/react/24/outline'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface TenantFiltersProps {
   filters: {
-    status: string;
-    search: string;
-  };
-  onFilterChange: (filters: any) => void;
+    status: string
+    search: string
+  }
+  onFilterChange: (filters: any) => void
 }
 
 export default function TenantFilters({
   filters,
   onFilterChange,
 }: TenantFiltersProps) {
-  const { t } = useLanguage();
+  const { t } = useLanguage()
 
   const handleStatusChange = (status: string) => {
-    onFilterChange({ ...filters, status });
-  };
+    onFilterChange({ ...filters, status })
+  }
 
   const handleSearchChange = (search: string) => {
-    onFilterChange({ ...filters, search });
-  };
+    onFilterChange({ ...filters, search })
+  }
 
   return (
     <div className="bg-white rounded-lg shadow p-4">
@@ -58,5 +58,5 @@ export default function TenantFilters({
         </div>
       </div>
     </div>
-  );
+  )
 }

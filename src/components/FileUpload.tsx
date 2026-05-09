@@ -1,16 +1,16 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { Upload, X, FileText } from "lucide-react";
+import { useState } from 'react'
+import { Upload, X, FileText } from 'lucide-react'
 
 interface FileUploadProps {
-  onFileSelect: (file: File) => void;
-  onFileRemove: () => void;
-  selectedFile: File | null;
-  fileSize: string;
-  uploading: boolean;
-  uploadProgress: number;
-  disabled?: boolean;
+  onFileSelect: (file: File) => void
+  onFileRemove: () => void
+  selectedFile: File | null
+  fileSize: string
+  uploading: boolean
+  uploadProgress: number
+  disabled?: boolean
 }
 
 export default function FileUpload({
@@ -23,16 +23,18 @@ export default function FileUpload({
   disabled = false,
 }: FileUploadProps) {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+    const file = e.target.files?.[0]
     if (file) {
-      onFileSelect(file);
+      onFileSelect(file)
     }
-  };
+  }
 
   return (
     <div className="space-y-3">
       {/* 文件选择按钮 */}
-      <label className={`flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-neutral-300 rounded-lg hover:border-primary-500 hover:bg-primary-50 transition-all ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}>
+      <label
+        className={`flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-neutral-300 rounded-lg hover:border-primary-500 hover:bg-primary-50 transition-all ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+      >
         <Upload className="h-5 w-5 text-neutral-600" />
         <span className="text-sm font-medium text-neutral-700">
           {selectedFile ? selectedFile.name : '点击选择文件'}
@@ -70,7 +72,9 @@ export default function FileUpload({
         <div className="space-y-2">
           <div className="flex items-center justify-between text-sm">
             <span className="text-neutral-600">上传中...</span>
-            <span className="text-primary-600 font-medium">{uploadProgress}%</span>
+            <span className="text-primary-600 font-medium">
+              {uploadProgress}%
+            </span>
           </div>
           <div className="w-full bg-neutral-200 rounded-full h-2">
             <div
@@ -86,5 +90,5 @@ export default function FileUpload({
         支持格式：PDF、Word (.doc, .docx)、Excel (.xls, .xlsx)，最大 10MB
       </p>
     </div>
-  );
+  )
 }

@@ -1,9 +1,9 @@
-'use client';
+'use client'
 
-import { useEffect, useState } from 'react';
-import { useRouter, useParams } from 'next/navigation';
-import { withSuperAdminAuth } from '@/lib/auth/withSuperAdminAuth';
-import SuperAdminLayout from '@/components/super-admin/SuperAdminLayout';
+import { useEffect, useState } from 'react'
+import { useRouter, useParams } from 'next/navigation'
+import { withSuperAdminAuth } from '@/lib/auth/withSuperAdminAuth'
+import SuperAdminLayout from '@/components/super-admin/SuperAdminLayout'
 import {
   UserIcon,
   EnvelopeIcon,
@@ -16,101 +16,101 @@ import {
   XCircleIcon,
   CheckCircleIcon,
   ExclamationTriangleIcon,
-} from '@heroicons/react/24/outline';
+} from '@heroicons/react/24/outline'
 
 interface User {
-  id: string;
-  email: string;
-  full_name: string;
-  phone: string | null;
-  user_type: string;
-  tenant_id: string;
-  active: boolean;
-  created_at: string;
-  updated_at: string;
+  id: string
+  email: string
+  full_name: string
+  phone: string | null
+  user_type: string
+  tenant_id: string
+  active: boolean
+  created_at: string
+  updated_at: string
   tenants?: {
-    id: string;
-    name: string;
-    subdomain: string;
-    status: string;
-    subscription_plan: string;
-  };
+    id: string
+    name: string
+    subdomain: string
+    status: string
+    subscription_plan: string
+  }
 }
 
 interface Activity {
-  consultation_count: number;
-  order_count: number;
+  consultation_count: number
+  order_count: number
 }
 
 function UserDetailsPage() {
-  const router = useRouter();
-  const params = useParams();
-  const userId = params?.id as string;
+  const router = useRouter()
+  const params = useParams()
+  const userId = params?.id as string
 
-  const [user, setUser] = useState<User | null>(null);
-  const [activity, setActivity] = useState<Activity | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isEditing, setIsEditing] = useState(false);
-  const [showMigrateDialog, setShowMigrateDialog] = useState(false);
-  const [tenants, setTenants] = useState<any[]>([]);
-  const [selectedTenantId, setSelectedTenantId] = useState('');
+  const [user, setUser] = useState<User | null>(null)
+  const [activity, setActivity] = useState<Activity | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [isEditing, setIsEditing] = useState(false)
+  const [showMigrateDialog, setShowMigrateDialog] = useState(false)
+  const [tenants, setTenants] = useState<any[]>([])
+  const [selectedTenantId, setSelectedTenantId] = useState('')
   const [message, setMessage] = useState<{
-    type: 'success' | 'error';
-    text: string;
-  } | null>(null);
+    type: 'success' | 'error'
+    text: string
+  } | null>(null)
 
   const [editForm, setEditForm] = useState({
     full_name: '',
     phone: '',
     user_type: '',
-  });
+  })
 
   useEffect(() => {
     if (userId) {
-      fetchUser();
-      fetchTenants();
+      fetchUser()
+      fetchTenants()
     }
-  }, [userId]);
+  }, [userId])
 
   const fetchUser = async () => {
     try {
-      setIsLoading(true);
-      const response = await fetch(`/api/super-admin/users/${userId}`);
-      const data = await response.json();
+      setIsLoading(true)
+      const response = await fetch(`/api/super-admin/users/${userId}`)
+      const data = await response.json()
 
       if (data.success) {
-        setUser(data.user);
-        setActivity(data.activity);
+        setUser(data.user)
+        setActivity(data.activity)
         setEditForm({
           full_name: data.user.full_name || '',
           phone: data.user.phone || '',
           user_type: data.user.user_type || 'client',
-        });
+        })
       }
     } catch (error) {
-      console.error('Error fetching user:', error);
-      showMessage('error', 'Failed to load user details');
+      console.error('Error fetching user:', error)
+      showMessage('error', 'Failed to load user details')
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   const fetchTenants = async () => {
     try {
-      const response = await fetch('/api/super-admin/tenants?limit=100');
-      const data = await response.json();
+      const response = await fetch('/api/super-admin/tenants?limit=100')
+      const data = await response.json()
       if (data.success) {
-        setTenants(data.tenants);
+        setTenants(data.tenants)
       }
     } catch (error) {
-      console.error('Error fetching tenants:', error);
+      console.error('Error fetching tenants:', error)
     }
-  };
+  }
 
   const showMessage = (type: 'success' | 'error', text: string) => {
-    setMessage({ type, text });
-    setTimeout(() => setMessage(null), 5000);
-  };
+    setMessage({ type, text })
+    setTimeout(() => setMessage(null), 5000)
+  }
 
   const handleUpdate = async () => {
     try {
@@ -118,35 +118,35 @@ function UserDetailsPage() {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(editForm),
-      });
+      })
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (data.success) {
-        setUser(data.user);
-        setIsEditing(false);
-        showMessage('success', 'User updated successfully');
+        setUser(data.user)
+        setIsEditing(false)
+        showMessage('success', 'User updated successfully')
       } else {
-        showMessage('error', data.error || 'Failed to update user');
+        showMessage('error', data.error || 'Failed to update user')
       }
     } catch (error) {
-      console.error('Error updating user:', error);
-      showMessage('error', 'Failed to update user');
+      console.error('Error updating user:', error)
+      showMessage('error', 'Failed to update user')
     }
-  };
+  }
 
   const handleMigrate = async () => {
     if (!selectedTenantId) {
-      showMessage('error', 'Please select a target tenant');
-      return;
+      showMessage('error', 'Please select a target tenant')
+      return
     }
 
     if (
       !confirm(
-        `Are you sure you want to migrate this user to the selected tenant? This will move all their data.`
+        `Are you sure you want to migrate this user to the selected tenant? This will move all their data.`,
       )
     ) {
-      return;
+      return
     }
 
     try {
@@ -154,33 +154,33 @@ function UserDetailsPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ target_tenant_id: selectedTenantId }),
-      });
+      })
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (data.success) {
-        setShowMigrateDialog(false);
-        fetchUser();
+        setShowMigrateDialog(false)
+        fetchUser()
         showMessage(
           'success',
-          `User migrated successfully. ${data.migrated_data_count} records updated.`
-        );
+          `User migrated successfully. ${data.migrated_data_count} records updated.`,
+        )
       } else {
-        showMessage('error', data.error || 'Failed to migrate user');
+        showMessage('error', data.error || 'Failed to migrate user')
       }
     } catch (error) {
-      console.error('Error migrating user:', error);
-      showMessage('error', 'Failed to migrate user');
+      console.error('Error migrating user:', error)
+      showMessage('error', 'Failed to migrate user')
     }
-  };
+  }
 
   const handleImpersonate = async () => {
     if (
       !confirm(
-        'Are you sure you want to impersonate this user? This action will be logged.'
+        'Are you sure you want to impersonate this user? This action will be logged.',
       )
     ) {
-      return;
+      return
     }
 
     try {
@@ -188,43 +188,43 @@ function UserDetailsPage() {
         `/api/super-admin/users/${userId}/impersonate`,
         {
           method: 'POST',
-        }
-      );
+        },
+      )
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (data.success) {
-        showMessage(
-          'success',
-          'Impersonation session created. Redirecting...'
-        );
+        showMessage('success', 'Impersonation session created. Redirecting...')
         // In a real implementation, this would redirect to the user's view
         setTimeout(() => {
           alert(
-            'Impersonation feature: In production, this would redirect to the user view with their permissions.'
-          );
-        }, 1000);
+            'Impersonation feature: In production, this would redirect to the user view with their permissions.',
+          )
+        }, 1000)
       } else {
-        showMessage('error', data.error || 'Failed to create impersonation session');
+        showMessage(
+          'error',
+          data.error || 'Failed to create impersonation session',
+        )
       }
     } catch (error) {
-      console.error('Error creating impersonation session:', error);
-      showMessage('error', 'Failed to create impersonation session');
+      console.error('Error creating impersonation session:', error)
+      showMessage('error', 'Failed to create impersonation session')
     }
-  };
+  }
 
   const handleDeactivate = async () => {
-    const action = user?.active ? 'deactivate' : 'activate';
+    const action = user?.active ? 'deactivate' : 'activate'
     if (
       !confirm(
         `Are you sure you want to ${action} this user? ${
           user?.active
             ? 'They will no longer be able to access the platform.'
             : 'They will be able to access the platform again.'
-        }`
+        }`,
       )
     ) {
-      return;
+      return
     }
 
     try {
@@ -232,22 +232,22 @@ function UserDetailsPage() {
         `/api/super-admin/users/${userId}/deactivate`,
         {
           method: 'POST',
-        }
-      );
+        },
+      )
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (data.success) {
-        fetchUser();
-        showMessage('success', `User ${action}d successfully`);
+        fetchUser()
+        showMessage('success', `User ${action}d successfully`)
       } else {
-        showMessage('error', data.error || `Failed to ${action} user`);
+        showMessage('error', data.error || `Failed to ${action} user`)
       }
     } catch (error) {
-      console.error(`Error ${action}ing user:`, error);
-      showMessage('error', `Failed to ${action} user`);
+      console.error(`Error ${action}ing user:`, error)
+      showMessage('error', `Failed to ${action} user`)
     }
-  };
+  }
 
   if (isLoading) {
     return (
@@ -256,7 +256,7 @@ function UserDetailsPage() {
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div>
         </div>
       </SuperAdminLayout>
-    );
+    )
   }
 
   if (!user) {
@@ -272,21 +272,21 @@ function UserDetailsPage() {
           </button>
         </div>
       </SuperAdminLayout>
-    );
+    )
   }
 
   const getUserTypeColor = (type: string) => {
     switch (type) {
       case 'admin':
-        return 'bg-purple-100 text-purple-800';
+        return 'bg-purple-100 text-purple-800'
       case 'lawyer':
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-blue-100 text-blue-800'
       case 'client':
-        return 'bg-green-100 text-green-800';
+        return 'bg-green-100 text-green-800'
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-100 text-gray-800'
     }
-  };
+  }
 
   return (
     <SuperAdminLayout>
@@ -308,7 +308,7 @@ function UserDetailsPage() {
           <div className="flex items-center space-x-2">
             <span
               className={`px-4 py-2 rounded-full text-sm font-medium ${getUserTypeColor(
-                user.user_type
+                user.user_type,
               )}`}
             >
               {user.user_type}
@@ -451,12 +451,12 @@ function UserDetailsPage() {
               <div className="flex items-center space-x-2 pt-4">
                 <button
                   onClick={() => {
-                    setIsEditing(false);
+                    setIsEditing(false)
                     setEditForm({
                       full_name: user.full_name || '',
                       phone: user.phone || '',
                       user_type: user.user_type || 'client',
-                    });
+                    })
                   }}
                   className="px-4 py-2 text-gray-600 hover:text-gray-900"
                 >
@@ -663,8 +663,8 @@ function UserDetailsPage() {
               <div className="flex items-center space-x-3">
                 <button
                   onClick={() => {
-                    setShowMigrateDialog(false);
-                    setSelectedTenantId('');
+                    setShowMigrateDialog(false)
+                    setSelectedTenantId('')
                   }}
                   className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
                 >
@@ -683,7 +683,7 @@ function UserDetailsPage() {
         )}
       </div>
     </SuperAdminLayout>
-  );
+  )
 }
 
-export default withSuperAdminAuth(UserDetailsPage);
+export default withSuperAdminAuth(UserDetailsPage)

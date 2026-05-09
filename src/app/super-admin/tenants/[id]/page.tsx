@@ -1,11 +1,11 @@
-'use client';
+'use client'
 
-import { useEffect, useState } from 'react';
-import { useRouter, useParams } from 'next/navigation';
-import { withSuperAdminAuth } from '@/lib/auth/withSuperAdminAuth';
-import SuperAdminLayout from '@/components/super-admin/SuperAdminLayout';
-import { useLanguage } from '@/contexts/LanguageContext';
-import T from '@/components/super-admin/T';
+import { useEffect, useState } from 'react'
+import { useRouter, useParams } from 'next/navigation'
+import { withSuperAdminAuth } from '@/lib/auth/withSuperAdminAuth'
+import SuperAdminLayout from '@/components/super-admin/SuperAdminLayout'
+import { useLanguage } from '@/contexts/LanguageContext'
+import T from '@/components/super-admin/T'
 import {
   BuildingOfficeIcon,
   UsersIcon,
@@ -14,60 +14,60 @@ import {
   XCircleIcon,
   TrashIcon,
   PencilIcon,
-} from '@heroicons/react/24/outline';
+} from '@heroicons/react/24/outline'
 
 interface Tenant {
-  id: string;
-  name: string;
-  subdomain: string;
-  domain: string | null;
-  status: 'active' | 'inactive' | 'suspended';
-  user_count: number;
-  created_at: string;
-  updated_at: string;
+  id: string
+  name: string
+  subdomain: string
+  domain: string | null
+  status: 'active' | 'inactive' | 'suspended'
+  user_count: number
+  created_at: string
+  updated_at: string
 }
 
 function TenantDetailsPage() {
-  const router = useRouter();
-  const params = useParams();
-  const { t } = useLanguage();
-  const tenantId = params?.id as string;
+  const router = useRouter()
+  const params = useParams()
+  const { t } = useLanguage()
+  const tenantId = params?.id as string
 
-  const [tenant, setTenant] = useState<Tenant | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isEditing, setIsEditing] = useState(false);
+  const [tenant, setTenant] = useState<Tenant | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [isEditing, setIsEditing] = useState(false)
   const [editForm, setEditForm] = useState({
     name: '',
     subdomain: '',
     domain: '',
-  });
+  })
 
   useEffect(() => {
     if (tenantId) {
-      fetchTenant();
+      fetchTenant()
     }
-  }, [tenantId]);
+  }, [tenantId])
 
   const fetchTenant = async () => {
     try {
-      setIsLoading(true);
-      const response = await fetch(`/api/super-admin/tenants/${tenantId}`);
-      const data = await response.json();
+      setIsLoading(true)
+      const response = await fetch(`/api/super-admin/tenants/${tenantId}`)
+      const data = await response.json()
 
       if (data.success) {
-        setTenant(data.tenant);
+        setTenant(data.tenant)
         setEditForm({
           name: data.tenant.name,
           subdomain: data.tenant.subdomain,
           domain: data.tenant.domain || '',
-        });
+        })
       }
     } catch (error) {
-      console.error('Error fetching tenant:', error);
+      console.error('Error fetching tenant:', error)
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   const handleUpdate = async () => {
     try {
@@ -75,73 +75,73 @@ function TenantDetailsPage() {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(editForm),
-      });
+      })
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (data.success) {
-        setTenant(data.tenant);
-        setIsEditing(false);
+        setTenant(data.tenant)
+        setIsEditing(false)
       } else {
-        alert(data.error || 'Failed to update tenant');
+        alert(data.error || 'Failed to update tenant')
       }
     } catch (error) {
-      console.error('Error updating tenant:', error);
-      alert('Failed to update tenant');
+      console.error('Error updating tenant:', error)
+      alert('Failed to update tenant')
     }
-  };
+  }
 
   const handleActivate = async () => {
     try {
       const response = await fetch(
         `/api/super-admin/tenants/${tenantId}/activate`,
-        { method: 'POST' }
-      );
+        { method: 'POST' },
+      )
 
       if (response.ok) {
-        fetchTenant();
+        fetchTenant()
       }
     } catch (error) {
-      console.error('Error activating tenant:', error);
+      console.error('Error activating tenant:', error)
     }
-  };
+  }
 
   const handleDeactivate = async () => {
-    if (!confirm(t('tenantDetail.confirmDeactivate'))) return;
+    if (!confirm(t('tenantDetail.confirmDeactivate'))) return
 
     try {
       const response = await fetch(
         `/api/super-admin/tenants/${tenantId}/deactivate`,
-        { method: 'POST' }
-      );
+        { method: 'POST' },
+      )
 
       if (response.ok) {
-        fetchTenant();
+        fetchTenant()
       }
     } catch (error) {
-      console.error('Error deactivating tenant:', error);
+      console.error('Error deactivating tenant:', error)
     }
-  };
+  }
 
   const handleDelete = async () => {
-    if (!confirm(t('tenantDetail.confirmDelete'))) return;
+    if (!confirm(t('tenantDetail.confirmDelete'))) return
 
     try {
       const response = await fetch(`/api/super-admin/tenants/${tenantId}`, {
         method: 'DELETE',
-      });
+      })
 
       if (response.ok) {
-        router.push('/super-admin/tenants');
+        router.push('/super-admin/tenants')
       } else {
-        const data = await response.json();
-        alert(data.error || 'Failed to delete tenant');
+        const data = await response.json()
+        alert(data.error || 'Failed to delete tenant')
       }
     } catch (error) {
-      console.error('Error deleting tenant:', error);
-      alert('Failed to delete tenant');
+      console.error('Error deleting tenant:', error)
+      alert('Failed to delete tenant')
     }
-  };
+  }
 
   if (isLoading) {
     return (
@@ -150,7 +150,7 @@ function TenantDetailsPage() {
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div>
         </div>
       </SuperAdminLayout>
-    );
+    )
   }
 
   if (!tenant) {
@@ -168,21 +168,21 @@ function TenantDetailsPage() {
           </button>
         </div>
       </SuperAdminLayout>
-    );
+    )
   }
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'active':
-        return 'bg-green-100 text-green-800';
+        return 'bg-green-100 text-green-800'
       case 'inactive':
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-100 text-gray-800'
       case 'suspended':
-        return 'bg-red-100 text-red-800';
+        return 'bg-red-100 text-red-800'
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-100 text-gray-800'
     }
-  };
+  }
 
   return (
     <SuperAdminLayout>
@@ -203,12 +203,18 @@ function TenantDetailsPage() {
           </div>
           <span
             className={`px-4 py-2 rounded-full text-sm font-medium ${getStatusColor(
-              tenant.status
+              tenant.status,
             )}`}
           >
-            <T 
-              zh={tenant.status === 'active' ? '活跃' : tenant.status === 'inactive' ? '停用' : '暂停'} 
-              en={tenant.status} 
+            <T
+              zh={
+                tenant.status === 'active'
+                  ? '活跃'
+                  : tenant.status === 'inactive'
+                    ? '停用'
+                    : '暂停'
+              }
+              en={tenant.status}
             />
           </span>
         </div>
@@ -216,7 +222,9 @@ function TenantDetailsPage() {
         {/* Quick Actions */}
         <div className="flex items-center space-x-4">
           <button
-            onClick={() => router.push(`/super-admin/tenants/${tenantId}/settings`)}
+            onClick={() =>
+              router.push(`/super-admin/tenants/${tenantId}/settings`)
+            }
             className="flex items-center px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700"
           >
             <Cog6ToothIcon className="w-5 h-5 mr-2" />
@@ -268,12 +276,12 @@ function TenantDetailsPage() {
               <div className="flex items-center space-x-2">
                 <button
                   onClick={() => {
-                    setIsEditing(false);
+                    setIsEditing(false)
                     setEditForm({
                       name: tenant.name,
                       subdomain: tenant.subdomain,
                       domain: tenant.domain || '',
-                    });
+                    })
                   }}
                   className="px-3 py-1 text-gray-600 hover:text-gray-900"
                 >
@@ -372,7 +380,9 @@ function TenantDetailsPage() {
                 <dt className="text-sm font-medium text-gray-500">
                   <T zh="租户ID" en="Tenant ID" />
                 </dt>
-                <dd className="mt-1 text-sm text-gray-900 font-mono">{tenant.id}</dd>
+                <dd className="mt-1 text-sm text-gray-900 font-mono">
+                  {tenant.id}
+                </dd>
               </div>
 
               <div>
@@ -424,9 +434,15 @@ function TenantDetailsPage() {
                   <T zh="状态" en="Status" />
                 </p>
                 <p className="text-2xl font-bold text-gray-900 capitalize">
-                  <T 
-                    zh={tenant.status === 'active' ? '活跃' : tenant.status === 'inactive' ? '停用' : '暂停'} 
-                    en={tenant.status} 
+                  <T
+                    zh={
+                      tenant.status === 'active'
+                        ? '活跃'
+                        : tenant.status === 'inactive'
+                          ? '停用'
+                          : '暂停'
+                    }
+                    en={tenant.status}
                   />
                 </p>
               </div>
@@ -456,7 +472,7 @@ function TenantDetailsPage() {
         </div>
       </div>
     </SuperAdminLayout>
-  );
+  )
 }
 
-export default withSuperAdminAuth(TenantDetailsPage);
+export default withSuperAdminAuth(TenantDetailsPage)

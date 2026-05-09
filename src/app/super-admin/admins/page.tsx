@@ -1,146 +1,146 @@
-'use client';
+'use client'
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { withSuperAdminAuth } from '@/lib/auth/withSuperAdminAuth';
-import SuperAdminLayout from '@/components/super-admin/SuperAdminLayout';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { withSuperAdminAuth } from '@/lib/auth/withSuperAdminAuth'
+import SuperAdminLayout from '@/components/super-admin/SuperAdminLayout'
+import { useLanguage } from '@/contexts/LanguageContext'
 import {
   MagnifyingGlassIcon,
   PlusIcon,
   ArrowPathIcon,
   UserGroupIcon,
-} from '@heroicons/react/24/outline';
+} from '@heroicons/react/24/outline'
 
 interface Admin {
-  id: string;
-  email: string;
-  full_name: string | null;
-  phone: string | null;
-  tenant_id: string;
-  created_at: string;
+  id: string
+  email: string
+  full_name: string | null
+  phone: string | null
+  tenant_id: string
+  created_at: string
   tenants: {
-    id: string;
-    name: string;
-    subdomain: string;
-    status: string;
-  };
+    id: string
+    name: string
+    subdomain: string
+    status: string
+  }
 }
 
 interface GroupedAdmins {
   [tenantId: string]: {
     tenant: {
-      id: string;
-      name: string;
-      subdomain: string;
-      status: string;
-    };
-    admins: Admin[];
-  };
+      id: string
+      name: string
+      subdomain: string
+      status: string
+    }
+    admins: Admin[]
+  }
 }
 
 function AdminsPage() {
-  const router = useRouter();
-  const { t } = useLanguage();
-  const [admins, setAdmins] = useState<Admin[]>([]);
-  const [groupedAdmins, setGroupedAdmins] = useState<GroupedAdmins>({});
-  const [isLoading, setIsLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedTenant, setSelectedTenant] = useState<string>('all');
-  const [tenants, setTenants] = useState<any[]>([]);
-  const [showReassignModal, setShowReassignModal] = useState(false);
-  const [showRevokeModal, setShowRevokeModal] = useState(false);
-  const [selectedAdmin, setSelectedAdmin] = useState<Admin | null>(null);
-  const [targetTenantId, setTargetTenantId] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter()
+  const { t } = useLanguage()
+  const [admins, setAdmins] = useState<Admin[]>([])
+  const [groupedAdmins, setGroupedAdmins] = useState<GroupedAdmins>({})
+  const [isLoading, setIsLoading] = useState(true)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [selectedTenant, setSelectedTenant] = useState<string>('all')
+  const [tenants, setTenants] = useState<any[]>([])
+  const [showReassignModal, setShowReassignModal] = useState(false)
+  const [showRevokeModal, setShowRevokeModal] = useState(false)
+  const [selectedAdmin, setSelectedAdmin] = useState<Admin | null>(null)
+  const [targetTenantId, setTargetTenantId] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEffect(() => {
-    fetchAdmins();
-    fetchTenants();
-  }, []);
+    fetchAdmins()
+    fetchTenants()
+  }, [])
 
   useEffect(() => {
-    groupAndFilterAdmins();
-  }, [admins, searchQuery, selectedTenant]);
+    groupAndFilterAdmins()
+  }, [admins, searchQuery, selectedTenant])
 
   const fetchAdmins = async () => {
     try {
-      setIsLoading(true);
-      const response = await fetch('/api/super-admin/admins?limit=1000');
-      const data = await response.json();
+      setIsLoading(true)
+      const response = await fetch('/api/super-admin/admins?limit=1000')
+      const data = await response.json()
 
       if (data.success) {
-        setAdmins(data.admins);
+        setAdmins(data.admins)
       }
     } catch (error) {
-      console.error('Error fetching admins:', error);
+      console.error('Error fetching admins:', error)
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   const fetchTenants = async () => {
     try {
-      const response = await fetch('/api/super-admin/tenants?limit=1000');
-      const data = await response.json();
+      const response = await fetch('/api/super-admin/tenants?limit=1000')
+      const data = await response.json()
 
       if (data.success) {
-        setTenants(data.tenants);
+        setTenants(data.tenants)
       }
     } catch (error) {
-      console.error('Error fetching tenants:', error);
+      console.error('Error fetching tenants:', error)
     }
-  };
+  }
 
   const groupAndFilterAdmins = () => {
-    let filtered = [...admins];
+    let filtered = [...admins]
 
     // Apply search filter
     if (searchQuery) {
-      const query = searchQuery.toLowerCase();
+      const query = searchQuery.toLowerCase()
       filtered = filtered.filter(
         (admin) =>
           admin.email.toLowerCase().includes(query) ||
           admin.full_name?.toLowerCase().includes(query) ||
-          admin.tenants?.name.toLowerCase().includes(query)
-      );
+          admin.tenants?.name.toLowerCase().includes(query),
+      )
     }
 
     // Apply tenant filter
     if (selectedTenant !== 'all') {
-      filtered = filtered.filter((admin) => admin.tenant_id === selectedTenant);
+      filtered = filtered.filter((admin) => admin.tenant_id === selectedTenant)
     }
 
     // Group by tenant
-    const grouped: GroupedAdmins = {};
+    const grouped: GroupedAdmins = {}
     filtered.forEach((admin) => {
       if (!grouped[admin.tenant_id]) {
         grouped[admin.tenant_id] = {
           tenant: admin.tenants,
           admins: [],
-        };
+        }
       }
-      grouped[admin.tenant_id].admins.push(admin);
-    });
+      grouped[admin.tenant_id].admins.push(admin)
+    })
 
-    setGroupedAdmins(grouped);
-  };
+    setGroupedAdmins(grouped)
+  }
 
   const handleReassign = (admin: Admin) => {
-    setSelectedAdmin(admin);
-    setTargetTenantId('');
-    setShowReassignModal(true);
-  };
+    setSelectedAdmin(admin)
+    setTargetTenantId('')
+    setShowReassignModal(true)
+  }
 
   const handleRevoke = (admin: Admin) => {
-    setSelectedAdmin(admin);
-    setShowRevokeModal(true);
-  };
+    setSelectedAdmin(admin)
+    setShowRevokeModal(true)
+  }
 
   const confirmReassign = async () => {
-    if (!selectedAdmin || !targetTenantId) return;
+    if (!selectedAdmin || !targetTenantId) return
 
-    setIsSubmitting(true);
+    setIsSubmitting(true)
     try {
       const response = await fetch(
         `/api/super-admin/admins/${selectedAdmin.id}/reassign`,
@@ -148,62 +148,62 @@ function AdminsPage() {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ tenant_id: targetTenantId }),
-        }
-      );
+        },
+      )
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (data.success) {
-        alert('Admin reassigned successfully');
-        setShowReassignModal(false);
-        fetchAdmins();
+        alert('Admin reassigned successfully')
+        setShowReassignModal(false)
+        fetchAdmins()
       } else {
-        alert(data.error || 'Failed to reassign admin');
+        alert(data.error || 'Failed to reassign admin')
       }
     } catch (error) {
-      console.error('Error reassigning admin:', error);
-      alert('Failed to reassign admin');
+      console.error('Error reassigning admin:', error)
+      alert('Failed to reassign admin')
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false)
     }
-  };
+  }
 
   const confirmRevoke = async () => {
-    if (!selectedAdmin) return;
+    if (!selectedAdmin) return
 
-    setIsSubmitting(true);
+    setIsSubmitting(true)
     try {
       const response = await fetch(
         `/api/super-admin/admins/${selectedAdmin.id}`,
         {
           method: 'DELETE',
-        }
-      );
+        },
+      )
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (data.success) {
-        alert('Admin privileges revoked successfully');
-        setShowRevokeModal(false);
-        fetchAdmins();
+        alert('Admin privileges revoked successfully')
+        setShowRevokeModal(false)
+        fetchAdmins()
       } else {
-        alert(data.error || 'Failed to revoke admin privileges');
+        alert(data.error || 'Failed to revoke admin privileges')
       }
     } catch (error) {
-      console.error('Error revoking admin:', error);
-      alert('Failed to revoke admin privileges');
+      console.error('Error revoking admin:', error)
+      alert('Failed to revoke admin privileges')
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false)
     }
-  };
+  }
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
-    });
-  };
+    })
+  }
 
   return (
     <SuperAdminLayout>
@@ -214,9 +214,7 @@ function AdminsPage() {
             <h1 className="text-3xl font-bold text-gray-900">
               {t('admins.title')}
             </h1>
-            <p className="text-gray-600 mt-2">
-              {t('admins.subtitle')}
-            </p>
+            <p className="text-gray-600 mt-2">{t('admins.subtitle')}</p>
           </div>
           <div className="flex justify-end">
             <button
@@ -260,8 +258,8 @@ function AdminsPage() {
               </select>
               <button
                 onClick={() => {
-                  setSearchQuery('');
-                  setSelectedTenant('all');
+                  setSearchQuery('')
+                  setSelectedTenant('all')
                 }}
                 className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
                 title="Clear filters"
@@ -284,8 +282,8 @@ function AdminsPage() {
             {searchQuery || selectedTenant !== 'all' ? (
               <button
                 onClick={() => {
-                  setSearchQuery('');
-                  setSelectedTenant('all');
+                  setSearchQuery('')
+                  setSelectedTenant('all')
                 }}
                 className="mt-4 text-orange-600 hover:text-orange-700"
               >
@@ -492,7 +490,7 @@ function AdminsPage() {
         )}
       </div>
     </SuperAdminLayout>
-  );
+  )
 }
 
-export default withSuperAdminAuth(AdminsPage);
+export default withSuperAdminAuth(AdminsPage)

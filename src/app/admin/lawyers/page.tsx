@@ -1,172 +1,180 @@
-"use client";
+'use client'
 
-import { useEffect, useState } from "react";
-import { createClient } from "@/lib/supabase/client";
-import { Search, Plus, Edit, Trash2, CheckCircle, XCircle, Star } from "lucide-react";
-import Link from "next/link";
+import { useEffect, useState } from 'react'
+import { createClient } from '@/lib/supabase/client'
+import {
+  Search,
+  Plus,
+  Edit,
+  Trash2,
+  CheckCircle,
+  XCircle,
+  Star,
+} from 'lucide-react'
+import Link from 'next/link'
 
 interface Lawyer {
-  id: string;
-  name: string;
-  specialty: string[];
-  experience: number;
-  rating: number;
-  reviews: number;
-  location: string;
-  available: boolean;
-  sold_count: number;
-  created_at: string;
-  price_range?: string;
-  languages?: string[];
-  bio?: string;
-  education?: string;
-  certification?: string;
-  response_time?: string;
-  success_rate?: number;
+  id: string
+  name: string
+  specialty: string[]
+  experience: number
+  rating: number
+  reviews: number
+  location: string
+  available: boolean
+  sold_count: number
+  created_at: string
+  price_range?: string
+  languages?: string[]
+  bio?: string
+  education?: string
+  certification?: string
+  response_time?: string
+  success_rate?: number
 }
 
 export default function LawyersManagement() {
-  const [lawyers, setLawyers] = useState<Lawyer[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [editingLawyer, setEditingLawyer] = useState<Lawyer | null>(null);
+  const [lawyers, setLawyers] = useState<Lawyer[]>([])
+  const [loading, setLoading] = useState(true)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [showEditModal, setShowEditModal] = useState(false)
+  const [showAddModal, setShowAddModal] = useState(false)
+  const [editingLawyer, setEditingLawyer] = useState<Lawyer | null>(null)
   const [formData, setFormData] = useState({
-    name: "",
+    name: '',
     specialty: [] as string[],
     experience: 0,
-    price_range: "",
-    location: "",
+    price_range: '',
+    location: '',
     languages: [] as string[],
-    bio: "",
-    education: "",
-    certification: "",
-    response_time: "",
+    bio: '',
+    education: '',
+    certification: '',
+    response_time: '',
     success_rate: 0,
-  });
+  })
 
   useEffect(() => {
-    loadLawyers();
-  }, []);
+    loadLawyers()
+  }, [])
 
   const loadLawyers = async () => {
-    const supabase = await createClient();
-    setLoading(true);
+    const supabase = await createClient()
+    setLoading(true)
 
     try {
       const { data, error } = await supabase
-        .from("lawyers")
-        .select("*")
-        .order("created_at", { ascending: false });
+        .from('lawyers')
+        .select('*')
+        .order('created_at', { ascending: false })
 
-      if (error) throw error;
-      setLawyers(data || []);
+      if (error) throw error
+      setLawyers(data || [])
     } catch (error) {
-      console.error("Error loading lawyers:", error);
+      console.error('Error loading lawyers:', error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const toggleAvailability = async (id: string, currentStatus: boolean) => {
-    const supabase = await createClient();
+    const supabase = await createClient()
 
     try {
       const { error } = await supabase
-        .from("lawyers")
+        .from('lawyers')
         .update({ available: !currentStatus })
-        .eq("id", id);
+        .eq('id', id)
 
-      if (error) throw error;
-      loadLawyers();
+      if (error) throw error
+      loadLawyers()
     } catch (error) {
-      console.error("Error updating lawyer:", error);
+      console.error('Error updating lawyer:', error)
     }
-  };
+  }
 
   const handleEdit = (lawyer: Lawyer) => {
-    setEditingLawyer(lawyer);
+    setEditingLawyer(lawyer)
     setFormData({
-      name: lawyer.name || "",
+      name: lawyer.name || '',
       specialty: lawyer.specialty || [],
       experience: lawyer.experience || 0,
-      price_range: lawyer.price_range || "",
-      location: lawyer.location || "",
+      price_range: lawyer.price_range || '',
+      location: lawyer.location || '',
       languages: lawyer.languages || [],
-      bio: lawyer.bio || "",
-      education: lawyer.education || "",
-      certification: lawyer.certification || "",
-      response_time: lawyer.response_time || "",
+      bio: lawyer.bio || '',
+      education: lawyer.education || '',
+      certification: lawyer.certification || '',
+      response_time: lawyer.response_time || '',
       success_rate: lawyer.success_rate || 0,
-    });
-    setShowEditModal(true);
-  };
+    })
+    setShowEditModal(true)
+  }
 
   const handleAdd = () => {
     setFormData({
-      name: "",
+      name: '',
       specialty: [],
       experience: 0,
-      price_range: "",
-      location: "",
+      price_range: '',
+      location: '',
       languages: [],
-      bio: "",
-      education: "",
-      certification: "",
-      response_time: "",
+      bio: '',
+      education: '',
+      certification: '',
+      response_time: '',
       success_rate: 0,
-    });
-    setShowAddModal(true);
-  };
+    })
+    setShowAddModal(true)
+  }
 
   const handleDelete = async (id: string, name: string) => {
-    if (!confirm(`确定要删除律师 "${name}" 吗？此操作无法撤销。`)) return;
+    if (!confirm(`确定要删除律师 "${name}" 吗？此操作无法撤销。`)) return
 
-    const supabase = await createClient();
+    const supabase = await createClient()
 
     try {
-      const { error } = await supabase.from("lawyers").delete().eq("id", id);
+      const { error } = await supabase.from('lawyers').delete().eq('id', id)
 
-      if (error) throw error;
-      loadLawyers();
-      alert("删除成功！");
+      if (error) throw error
+      loadLawyers()
+      alert('删除成功！')
     } catch (error) {
-      console.error("Error deleting lawyer:", error);
-      alert("删除失败，请重试");
+      console.error('Error deleting lawyer:', error)
+      alert('删除失败，请重试')
     }
-  };
+  }
 
   const handleSubmitEdit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!editingLawyer) return;
+    e.preventDefault()
+    if (!editingLawyer) return
 
-    const supabase = await createClient();
+    const supabase = await createClient()
 
     try {
       const { error } = await supabase
-        .from("lawyers")
+        .from('lawyers')
         .update(formData)
-        .eq("id", editingLawyer.id);
+        .eq('id', editingLawyer.id)
 
-      if (error) throw error;
+      if (error) throw error
 
-      setShowEditModal(false);
-      setEditingLawyer(null);
-      loadLawyers();
-      alert("更新成功！");
+      setShowEditModal(false)
+      setEditingLawyer(null)
+      loadLawyers()
+      alert('更新成功！')
     } catch (error) {
-      console.error("Error updating lawyer:", error);
-      alert("更新失败，请重试");
+      console.error('Error updating lawyer:', error)
+      alert('更新失败，请重试')
     }
-  };
+  }
 
   const handleSubmitAdd = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const supabase = await createClient();
+    e.preventDefault()
+    const supabase = await createClient()
 
     try {
-      const { error } = await supabase.from("lawyers").insert([
+      const { error } = await supabase.from('lawyers').insert([
         {
           ...formData,
           rating: 5.0,
@@ -174,25 +182,27 @@ export default function LawyersManagement() {
           available: true,
           sold_count: 0,
         },
-      ]);
+      ])
 
-      if (error) throw error;
+      if (error) throw error
 
-      setShowAddModal(false);
-      loadLawyers();
-      alert("添加成功！");
+      setShowAddModal(false)
+      loadLawyers()
+      alert('添加成功！')
     } catch (error) {
-      console.error("Error adding lawyer:", error);
-      alert("添加失败，请重试");
+      console.error('Error adding lawyer:', error)
+      alert('添加失败，请重试')
     }
-  };
+  }
 
   const filteredLawyers = lawyers.filter(
     (lawyer) =>
       lawyer.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       lawyer.location?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      lawyer.specialty?.some((s) => s.toLowerCase().includes(searchTerm.toLowerCase()))
-  );
+      lawyer.specialty?.some((s) =>
+        s.toLowerCase().includes(searchTerm.toLowerCase()),
+      ),
+  )
 
   return (
     <div>
@@ -205,8 +215,8 @@ export default function LawyersManagement() {
         <Link
           href="#"
           onClick={(e) => {
-            e.preventDefault();
-            handleAdd();
+            e.preventDefault()
+            handleAdd()
           }}
           className="flex items-center gap-2 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-medium transition-all"
         >
@@ -231,7 +241,9 @@ export default function LawyersManagement() {
         {/* Stats */}
         <div className="grid grid-cols-4 gap-4">
           <div>
-            <div className="text-2xl font-bold text-neutral-900">{lawyers.length}</div>
+            <div className="text-2xl font-bold text-neutral-900">
+              {lawyers.length}
+            </div>
             <div className="text-sm text-neutral-600">总律师数</div>
           </div>
           <div>
@@ -248,7 +260,10 @@ export default function LawyersManagement() {
           </div>
           <div>
             <div className="text-2xl font-bold text-yellow-600">
-              {(lawyers.reduce((sum, l) => sum + l.rating, 0) / lawyers.length || 0).toFixed(1)}
+              {(
+                lawyers.reduce((sum, l) => sum + l.rating, 0) /
+                  lawyers.length || 0
+              ).toFixed(1)}
             </div>
             <div className="text-sm text-neutral-600">平均评分</div>
           </div>
@@ -281,20 +296,26 @@ export default function LawyersManagement() {
                     👨‍⚖️
                   </div>
                   <div>
-                    <h3 className="font-bold text-neutral-900">{lawyer.name}</h3>
+                    <h3 className="font-bold text-neutral-900">
+                      {lawyer.name}
+                    </h3>
                     <div className="flex items-center gap-1 text-sm text-neutral-600">
                       <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
                       <span>{lawyer.rating}</span>
-                      <span className="text-neutral-400">({lawyer.reviews})</span>
+                      <span className="text-neutral-400">
+                        ({lawyer.reviews})
+                      </span>
                     </div>
                   </div>
                 </div>
                 <button
-                  onClick={() => toggleAvailability(lawyer.id, lawyer.available)}
+                  onClick={() =>
+                    toggleAvailability(lawyer.id, lawyer.available)
+                  }
                   className={`p-2 rounded-lg ${
                     lawyer.available
-                      ? "bg-green-100 text-green-600"
-                      : "bg-red-100 text-red-600"
+                      ? 'bg-green-100 text-green-600'
+                      : 'bg-red-100 text-red-600'
                   }`}
                 >
                   {lawyer.available ? (
@@ -356,7 +377,9 @@ export default function LawyersManagement() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6 border-b border-neutral-200">
-              <h2 className="text-2xl font-bold text-neutral-900">编辑律师信息</h2>
+              <h2 className="text-2xl font-bold text-neutral-900">
+                编辑律师信息
+              </h2>
             </div>
 
             <form onSubmit={handleSubmitEdit} className="p-6 space-y-4">
@@ -369,7 +392,9 @@ export default function LawyersManagement() {
                     type="text"
                     required
                     value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
                     className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                   />
                 </div>
@@ -383,7 +408,12 @@ export default function LawyersManagement() {
                     required
                     min="0"
                     value={formData.experience}
-                    onChange={(e) => setFormData({ ...formData, experience: parseInt(e.target.value) })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        experience: parseInt(e.target.value),
+                      })
+                    }
                     className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                   />
                 </div>
@@ -396,8 +426,13 @@ export default function LawyersManagement() {
                 <input
                   type="text"
                   required
-                  value={formData.specialty.join(", ")}
-                  onChange={(e) => setFormData({ ...formData, specialty: e.target.value.split(",").map(s => s.trim()) })}
+                  value={formData.specialty.join(', ')}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      specialty: e.target.value.split(',').map((s) => s.trim()),
+                    })
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                   placeholder="例如：合同法, 劳动法, 房产法"
                 />
@@ -411,7 +446,9 @@ export default function LawyersManagement() {
                   <input
                     type="text"
                     value={formData.price_range}
-                    onChange={(e) => setFormData({ ...formData, price_range: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, price_range: e.target.value })
+                    }
                     className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                     placeholder="例如：RM 500-1000/小时"
                   />
@@ -425,7 +462,9 @@ export default function LawyersManagement() {
                     type="text"
                     required
                     value={formData.location}
-                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, location: e.target.value })
+                    }
                     className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                     placeholder="例如：吉隆坡"
                   />
@@ -438,8 +477,13 @@ export default function LawyersManagement() {
                 </label>
                 <input
                   type="text"
-                  value={formData.languages.join(", ")}
-                  onChange={(e) => setFormData({ ...formData, languages: e.target.value.split(",").map(s => s.trim()) })}
+                  value={formData.languages.join(', ')}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      languages: e.target.value.split(',').map((s) => s.trim()),
+                    })
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                   placeholder="例如：中文, 英语, 马来语"
                 />
@@ -451,7 +495,9 @@ export default function LawyersManagement() {
                 </label>
                 <textarea
                   value={formData.bio}
-                  onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, bio: e.target.value })
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                   rows={3}
                   placeholder="律师的专业背景和经验介绍"
@@ -465,7 +511,9 @@ export default function LawyersManagement() {
                 <input
                   type="text"
                   value={formData.education}
-                  onChange={(e) => setFormData({ ...formData, education: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, education: e.target.value })
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                   placeholder="例如：马来亚大学法学学士"
                 />
@@ -479,7 +527,12 @@ export default function LawyersManagement() {
                   <input
                     type="text"
                     value={formData.certification}
-                    onChange={(e) => setFormData({ ...formData, certification: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        certification: e.target.value,
+                      })
+                    }
                     className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                     placeholder="例如：马来西亚律师公会会员"
                   />
@@ -492,7 +545,12 @@ export default function LawyersManagement() {
                   <input
                     type="text"
                     value={formData.response_time}
-                    onChange={(e) => setFormData({ ...formData, response_time: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        response_time: e.target.value,
+                      })
+                    }
                     className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                     placeholder="例如：24小时内"
                   />
@@ -508,7 +566,12 @@ export default function LawyersManagement() {
                   min="0"
                   max="100"
                   value={formData.success_rate}
-                  onChange={(e) => setFormData({ ...formData, success_rate: parseFloat(e.target.value) })}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      success_rate: parseFloat(e.target.value),
+                    })
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                 />
               </div>
@@ -517,8 +580,8 @@ export default function LawyersManagement() {
                 <button
                   type="button"
                   onClick={() => {
-                    setShowEditModal(false);
-                    setEditingLawyer(null);
+                    setShowEditModal(false)
+                    setEditingLawyer(null)
                   }}
                   className="flex-1 px-4 py-2 border border-neutral-300 text-neutral-700 rounded-lg font-medium hover:bg-neutral-50 transition-all"
                 >
@@ -541,7 +604,9 @@ export default function LawyersManagement() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6 border-b border-neutral-200">
-              <h2 className="text-2xl font-bold text-neutral-900">添加新律师</h2>
+              <h2 className="text-2xl font-bold text-neutral-900">
+                添加新律师
+              </h2>
             </div>
 
             <form onSubmit={handleSubmitAdd} className="p-6 space-y-4">
@@ -554,7 +619,9 @@ export default function LawyersManagement() {
                     type="text"
                     required
                     value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
                     className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                   />
                 </div>
@@ -568,7 +635,12 @@ export default function LawyersManagement() {
                     required
                     min="0"
                     value={formData.experience}
-                    onChange={(e) => setFormData({ ...formData, experience: parseInt(e.target.value) })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        experience: parseInt(e.target.value),
+                      })
+                    }
                     className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                   />
                 </div>
@@ -581,8 +653,13 @@ export default function LawyersManagement() {
                 <input
                   type="text"
                   required
-                  value={formData.specialty.join(", ")}
-                  onChange={(e) => setFormData({ ...formData, specialty: e.target.value.split(",").map(s => s.trim()) })}
+                  value={formData.specialty.join(', ')}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      specialty: e.target.value.split(',').map((s) => s.trim()),
+                    })
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                   placeholder="例如：合同法, 劳动法, 房产法"
                 />
@@ -596,7 +673,9 @@ export default function LawyersManagement() {
                   <input
                     type="text"
                     value={formData.price_range}
-                    onChange={(e) => setFormData({ ...formData, price_range: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, price_range: e.target.value })
+                    }
                     className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                     placeholder="例如：RM 500-1000/小时"
                   />
@@ -610,7 +689,9 @@ export default function LawyersManagement() {
                     type="text"
                     required
                     value={formData.location}
-                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, location: e.target.value })
+                    }
                     className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                     placeholder="例如：吉隆坡"
                   />
@@ -623,8 +704,13 @@ export default function LawyersManagement() {
                 </label>
                 <input
                   type="text"
-                  value={formData.languages.join(", ")}
-                  onChange={(e) => setFormData({ ...formData, languages: e.target.value.split(",").map(s => s.trim()) })}
+                  value={formData.languages.join(', ')}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      languages: e.target.value.split(',').map((s) => s.trim()),
+                    })
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                   placeholder="例如：中文, 英语, 马来语"
                 />
@@ -636,7 +722,9 @@ export default function LawyersManagement() {
                 </label>
                 <textarea
                   value={formData.bio}
-                  onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, bio: e.target.value })
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                   rows={3}
                   placeholder="律师的专业背景和经验介绍"
@@ -650,7 +738,9 @@ export default function LawyersManagement() {
                 <input
                   type="text"
                   value={formData.education}
-                  onChange={(e) => setFormData({ ...formData, education: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, education: e.target.value })
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                   placeholder="例如：马来亚大学法学学士"
                 />
@@ -664,7 +754,12 @@ export default function LawyersManagement() {
                   <input
                     type="text"
                     value={formData.certification}
-                    onChange={(e) => setFormData({ ...formData, certification: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        certification: e.target.value,
+                      })
+                    }
                     className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                     placeholder="例如：马来西亚律师公会会员"
                   />
@@ -677,7 +772,12 @@ export default function LawyersManagement() {
                   <input
                     type="text"
                     value={formData.response_time}
-                    onChange={(e) => setFormData({ ...formData, response_time: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        response_time: e.target.value,
+                      })
+                    }
                     className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                     placeholder="例如：24小时内"
                   />
@@ -693,7 +793,12 @@ export default function LawyersManagement() {
                   min="0"
                   max="100"
                   value={formData.success_rate}
-                  onChange={(e) => setFormData({ ...formData, success_rate: parseFloat(e.target.value) })}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      success_rate: parseFloat(e.target.value),
+                    })
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                 />
               </div>
@@ -718,5 +823,5 @@ export default function LawyersManagement() {
         </div>
       )}
     </div>
-  );
+  )
 }

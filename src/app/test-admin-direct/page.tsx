@@ -1,36 +1,36 @@
-'use client';
+'use client'
 
-import { useEffect, useState } from 'react';
-import { createClient } from '@/lib/supabase/client';
+import { useEffect, useState } from 'react'
+import { createClient } from '@/lib/supabase/client'
 
 export default function TestAdminDirectPage() {
-  const [status, setStatus] = useState<any>({});
-  const [loading, setLoading] = useState(true);
+  const [status, setStatus] = useState<any>({})
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    checkEverything();
-  }, []);
+    checkEverything()
+  }, [])
 
   const checkEverything = async () => {
-    const supabase = createClient();
-    const results: any = {};
+    const supabase = createClient()
+    const results: any = {}
 
     try {
       // 1. 检查Session
-      const { data: sessionData } = await supabase.auth.getSession();
+      const { data: sessionData } = await supabase.auth.getSession()
       results.session = {
         exists: !!sessionData.session,
         userId: sessionData.session?.user?.id,
         email: sessionData.session?.user?.email,
-      };
+      }
 
       // 2. 检查User
-      const { data: userData } = await supabase.auth.getUser();
+      const { data: userData } = await supabase.auth.getUser()
       results.user = {
         exists: !!userData.user,
         userId: userData.user?.id,
         email: userData.user?.email,
-      };
+      }
 
       // 3. 检查Profile
       if (userData.user) {
@@ -38,58 +38,57 @@ export default function TestAdminDirectPage() {
           .from('profiles')
           .select('*')
           .eq('id', userData.user.id)
-          .maybeSingle();
+          .maybeSingle()
 
         results.profile = {
           exists: !!profile,
           error: profileError?.message,
           data: profile,
-        };
+        }
       }
 
       // 4. 统计数据
       const { count: usersCount } = await supabase
         .from('profiles')
-        .select('*', { count: 'exact', head: true });
+        .select('*', { count: 'exact', head: true })
 
       results.stats = {
         totalUsers: usersCount || 0,
-      };
-
+      }
     } catch (error: any) {
-      results.error = error.message;
+      results.error = error.message
     }
 
-    setStatus(results);
-    setLoading(false);
-  };
+    setStatus(results)
+    setLoading(false)
+  }
 
   const handleLogin = async () => {
-    const email = prompt('Email:');
-    const password = prompt('Password:');
-    
-    if (!email || !password) return;
+    const email = prompt('Email:')
+    const password = prompt('Password:')
 
-    const supabase = createClient();
+    if (!email || !password) return
+
+    const supabase = createClient()
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
-    });
+    })
 
     if (error) {
-      alert(`登录失败: ${error.message}`);
+      alert(`登录失败: ${error.message}`)
     } else {
-      alert('登录成功！刷新页面查看结果');
-      window.location.reload();
+      alert('登录成功！刷新页面查看结果')
+      window.location.reload()
     }
-  };
+  }
 
   const handleLogout = async () => {
-    const supabase = createClient();
-    await supabase.auth.signOut();
-    alert('已退出登录');
-    window.location.reload();
-  };
+    const supabase = createClient()
+    await supabase.auth.signOut()
+    alert('已退出登录')
+    window.location.reload()
+  }
 
   if (loading) {
     return (
@@ -99,13 +98,15 @@ export default function TestAdminDirectPage() {
           <p className="mt-4 text-gray-600">检查中...</p>
         </div>
       </div>
-    );
+    )
   }
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8">🔧 管理后台测试页面（无权限检查）</h1>
+        <h1 className="text-3xl font-bold mb-8">
+          🔧 管理后台测试页面（无权限检查）
+        </h1>
 
         {/* 操作按钮 */}
         <div className="mb-8 flex gap-4">
@@ -191,7 +192,8 @@ export default function TestAdminDirectPage() {
                   ✅ 登录成功！您已经可以访问管理后台了！
                 </p>
                 <p className="text-green-700 text-sm mt-2">
-                  用户: {status.profile.data.email} ({status.profile.data.user_type})
+                  用户: {status.profile.data.email} (
+                  {status.profile.data.user_type})
                 </p>
                 {status.profile.data.super_admin && (
                   <p className="text-green-700 text-sm">
@@ -260,5 +262,5 @@ export default function TestAdminDirectPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }

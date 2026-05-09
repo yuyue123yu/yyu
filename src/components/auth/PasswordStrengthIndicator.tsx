@@ -1,49 +1,49 @@
-'use client';
+'use client'
 
-import { usePasswordStrength } from '@/hooks/usePasswordStrength';
+import { usePasswordStrength } from '@/hooks/usePasswordStrength'
 
 interface PasswordStrengthIndicatorProps {
-  password: string;
-  showFeedback?: boolean;
+  password: string
+  showFeedback?: boolean
 }
 
-export default function PasswordStrengthIndicator({ 
-  password, 
-  showFeedback = true 
+export default function PasswordStrengthIndicator({
+  password,
+  showFeedback = true,
 }: PasswordStrengthIndicatorProps) {
-  const { score, strength, checks, feedback } = usePasswordStrength(password);
+  const { score, strength, checks, feedback } = usePasswordStrength(password)
 
-  if (!password) return null;
+  if (!password) return null
 
   const getStrengthColor = () => {
     switch (strength) {
       case 'very-strong':
-        return 'bg-green-500';
+        return 'bg-green-500'
       case 'strong':
-        return 'bg-blue-500';
+        return 'bg-blue-500'
       case 'medium':
-        return 'bg-yellow-500';
+        return 'bg-yellow-500'
       case 'weak':
-        return 'bg-red-500';
+        return 'bg-red-500'
       default:
-        return 'bg-gray-300';
+        return 'bg-gray-300'
     }
-  };
+  }
 
   const getStrengthText = () => {
     switch (strength) {
       case 'very-strong':
-        return '非常强';
+        return '非常强'
       case 'strong':
-        return '强';
+        return '强'
       case 'medium':
-        return '中等';
+        return '中等'
       case 'weak':
-        return '弱';
+        return '弱'
       default:
-        return '';
+        return ''
     }
-  };
+  }
 
   return (
     <div className="space-y-2">
@@ -64,32 +64,42 @@ export default function PasswordStrengthIndicator({
       {showFeedback && (
         <div className="space-y-1">
           <div className="flex items-center space-x-2 text-xs">
-            <span className={checks.length ? 'text-green-600' : 'text-gray-400'}>
+            <span
+              className={checks.length ? 'text-green-600' : 'text-gray-400'}
+            >
               {checks.length ? '✓' : '○'} 至少 8 个字符
             </span>
           </div>
           <div className="flex items-center space-x-2 text-xs">
-            <span className={checks.uppercase ? 'text-green-600' : 'text-gray-400'}>
+            <span
+              className={checks.uppercase ? 'text-green-600' : 'text-gray-400'}
+            >
               {checks.uppercase ? '✓' : '○'} 包含大写字母
             </span>
           </div>
           <div className="flex items-center space-x-2 text-xs">
-            <span className={checks.lowercase ? 'text-green-600' : 'text-gray-400'}>
+            <span
+              className={checks.lowercase ? 'text-green-600' : 'text-gray-400'}
+            >
               {checks.lowercase ? '✓' : '○'} 包含小写字母
             </span>
           </div>
           <div className="flex items-center space-x-2 text-xs">
-            <span className={checks.number ? 'text-green-600' : 'text-gray-400'}>
+            <span
+              className={checks.number ? 'text-green-600' : 'text-gray-400'}
+            >
               {checks.number ? '✓' : '○'} 包含数字
             </span>
           </div>
           <div className="flex items-center space-x-2 text-xs">
-            <span className={checks.special ? 'text-green-600' : 'text-gray-400'}>
+            <span
+              className={checks.special ? 'text-green-600' : 'text-gray-400'}
+            >
               {checks.special ? '✓' : '○'} 包含特殊字符（推荐）
             </span>
           </div>
         </div>
       )}
     </div>
-  );
+  )
 }

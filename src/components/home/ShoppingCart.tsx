@@ -1,46 +1,51 @@
-import { Trash2, Heart, ShoppingCart as CartIcon, ArrowRight } from "lucide-react";
-import Link from "next/link";
+import {
+  Trash2,
+  Heart,
+  ShoppingCart as CartIcon,
+  ArrowRight,
+} from 'lucide-react'
+import Link from 'next/link'
 
 export default function ShoppingCart() {
   const cartItems = [
     {
       id: 1,
-      lawyerName: "Ahmad Abdullah",
-      specialty: "商业法",
+      lawyerName: 'Ahmad Abdullah',
+      specialty: '商业法',
       price: 3500,
-      responseTime: "1小时",
-      addedDate: "2024-01-15"
+      responseTime: '1小时',
+      addedDate: '2024-01-15',
     },
     {
       id: 2,
-      lawyerName: "Sarah Wong",
-      specialty: "家庭法",
+      lawyerName: 'Sarah Wong',
+      specialty: '家庭法',
       price: 2800,
-      responseTime: "2小时",
-      addedDate: "2024-01-14"
-    }
-  ];
+      responseTime: '2小时',
+      addedDate: '2024-01-14',
+    },
+  ]
 
   const favorites = [
     {
       id: 3,
-      lawyerName: "Kumar Rajesh",
-      specialty: "房产法",
+      lawyerName: 'Kumar Rajesh',
+      specialty: '房产法',
       rating: 4.9,
       reviews: 178,
-      priceRange: "¥3,000-6,000"
+      priceRange: '¥3,000-6,000',
     },
     {
       id: 4,
-      lawyerName: "Tan Mei Ling",
-      specialty: "家庭法",
+      lawyerName: 'Tan Mei Ling',
+      specialty: '家庭法',
       rating: 4.8,
       reviews: 203,
-      priceRange: "¥2,000-4,000"
-    }
-  ];
+      priceRange: '¥2,000-4,000',
+    },
+  ]
 
-  const totalPrice = cartItems.reduce((sum, item) => sum + item.price, 0);
+  const totalPrice = cartItems.reduce((sum, item) => sum + item.price, 0)
 
   return (
     <section className="py-10 bg-white">
@@ -50,9 +55,7 @@ export default function ShoppingCart() {
           <div className="lg:col-span-2">
             <div className="flex items-center gap-2 mb-6">
               <CartIcon className="h-6 w-6 text-primary-600" />
-              <h2 className="text-2xl font-bold text-neutral-900">
-                咨询记录
-              </h2>
+              <h2 className="text-2xl font-bold text-neutral-900">咨询记录</h2>
               <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full font-bold">
                 {cartItems.length}
               </span>
@@ -130,7 +133,9 @@ export default function ShoppingCart() {
                         {fav.specialty}
                       </p>
                       <div className="flex items-center justify-between text-xs text-neutral-600">
-                        <span>⭐ {fav.rating} ({fav.reviews})</span>
+                        <span>
+                          ⭐ {fav.rating} ({fav.reviews})
+                        </span>
                         <span className="font-bold text-primary-600">
                           {fav.priceRange}
                         </span>
@@ -149,11 +154,15 @@ export default function ShoppingCart() {
               <div className="space-y-3 mb-4">
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-neutral-700">咨询数量</span>
-                  <span className="font-bold text-neutral-900">{cartItems.length}</span>
+                  <span className="font-bold text-neutral-900">
+                    {cartItems.length}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-neutral-700">小计</span>
-                  <span className="font-bold text-neutral-900">¥{totalPrice}</span>
+                  <span className="font-bold text-neutral-900">
+                    ¥{totalPrice}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-neutral-700">优惠券</span>
@@ -190,5 +199,5 @@ export default function ShoppingCart() {
         </div>
       </div>
     </section>
-  );
+  )
 }

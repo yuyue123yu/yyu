@@ -1,96 +1,96 @@
-'use client';
+'use client'
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { withSuperAdminAuth } from '@/lib/auth/withSuperAdminAuth';
-import SuperAdminLayout from '@/components/super-admin/SuperAdminLayout';
-import UserTable from '@/components/super-admin/UserTable';
-import UserFilters from '@/components/super-admin/UserFilters';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { withSuperAdminAuth } from '@/lib/auth/withSuperAdminAuth'
+import SuperAdminLayout from '@/components/super-admin/SuperAdminLayout'
+import UserTable from '@/components/super-admin/UserTable'
+import UserFilters from '@/components/super-admin/UserFilters'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface User {
-  id: string;
-  email: string;
-  full_name: string;
-  phone: string | null;
-  user_type: string;
-  tenant_id: string;
-  tenant_name: string;
-  active: boolean;
-  created_at: string;
+  id: string
+  email: string
+  full_name: string
+  phone: string | null
+  user_type: string
+  tenant_id: string
+  tenant_name: string
+  active: boolean
+  created_at: string
 }
 
 function UsersPage() {
-  const router = useRouter();
-  const { t } = useLanguage();
-  const [users, setUsers] = useState<User[]>([]);
-  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const router = useRouter()
+  const { t } = useLanguage()
+  const [users, setUsers] = useState<User[]>([])
+  const [filteredUsers, setFilteredUsers] = useState<User[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
   const [filters, setFilters] = useState({
     tenant_id: 'all',
     user_type: 'all',
     search: '',
-  });
+  })
 
   useEffect(() => {
-    fetchUsers();
-  }, [currentPage]);
+    fetchUsers()
+  }, [currentPage])
 
   useEffect(() => {
-    applyFilters();
-  }, [users, filters]);
+    applyFilters()
+  }, [users, filters])
 
   const fetchUsers = async () => {
     try {
-      setIsLoading(true);
+      setIsLoading(true)
       const response = await fetch(
-        `/api/super-admin/users?page=${currentPage}&limit=20`
-      );
-      const data = await response.json();
+        `/api/super-admin/users?page=${currentPage}&limit=20`,
+      )
+      const data = await response.json()
 
       if (data.success) {
-        setUsers(data.users);
-        setTotalPages(data.totalPages);
+        setUsers(data.users)
+        setTotalPages(data.totalPages)
       }
     } catch (error) {
-      console.error('Error fetching users:', error);
+      console.error('Error fetching users:', error)
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   const applyFilters = () => {
-    let filtered = [...users];
+    let filtered = [...users]
 
     // Tenant filter
     if (filters.tenant_id !== 'all') {
-      filtered = filtered.filter((u) => u.tenant_id === filters.tenant_id);
+      filtered = filtered.filter((u) => u.tenant_id === filters.tenant_id)
     }
 
     // User type filter
     if (filters.user_type !== 'all') {
-      filtered = filtered.filter((u) => u.user_type === filters.user_type);
+      filtered = filtered.filter((u) => u.user_type === filters.user_type)
     }
 
     // Search filter
     if (filters.search) {
-      const searchLower = filters.search.toLowerCase();
+      const searchLower = filters.search.toLowerCase()
       filtered = filtered.filter(
         (u) =>
           u.email.toLowerCase().includes(searchLower) ||
           u.full_name?.toLowerCase().includes(searchLower) ||
-          u.phone?.toLowerCase().includes(searchLower)
-      );
+          u.phone?.toLowerCase().includes(searchLower),
+      )
     }
 
-    setFilteredUsers(filtered);
-  };
+    setFilteredUsers(filtered)
+  }
 
   const handleFilterChange = (newFilters: any) => {
-    setFilters(newFilters);
-  };
+    setFilters(newFilters)
+  }
 
   return (
     <SuperAdminLayout>
@@ -98,10 +98,10 @@ function UsersPage() {
         {/* Page Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">{t('users.title')}</h1>
-            <p className="text-gray-600 mt-2">
-              {t('users.subtitle')}
-            </p>
+            <h1 className="text-3xl font-bold text-gray-900">
+              {t('users.title')}
+            </h1>
+            <p className="text-gray-600 mt-2">{t('users.subtitle')}</p>
           </div>
         </div>
 
@@ -157,7 +157,7 @@ function UsersPage() {
         )}
       </div>
     </SuperAdminLayout>
-  );
+  )
 }
 
-export default withSuperAdminAuth(UsersPage);
+export default withSuperAdminAuth(UsersPage)

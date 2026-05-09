@@ -1,12 +1,12 @@
 // Force dynamic rendering
-export const dynamic = 'force-dynamic';
-export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
 
 // System Settings API
-import { NextRequest, NextResponse } from 'next/server';
-import { requireSuperAdmin } from '@/lib/middleware/super-admin';
-import { logAuditEvent } from '@/lib/audit';
-import { createClient } from '@/lib/supabase/server';
+import { NextRequest, NextResponse } from 'next/server'
+import { requireSuperAdmin } from '@/lib/middleware/super-admin'
+import { logAuditEvent } from '@/lib/audit'
+import { createClient } from '@/lib/supabase/server'
 
 /**
  * GET /api/super-admin/system-settings
@@ -14,36 +14,39 @@ import { createClient } from '@/lib/supabase/server';
  */
 export async function GET(request: NextRequest) {
   // Verify super admin authentication
-  const authResult = await requireSuperAdmin(request);
+  const authResult = await requireSuperAdmin(request)
   if (authResult instanceof NextResponse) {
-    return authResult;
+    return authResult
   }
 
-  const { supabase } = authResult;
+  const { supabase } = authResult
 
   try {
     const { data, error } = await supabase
       .from('system_settings')
       .select('*')
-      .order('setting_key', { ascending: true });
+      .order('setting_key', { ascending: true })
 
     if (error) {
-      console.error('Error fetching system settings:', error);
+      console.error('Error fetching system settings:', error)
       return NextResponse.json(
         { error: 'Failed to fetch system settings' },
-        { status: 500 }
-      );
+        { status: 500 },
+      )
     }
 
     // Convert array to object for easier access
-    const settingsMap: Record<string, any> = {};
-    (data || []).forEach((setting: any) => {
-      settingsMap[setting.setting_key] = setting.setting_value;
-    });
+    const settingsMap: Record<string, any> = {}
+    ;(data || []).forEach((setting: any) => {
+      settingsMap[setting.setting_key] = setting.setting_value
+    })
 
     // Structure settings for frontend
     const settings = {
-      maintenance_mode: settingsMap.maintenance_mode || { enabled: false, message: '' },
+      maintenance_mode: settingsMap.maintenance_mode || {
+        enabled: false,
+        message: '',
+      },
       feature_flags: settingsMap.feature_flags || {
         multi_tenancy: true,
         user_impersonation: true,
@@ -90,17 +93,17 @@ export async function GET(request: NextRequest) {
           replyTo: 'support@legalmy.com',
         },
       },
-    };
+    }
 
     return NextResponse.json({
       success: true,
       settings,
-    });
+    })
   } catch (error) {
-    console.error('Error fetching system settings:', error);
+    console.error('Error fetching system settings:', error)
     return NextResponse.json(
       { error: 'Failed to fetch system settings' },
-      { status: 500 }
-    );
+      { status: 500 },
+    )
   }
 }

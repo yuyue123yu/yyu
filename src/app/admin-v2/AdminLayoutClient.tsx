@@ -1,39 +1,43 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
-import Link from 'next/link';
-import { 
-  LayoutDashboard, 
-  Users, 
-  Briefcase, 
-  MessageSquare, 
-  ShoppingCart, 
-  FileText, 
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { createClient } from '@/lib/supabase/client'
+import Link from 'next/link'
+import {
+  LayoutDashboard,
+  Users,
+  Briefcase,
+  MessageSquare,
+  ShoppingCart,
+  FileText,
   Newspaper,
   Settings,
   LogOut,
   Menu,
-  X
-} from 'lucide-react';
-import { User } from '@supabase/supabase-js';
+  X,
+} from 'lucide-react'
+import { User } from '@supabase/supabase-js'
 
 interface AdminLayoutClientProps {
-  user: User;
-  profile: any;
-  children: React.ReactNode;
+  user: User
+  profile: any
+  children: React.ReactNode
 }
 
-export default function AdminLayoutClient({ user, profile, children }: AdminLayoutClientProps) {
-  const router = useRouter();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+export default function AdminLayoutClient({
+  user,
+  profile,
+  children,
+}: AdminLayoutClientProps) {
+  const router = useRouter()
+  const [sidebarOpen, setSidebarOpen] = useState(true)
 
   const handleSignOut = async () => {
-    const supabase = createClient();
-    await supabase.auth.signOut();
-    router.push('/admin/login');
-  };
+    const supabase = createClient()
+    await supabase.auth.signOut()
+    router.push('/admin/login')
+  }
 
   const menuItems = [
     { icon: LayoutDashboard, label: '仪表板', href: '/admin-v2' },
@@ -44,7 +48,7 @@ export default function AdminLayoutClient({ user, profile, children }: AdminLayo
     { icon: FileText, label: '模板管理', href: '/admin-v2/templates' },
     { icon: Newspaper, label: '文章管理', href: '/admin-v2/articles' },
     { icon: Settings, label: '系统设置', href: '/admin-v2/settings' },
-  ];
+  ]
 
   return (
     <div className="min-h-screen bg-neutral-100">
@@ -140,5 +144,5 @@ export default function AdminLayoutClient({ user, profile, children }: AdminLayo
         />
       )}
     </div>
-  );
+  )
 }

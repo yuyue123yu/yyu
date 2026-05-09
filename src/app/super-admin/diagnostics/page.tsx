@@ -1,58 +1,58 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import { withSuperAdminAuth } from '@/lib/auth/withSuperAdminAuth';
-import SuperAdminLayout from '@/components/super-admin/SuperAdminLayout';
+import { useState } from 'react'
+import { withSuperAdminAuth } from '@/lib/auth/withSuperAdminAuth'
+import SuperAdminLayout from '@/components/super-admin/SuperAdminLayout'
 import {
   CheckCircleIcon,
   XCircleIcon,
   ClockIcon,
   WrenchScrewdriverIcon,
-} from '@heroicons/react/24/outline';
+} from '@heroicons/react/24/outline'
 
 interface DiagnosticResult {
-  name: string;
-  status: 'success' | 'error' | 'pending';
-  message: string;
-  details?: string;
+  name: string
+  status: 'success' | 'error' | 'pending'
+  message: string
+  details?: string
 }
 
 function DiagnosticsPage() {
-  const [isRunning, setIsRunning] = useState(false);
-  const [results, setResults] = useState<DiagnosticResult[]>([]);
+  const [isRunning, setIsRunning] = useState(false)
+  const [results, setResults] = useState<DiagnosticResult[]>([])
 
   const runDiagnostics = async () => {
-    setIsRunning(true);
-    setResults([]);
+    setIsRunning(true)
+    setResults([])
 
-    const checks: DiagnosticResult[] = [];
+    const checks: DiagnosticResult[] = []
 
     // 1. 数据库连接检查
     checks.push({
       name: '数据库连接',
       status: 'pending',
       message: '检查中...',
-    });
-    setResults([...checks]);
+    })
+    setResults([...checks])
 
     try {
-      const response = await fetch('/api/super-admin/diagnostics/database');
-      const data = await response.json();
+      const response = await fetch('/api/super-admin/diagnostics/database')
+      const data = await response.json()
       checks[checks.length - 1] = {
         name: '数据库连接',
         status: data.success ? 'success' : 'error',
         message: data.success ? '连接正常' : '连接失败',
         details: data.message,
-      };
-      setResults([...checks]);
+      }
+      setResults([...checks])
     } catch (error) {
       checks[checks.length - 1] = {
         name: '数据库连接',
         status: 'error',
         message: '检查失败',
         details: String(error),
-      };
-      setResults([...checks]);
+      }
+      setResults([...checks])
     }
 
     // 2. RLS 策略检查
@@ -60,27 +60,27 @@ function DiagnosticsPage() {
       name: 'RLS 策略',
       status: 'pending',
       message: '检查中...',
-    });
-    setResults([...checks]);
+    })
+    setResults([...checks])
 
     try {
-      const response = await fetch('/api/super-admin/diagnostics/rls');
-      const data = await response.json();
+      const response = await fetch('/api/super-admin/diagnostics/rls')
+      const data = await response.json()
       checks[checks.length - 1] = {
         name: 'RLS 策略',
         status: data.success ? 'success' : 'error',
         message: data.success ? '策略正常' : '策略异常',
         details: data.message,
-      };
-      setResults([...checks]);
+      }
+      setResults([...checks])
     } catch (error) {
       checks[checks.length - 1] = {
         name: 'RLS 策略',
         status: 'error',
         message: '检查失败',
         details: String(error),
-      };
-      setResults([...checks]);
+      }
+      setResults([...checks])
     }
 
     // 3. 表结构检查
@@ -88,27 +88,27 @@ function DiagnosticsPage() {
       name: '表结构',
       status: 'pending',
       message: '检查中...',
-    });
-    setResults([...checks]);
+    })
+    setResults([...checks])
 
     try {
-      const response = await fetch('/api/super-admin/diagnostics/tables');
-      const data = await response.json();
+      const response = await fetch('/api/super-admin/diagnostics/tables')
+      const data = await response.json()
       checks[checks.length - 1] = {
         name: '表结构',
         status: data.success ? 'success' : 'error',
         message: data.success ? '表结构完整' : '表结构异常',
         details: data.message,
-      };
-      setResults([...checks]);
+      }
+      setResults([...checks])
     } catch (error) {
       checks[checks.length - 1] = {
         name: '表结构',
         status: 'error',
         message: '检查失败',
         details: String(error),
-      };
-      setResults([...checks]);
+      }
+      setResults([...checks])
     }
 
     // 4. 认证权限检查
@@ -116,27 +116,27 @@ function DiagnosticsPage() {
       name: '认证权限',
       status: 'pending',
       message: '检查中...',
-    });
-    setResults([...checks]);
+    })
+    setResults([...checks])
 
     try {
-      const response = await fetch('/api/super-admin/diagnostics/auth');
-      const data = await response.json();
+      const response = await fetch('/api/super-admin/diagnostics/auth')
+      const data = await response.json()
       checks[checks.length - 1] = {
         name: '认证权限',
         status: data.success ? 'success' : 'error',
         message: data.success ? '权限正常' : '权限异常',
         details: data.message,
-      };
-      setResults([...checks]);
+      }
+      setResults([...checks])
     } catch (error) {
       checks[checks.length - 1] = {
         name: '认证权限',
         status: 'error',
         message: '检查失败',
         details: String(error),
-      };
-      setResults([...checks]);
+      }
+      setResults([...checks])
     }
 
     // 5. 环境变量检查
@@ -144,57 +144,57 @@ function DiagnosticsPage() {
       name: '环境变量',
       status: 'pending',
       message: '检查中...',
-    });
-    setResults([...checks]);
+    })
+    setResults([...checks])
 
     try {
-      const response = await fetch('/api/super-admin/diagnostics/env');
-      const data = await response.json();
+      const response = await fetch('/api/super-admin/diagnostics/env')
+      const data = await response.json()
       checks[checks.length - 1] = {
         name: '环境变量',
         status: data.success ? 'success' : 'error',
         message: data.success ? '配置正常' : '配置异常',
         details: data.message,
-      };
-      setResults([...checks]);
+      }
+      setResults([...checks])
     } catch (error) {
       checks[checks.length - 1] = {
         name: '环境变量',
         status: 'error',
         message: '检查失败',
         details: String(error),
-      };
-      setResults([...checks]);
+      }
+      setResults([...checks])
     }
 
-    setIsRunning(false);
-  };
+    setIsRunning(false)
+  }
 
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'success':
-        return <CheckCircleIcon className="w-6 h-6 text-green-600" />;
+        return <CheckCircleIcon className="w-6 h-6 text-green-600" />
       case 'error':
-        return <XCircleIcon className="w-6 h-6 text-red-600" />;
+        return <XCircleIcon className="w-6 h-6 text-red-600" />
       case 'pending':
-        return <ClockIcon className="w-6 h-6 text-yellow-600 animate-spin" />;
+        return <ClockIcon className="w-6 h-6 text-yellow-600 animate-spin" />
       default:
-        return null;
+        return null
     }
-  };
+  }
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'success':
-        return 'bg-green-50 border-green-200';
+        return 'bg-green-50 border-green-200'
       case 'error':
-        return 'bg-red-50 border-red-200';
+        return 'bg-red-50 border-red-200'
       case 'pending':
-        return 'bg-yellow-50 border-yellow-200';
+        return 'bg-yellow-50 border-yellow-200'
       default:
-        return 'bg-gray-50 border-gray-200';
+        return 'bg-gray-50 border-gray-200'
     }
-  };
+  }
 
   return (
     <SuperAdminLayout>
@@ -204,9 +204,7 @@ function DiagnosticsPage() {
             <WrenchScrewdriverIcon className="w-10 h-10 text-orange-600 mr-3" />
             <h1 className="text-3xl font-bold text-gray-900">系统诊断</h1>
           </div>
-          <p className="text-gray-600">
-            检查 Super Admin 系统的所有关键组件
-          </p>
+          <p className="text-gray-600">检查 Super Admin 系统的所有关键组件</p>
         </div>
 
         <div className="mb-8">
@@ -298,7 +296,7 @@ function DiagnosticsPage() {
         )}
       </div>
     </SuperAdminLayout>
-  );
+  )
 }
 
-export default withSuperAdminAuth(DiagnosticsPage);
+export default withSuperAdminAuth(DiagnosticsPage)

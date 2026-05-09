@@ -1,107 +1,110 @@
-'use client';
+'use client'
 
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
+import { useLanguage } from '@/contexts/LanguageContext'
 import {
   UserCircleIcon,
   BuildingOfficeIcon,
   CheckCircleIcon,
   XCircleIcon,
   KeyIcon,
-} from '@heroicons/react/24/outline';
+} from '@heroicons/react/24/outline'
 
 interface User {
-  id: string;
-  email: string;
-  full_name: string;
-  phone: string | null;
-  user_type: string;
-  tenant_id: string;
-  tenant_name: string;
-  active: boolean;
-  created_at: string;
+  id: string
+  email: string
+  full_name: string
+  phone: string | null
+  user_type: string
+  tenant_id: string
+  tenant_name: string
+  active: boolean
+  created_at: string
 }
 
 interface UserTableProps {
-  users: User[];
-  onUpdate: () => void;
+  users: User[]
+  onUpdate: () => void
 }
 
 export default function UserTable({ users, onUpdate }: UserTableProps) {
-  const router = useRouter();
-  const { t } = useLanguage();
+  const router = useRouter()
+  const { t } = useLanguage()
 
   // 重置密码相关状态
-  const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
-  const [resetPasswordUser, setResetPasswordUser] = useState<User | null>(null);
-  const [resetMethod, setResetMethod] = useState<'email' | 'temporary'>('email');
-  const [temporaryPassword, setTemporaryPassword] = useState('');
-  const [isResetting, setIsResetting] = useState(false);
-  const [resetError, setResetError] = useState('');
-  const [passwordCopied, setPasswordCopied] = useState(false);
+  const [showResetPasswordModal, setShowResetPasswordModal] = useState(false)
+  const [resetPasswordUser, setResetPasswordUser] = useState<User | null>(null)
+  const [resetMethod, setResetMethod] = useState<'email' | 'temporary'>('email')
+  const [temporaryPassword, setTemporaryPassword] = useState('')
+  const [isResetting, setIsResetting] = useState(false)
+  const [resetError, setResetError] = useState('')
+  const [passwordCopied, setPasswordCopied] = useState(false)
 
   const handleResetPassword = (e: React.MouseEvent, user: User) => {
-    e.stopPropagation();
-    setResetPasswordUser(user);
-    setResetMethod('email');
-    setTemporaryPassword('');
-    setResetError('');
-    setPasswordCopied(false);
-    setShowResetPasswordModal(true);
-  };
+    e.stopPropagation()
+    setResetPasswordUser(user)
+    setResetMethod('email')
+    setTemporaryPassword('')
+    setResetError('')
+    setPasswordCopied(false)
+    setShowResetPasswordModal(true)
+  }
 
   const handleSubmitResetPassword = async () => {
-    if (!resetPasswordUser) return;
+    if (!resetPasswordUser) return
 
-    setIsResetting(true);
-    setResetError('');
+    setIsResetting(true)
+    setResetError('')
 
     try {
-      const response = await fetch(`/api/admin/users/${resetPasswordUser.id}/reset-password`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `/api/admin/users/${resetPasswordUser.id}/reset-password`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ method: resetMethod }),
         },
-        body: JSON.stringify({ method: resetMethod }),
-      });
+      )
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (data.success) {
         if (resetMethod === 'temporary' && data.temporaryPassword) {
-          setTemporaryPassword(data.temporaryPassword);
+          setTemporaryPassword(data.temporaryPassword)
         } else {
-          alert('重置邮件已发送到用户邮箱！');
-          setShowResetPasswordModal(false);
-          setResetPasswordUser(null);
+          alert('重置邮件已发送到用户邮箱！')
+          setShowResetPasswordModal(false)
+          setResetPasswordUser(null)
         }
       } else {
-        setResetError(data.error || '重置失败，请重试');
+        setResetError(data.error || '重置失败，请重试')
       }
     } catch (error) {
-      console.error('Error resetting password:', error);
-      setResetError('网络错误，请稍后重试');
+      console.error('Error resetting password:', error)
+      setResetError('网络错误，请稍后重试')
     } finally {
-      setIsResetting(false);
+      setIsResetting(false)
     }
-  };
+  }
 
   const handleCopyPassword = () => {
     if (temporaryPassword) {
-      navigator.clipboard.writeText(temporaryPassword);
-      setPasswordCopied(true);
-      setTimeout(() => setPasswordCopied(false), 2000);
+      navigator.clipboard.writeText(temporaryPassword)
+      setPasswordCopied(true)
+      setTimeout(() => setPasswordCopied(false), 2000)
     }
-  };
+  }
 
   const handleCloseResetModal = () => {
-    setShowResetPasswordModal(false);
-    setResetPasswordUser(null);
-    setTemporaryPassword('');
-    setResetError('');
-    setPasswordCopied(false);
-  };
+    setShowResetPasswordModal(false)
+    setResetPasswordUser(null)
+    setTemporaryPassword('')
+    setResetError('')
+    setPasswordCopied(false)
+  }
 
   return (
     <>
@@ -185,8 +188,8 @@ export default function UserTable({ users, onUpdate }: UserTableProps) {
                     </button>
                     <button
                       onClick={(e) => {
-                        e.stopPropagation();
-                        router.push(`/super-admin/users/${user.id}`);
+                        e.stopPropagation()
+                        router.push(`/super-admin/users/${user.id}`)
                       }}
                       className="text-orange-600 hover:text-orange-900"
                     >
@@ -284,11 +287,15 @@ export default function UserTable({ users, onUpdate }: UserTableProps) {
                           name="resetMethod"
                           value="email"
                           checked={resetMethod === 'email'}
-                          onChange={(e) => setResetMethod(e.target.value as 'email')}
+                          onChange={(e) =>
+                            setResetMethod(e.target.value as 'email')
+                          }
                           className="mt-1 mr-3"
                         />
                         <div className="flex-1">
-                          <div className="font-medium text-gray-900">发送重置邮件</div>
+                          <div className="font-medium text-gray-900">
+                            发送重置邮件
+                          </div>
                           <div className="text-sm text-gray-600 mt-1">
                             系统将发送密码重置链接到用户邮箱
                           </div>
@@ -301,11 +308,15 @@ export default function UserTable({ users, onUpdate }: UserTableProps) {
                           name="resetMethod"
                           value="temporary"
                           checked={resetMethod === 'temporary'}
-                          onChange={(e) => setResetMethod(e.target.value as 'temporary')}
+                          onChange={(e) =>
+                            setResetMethod(e.target.value as 'temporary')
+                          }
                           className="mt-1 mr-3"
                         />
                         <div className="flex-1">
-                          <div className="font-medium text-gray-900">生成临时密码</div>
+                          <div className="font-medium text-gray-900">
+                            生成临时密码
+                          </div>
                           <div className="text-sm text-gray-600 mt-1">
                             系统将生成临时密码并显示给您
                           </div>
@@ -317,8 +328,9 @@ export default function UserTable({ users, onUpdate }: UserTableProps) {
                   {/* 提示信息 */}
                   <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <p className="text-sm text-blue-800">
-                      💡 {resetMethod === 'email' 
-                        ? '用户将收到重置邮件，可以自行设置新密码' 
+                      💡{' '}
+                      {resetMethod === 'email'
+                        ? '用户将收到重置邮件，可以自行设置新密码'
                         : '临时密码仅显示一次，请务必保存并发送给用户'}
                     </p>
                   </div>
@@ -349,5 +361,5 @@ export default function UserTable({ users, onUpdate }: UserTableProps) {
         </div>
       )}
     </>
-  );
+  )
 }

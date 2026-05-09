@@ -1,20 +1,20 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import { useLanguage } from '@/contexts/LanguageContext';
-import T from '@/components/super-admin/T';
+import { useState } from 'react'
+import { useLanguage } from '@/contexts/LanguageContext'
+import T from '@/components/super-admin/T'
 import {
   CheckIcon,
   BuildingOfficeIcon,
   PaintBrushIcon,
   UserPlusIcon,
   DocumentCheckIcon,
-} from '@heroicons/react/24/outline';
+} from '@heroicons/react/24/outline'
 
 interface TenantWizardProps {
-  onComplete: (data: any) => void;
-  onCancel: () => void;
-  isSubmitting: boolean;
+  onComplete: (data: any) => void
+  onCancel: () => void
+  isSubmitting: boolean
 }
 
 export default function TenantWizard({
@@ -22,15 +22,15 @@ export default function TenantWizard({
   onCancel,
   isSubmitting,
 }: TenantWizardProps) {
-  const { t } = useLanguage();
-  const [currentStep, setCurrentStep] = useState(1);
-  
+  const { t } = useLanguage()
+  const [currentStep, setCurrentStep] = useState(1)
+
   const steps = [
     { id: 1, name: t('wizard.basicInfo'), icon: BuildingOfficeIcon },
     { id: 2, name: t('wizard.oemConfig'), icon: PaintBrushIcon },
     { id: 3, name: t('wizard.adminAccount'), icon: UserPlusIcon },
     { id: 4, name: t('wizard.reviewConfirm'), icon: DocumentCheckIcon },
-  ];
+  ]
   const [formData, setFormData] = useState({
     // Step 1: Basic Information
     name: '',
@@ -50,70 +50,70 @@ export default function TenantWizard({
     admin_email: '',
     admin_name: '',
     admin_phone: '',
-  });
+  })
 
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<Record<string, string>>({})
 
   const updateFormData = (field: string, value: any) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }))
     // Clear error when user starts typing
     if (errors[field]) {
       setErrors((prev) => {
-        const newErrors = { ...prev };
-        delete newErrors[field];
-        return newErrors;
-      });
+        const newErrors = { ...prev }
+        delete newErrors[field]
+        return newErrors
+      })
     }
-  };
+  }
 
   const validateStep = (step: number): boolean => {
-    const newErrors: Record<string, string> = {};
+    const newErrors: Record<string, string> = {}
 
     if (step === 1) {
-      if (!formData.name.trim()) newErrors.name = t('wizard.tenantNameRequired');
+      if (!formData.name.trim()) newErrors.name = t('wizard.tenantNameRequired')
       if (!formData.subdomain.trim())
-        newErrors.subdomain = t('wizard.subdomainRequired');
+        newErrors.subdomain = t('wizard.subdomainRequired')
       if (!/^[a-z0-9-]+$/.test(formData.subdomain))
-        newErrors.subdomain = t('wizard.subdomainInvalid');
+        newErrors.subdomain = t('wizard.subdomainInvalid')
     }
 
     if (step === 2) {
       if (!formData.company_name.trim())
-        newErrors.company_name = t('wizard.companyNameRequired');
+        newErrors.company_name = t('wizard.companyNameRequired')
       if (!formData.support_email.trim())
-        newErrors.support_email = t('wizard.supportEmailRequired');
+        newErrors.support_email = t('wizard.supportEmailRequired')
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.support_email))
-        newErrors.support_email = t('wizard.supportEmailInvalid');
+        newErrors.support_email = t('wizard.supportEmailInvalid')
     }
 
     if (step === 3) {
       if (!formData.admin_email.trim())
-        newErrors.admin_email = t('wizard.adminEmailRequired');
+        newErrors.admin_email = t('wizard.adminEmailRequired')
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.admin_email))
-        newErrors.admin_email = t('wizard.adminEmailInvalid');
+        newErrors.admin_email = t('wizard.adminEmailInvalid')
       if (!formData.admin_name.trim())
-        newErrors.admin_name = t('wizard.adminNameRequired');
+        newErrors.admin_name = t('wizard.adminNameRequired')
     }
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
 
   const handleNext = () => {
     if (validateStep(currentStep)) {
       if (currentStep < 4) {
-        setCurrentStep(currentStep + 1);
+        setCurrentStep(currentStep + 1)
       } else {
-        onComplete(formData);
+        onComplete(formData)
       }
     }
-  };
+  }
 
   const handleBack = () => {
     if (currentStep > 1) {
-      setCurrentStep(currentStep - 1);
+      setCurrentStep(currentStep - 1)
     }
-  };
+  }
 
   return (
     <div className="bg-white rounded-lg shadow-lg">
@@ -134,8 +134,8 @@ export default function TenantWizard({
                       currentStep > step.id
                         ? 'bg-orange-600 border-orange-600'
                         : currentStep === step.id
-                        ? 'border-orange-600 bg-white'
-                        : 'border-gray-300 bg-white'
+                          ? 'border-orange-600 bg-white'
+                          : 'border-gray-300 bg-white'
                     }`}
                   >
                     {currentStep > step.id ? (
@@ -222,7 +222,10 @@ export default function TenantWizard({
                 <p className="mt-1 text-sm text-red-600">{errors.subdomain}</p>
               )}
               <p className="mt-1 text-sm text-gray-500">
-                <T zh="只允许小写字母、数字和连字符" en="Only lowercase letters, numbers, and hyphens allowed" />
+                <T
+                  zh="只允许小写字母、数字和连字符"
+                  en="Only lowercase letters, numbers, and hyphens allowed"
+                />
               </p>
             </div>
 
@@ -248,8 +251,12 @@ export default function TenantWizard({
                 onChange={(e) => updateFormData('status', e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
               >
-                <option value="active"><T zh="活跃" en="Active" /></option>
-                <option value="inactive"><T zh="停用" en="Inactive" /></option>
+                <option value="active">
+                  <T zh="活跃" en="Active" />
+                </option>
+                <option value="inactive">
+                  <T zh="停用" en="Inactive" />
+                </option>
               </select>
             </div>
           </div>
@@ -276,7 +283,9 @@ export default function TenantWizard({
                 placeholder="Acme Corporation"
               />
               {errors.company_name && (
-                <p className="mt-1 text-sm text-red-600">{errors.company_name}</p>
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.company_name}
+                </p>
               )}
             </div>
 
@@ -289,13 +298,17 @@ export default function TenantWizard({
                   <input
                     type="color"
                     value={formData.primary_color}
-                    onChange={(e) => updateFormData('primary_color', e.target.value)}
+                    onChange={(e) =>
+                      updateFormData('primary_color', e.target.value)
+                    }
                     className="w-12 h-10 border border-gray-300 rounded cursor-pointer"
                   />
                   <input
                     type="text"
                     value={formData.primary_color}
-                    onChange={(e) => updateFormData('primary_color', e.target.value)}
+                    onChange={(e) =>
+                      updateFormData('primary_color', e.target.value)
+                    }
                     className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
                   />
                 </div>
@@ -346,14 +359,18 @@ export default function TenantWizard({
               <input
                 type="email"
                 value={formData.support_email}
-                onChange={(e) => updateFormData('support_email', e.target.value)}
+                onChange={(e) =>
+                  updateFormData('support_email', e.target.value)
+                }
                 className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-orange-500 ${
                   errors.support_email ? 'border-red-500' : 'border-gray-300'
                 }`}
                 placeholder="support@acme.com"
               />
               {errors.support_email && (
-                <p className="mt-1 text-sm text-red-600">{errors.support_email}</p>
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.support_email}
+                </p>
               )}
             </div>
 
@@ -364,7 +381,9 @@ export default function TenantWizard({
               <input
                 type="tel"
                 value={formData.support_phone}
-                onChange={(e) => updateFormData('support_phone', e.target.value)}
+                onChange={(e) =>
+                  updateFormData('support_phone', e.target.value)
+                }
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
                 placeholder="+60 12-345 6789"
               />
@@ -379,7 +398,10 @@ export default function TenantWizard({
               <T zh="管理员账户" en="Admin Account" />
             </h2>
             <p className="text-gray-600">
-              <T zh="为此租户创建初始管理员账户" en="Create the initial administrator account for this tenant" />
+              <T
+                zh="为此租户创建初始管理员账户"
+                en="Create the initial administrator account for this tenant"
+              />
             </p>
 
             <div>
@@ -396,7 +418,9 @@ export default function TenantWizard({
                 placeholder="admin@acme.com"
               />
               {errors.admin_email && (
-                <p className="mt-1 text-sm text-red-600">{errors.admin_email}</p>
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.admin_email}
+                </p>
               )}
             </div>
 
@@ -433,7 +457,13 @@ export default function TenantWizard({
 
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
               <p className="text-sm text-blue-800">
-                <strong><T zh="注意：" en="Note:" /></strong> <T zh="激活邮件将发送到管理员邮箱，包含设置密码的说明。" en="An activation email will be sent to the admin email address with instructions to set up their password." />
+                <strong>
+                  <T zh="注意：" en="Note:" />
+                </strong>{' '}
+                <T
+                  zh="激活邮件将发送到管理员邮箱，包含设置密码的说明。"
+                  en="An activation email will be sent to the admin email address with instructions to set up their password."
+                />
               </p>
             </div>
           </div>
@@ -446,7 +476,10 @@ export default function TenantWizard({
               <T zh="审核确认" en="Review & Confirm" />
             </h2>
             <p className="text-gray-600">
-              <T zh="请在创建租户前审核信息" en="Please review the information before creating the tenant" />
+              <T
+                zh="请在创建租户前审核信息"
+                en="Please review the information before creating the tenant"
+              />
             </p>
 
             <div className="space-y-4">
@@ -456,23 +489,36 @@ export default function TenantWizard({
                 </h3>
                 <dl className="space-y-2">
                   <div className="flex justify-between">
-                    <dt className="text-gray-600"><T zh="租户名称：" en="Tenant Name:" /></dt>
+                    <dt className="text-gray-600">
+                      <T zh="租户名称：" en="Tenant Name:" />
+                    </dt>
                     <dd className="font-medium">{formData.name}</dd>
                   </div>
                   <div className="flex justify-between">
-                    <dt className="text-gray-600"><T zh="子域名：" en="Subdomain:" /></dt>
-                    <dd className="font-medium">{formData.subdomain}.example.com</dd>
+                    <dt className="text-gray-600">
+                      <T zh="子域名：" en="Subdomain:" />
+                    </dt>
+                    <dd className="font-medium">
+                      {formData.subdomain}.example.com
+                    </dd>
                   </div>
                   {formData.domain && (
                     <div className="flex justify-between">
-                      <dt className="text-gray-600"><T zh="自定义域名：" en="Custom Domain:" /></dt>
+                      <dt className="text-gray-600">
+                        <T zh="自定义域名：" en="Custom Domain:" />
+                      </dt>
                       <dd className="font-medium">{formData.domain}</dd>
                     </div>
                   )}
                   <div className="flex justify-between">
-                    <dt className="text-gray-600"><T zh="状态：" en="Status:" /></dt>
+                    <dt className="text-gray-600">
+                      <T zh="状态：" en="Status:" />
+                    </dt>
                     <dd className="font-medium capitalize">
-                      <T zh={formData.status === 'active' ? '活跃' : '停用'} en={formData.status} />
+                      <T
+                        zh={formData.status === 'active' ? '活跃' : '停用'}
+                        en={formData.status}
+                      />
                     </dd>
                   </div>
                 </dl>
@@ -484,36 +530,50 @@ export default function TenantWizard({
                 </h3>
                 <dl className="space-y-2">
                   <div className="flex justify-between">
-                    <dt className="text-gray-600"><T zh="公司名称：" en="Company Name:" /></dt>
+                    <dt className="text-gray-600">
+                      <T zh="公司名称：" en="Company Name:" />
+                    </dt>
                     <dd className="font-medium">{formData.company_name}</dd>
                   </div>
                   <div className="flex justify-between items-center">
-                    <dt className="text-gray-600"><T zh="主色调：" en="Primary Color:" /></dt>
+                    <dt className="text-gray-600">
+                      <T zh="主色调：" en="Primary Color:" />
+                    </dt>
                     <dd className="flex items-center">
                       <div
                         className="w-6 h-6 rounded border border-gray-300 mr-2"
                         style={{ backgroundColor: formData.primary_color }}
                       ></div>
-                      <span className="font-medium">{formData.primary_color}</span>
+                      <span className="font-medium">
+                        {formData.primary_color}
+                      </span>
                     </dd>
                   </div>
                   <div className="flex justify-between items-center">
-                    <dt className="text-gray-600"><T zh="辅助色：" en="Secondary Color:" /></dt>
+                    <dt className="text-gray-600">
+                      <T zh="辅助色：" en="Secondary Color:" />
+                    </dt>
                     <dd className="flex items-center">
                       <div
                         className="w-6 h-6 rounded border border-gray-300 mr-2"
                         style={{ backgroundColor: formData.secondary_color }}
                       ></div>
-                      <span className="font-medium">{formData.secondary_color}</span>
+                      <span className="font-medium">
+                        {formData.secondary_color}
+                      </span>
                     </dd>
                   </div>
                   <div className="flex justify-between">
-                    <dt className="text-gray-600"><T zh="支持邮箱：" en="Support Email:" /></dt>
+                    <dt className="text-gray-600">
+                      <T zh="支持邮箱：" en="Support Email:" />
+                    </dt>
                     <dd className="font-medium">{formData.support_email}</dd>
                   </div>
                   {formData.support_phone && (
                     <div className="flex justify-between">
-                      <dt className="text-gray-600"><T zh="支持电话：" en="Support Phone:" /></dt>
+                      <dt className="text-gray-600">
+                        <T zh="支持电话：" en="Support Phone:" />
+                      </dt>
                       <dd className="font-medium">{formData.support_phone}</dd>
                     </div>
                   )}
@@ -526,16 +586,22 @@ export default function TenantWizard({
                 </h3>
                 <dl className="space-y-2">
                   <div className="flex justify-between">
-                    <dt className="text-gray-600"><T zh="邮箱：" en="Email:" /></dt>
+                    <dt className="text-gray-600">
+                      <T zh="邮箱：" en="Email:" />
+                    </dt>
                     <dd className="font-medium">{formData.admin_email}</dd>
                   </div>
                   <div className="flex justify-between">
-                    <dt className="text-gray-600"><T zh="姓名：" en="Name:" /></dt>
+                    <dt className="text-gray-600">
+                      <T zh="姓名：" en="Name:" />
+                    </dt>
                     <dd className="font-medium">{formData.admin_name}</dd>
                   </div>
                   {formData.admin_phone && (
                     <div className="flex justify-between">
-                      <dt className="text-gray-600"><T zh="电话：" en="Phone:" /></dt>
+                      <dt className="text-gray-600">
+                        <T zh="电话：" en="Phone:" />
+                      </dt>
                       <dd className="font-medium">{formData.admin_phone}</dd>
                     </div>
                   )}
@@ -581,5 +647,5 @@ export default function TenantWizard({
         </div>
       </div>
     </div>
-  );
+  )
 }

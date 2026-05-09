@@ -1,5 +1,5 @@
-import Link from 'next/link';
-import { Home, ArrowLeft } from 'lucide-react';
+import Link from 'next/link'
+import { Home, ArrowLeft } from 'lucide-react'
 
 export default function NotFound() {
   return (
@@ -42,24 +42,36 @@ export default function NotFound() {
         <div className="mt-12 pt-8 border-t border-gray-200">
           <p className="text-sm text-gray-500 mb-4">您可能在寻找：</p>
           <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
-            <Link href="/services" className="text-primary-600 hover:text-primary-700 hover:underline">
+            <Link
+              href="/services"
+              className="text-primary-600 hover:text-primary-700 hover:underline"
+            >
               法律服务
             </Link>
             <span className="text-gray-300">|</span>
-            <Link href="/lawyers" className="text-primary-600 hover:text-primary-700 hover:underline">
+            <Link
+              href="/lawyers"
+              className="text-primary-600 hover:text-primary-700 hover:underline"
+            >
               律师团队
             </Link>
             <span className="text-gray-300">|</span>
-            <Link href="/about" className="text-primary-600 hover:text-primary-700 hover:underline">
+            <Link
+              href="/about"
+              className="text-primary-600 hover:text-primary-700 hover:underline"
+            >
               关于我们
             </Link>
             <span className="text-gray-300">|</span>
-            <Link href="/contact" className="text-primary-600 hover:text-primary-700 hover:underline">
+            <Link
+              href="/contact"
+              className="text-primary-600 hover:text-primary-700 hover:underline"
+            >
               联系我们
             </Link>
           </div>
         </div>
       </div>
     </div>
-  );
+  )
 }

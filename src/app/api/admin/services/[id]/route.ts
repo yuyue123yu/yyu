@@ -1,5 +1,5 @@
-import { createClient } from '@/lib/supabase/server';
-import { NextResponse } from 'next/server';
+import { createClient } from '@/lib/supabase/server'
+import { NextResponse } from 'next/server'
 
 /**
  * 獲取單個服務
@@ -7,15 +7,18 @@ import { NextResponse } from 'next/server';
  */
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   try {
-    const supabase = await createClient();
+    const supabase = await createClient()
 
     // 獲取當前用戶
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser()
     if (userError || !user) {
-      return NextResponse.json({ error: '未授權' }, { status: 401 });
+      return NextResponse.json({ error: '未授權' }, { status: 401 })
     }
 
     // 獲取用戶的租戶ID
@@ -23,10 +26,10 @@ export async function GET(
       .from('profiles')
       .select('tenant_id')
       .eq('id', user.id)
-      .single();
+      .single()
 
     if (!profile?.tenant_id) {
-      return NextResponse.json({ error: '未找到租戶信息' }, { status: 404 });
+      return NextResponse.json({ error: '未找到租戶信息' }, { status: 404 })
     }
 
     // 獲取服務
@@ -35,21 +38,21 @@ export async function GET(
       .select('*')
       .eq('id', params.id)
       .eq('tenant_id', profile.tenant_id)
-      .single();
+      .single()
 
     if (error) {
-      console.error('獲取服務失敗:', error);
-      return NextResponse.json({ error: '獲取服務失敗' }, { status: 500 });
+      console.error('獲取服務失敗:', error)
+      return NextResponse.json({ error: '獲取服務失敗' }, { status: 500 })
     }
 
     if (!service) {
-      return NextResponse.json({ error: '服務不存在' }, { status: 404 });
+      return NextResponse.json({ error: '服務不存在' }, { status: 404 })
     }
 
-    return NextResponse.json({ service });
+    return NextResponse.json({ service })
   } catch (error) {
-    console.error('服務器錯誤:', error);
-    return NextResponse.json({ error: '服務器錯誤' }, { status: 500 });
+    console.error('服務器錯誤:', error)
+    return NextResponse.json({ error: '服務器錯誤' }, { status: 500 })
   }
 }
 
@@ -59,15 +62,18 @@ export async function GET(
  */
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   try {
-    const supabase = await createClient();
+    const supabase = await createClient()
 
     // 獲取當前用戶
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser()
     if (userError || !user) {
-      return NextResponse.json({ error: '未授權' }, { status: 401 });
+      return NextResponse.json({ error: '未授權' }, { status: 401 })
     }
 
     // 獲取用戶的租戶ID
@@ -75,14 +81,14 @@ export async function PUT(
       .from('profiles')
       .select('tenant_id')
       .eq('id', user.id)
-      .single();
+      .single()
 
     if (!profile?.tenant_id) {
-      return NextResponse.json({ error: '未找到租戶信息' }, { status: 404 });
+      return NextResponse.json({ error: '未找到租戶信息' }, { status: 404 })
     }
 
     // 解析請求體
-    const body = await request.json();
+    const body = await request.json()
 
     // 更新服務
     const { data: service, error } = await supabase
@@ -94,17 +100,17 @@ export async function PUT(
       .eq('id', params.id)
       .eq('tenant_id', profile.tenant_id)
       .select()
-      .single();
+      .single()
 
     if (error) {
-      console.error('更新服務失敗:', error);
-      return NextResponse.json({ error: '更新服務失敗' }, { status: 500 });
+      console.error('更新服務失敗:', error)
+      return NextResponse.json({ error: '更新服務失敗' }, { status: 500 })
     }
 
-    return NextResponse.json({ service });
+    return NextResponse.json({ service })
   } catch (error) {
-    console.error('服務器錯誤:', error);
-    return NextResponse.json({ error: '服務器錯誤' }, { status: 500 });
+    console.error('服務器錯誤:', error)
+    return NextResponse.json({ error: '服務器錯誤' }, { status: 500 })
   }
 }
 
@@ -114,15 +120,18 @@ export async function PUT(
  */
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   try {
-    const supabase = await createClient();
+    const supabase = await createClient()
 
     // 獲取當前用戶
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser()
     if (userError || !user) {
-      return NextResponse.json({ error: '未授權' }, { status: 401 });
+      return NextResponse.json({ error: '未授權' }, { status: 401 })
     }
 
     // 獲取用戶的租戶ID
@@ -130,10 +139,10 @@ export async function DELETE(
       .from('profiles')
       .select('tenant_id')
       .eq('id', user.id)
-      .single();
+      .single()
 
     if (!profile?.tenant_id) {
-      return NextResponse.json({ error: '未找到租戶信息' }, { status: 404 });
+      return NextResponse.json({ error: '未找到租戶信息' }, { status: 404 })
     }
 
     // 刪除服務
@@ -141,16 +150,16 @@ export async function DELETE(
       .from('services')
       .delete()
       .eq('id', params.id)
-      .eq('tenant_id', profile.tenant_id);
+      .eq('tenant_id', profile.tenant_id)
 
     if (error) {
-      console.error('刪除服務失敗:', error);
-      return NextResponse.json({ error: '刪除服務失敗' }, { status: 500 });
+      console.error('刪除服務失敗:', error)
+      return NextResponse.json({ error: '刪除服務失敗' }, { status: 500 })
     }
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('服務器錯誤:', error);
-    return NextResponse.json({ error: '服務器錯誤' }, { status: 500 });
+    console.error('服務器錯誤:', error)
+    return NextResponse.json({ error: '服務器錯誤' }, { status: 500 })
   }
 }

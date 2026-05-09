@@ -1,78 +1,87 @@
-"use client";
+'use client'
 
-import { useEffect, useState } from "react";
-import { createClient } from "@/lib/supabase/client";
-import { Search, Plus, Edit, Trash2, Download, FileText, Upload, X } from "lucide-react";
-import FileUpload from "@/components/FileUpload";
+import { useEffect, useState } from 'react'
+import { createClient } from '@/lib/supabase/client'
+import {
+  Search,
+  Plus,
+  Edit,
+  Trash2,
+  Download,
+  FileText,
+  Upload,
+  X,
+} from 'lucide-react'
+import FileUpload from '@/components/FileUpload'
 
 interface Template {
-  id: string;
-  category: string;
-  title_zh: string;
-  title_en: string;
-  title_ms: string;
-  description_zh: string;
-  description_en: string;
-  description_ms: string;
-  file_url: string;
-  file_size: string;
-  language: string;
-  downloads: number;
-  is_free: boolean;
-  price: number;
-  created_at: string;
+  id: string
+  category: string
+  title_zh: string
+  title_en: string
+  title_ms: string
+  description_zh: string
+  description_en: string
+  description_ms: string
+  file_url: string
+  file_size: string
+  language: string
+  downloads: number
+  is_free: boolean
+  price: number
+  created_at: string
 }
 
 export default function TemplatesManagement() {
-  const [templates, setTemplates] = useState<Template[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [editingTemplate, setEditingTemplate] = useState<Template | null>(null);
-  const [uploading, setUploading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [templates, setTemplates] = useState<Template[]>([])
+  const [loading, setLoading] = useState(true)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [showAddModal, setShowAddModal] = useState(false)
+  const [showEditModal, setShowEditModal] = useState(false)
+  const [editingTemplate, setEditingTemplate] = useState<Template | null>(null)
+  const [uploading, setUploading] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState(0)
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [formData, setFormData] = useState({
-    category: "",
-    title_zh: "",
-    title_en: "",
-    title_ms: "",
-    description_zh: "",
-    description_en: "",
-    description_ms: "",
-    file_url: "",
-    file_size: "",
-    language: "ms",
+    category: '',
+    title_zh: '',
+    title_en: '',
+    title_ms: '',
+    description_zh: '',
+    description_en: '',
+    description_ms: '',
+    file_url: '',
+    file_size: '',
+    language: 'ms',
     is_free: true,
     price: 0,
-  });
+  })
 
   useEffect(() => {
-    loadTemplates();
-  }, []);
+    loadTemplates()
+  }, [])
 
   const loadTemplates = async () => {
-    const supabase = await createClient();
-    setLoading(true);
+    const supabase = await createClient()
+    setLoading(true)
 
     try {
       const { data, error } = await supabase
-        .from("templates")
-        .select("*")
-        .order("created_at", { ascending: false });
+        .from('templates')
+        .select('*')
+        .order('created_at', { ascending: false })
 
-      if (error) throw error;
-      setTemplates(data || []);
+      if (error) throw error
+      setTemplates(data || [])
     } catch (error) {
-      console.error("Error loading templates:", error);
+      console.error('Error loading templates:', error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+    const file = e.target.files?.[0]
     if (file) {
       // 验证文件类型
       const allowedTypes = [
@@ -81,37 +90,37 @@ export default function TemplatesManagement() {
         'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
         'application/vnd.ms-excel',
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      ];
-      
+      ]
+
       if (!allowedTypes.includes(file.type)) {
-        alert('只支持 PDF、Word、Excel 文件格式');
-        return;
+        alert('只支持 PDF、Word、Excel 文件格式')
+        return
       }
 
       // 验证文件大小（最大 10MB）
       if (file.size > 10 * 1024 * 1024) {
-        alert('文件大小不能超过 10MB');
-        return;
+        alert('文件大小不能超过 10MB')
+        return
       }
 
-      setSelectedFile(file);
-      
+      setSelectedFile(file)
+
       // 自动计算文件大小
-      const sizeInMB = (file.size / (1024 * 1024)).toFixed(2);
-      setFormData({ ...formData, file_size: `${sizeInMB} MB` });
+      const sizeInMB = (file.size / (1024 * 1024)).toFixed(2)
+      setFormData({ ...formData, file_size: `${sizeInMB} MB` })
     }
-  };
+  }
 
   const uploadFile = async (file: File): Promise<string | null> => {
-    const supabase = await createClient();
-    setUploading(true);
-    setUploadProgress(0);
+    const supabase = await createClient()
+    setUploading(true)
+    setUploadProgress(0)
 
     try {
       // 生成唯一文件名
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
-      const filePath = `templates/${fileName}`;
+      const fileExt = file.name.split('.').pop()
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`
+      const filePath = `templates/${fileName}`
 
       // 上传文件到 Supabase Storage
       const { data, error } = await supabase.storage
@@ -119,158 +128,160 @@ export default function TemplatesManagement() {
         .upload(filePath, file, {
           cacheControl: '3600',
           upsert: false,
-        });
+        })
 
-      if (error) throw error;
+      if (error) throw error
 
       // 获取公共 URL
       const { data: urlData } = supabase.storage
         .from('templates')
-        .getPublicUrl(filePath);
+        .getPublicUrl(filePath)
 
-      setUploadProgress(100);
-      return urlData.publicUrl;
+      setUploadProgress(100)
+      return urlData.publicUrl
     } catch (error) {
-      console.error('Error uploading file:', error);
-      alert('文件上传失败，请重试');
-      return null;
+      console.error('Error uploading file:', error)
+      alert('文件上传失败，请重试')
+      return null
     } finally {
-      setUploading(false);
+      setUploading(false)
     }
-  };
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
+    e.preventDefault()
+
     // 如果选择了文件，先上传文件
-    let fileUrl = formData.file_url;
+    let fileUrl = formData.file_url
     if (selectedFile) {
-      const uploadedUrl = await uploadFile(selectedFile);
+      const uploadedUrl = await uploadFile(selectedFile)
       if (!uploadedUrl) {
-        return; // 上传失败，不继续
+        return // 上传失败，不继续
       }
-      fileUrl = uploadedUrl;
+      fileUrl = uploadedUrl
     }
 
     // 验证必填字段
     if (!fileUrl) {
-      alert('请上传文件或输入文件URL');
-      return;
+      alert('请上传文件或输入文件URL')
+      return
     }
 
-    const supabase = await createClient();
+    const supabase = await createClient()
 
     try {
-      const { error } = await supabase.from("templates").insert([{
-        ...formData,
-        file_url: fileUrl,
-      }]);
+      const { error } = await supabase.from('templates').insert([
+        {
+          ...formData,
+          file_url: fileUrl,
+        },
+      ])
 
-      if (error) throw error;
+      if (error) throw error
 
-      setShowAddModal(false);
-      setSelectedFile(null);
+      setShowAddModal(false)
+      setSelectedFile(null)
       setFormData({
-        category: "",
-        title_zh: "",
-        title_en: "",
-        title_ms: "",
-        description_zh: "",
-        description_en: "",
-        description_ms: "",
-        file_url: "",
-        file_size: "",
-        language: "ms",
+        category: '',
+        title_zh: '',
+        title_en: '',
+        title_ms: '',
+        description_zh: '',
+        description_en: '',
+        description_ms: '',
+        file_url: '',
+        file_size: '',
+        language: 'ms',
         is_free: true,
         price: 0,
-      });
-      loadTemplates();
-      alert("模板添加成功！");
+      })
+      loadTemplates()
+      alert('模板添加成功！')
     } catch (error) {
-      console.error("Error adding template:", error);
-      alert("添加失败，请重试");
+      console.error('Error adding template:', error)
+      alert('添加失败，请重试')
     }
-  };
+  }
 
   const deleteTemplate = async (id: string) => {
-    if (!confirm("确定要删除这个模板吗？")) return;
+    if (!confirm('确定要删除这个模板吗？')) return
 
-    const supabase = await createClient();
+    const supabase = await createClient()
 
     try {
-      const { error } = await supabase.from("templates").delete().eq("id", id);
+      const { error } = await supabase.from('templates').delete().eq('id', id)
 
-      if (error) throw error;
-      loadTemplates();
-      alert("删除成功！");
+      if (error) throw error
+      loadTemplates()
+      alert('删除成功！')
     } catch (error) {
-      console.error("Error deleting template:", error);
-      alert("删除失败，请重试");
+      console.error('Error deleting template:', error)
+      alert('删除失败，请重试')
     }
-  };
+  }
 
   const handleEdit = (template: Template) => {
-    setEditingTemplate(template);
+    setEditingTemplate(template)
     setFormData({
-      category: template.category || "",
-      title_zh: template.title_zh || "",
-      title_en: template.title_en || "",
-      title_ms: template.title_ms || "",
-      description_zh: template.description_zh || "",
-      description_en: template.description_en || "",
-      description_ms: template.description_ms || "",
-      file_url: template.file_url || "",
-      file_size: template.file_size || "",
-      language: template.language || "ms",
+      category: template.category || '',
+      title_zh: template.title_zh || '',
+      title_en: template.title_en || '',
+      title_ms: template.title_ms || '',
+      description_zh: template.description_zh || '',
+      description_en: template.description_en || '',
+      description_ms: template.description_ms || '',
+      file_url: template.file_url || '',
+      file_size: template.file_size || '',
+      language: template.language || 'ms',
       is_free: template.is_free ?? true,
       price: template.price || 0,
-    });
-    setShowEditModal(true);
-  };
+    })
+    setShowEditModal(true)
+  }
 
   const handleSubmitEdit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!editingTemplate) return;
+    e.preventDefault()
+    if (!editingTemplate) return
 
     // 如果选择了新文件，先上传
-    let fileUrl = formData.file_url;
+    let fileUrl = formData.file_url
     if (selectedFile) {
-      const uploadedUrl = await uploadFile(selectedFile);
+      const uploadedUrl = await uploadFile(selectedFile)
       if (!uploadedUrl) {
-        return; // 上传失败，不继续
+        return // 上传失败，不继续
       }
-      fileUrl = uploadedUrl;
+      fileUrl = uploadedUrl
     }
 
-    const supabase = await createClient();
+    const supabase = await createClient()
 
     try {
       const { error } = await supabase
-        .from("templates")
+        .from('templates')
         .update({
           ...formData,
           file_url: fileUrl,
         })
-        .eq("id", editingTemplate.id);
+        .eq('id', editingTemplate.id)
 
-      if (error) throw error;
+      if (error) throw error
 
-      setShowEditModal(false);
-      setEditingTemplate(null);
-      setSelectedFile(null);
-      loadTemplates();
-      alert("更新成功！");
+      setShowEditModal(false)
+      setEditingTemplate(null)
+      setSelectedFile(null)
+      loadTemplates()
+      alert('更新成功！')
     } catch (error) {
-      console.error("Error updating template:", error);
-      alert("更新失败，请重试");
+      console.error('Error updating template:', error)
+      alert('更新失败，请重试')
     }
-  };
+  }
 
   const filteredTemplates = templates.filter(
     (template) =>
       template.title_zh?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      template.category?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+      template.category?.toLowerCase().includes(searchTerm.toLowerCase()),
+  )
 
   return (
     <div>
@@ -305,7 +316,9 @@ export default function TemplatesManagement() {
         {/* Stats */}
         <div className="grid grid-cols-4 gap-4">
           <div>
-            <div className="text-2xl font-bold text-neutral-900">{templates.length}</div>
+            <div className="text-2xl font-bold text-neutral-900">
+              {templates.length}
+            </div>
             <div className="text-sm text-neutral-600">总模板数</div>
           </div>
           <div>
@@ -355,8 +368,12 @@ export default function TemplatesManagement() {
                     <FileText className="h-6 w-6 text-primary-600" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-neutral-900">{template.title_zh}</h3>
-                    <div className="text-sm text-neutral-600">{template.category}</div>
+                    <h3 className="font-bold text-neutral-900">
+                      {template.title_zh}
+                    </h3>
+                    <div className="text-sm text-neutral-600">
+                      {template.category}
+                    </div>
                   </div>
                 </div>
                 {template.is_free ? (
@@ -421,7 +438,9 @@ export default function TemplatesManagement() {
                     type="text"
                     required
                     value={formData.category}
-                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, category: e.target.value })
+                    }
                     className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                     placeholder="例如：合同、协议"
                   />
@@ -433,7 +452,9 @@ export default function TemplatesManagement() {
                   </label>
                   <select
                     value={formData.language}
-                    onChange={(e) => setFormData({ ...formData, language: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, language: e.target.value })
+                    }
                     className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                   >
                     <option value="zh">中文</option>
@@ -451,7 +472,9 @@ export default function TemplatesManagement() {
                   type="text"
                   required
                   value={formData.title_zh}
-                  onChange={(e) => setFormData({ ...formData, title_zh: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, title_zh: e.target.value })
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                 />
               </div>
@@ -464,7 +487,9 @@ export default function TemplatesManagement() {
                   type="text"
                   required
                   value={formData.title_en}
-                  onChange={(e) => setFormData({ ...formData, title_en: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, title_en: e.target.value })
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                 />
               </div>
@@ -477,7 +502,9 @@ export default function TemplatesManagement() {
                   type="text"
                   required
                   value={formData.title_ms}
-                  onChange={(e) => setFormData({ ...formData, title_ms: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, title_ms: e.target.value })
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                 />
               </div>
@@ -489,7 +516,9 @@ export default function TemplatesManagement() {
                 <textarea
                   required
                   value={formData.description_zh}
-                  onChange={(e) => setFormData({ ...formData, description_zh: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description_zh: e.target.value })
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                   rows={3}
                 />
@@ -504,7 +533,9 @@ export default function TemplatesManagement() {
                     type="url"
                     required
                     value={formData.file_url}
-                    onChange={(e) => setFormData({ ...formData, file_url: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, file_url: e.target.value })
+                    }
                     className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                     placeholder="https://..."
                   />
@@ -517,7 +548,9 @@ export default function TemplatesManagement() {
                   <input
                     type="text"
                     value={formData.file_size}
-                    onChange={(e) => setFormData({ ...formData, file_size: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, file_size: e.target.value })
+                    }
                     className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                     placeholder="例如：2.5 MB"
                   />
@@ -530,11 +563,17 @@ export default function TemplatesManagement() {
                     type="checkbox"
                     checked={formData.is_free}
                     onChange={(e) =>
-                      setFormData({ ...formData, is_free: e.target.checked, price: e.target.checked ? 0 : formData.price })
+                      setFormData({
+                        ...formData,
+                        is_free: e.target.checked,
+                        price: e.target.checked ? 0 : formData.price,
+                      })
                     }
                     className="w-4 h-4 text-primary-600 border-neutral-300 rounded focus:ring-primary-500"
                   />
-                  <span className="text-sm font-medium text-neutral-700">免费模板</span>
+                  <span className="text-sm font-medium text-neutral-700">
+                    免费模板
+                  </span>
                 </label>
 
                 {!formData.is_free && (
@@ -544,7 +583,12 @@ export default function TemplatesManagement() {
                       step="0.01"
                       min="0"
                       value={formData.price}
-                      onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) })}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          price: parseFloat(e.target.value),
+                        })
+                      }
                       className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                       placeholder="价格 (RM)"
                     />
@@ -556,8 +600,8 @@ export default function TemplatesManagement() {
                 <button
                   type="button"
                   onClick={() => {
-                    setShowEditModal(false);
-                    setEditingTemplate(null);
+                    setShowEditModal(false)
+                    setEditingTemplate(null)
                   }}
                   className="flex-1 px-4 py-2 border border-neutral-300 text-neutral-700 rounded-lg font-medium hover:bg-neutral-50 transition-all"
                 >
@@ -580,7 +624,9 @@ export default function TemplatesManagement() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6 border-b border-neutral-200">
-              <h2 className="text-2xl font-bold text-neutral-900">添加新模板</h2>
+              <h2 className="text-2xl font-bold text-neutral-900">
+                添加新模板
+              </h2>
             </div>
 
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
@@ -593,7 +639,9 @@ export default function TemplatesManagement() {
                     type="text"
                     required
                     value={formData.category}
-                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, category: e.target.value })
+                    }
                     className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                     placeholder="例如：合同、协议"
                   />
@@ -605,7 +653,9 @@ export default function TemplatesManagement() {
                   </label>
                   <select
                     value={formData.language}
-                    onChange={(e) => setFormData({ ...formData, language: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, language: e.target.value })
+                    }
                     className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                   >
                     <option value="zh">中文</option>
@@ -623,7 +673,9 @@ export default function TemplatesManagement() {
                   type="text"
                   required
                   value={formData.title_zh}
-                  onChange={(e) => setFormData({ ...formData, title_zh: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, title_zh: e.target.value })
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                 />
               </div>
@@ -636,7 +688,9 @@ export default function TemplatesManagement() {
                   type="text"
                   required
                   value={formData.title_en}
-                  onChange={(e) => setFormData({ ...formData, title_en: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, title_en: e.target.value })
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                 />
               </div>
@@ -649,7 +703,9 @@ export default function TemplatesManagement() {
                   type="text"
                   required
                   value={formData.title_ms}
-                  onChange={(e) => setFormData({ ...formData, title_ms: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, title_ms: e.target.value })
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                 />
               </div>
@@ -661,7 +717,9 @@ export default function TemplatesManagement() {
                 <textarea
                   required
                   value={formData.description_zh}
-                  onChange={(e) => setFormData({ ...formData, description_zh: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description_zh: e.target.value })
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                   rows={3}
                 />
@@ -676,7 +734,9 @@ export default function TemplatesManagement() {
                     type="url"
                     required
                     value={formData.file_url}
-                    onChange={(e) => setFormData({ ...formData, file_url: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, file_url: e.target.value })
+                    }
                     className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                     placeholder="https://..."
                   />
@@ -689,7 +749,9 @@ export default function TemplatesManagement() {
                   <input
                     type="text"
                     value={formData.file_size}
-                    onChange={(e) => setFormData({ ...formData, file_size: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, file_size: e.target.value })
+                    }
                     className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                     placeholder="例如：2.5 MB"
                   />
@@ -702,11 +764,17 @@ export default function TemplatesManagement() {
                     type="checkbox"
                     checked={formData.is_free}
                     onChange={(e) =>
-                      setFormData({ ...formData, is_free: e.target.checked, price: e.target.checked ? 0 : formData.price })
+                      setFormData({
+                        ...formData,
+                        is_free: e.target.checked,
+                        price: e.target.checked ? 0 : formData.price,
+                      })
                     }
                     className="w-4 h-4 text-primary-600 border-neutral-300 rounded focus:ring-primary-500"
                   />
-                  <span className="text-sm font-medium text-neutral-700">免费模板</span>
+                  <span className="text-sm font-medium text-neutral-700">
+                    免费模板
+                  </span>
                 </label>
 
                 {!formData.is_free && (
@@ -716,7 +784,12 @@ export default function TemplatesManagement() {
                       step="0.01"
                       min="0"
                       value={formData.price}
-                      onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) })}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          price: parseFloat(e.target.value),
+                        })
+                      }
                       className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                       placeholder="价格 (RM)"
                     />
@@ -744,5 +817,5 @@ export default function TemplatesManagement() {
         </div>
       )}
     </div>
-  );
+  )
 }

@@ -1,9 +1,9 @@
-'use client';
+'use client'
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { 
-  PlusIcon, 
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import {
+  PlusIcon,
   MagnifyingGlassIcon,
   PencilIcon,
   TrashIcon,
@@ -11,76 +11,76 @@ import {
   LockOpenIcon,
   KeyIcon,
   CheckCircleIcon,
-} from '@heroicons/react/24/outline';
-import CreateSubAccountModal from '@/components/admin/CreateSubAccountModal';
-import EditSubAccountModal from '@/components/admin/EditSubAccountModal';
+} from '@heroicons/react/24/outline'
+import CreateSubAccountModal from '@/components/admin/CreateSubAccountModal'
+import EditSubAccountModal from '@/components/admin/EditSubAccountModal'
 
 interface User {
-  id: string;
-  email: string;
-  full_name: string;
-  role: string;
-  is_active: boolean;
-  created_at: string;
-  last_login_at: string | null;
-  parent_user_id: string | null;
+  id: string
+  email: string
+  full_name: string
+  role: string
+  is_active: boolean
+  created_at: string
+  last_login_at: string | null
+  parent_user_id: string | null
 }
 
 export default function SubAccountsPage() {
-  const router = useRouter();
-  const [users, setUsers] = useState<User[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [search, setSearch] = useState('');
-  const [roleFilter, setRoleFilter] = useState('all');
-  const [statusFilter, setStatusFilter] = useState('all');
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  
-  const [showCreateModal, setShowCreateModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const router = useRouter()
+  const [users, setUsers] = useState<User[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [search, setSearch] = useState('')
+  const [roleFilter, setRoleFilter] = useState('all')
+  const [statusFilter, setStatusFilter] = useState('all')
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+
+  const [showCreateModal, setShowCreateModal] = useState(false)
+  const [showEditModal, setShowEditModal] = useState(false)
+  const [selectedUser, setSelectedUser] = useState<User | null>(null)
 
   // 重置密码相关状态
-  const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
-  const [resetPasswordUser, setResetPasswordUser] = useState<User | null>(null);
-  const [resetMethod, setResetMethod] = useState<'email' | 'temporary'>('email');
-  const [temporaryPassword, setTemporaryPassword] = useState('');
-  const [isResetting, setIsResetting] = useState(false);
-  const [resetError, setResetError] = useState('');
-  const [passwordCopied, setPasswordCopied] = useState(false);
+  const [showResetPasswordModal, setShowResetPasswordModal] = useState(false)
+  const [resetPasswordUser, setResetPasswordUser] = useState<User | null>(null)
+  const [resetMethod, setResetMethod] = useState<'email' | 'temporary'>('email')
+  const [temporaryPassword, setTemporaryPassword] = useState('')
+  const [isResetting, setIsResetting] = useState(false)
+  const [resetError, setResetError] = useState('')
+  const [passwordCopied, setPasswordCopied] = useState(false)
 
   useEffect(() => {
-    fetchUsers();
-  }, [currentPage, search, roleFilter, statusFilter]);
+    fetchUsers()
+  }, [currentPage, search, roleFilter, statusFilter])
 
   const fetchUsers = async () => {
     try {
-      setIsLoading(true);
+      setIsLoading(true)
       const params = new URLSearchParams({
         page: currentPage.toString(),
         limit: '10',
         search,
         role: roleFilter,
         status: statusFilter,
-      });
+      })
 
-      const response = await fetch(`/api/tenant/users?${params}`);
-      const data = await response.json();
+      const response = await fetch(`/api/tenant/users?${params}`)
+      const data = await response.json()
 
       if (data.success) {
-        setUsers(data.users);
-        setTotalPages(data.pagination.totalPages);
+        setUsers(data.users)
+        setTotalPages(data.pagination.totalPages)
       }
     } catch (error) {
-      console.error('Error fetching users:', error);
+      console.error('Error fetching users:', error)
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   const handleToggleStatus = async (user: User) => {
     if (!confirm(`确定要${user.is_active ? '禁用' : '启用'}该用户吗？`)) {
-      return;
+      return
     }
 
     try {
@@ -92,139 +92,146 @@ export default function SubAccountsPage() {
         body: JSON.stringify({
           is_active: !user.is_active,
         }),
-      });
+      })
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (data.success) {
-        fetchUsers();
+        fetchUsers()
       } else {
-        alert(data.error || '操作失败');
+        alert(data.error || '操作失败')
       }
     } catch (error) {
-      console.error('Error toggling status:', error);
-      alert('操作失败，请稍后重试');
+      console.error('Error toggling status:', error)
+      alert('操作失败，请稍后重试')
     }
-  };
+  }
 
   const handleDelete = async (user: User) => {
-    if (!confirm(`确定要删除用户 ${user.full_name} (${user.email}) 吗？此操作无法撤销！`)) {
-      return;
+    if (
+      !confirm(
+        `确定要删除用户 ${user.full_name} (${user.email}) 吗？此操作无法撤销！`,
+      )
+    ) {
+      return
     }
 
     try {
       const response = await fetch(`/api/tenant/users/${user.id}`, {
         method: 'DELETE',
-      });
+      })
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (data.success) {
-        fetchUsers();
+        fetchUsers()
       } else {
-        alert(data.error || '删除失败');
+        alert(data.error || '删除失败')
       }
     } catch (error) {
-      console.error('Error deleting user:', error);
-      alert('删除失败，请稍后重试');
+      console.error('Error deleting user:', error)
+      alert('删除失败，请稍后重试')
     }
-  };
+  }
 
   const handleEdit = (user: User) => {
-    setSelectedUser(user);
-    setShowEditModal(true);
-  };
+    setSelectedUser(user)
+    setShowEditModal(true)
+  }
 
   const handleResetPassword = (user: User) => {
-    setResetPasswordUser(user);
-    setResetMethod('email');
-    setTemporaryPassword('');
-    setResetError('');
-    setPasswordCopied(false);
-    setShowResetPasswordModal(true);
-  };
+    setResetPasswordUser(user)
+    setResetMethod('email')
+    setTemporaryPassword('')
+    setResetError('')
+    setPasswordCopied(false)
+    setShowResetPasswordModal(true)
+  }
 
   const handleSubmitResetPassword = async () => {
-    if (!resetPasswordUser) return;
+    if (!resetPasswordUser) return
 
-    setIsResetting(true);
-    setResetError('');
+    setIsResetting(true)
+    setResetError('')
 
     try {
-      const response = await fetch(`/api/admin/users/${resetPasswordUser.id}/reset-password`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `/api/admin/users/${resetPasswordUser.id}/reset-password`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ method: resetMethod }),
         },
-        body: JSON.stringify({ method: resetMethod }),
-      });
+      )
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (data.success) {
         if (resetMethod === 'temporary' && data.temporaryPassword) {
-          setTemporaryPassword(data.temporaryPassword);
+          setTemporaryPassword(data.temporaryPassword)
         } else {
-          alert('重置邮件已发送到用户邮箱！');
-          setShowResetPasswordModal(false);
-          setResetPasswordUser(null);
+          alert('重置邮件已发送到用户邮箱！')
+          setShowResetPasswordModal(false)
+          setResetPasswordUser(null)
         }
       } else {
-        setResetError(data.error || '重置失败，请重试');
+        setResetError(data.error || '重置失败，请重试')
       }
     } catch (error) {
-      console.error('Error resetting password:', error);
-      setResetError('网络错误，请稍后重试');
+      console.error('Error resetting password:', error)
+      setResetError('网络错误，请稍后重试')
     } finally {
-      setIsResetting(false);
+      setIsResetting(false)
     }
-  };
+  }
 
   const handleCopyPassword = () => {
     if (temporaryPassword) {
-      navigator.clipboard.writeText(temporaryPassword);
-      setPasswordCopied(true);
-      setTimeout(() => setPasswordCopied(false), 2000);
+      navigator.clipboard.writeText(temporaryPassword)
+      setPasswordCopied(true)
+      setTimeout(() => setPasswordCopied(false), 2000)
     }
-  };
+  }
 
   const handleCloseResetModal = () => {
-    setShowResetPasswordModal(false);
-    setResetPasswordUser(null);
-    setTemporaryPassword('');
-    setResetError('');
-    setPasswordCopied(false);
-  };
+    setShowResetPasswordModal(false)
+    setResetPasswordUser(null)
+    setTemporaryPassword('')
+    setResetError('')
+    setPasswordCopied(false)
+  }
 
   const getRoleBadgeColor = (role: string) => {
     switch (role) {
       case 'owner':
-        return 'bg-purple-100 text-purple-800';
+        return 'bg-purple-100 text-purple-800'
       case 'admin':
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-blue-100 text-blue-800'
       case 'manager':
-        return 'bg-green-100 text-green-800';
+        return 'bg-green-100 text-green-800'
       case 'user':
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-100 text-gray-800'
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-100 text-gray-800'
     }
-  };
+  }
 
   const getRoleText = (role: string) => {
     switch (role) {
       case 'owner':
-        return '所有者';
+        return '所有者'
       case 'admin':
-        return '管理员';
+        return '管理员'
       case 'manager':
-        return '经理';
+        return '经理'
       case 'user':
-        return '普通用户';
+        return '普通用户'
       default:
-        return role;
+        return role
     }
-  };
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
@@ -335,26 +342,34 @@ export default function SubAccountsPage() {
                           <div className="text-sm font-medium text-gray-900">
                             {user.full_name}
                           </div>
-                          <div className="text-sm text-gray-500">{user.email}</div>
+                          <div className="text-sm text-gray-500">
+                            {user.email}
+                          </div>
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`px-2 py-1 text-xs font-medium rounded-full ${getRoleBadgeColor(user.role)}`}>
+                        <span
+                          className={`px-2 py-1 text-xs font-medium rounded-full ${getRoleBadgeColor(user.role)}`}
+                        >
                           {getRoleText(user.role)}
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                          user.is_active 
-                            ? 'bg-green-100 text-green-800' 
-                            : 'bg-red-100 text-red-800'
-                        }`}>
+                        <span
+                          className={`px-2 py-1 text-xs font-medium rounded-full ${
+                            user.is_active
+                              ? 'bg-green-100 text-green-800'
+                              : 'bg-red-100 text-red-800'
+                          }`}
+                        >
                           {user.is_active ? '激活' : '禁用'}
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {user.last_login_at 
-                          ? new Date(user.last_login_at).toLocaleDateString('zh-CN')
+                        {user.last_login_at
+                          ? new Date(user.last_login_at).toLocaleDateString(
+                              'zh-CN',
+                            )
                           : '从未登录'}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -378,7 +393,11 @@ export default function SubAccountsPage() {
                           </button>
                           <button
                             onClick={() => handleToggleStatus(user)}
-                            className={user.is_active ? 'text-yellow-600 hover:text-yellow-900' : 'text-green-600 hover:text-green-900'}
+                            className={
+                              user.is_active
+                                ? 'text-yellow-600 hover:text-yellow-900'
+                                : 'text-green-600 hover:text-green-900'
+                            }
                             title={user.is_active ? '禁用' : '启用'}
                           >
                             {user.is_active ? (
@@ -408,14 +427,16 @@ export default function SubAccountsPage() {
             <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
               <div className="flex-1 flex justify-between sm:hidden">
                 <button
-                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                   disabled={currentPage === 1}
                   className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
                 >
                   上一页
                 </button>
                 <button
-                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                  onClick={() =>
+                    setCurrentPage((p) => Math.min(totalPages, p + 1))
+                  }
                   disabled={currentPage === totalPages}
                   className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
                 >
@@ -432,14 +453,16 @@ export default function SubAccountsPage() {
                 <div>
                   <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
                     <button
-                      onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                      onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                       disabled={currentPage === 1}
                       className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
                     >
                       上一页
                     </button>
                     <button
-                      onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                      onClick={() =>
+                        setCurrentPage((p) => Math.min(totalPages, p + 1))
+                      }
                       disabled={currentPage === totalPages}
                       className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
                     >
@@ -458,8 +481,8 @@ export default function SubAccountsPage() {
         <CreateSubAccountModal
           onClose={() => setShowCreateModal(false)}
           onSuccess={() => {
-            setShowCreateModal(false);
-            fetchUsers();
+            setShowCreateModal(false)
+            fetchUsers()
           }}
         />
       )}
@@ -468,13 +491,13 @@ export default function SubAccountsPage() {
         <EditSubAccountModal
           user={selectedUser}
           onClose={() => {
-            setShowEditModal(false);
-            setSelectedUser(null);
+            setShowEditModal(false)
+            setSelectedUser(null)
           }}
           onSuccess={() => {
-            setShowEditModal(false);
-            setSelectedUser(null);
-            fetchUsers();
+            setShowEditModal(false)
+            setSelectedUser(null)
+            fetchUsers()
           }}
         />
       )}
@@ -563,11 +586,15 @@ export default function SubAccountsPage() {
                           name="resetMethod"
                           value="email"
                           checked={resetMethod === 'email'}
-                          onChange={(e) => setResetMethod(e.target.value as 'email')}
+                          onChange={(e) =>
+                            setResetMethod(e.target.value as 'email')
+                          }
                           className="mt-1 mr-3"
                         />
                         <div className="flex-1">
-                          <div className="font-medium text-gray-900">发送重置邮件</div>
+                          <div className="font-medium text-gray-900">
+                            发送重置邮件
+                          </div>
                           <div className="text-sm text-gray-600 mt-1">
                             系统将发送密码重置链接到用户邮箱
                           </div>
@@ -580,11 +607,15 @@ export default function SubAccountsPage() {
                           name="resetMethod"
                           value="temporary"
                           checked={resetMethod === 'temporary'}
-                          onChange={(e) => setResetMethod(e.target.value as 'temporary')}
+                          onChange={(e) =>
+                            setResetMethod(e.target.value as 'temporary')
+                          }
                           className="mt-1 mr-3"
                         />
                         <div className="flex-1">
-                          <div className="font-medium text-gray-900">生成临时密码</div>
+                          <div className="font-medium text-gray-900">
+                            生成临时密码
+                          </div>
                           <div className="text-sm text-gray-600 mt-1">
                             系统将生成临时密码并显示给您
                           </div>
@@ -596,8 +627,9 @@ export default function SubAccountsPage() {
                   {/* 提示信息 */}
                   <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <p className="text-sm text-blue-800">
-                      💡 {resetMethod === 'email' 
-                        ? '用户将收到重置邮件，可以自行设置新密码' 
+                      💡{' '}
+                      {resetMethod === 'email'
+                        ? '用户将收到重置邮件，可以自行设置新密码'
                         : '临时密码仅显示一次，请务必保存并发送给用户'}
                     </p>
                   </div>
@@ -628,5 +660,5 @@ export default function SubAccountsPage() {
         </div>
       )}
     </div>
-  );
+  )
 }

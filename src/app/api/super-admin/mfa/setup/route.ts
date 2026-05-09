@@ -1,11 +1,11 @@
 // Force dynamic rendering
-export const dynamic = 'force-dynamic';
-export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
 
-import { NextRequest, NextResponse } from 'next/server';
-import { requireSuperAdmin } from '@/lib/middleware/super-admin';
-import { generateMFASecret } from '@/lib/mfa/totp';
-import { logAuditEvent } from '@/lib/audit';
+import { NextRequest, NextResponse } from 'next/server'
+import { requireSuperAdmin } from '@/lib/middleware/super-admin'
+import { generateMFASecret } from '@/lib/mfa/totp'
+import { logAuditEvent } from '@/lib/audit'
 
 /**
  * POST /api/super-admin/mfa/setup
@@ -13,16 +13,16 @@ import { logAuditEvent } from '@/lib/audit';
  */
 export async function POST(request: NextRequest) {
   // Verify super admin authentication
-  const authResult = await requireSuperAdmin(request);
+  const authResult = await requireSuperAdmin(request)
   if (authResult instanceof NextResponse) {
-    return authResult;
+    return authResult
   }
 
-  const { user, supabase } = authResult;
+  const { user, supabase } = authResult
 
   try {
     // Generate MFA secret
-    const { secret, qrCode, uri } = await generateMFASecret(user.email || '');
+    const { secret, qrCode, uri } = await generateMFASecret(user.email || '')
 
     // Store secret in user metadata (encrypted in production)
     const { error: updateError } = await supabase.auth.updateUser({
@@ -30,10 +30,10 @@ export async function POST(request: NextRequest) {
         mfa_secret: secret,
         mfa_enabled: false, // Not enabled until verified
       },
-    });
+    })
 
     if (updateError) {
-      throw updateError;
+      throw updateError
     }
 
     // Log audit event
@@ -46,20 +46,17 @@ export async function POST(request: NextRequest) {
           mfa_setup: true,
         },
       },
-      request
-    );
+      request,
+    )
 
     return NextResponse.json({
       success: true,
       secret,
       qrCode,
       uri,
-    });
+    })
   } catch (error) {
-    console.error('Error setting up MFA:', error);
-    return NextResponse.json(
-      { error: 'Failed to setup MFA' },
-      { status: 500 }
-    );
+    console.error('Error setting up MFA:', error)
+    return NextResponse.json({ error: 'Failed to setup MFA' }, { status: 500 })
   }
 }

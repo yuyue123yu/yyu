@@ -1,48 +1,55 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import { XMarkIcon } from '@heroicons/react/24/outline';
+import { useState } from 'react'
+import { XMarkIcon } from '@heroicons/react/24/outline'
 
 interface User {
-  id: string;
-  email: string;
-  full_name: string;
-  role: string;
-  is_active: boolean;
+  id: string
+  email: string
+  full_name: string
+  role: string
+  is_active: boolean
 }
 
 interface EditSubAccountModalProps {
-  user: User;
-  onClose: () => void;
-  onSuccess: () => void;
+  user: User
+  onClose: () => void
+  onSuccess: () => void
 }
 
-export default function EditSubAccountModal({ user, onClose, onSuccess }: EditSubAccountModalProps) {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+export default function EditSubAccountModal({
+  user,
+  onClose,
+  onSuccess,
+}: EditSubAccountModalProps) {
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState('')
 
   const [formData, setFormData] = useState({
     full_name: user.full_name,
     role: user.role,
     is_active: user.is_active,
-  });
+  })
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const value = e.target.type === 'checkbox' 
-      ? (e.target as HTMLInputElement).checked 
-      : e.target.value;
-    
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
+    const value =
+      e.target.type === 'checkbox'
+        ? (e.target as HTMLInputElement).checked
+        : e.target.value
+
     setFormData({
       ...formData,
       [e.target.name]: value,
-    });
-    setError('');
-  };
+    })
+    setError('')
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    setIsLoading(true);
+    e.preventDefault()
+    setError('')
+    setIsLoading(true)
 
     try {
       const response = await fetch(`/api/tenant/users/${user.id}`, {
@@ -51,21 +58,21 @@ export default function EditSubAccountModal({ user, onClose, onSuccess }: EditSu
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
-      });
+      })
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (data.success) {
-        onSuccess();
+        onSuccess()
       } else {
-        setError(data.error || '更新失败');
+        setError(data.error || '更新失败')
       }
     } catch (err: any) {
-      setError('网络错误，请稍后重试');
+      setError('网络错误，请稍后重试')
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -106,7 +113,10 @@ export default function EditSubAccountModal({ user, onClose, onSuccess }: EditSu
 
           {/* Full Name */}
           <div>
-            <label htmlFor="full_name" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="full_name"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               姓名 *
             </label>
             <input
@@ -122,7 +132,10 @@ export default function EditSubAccountModal({ user, onClose, onSuccess }: EditSu
 
           {/* Role */}
           <div>
-            <label htmlFor="role" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="role"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               角色 *
             </label>
             <select
@@ -150,13 +163,14 @@ export default function EditSubAccountModal({ user, onClose, onSuccess }: EditSu
               onChange={handleChange}
               className="w-4 h-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500"
             />
-            <label htmlFor="is_active" className="ml-2 block text-sm text-gray-700">
+            <label
+              htmlFor="is_active"
+              className="ml-2 block text-sm text-gray-700"
+            >
               账号激活
             </label>
           </div>
-          <p className="text-sm text-gray-500">
-            禁用后，该用户将无法登录系统
-          </p>
+          <p className="text-sm text-gray-500">禁用后，该用户将无法登录系统</p>
 
           {/* Buttons */}
           <div className="flex space-x-4 pt-4">
@@ -178,5 +192,5 @@ export default function EditSubAccountModal({ user, onClose, onSuccess }: EditSu
         </form>
       </div>
     </div>
-  );
+  )
 }

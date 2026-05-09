@@ -1,194 +1,194 @@
-"use client";
+'use client'
 
-import { useEffect, useState } from "react";
-import { createClient } from "@/lib/supabase/client";
-import { Search, Plus, Edit, Trash2, Eye, EyeOff, BookOpen } from "lucide-react";
+import { useEffect, useState } from 'react'
+import { createClient } from '@/lib/supabase/client'
+import { Search, Plus, Edit, Trash2, Eye, EyeOff, BookOpen } from 'lucide-react'
 
 interface Article {
-  id: string;
-  category: string;
-  title_zh: string;
-  title_en: string;
-  title_ms: string;
-  content_zh: string;
-  content_en: string;
-  content_ms: string;
-  excerpt_zh: string;
-  excerpt_en: string;
-  excerpt_ms: string;
-  author: string;
-  read_time: number;
-  views: number;
-  image_url: string;
-  published: boolean;
-  created_at: string;
+  id: string
+  category: string
+  title_zh: string
+  title_en: string
+  title_ms: string
+  content_zh: string
+  content_en: string
+  content_ms: string
+  excerpt_zh: string
+  excerpt_en: string
+  excerpt_ms: string
+  author: string
+  read_time: number
+  views: number
+  image_url: string
+  published: boolean
+  created_at: string
 }
 
 export default function ArticlesManagement() {
-  const [articles, setArticles] = useState<Article[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [editingArticle, setEditingArticle] = useState<Article | null>(null);
+  const [articles, setArticles] = useState<Article[]>([])
+  const [loading, setLoading] = useState(true)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [showAddModal, setShowAddModal] = useState(false)
+  const [showEditModal, setShowEditModal] = useState(false)
+  const [editingArticle, setEditingArticle] = useState<Article | null>(null)
   const [formData, setFormData] = useState({
-    category: "",
-    title_zh: "",
-    title_en: "",
-    title_ms: "",
-    content_zh: "",
-    content_en: "",
-    content_ms: "",
-    excerpt_zh: "",
-    excerpt_en: "",
-    excerpt_ms: "",
-    author: "",
+    category: '',
+    title_zh: '',
+    title_en: '',
+    title_ms: '',
+    content_zh: '',
+    content_en: '',
+    content_ms: '',
+    excerpt_zh: '',
+    excerpt_en: '',
+    excerpt_ms: '',
+    author: '',
     read_time: 5,
-    image_url: "",
+    image_url: '',
     published: true,
-  });
+  })
 
   useEffect(() => {
-    loadArticles();
-  }, []);
+    loadArticles()
+  }, [])
 
   const loadArticles = async () => {
-    const supabase = await createClient();
-    setLoading(true);
+    const supabase = await createClient()
+    setLoading(true)
 
     try {
       const { data, error } = await supabase
-        .from("articles")
-        .select("*")
-        .order("created_at", { ascending: false });
+        .from('articles')
+        .select('*')
+        .order('created_at', { ascending: false })
 
-      if (error) throw error;
-      setArticles(data || []);
+      if (error) throw error
+      setArticles(data || [])
     } catch (error) {
-      console.error("Error loading articles:", error);
+      console.error('Error loading articles:', error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const supabase = await createClient();
+    e.preventDefault()
+    const supabase = await createClient()
 
     try {
-      const { error } = await supabase.from("articles").insert([formData]);
+      const { error } = await supabase.from('articles').insert([formData])
 
-      if (error) throw error;
+      if (error) throw error
 
-      setShowAddModal(false);
+      setShowAddModal(false)
       setFormData({
-        category: "",
-        title_zh: "",
-        title_en: "",
-        title_ms: "",
-        content_zh: "",
-        content_en: "",
-        content_ms: "",
-        excerpt_zh: "",
-        excerpt_en: "",
-        excerpt_ms: "",
-        author: "",
+        category: '',
+        title_zh: '',
+        title_en: '',
+        title_ms: '',
+        content_zh: '',
+        content_en: '',
+        content_ms: '',
+        excerpt_zh: '',
+        excerpt_en: '',
+        excerpt_ms: '',
+        author: '',
         read_time: 5,
-        image_url: "",
+        image_url: '',
         published: true,
-      });
-      loadArticles();
-      alert("文章添加成功！");
+      })
+      loadArticles()
+      alert('文章添加成功！')
     } catch (error) {
-      console.error("Error adding article:", error);
-      alert("添加失败，请重试");
+      console.error('Error adding article:', error)
+      alert('添加失败，请重试')
     }
-  };
+  }
 
   const togglePublished = async (id: string, currentStatus: boolean) => {
-    const supabase = await createClient();
+    const supabase = await createClient()
 
     try {
       const { error } = await supabase
-        .from("articles")
+        .from('articles')
         .update({ published: !currentStatus })
-        .eq("id", id);
+        .eq('id', id)
 
-      if (error) throw error;
-      loadArticles();
+      if (error) throw error
+      loadArticles()
     } catch (error) {
-      console.error("Error updating article:", error);
+      console.error('Error updating article:', error)
     }
-  };
+  }
 
   const deleteArticle = async (id: string) => {
-    if (!confirm("确定要删除这篇文章吗？")) return;
+    if (!confirm('确定要删除这篇文章吗？')) return
 
-    const supabase = await createClient();
+    const supabase = await createClient()
 
     try {
-      const { error } = await supabase.from("articles").delete().eq("id", id);
+      const { error } = await supabase.from('articles').delete().eq('id', id)
 
-      if (error) throw error;
-      loadArticles();
-      alert("删除成功！");
+      if (error) throw error
+      loadArticles()
+      alert('删除成功！')
     } catch (error) {
-      console.error("Error deleting article:", error);
-      alert("删除失败，请重试");
+      console.error('Error deleting article:', error)
+      alert('删除失败，请重试')
     }
-  };
+  }
 
   const handleEdit = (article: Article) => {
-    setEditingArticle(article);
+    setEditingArticle(article)
     setFormData({
-      category: article.category || "",
-      title_zh: article.title_zh || "",
-      title_en: article.title_en || "",
-      title_ms: article.title_ms || "",
-      content_zh: article.content_zh || "",
-      content_en: article.content_en || "",
-      content_ms: article.content_ms || "",
-      excerpt_zh: article.excerpt_zh || "",
-      excerpt_en: article.excerpt_en || "",
-      excerpt_ms: article.excerpt_ms || "",
-      author: article.author || "",
+      category: article.category || '',
+      title_zh: article.title_zh || '',
+      title_en: article.title_en || '',
+      title_ms: article.title_ms || '',
+      content_zh: article.content_zh || '',
+      content_en: article.content_en || '',
+      content_ms: article.content_ms || '',
+      excerpt_zh: article.excerpt_zh || '',
+      excerpt_en: article.excerpt_en || '',
+      excerpt_ms: article.excerpt_ms || '',
+      author: article.author || '',
       read_time: article.read_time || 5,
-      image_url: article.image_url || "",
+      image_url: article.image_url || '',
       published: article.published ?? true,
-    });
-    setShowEditModal(true);
-  };
+    })
+    setShowEditModal(true)
+  }
 
   const handleSubmitEdit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!editingArticle) return;
+    e.preventDefault()
+    if (!editingArticle) return
 
-    const supabase = await createClient();
+    const supabase = await createClient()
 
     try {
       const { error } = await supabase
-        .from("articles")
+        .from('articles')
         .update(formData)
-        .eq("id", editingArticle.id);
+        .eq('id', editingArticle.id)
 
-      if (error) throw error;
+      if (error) throw error
 
-      setShowEditModal(false);
-      setEditingArticle(null);
-      loadArticles();
-      alert("更新成功！");
+      setShowEditModal(false)
+      setEditingArticle(null)
+      loadArticles()
+      alert('更新成功！')
     } catch (error) {
-      console.error("Error updating article:", error);
-      alert("更新失败，请重试");
+      console.error('Error updating article:', error)
+      alert('更新失败，请重试')
     }
-  };
+  }
 
   const filteredArticles = articles.filter(
     (article) =>
       article.title_zh?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       article.category?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      article.author?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+      article.author?.toLowerCase().includes(searchTerm.toLowerCase()),
+  )
 
   return (
     <div>
@@ -223,7 +223,9 @@ export default function ArticlesManagement() {
         {/* Stats */}
         <div className="grid grid-cols-4 gap-4">
           <div>
-            <div className="text-2xl font-bold text-neutral-900">{articles.length}</div>
+            <div className="text-2xl font-bold text-neutral-900">
+              {articles.length}
+            </div>
             <div className="text-sm text-neutral-600">总文章数</div>
           </div>
           <div>
@@ -284,7 +286,9 @@ export default function ArticlesManagement() {
                   <div className="flex items-start justify-between mb-3">
                     <div>
                       <div className="flex items-center gap-3 mb-2">
-                        <h3 className="text-xl font-bold text-neutral-900">{article.title_zh}</h3>
+                        <h3 className="text-xl font-bold text-neutral-900">
+                          {article.title_zh}
+                        </h3>
                         {article.published ? (
                           <span className="px-2 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">
                             已发布
@@ -305,19 +309,23 @@ export default function ArticlesManagement() {
                       </div>
                     </div>
                     <div className="text-sm text-neutral-500">
-                      {new Date(article.created_at).toLocaleDateString("zh-CN")}
+                      {new Date(article.created_at).toLocaleDateString('zh-CN')}
                     </div>
                   </div>
 
-                  <p className="text-neutral-600 mb-4 line-clamp-2">{article.excerpt_zh}</p>
+                  <p className="text-neutral-600 mb-4 line-clamp-2">
+                    {article.excerpt_zh}
+                  </p>
 
                   <div className="flex gap-2">
                     <button
-                      onClick={() => togglePublished(article.id, article.published)}
+                      onClick={() =>
+                        togglePublished(article.id, article.published)
+                      }
                       className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${
                         article.published
-                          ? "bg-neutral-50 text-neutral-600 hover:bg-neutral-100"
-                          : "bg-green-50 text-green-600 hover:bg-green-100"
+                          ? 'bg-neutral-50 text-neutral-600 hover:bg-neutral-100'
+                          : 'bg-green-50 text-green-600 hover:bg-green-100'
                       }`}
                     >
                       {article.published ? (
@@ -372,7 +380,9 @@ export default function ArticlesManagement() {
                     type="text"
                     required
                     value={formData.category}
-                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, category: e.target.value })
+                    }
                     className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                     placeholder="例如：合同法、劳动法"
                   />
@@ -386,7 +396,9 @@ export default function ArticlesManagement() {
                     type="text"
                     required
                     value={formData.author}
-                    onChange={(e) => setFormData({ ...formData, author: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, author: e.target.value })
+                    }
                     className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                   />
                 </div>
@@ -400,7 +412,9 @@ export default function ArticlesManagement() {
                   type="text"
                   required
                   value={formData.title_zh}
-                  onChange={(e) => setFormData({ ...formData, title_zh: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, title_zh: e.target.value })
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                 />
               </div>
@@ -413,7 +427,9 @@ export default function ArticlesManagement() {
                   type="text"
                   required
                   value={formData.title_en}
-                  onChange={(e) => setFormData({ ...formData, title_en: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, title_en: e.target.value })
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                 />
               </div>
@@ -426,7 +442,9 @@ export default function ArticlesManagement() {
                   type="text"
                   required
                   value={formData.title_ms}
-                  onChange={(e) => setFormData({ ...formData, title_ms: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, title_ms: e.target.value })
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                 />
               </div>
@@ -438,7 +456,9 @@ export default function ArticlesManagement() {
                 <textarea
                   required
                   value={formData.excerpt_zh}
-                  onChange={(e) => setFormData({ ...formData, excerpt_zh: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, excerpt_zh: e.target.value })
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                   rows={2}
                 />
@@ -451,7 +471,9 @@ export default function ArticlesManagement() {
                 <textarea
                   required
                   value={formData.content_zh}
-                  onChange={(e) => setFormData({ ...formData, content_zh: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, content_zh: e.target.value })
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                   rows={6}
                 />
@@ -465,7 +487,9 @@ export default function ArticlesManagement() {
                   <input
                     type="url"
                     value={formData.image_url}
-                    onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, image_url: e.target.value })
+                    }
                     className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                     placeholder="https://..."
                   />
@@ -479,7 +503,12 @@ export default function ArticlesManagement() {
                     type="number"
                     min="1"
                     value={formData.read_time}
-                    onChange={(e) => setFormData({ ...formData, read_time: parseInt(e.target.value) })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        read_time: parseInt(e.target.value),
+                      })
+                    }
                     className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                   />
                 </div>
@@ -490,10 +519,14 @@ export default function ArticlesManagement() {
                   <input
                     type="checkbox"
                     checked={formData.published}
-                    onChange={(e) => setFormData({ ...formData, published: e.target.checked })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, published: e.target.checked })
+                    }
                     className="w-4 h-4 text-primary-600 border-neutral-300 rounded focus:ring-primary-500"
                   />
-                  <span className="text-sm font-medium text-neutral-700">立即发布</span>
+                  <span className="text-sm font-medium text-neutral-700">
+                    立即发布
+                  </span>
                 </label>
               </div>
 
@@ -501,8 +534,8 @@ export default function ArticlesManagement() {
                 <button
                   type="button"
                   onClick={() => {
-                    setShowEditModal(false);
-                    setEditingArticle(null);
+                    setShowEditModal(false)
+                    setEditingArticle(null)
                   }}
                   className="flex-1 px-4 py-2 border border-neutral-300 text-neutral-700 rounded-lg font-medium hover:bg-neutral-50 transition-all"
                 >
@@ -525,7 +558,9 @@ export default function ArticlesManagement() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6 border-b border-neutral-200">
-              <h2 className="text-2xl font-bold text-neutral-900">添加新文章</h2>
+              <h2 className="text-2xl font-bold text-neutral-900">
+                添加新文章
+              </h2>
             </div>
 
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
@@ -538,7 +573,9 @@ export default function ArticlesManagement() {
                     type="text"
                     required
                     value={formData.category}
-                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, category: e.target.value })
+                    }
                     className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                     placeholder="例如：合同法、劳动法"
                   />
@@ -552,7 +589,9 @@ export default function ArticlesManagement() {
                     type="text"
                     required
                     value={formData.author}
-                    onChange={(e) => setFormData({ ...formData, author: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, author: e.target.value })
+                    }
                     className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                   />
                 </div>
@@ -566,7 +605,9 @@ export default function ArticlesManagement() {
                   type="text"
                   required
                   value={formData.title_zh}
-                  onChange={(e) => setFormData({ ...formData, title_zh: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, title_zh: e.target.value })
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                 />
               </div>
@@ -579,7 +620,9 @@ export default function ArticlesManagement() {
                   type="text"
                   required
                   value={formData.title_en}
-                  onChange={(e) => setFormData({ ...formData, title_en: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, title_en: e.target.value })
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                 />
               </div>
@@ -592,7 +635,9 @@ export default function ArticlesManagement() {
                   type="text"
                   required
                   value={formData.title_ms}
-                  onChange={(e) => setFormData({ ...formData, title_ms: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, title_ms: e.target.value })
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                 />
               </div>
@@ -604,7 +649,9 @@ export default function ArticlesManagement() {
                 <textarea
                   required
                   value={formData.excerpt_zh}
-                  onChange={(e) => setFormData({ ...formData, excerpt_zh: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, excerpt_zh: e.target.value })
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                   rows={2}
                 />
@@ -617,7 +664,9 @@ export default function ArticlesManagement() {
                 <textarea
                   required
                   value={formData.content_zh}
-                  onChange={(e) => setFormData({ ...formData, content_zh: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, content_zh: e.target.value })
+                  }
                   className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                   rows={6}
                 />
@@ -631,7 +680,9 @@ export default function ArticlesManagement() {
                   <input
                     type="url"
                     value={formData.image_url}
-                    onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, image_url: e.target.value })
+                    }
                     className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                     placeholder="https://..."
                   />
@@ -645,7 +696,12 @@ export default function ArticlesManagement() {
                     type="number"
                     min="1"
                     value={formData.read_time}
-                    onChange={(e) => setFormData({ ...formData, read_time: parseInt(e.target.value) })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        read_time: parseInt(e.target.value),
+                      })
+                    }
                     className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                   />
                 </div>
@@ -656,10 +712,14 @@ export default function ArticlesManagement() {
                   <input
                     type="checkbox"
                     checked={formData.published}
-                    onChange={(e) => setFormData({ ...formData, published: e.target.checked })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, published: e.target.checked })
+                    }
                     className="w-4 h-4 text-primary-600 border-neutral-300 rounded focus:ring-primary-500"
                   />
-                  <span className="text-sm font-medium text-neutral-700">立即发布</span>
+                  <span className="text-sm font-medium text-neutral-700">
+                    立即发布
+                  </span>
                 </label>
               </div>
 
@@ -683,5 +743,5 @@ export default function ArticlesManagement() {
         </div>
       )}
     </div>
-  );
+  )
 }

@@ -1,6 +1,6 @@
 // MFA (Multi-Factor Authentication) utilities using TOTP
-import { TOTP, Secret } from 'otpauth';
-import QRCode from 'qrcode';
+import { TOTP, Secret } from 'otpauth'
+import QRCode from 'qrcode'
 
 /**
  * Generate a new MFA secret for a user
@@ -8,9 +8,9 @@ import QRCode from 'qrcode';
  * @returns Object containing secret and QR code data URL
  */
 export async function generateMFASecret(email: string): Promise<{
-  secret: string;
-  qrCodeUrl: string;
-  backupCodes: string[];
+  secret: string
+  qrCodeUrl: string
+  backupCodes: string[]
 }> {
   // Create a new TOTP instance
   const totp = new TOTP({
@@ -19,27 +19,25 @@ export async function generateMFASecret(email: string): Promise<{
     algorithm: 'SHA1',
     digits: 6,
     period: 30,
-  });
+  })
 
   // Generate the secret
-  const secret = totp.secret.base32;
+  const secret = totp.secret.base32
 
   // Generate OTP Auth URL for QR code
-  const otpauthUrl = totp.toString();
+  const otpauthUrl = totp.toString()
 
   // Generate QR code as data URL
-  const qrCodeUrl = await QRCode.toDataURL(otpauthUrl);
+  const qrCodeUrl = await QRCode.toDataURL(otpauthUrl)
 
   // Generate backup codes (8 codes, 8 characters each)
-  const backupCodes = Array.from({ length: 8 }, () =>
-    generateRandomCode(8)
-  );
+  const backupCodes = Array.from({ length: 8 }, () => generateRandomCode(8))
 
   return {
     secret,
     qrCodeUrl,
     backupCodes,
-  };
+  }
 }
 
 /**
@@ -56,19 +54,19 @@ export function verifyMFAToken(token: string, secret: string): boolean {
       algorithm: 'SHA1',
       digits: 6,
       period: 30,
-    });
+    })
 
     // Validate the token (allows 1 period before and after for clock skew)
     const delta = totp.validate({
       token,
       window: 1,
-    });
+    })
 
     // delta is null if invalid, or a number indicating the time step difference
-    return delta !== null;
+    return delta !== null
   } catch (error) {
-    console.error('Error verifying MFA token:', error);
-    return false;
+    console.error('Error verifying MFA token:', error)
+    return false
   }
 }
 
@@ -78,11 +76,8 @@ export function verifyMFAToken(token: string, secret: string): boolean {
  * @param backupCodes - Array of valid backup codes
  * @returns true if code is valid, false otherwise
  */
-export function verifyBackupCode(
-  code: string,
-  backupCodes: string[]
-): boolean {
-  return backupCodes.includes(code.toUpperCase());
+export function verifyBackupCode(code: string, backupCodes: string[]): boolean {
+  return backupCodes.includes(code.toUpperCase())
 }
 
 /**
@@ -91,16 +86,16 @@ export function verifyBackupCode(
  * @returns Random code
  */
 function generateRandomCode(length: number): string {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  let code = '';
-  const randomValues = new Uint8Array(length);
-  crypto.getRandomValues(randomValues);
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+  let code = ''
+  const randomValues = new Uint8Array(length)
+  crypto.getRandomValues(randomValues)
 
   for (let i = 0; i < length; i++) {
-    code += chars[randomValues[i] % chars.length];
+    code += chars[randomValues[i] % chars.length]
   }
 
-  return code;
+  return code
 }
 
 /**
@@ -109,11 +104,11 @@ function generateRandomCode(length: number): string {
  * @returns Hex-encoded token
  */
 export function generateSecureToken(bytes: number = 32): string {
-  const buffer = new Uint8Array(bytes);
-  crypto.getRandomValues(buffer);
+  const buffer = new Uint8Array(bytes)
+  crypto.getRandomValues(buffer)
   return Array.from(buffer)
     .map((b) => b.toString(16).padStart(2, '0'))
-    .join('');
+    .join('')
 }
 
 /**
@@ -122,11 +117,11 @@ export function generateSecureToken(bytes: number = 32): string {
  * @returns Hashed password (hex string)
  */
 export async function hashPassword(password: string): Promise<string> {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(password);
-  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
+  const encoder = new TextEncoder()
+  const data = encoder.encode(password)
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data)
+  const hashArray = Array.from(new Uint8Array(hashBuffer))
+  return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('')
 }
 
 /**
@@ -135,15 +130,15 @@ export async function hashPassword(password: string): Promise<string> {
  * @returns Object with isValid flag and error message
  */
 export function validateSuperAdminPassword(password: string): {
-  isValid: boolean;
-  error?: string;
+  isValid: boolean
+  error?: string
 } {
   // Super admin passwords must be at least 16 characters
   if (password.length < 16) {
     return {
       isValid: false,
       error: 'Password must be at least 16 characters long',
-    };
+    }
   }
 
   // Must contain at least one uppercase letter
@@ -151,7 +146,7 @@ export function validateSuperAdminPassword(password: string): {
     return {
       isValid: false,
       error: 'Password must contain at least one uppercase letter',
-    };
+    }
   }
 
   // Must contain at least one lowercase letter
@@ -159,7 +154,7 @@ export function validateSuperAdminPassword(password: string): {
     return {
       isValid: false,
       error: 'Password must contain at least one lowercase letter',
-    };
+    }
   }
 
   // Must contain at least one number
@@ -167,7 +162,7 @@ export function validateSuperAdminPassword(password: string): {
     return {
       isValid: false,
       error: 'Password must contain at least one number',
-    };
+    }
   }
 
   // Must contain at least one special character
@@ -175,8 +170,8 @@ export function validateSuperAdminPassword(password: string): {
     return {
       isValid: false,
       error: 'Password must contain at least one special character',
-    };
+    }
   }
 
-  return { isValid: true };
+  return { isValid: true }
 }

@@ -1,43 +1,65 @@
-"use client";
+'use client'
 
-import Link from "next/link";
-import { Search, Shield, Clock, Award, ChevronRight, ShoppingCart, Heart } from "lucide-react";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { useEffect, useState } from "react";
+import Link from 'next/link'
+import {
+  Search,
+  Shield,
+  Clock,
+  Award,
+  ChevronRight,
+  ShoppingCart,
+  Heart,
+} from 'lucide-react'
+import { useLanguage } from '@/contexts/LanguageContext'
+import { useEffect, useState } from 'react'
 
 export default function Hero() {
-  const { t } = useLanguage();
-  const [pricing, setPricing] = useState<any>(null);
+  const { t } = useLanguage()
+  const [pricing, setPricing] = useState<any>(null)
 
   // 从 API 获取租户配置
   useEffect(() => {
     fetch('/api/public/tenant-config')
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         if (data.pricing) {
-          setPricing(data.pricing);
+          setPricing(data.pricing)
         }
       })
-      .catch(err => console.error('获取配置失败:', err));
-  }, []);
+      .catch((err) => console.error('获取配置失败:', err))
+  }, [])
 
   // 获取咨询价格（基础咨询）
   const getConsultationPrice = () => {
-    if (!pricing?.consultation?.basic?.price) return 'RM 99';
-    const price = pricing.consultation.basic.price;
-    const currency = pricing.currency || 'MYR';
-    const currencySymbol = currency === 'MYR' ? 'RM' : currency === 'USD' ? '$' : currency === 'SGD' ? 'S$' : '¥';
-    return `${currencySymbol} ${price}`;
-  };
+    if (!pricing?.consultation?.basic?.price) return 'RM 99'
+    const price = pricing.consultation.basic.price
+    const currency = pricing.currency || 'MYR'
+    const currencySymbol =
+      currency === 'MYR'
+        ? 'RM'
+        : currency === 'USD'
+          ? '$'
+          : currency === 'SGD'
+            ? 'S$'
+            : '¥'
+    return `${currencySymbol} ${price}`
+  }
 
   // 获取合同审核价格
   const getReviewPrice = () => {
-    if (!pricing?.documents?.contractReview?.price) return 'RM 299';
-    const price = pricing.documents.contractReview.price;
-    const currency = pricing.currency || 'MYR';
-    const currencySymbol = currency === 'MYR' ? 'RM' : currency === 'USD' ? '$' : currency === 'SGD' ? 'S$' : '¥';
-    return `${currencySymbol} ${price}`;
-  };
+    if (!pricing?.documents?.contractReview?.price) return 'RM 299'
+    const price = pricing.documents.contractReview.price
+    const currency = pricing.currency || 'MYR'
+    const currencySymbol =
+      currency === 'MYR'
+        ? 'RM'
+        : currency === 'USD'
+          ? '$'
+          : currency === 'SGD'
+            ? 'S$'
+            : '¥'
+    return `${currencySymbol} ${price}`
+  }
   return (
     <section className="relative bg-gradient-to-br from-primary-600 via-primary-500 to-primary-400 text-white overflow-hidden">
       <div className="container mx-auto px-6 py-6 md:py-10">
@@ -57,10 +79,16 @@ export default function Hero() {
                 {t('home.searchButton')}
               </button>
               <div className="flex gap-2 w-full md:w-auto">
-                <Link href="/cart" className="flex-1 md:flex-none bg-white/20 hover:bg-white/30 backdrop-blur-sm p-2 md:p-3 rounded-lg border border-white/30 transition-all">
+                <Link
+                  href="/cart"
+                  className="flex-1 md:flex-none bg-white/20 hover:bg-white/30 backdrop-blur-sm p-2 md:p-3 rounded-lg border border-white/30 transition-all"
+                >
                   <ShoppingCart className="h-4 md:h-5 w-4 md:w-5 text-white mx-auto" />
                 </Link>
-                <Link href="/favorites" className="flex-1 md:flex-none bg-white/20 hover:bg-white/30 backdrop-blur-sm p-2 md:p-3 rounded-lg border border-white/30 transition-all">
+                <Link
+                  href="/favorites"
+                  className="flex-1 md:flex-none bg-white/20 hover:bg-white/30 backdrop-blur-sm p-2 md:p-3 rounded-lg border border-white/30 transition-all"
+                >
                   <Heart className="h-4 md:h-5 w-4 md:w-5 text-white mx-auto" />
                 </Link>
               </div>
@@ -73,10 +101,19 @@ export default function Hero() {
             <div className="bg-gradient-to-br from-red-500 to-red-600 rounded-lg md:rounded-xl p-3 md:p-5 relative overflow-hidden">
               <div className="absolute right-0 top-0 w-24 md:w-32 h-24 md:h-32 bg-white/10 rounded-full blur-2xl -mr-12 md:-mr-16 -mt-12 md:-mt-16"></div>
               <div className="relative z-10">
-                <div className="text-accent-400 text-xs font-bold mb-0.5 md:mb-1">📄 {t('common.templates')}</div>
-                <h3 className="text-base md:text-lg font-bold mb-0.5 md:mb-1">{t('home.legalTemplates')}</h3>
-                <p className="text-xs text-white/90 mb-1.5 md:mb-2">500+ {t('home.professionalTemplates')}</p>
-                <Link href="/templates" className="inline-flex items-center gap-1 bg-white text-red-600 px-2 md:px-3 py-1 md:py-1.5 rounded-lg font-bold text-xs hover:bg-neutral-100 transition-all">
+                <div className="text-accent-400 text-xs font-bold mb-0.5 md:mb-1">
+                  📄 {t('common.templates')}
+                </div>
+                <h3 className="text-base md:text-lg font-bold mb-0.5 md:mb-1">
+                  {t('home.legalTemplates')}
+                </h3>
+                <p className="text-xs text-white/90 mb-1.5 md:mb-2">
+                  500+ {t('home.professionalTemplates')}
+                </p>
+                <Link
+                  href="/templates"
+                  className="inline-flex items-center gap-1 bg-white text-red-600 px-2 md:px-3 py-1 md:py-1.5 rounded-lg font-bold text-xs hover:bg-neutral-100 transition-all"
+                >
                   {t('home.browseTemplates')}
                   <ChevronRight className="h-3 w-3" />
                 </Link>
@@ -87,10 +124,19 @@ export default function Hero() {
             <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg md:rounded-xl p-3 md:p-5 relative overflow-hidden">
               <div className="absolute right-0 top-0 w-24 md:w-32 h-24 md:h-32 bg-white/10 rounded-full blur-2xl -mr-12 md:-mr-16 -mt-12 md:-mt-16"></div>
               <div className="relative z-10">
-                <div className="text-accent-400 text-xs font-bold mb-0.5 md:mb-1">💬 {t('common.consultation')}</div>
-                <h3 className="text-base md:text-lg font-bold mb-0.5 md:mb-1">{t('home.onlineLawyerConsultation')}</h3>
-                <p className="text-xs text-white/90 mb-1.5 md:mb-2">{getConsultationPrice()} {t('home.consultationFrom')}</p>
-                <Link href="/consultation" className="inline-flex items-center gap-1 bg-white text-blue-600 px-2 md:px-3 py-1 md:py-1.5 rounded-lg font-bold text-xs hover:bg-neutral-100 transition-all">
+                <div className="text-accent-400 text-xs font-bold mb-0.5 md:mb-1">
+                  💬 {t('common.consultation')}
+                </div>
+                <h3 className="text-base md:text-lg font-bold mb-0.5 md:mb-1">
+                  {t('home.onlineLawyerConsultation')}
+                </h3>
+                <p className="text-xs text-white/90 mb-1.5 md:mb-2">
+                  {getConsultationPrice()} {t('home.consultationFrom')}
+                </p>
+                <Link
+                  href="/consultation"
+                  className="inline-flex items-center gap-1 bg-white text-blue-600 px-2 md:px-3 py-1 md:py-1.5 rounded-lg font-bold text-xs hover:bg-neutral-100 transition-all"
+                >
                   {t('home.consultNow')}
                   <ChevronRight className="h-3 w-3" />
                 </Link>
@@ -101,10 +147,19 @@ export default function Hero() {
             <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg md:rounded-xl p-3 md:p-5 relative overflow-hidden">
               <div className="absolute right-0 top-0 w-24 md:w-32 h-24 md:h-32 bg-white/10 rounded-full blur-2xl -mr-12 md:-mr-16 -mt-12 md:-mt-16"></div>
               <div className="relative z-10">
-                <div className="text-accent-400 text-xs font-bold mb-0.5 md:mb-1">✅ {t('home.contractReview')}</div>
-                <h3 className="text-base md:text-lg font-bold mb-0.5 md:mb-1">{t('home.contractReview')}</h3>
-                <p className="text-xs text-white/90 mb-1.5 md:mb-2">{getReviewPrice()} {t('home.reviewFrom')}</p>
-                <Link href="/review" className="inline-flex items-center gap-1 bg-white text-purple-600 px-2 md:px-3 py-1 md:py-1.5 rounded-lg font-bold text-xs hover:bg-neutral-100 transition-all">
+                <div className="text-accent-400 text-xs font-bold mb-0.5 md:mb-1">
+                  ✅ {t('home.contractReview')}
+                </div>
+                <h3 className="text-base md:text-lg font-bold mb-0.5 md:mb-1">
+                  {t('home.contractReview')}
+                </h3>
+                <p className="text-xs text-white/90 mb-1.5 md:mb-2">
+                  {getReviewPrice()} {t('home.reviewFrom')}
+                </p>
+                <Link
+                  href="/review"
+                  className="inline-flex items-center gap-1 bg-white text-purple-600 px-2 md:px-3 py-1 md:py-1.5 rounded-lg font-bold text-xs hover:bg-neutral-100 transition-all"
+                >
                   {t('home.submitReview')}
                   <ChevronRight className="h-3 w-3" />
                 </Link>
@@ -114,7 +169,9 @@ export default function Hero() {
 
           {/* 分类导航 - 6-8 个主要服务 */}
           <div className="mb-4 md:mb-5">
-            <h3 className="text-xs font-bold text-white mb-2 md:mb-3">{t('home.hotCategories')}</h3>
+            <h3 className="text-xs font-bold text-white mb-2 md:mb-3">
+              {t('home.hotCategories')}
+            </h3>
             <div className="grid grid-cols-3 md:grid-cols-6 gap-1.5 md:gap-2">
               {[
                 { nameKey: 'services.debt', id: 'debt', icon: '⚖️' },
@@ -122,7 +179,11 @@ export default function Hero() {
                 { nameKey: 'services.business', id: 'business', icon: '💼' },
                 { nameKey: 'services.property', id: 'property', icon: '🏠' },
                 { nameKey: 'services.criminal', id: 'criminal', icon: '⚖️' },
-                { nameKey: 'services.employment', id: 'employment', icon: '👔' },
+                {
+                  nameKey: 'services.employment',
+                  id: 'employment',
+                  icon: '👔',
+                },
                 { nameKey: 'services.ip', id: 'ip', icon: '💡' },
               ].map((service) => (
                 <Link
@@ -130,7 +191,9 @@ export default function Hero() {
                   href={`/services/${service.id}`}
                   className="bg-white/20 hover:bg-white/30 backdrop-blur-sm px-2 md:px-3 py-1.5 md:py-2 rounded-lg text-xs font-medium border border-white/30 transition-all text-center"
                 >
-                  <div className="text-sm md:text-base mb-0.5">{service.icon}</div>
+                  <div className="text-sm md:text-base mb-0.5">
+                    {service.icon}
+                  </div>
                   <div className="text-xs">{t(service.nameKey)}</div>
                 </Link>
               ))}
@@ -142,21 +205,27 @@ export default function Hero() {
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 md:p-3 border border-white/20 text-center">
               <Shield className="h-4 md:h-5 w-4 md:w-5 mx-auto mb-1 md:mb-1.5 text-accent-400" />
               <div className="text-lg md:text-xl font-bold">500+</div>
-              <div className="text-xs text-blue-100">{t('home.certifiedLawyers')}</div>
+              <div className="text-xs text-blue-100">
+                {t('home.certifiedLawyers')}
+              </div>
             </div>
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 md:p-3 border border-white/20 text-center">
               <Clock className="h-4 md:h-5 w-4 md:w-5 mx-auto mb-1 md:mb-1.5 text-accent-400" />
               <div className="text-lg md:text-xl font-bold">2h</div>
-              <div className="text-xs text-blue-100">{t('home.avgResponse')}</div>
+              <div className="text-xs text-blue-100">
+                {t('home.avgResponse')}
+              </div>
             </div>
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 md:p-3 border border-white/20 text-center">
               <Award className="h-4 md:h-5 w-4 md:w-5 mx-auto mb-1 md:mb-1.5 text-accent-400" />
               <div className="text-lg md:text-xl font-bold">4.9/5</div>
-              <div className="text-xs text-blue-100">{t('home.clientRating')}</div>
+              <div className="text-xs text-blue-100">
+                {t('home.clientRating')}
+              </div>
             </div>
           </div>
         </div>
       </div>
     </section>
-  );
+  )
 }

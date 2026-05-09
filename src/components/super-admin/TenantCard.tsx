@@ -1,8 +1,8 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { useLanguage } from '@/contexts/LanguageContext'
 import {
   BuildingOfficeIcon,
   UsersIcon,
@@ -12,101 +12,101 @@ import {
   XCircleIcon,
   PencilIcon,
   TrashIcon,
-} from '@heroicons/react/24/outline';
+} from '@heroicons/react/24/outline'
 
 interface Tenant {
-  id: string;
-  name: string;
-  subdomain: string;
-  domain: string | null;
-  status: 'active' | 'inactive' | 'suspended';
-  user_count: number;
-  created_at: string;
+  id: string
+  name: string
+  subdomain: string
+  domain: string | null
+  status: 'active' | 'inactive' | 'suspended'
+  user_count: number
+  created_at: string
 }
 
 interface TenantCardProps {
-  tenant: Tenant;
-  onUpdate: () => void;
+  tenant: Tenant
+  onUpdate: () => void
 }
 
 export default function TenantCard({ tenant, onUpdate }: TenantCardProps) {
-  const router = useRouter();
-  const { t } = useLanguage();
-  const [showMenu, setShowMenu] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter()
+  const { t } = useLanguage()
+  const [showMenu, setShowMenu] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'active':
-        return 'bg-green-100 text-green-800';
+        return 'bg-green-100 text-green-800'
       case 'inactive':
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-100 text-gray-800'
       case 'suspended':
-        return 'bg-red-100 text-red-800';
+        return 'bg-red-100 text-red-800'
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-100 text-gray-800'
     }
-  };
+  }
 
   const handleActivate = async () => {
-    if (isLoading) return;
-    setIsLoading(true);
+    if (isLoading) return
+    setIsLoading(true)
     try {
       const response = await fetch(
         `/api/super-admin/tenants/${tenant.id}/activate`,
-        { method: 'POST' }
-      );
+        { method: 'POST' },
+      )
       if (response.ok) {
-        onUpdate();
+        onUpdate()
       }
     } catch (error) {
-      console.error('Error activating tenant:', error);
+      console.error('Error activating tenant:', error)
     } finally {
-      setIsLoading(false);
-      setShowMenu(false);
+      setIsLoading(false)
+      setShowMenu(false)
     }
-  };
+  }
 
   const handleDeactivate = async () => {
-    if (isLoading) return;
-    if (!confirm(t('confirm.deactivateTenant'))) return;
+    if (isLoading) return
+    if (!confirm(t('confirm.deactivateTenant'))) return
 
-    setIsLoading(true);
+    setIsLoading(true)
     try {
       const response = await fetch(
         `/api/super-admin/tenants/${tenant.id}/deactivate`,
-        { method: 'POST' }
-      );
+        { method: 'POST' },
+      )
       if (response.ok) {
-        onUpdate();
+        onUpdate()
       }
     } catch (error) {
-      console.error('Error deactivating tenant:', error);
+      console.error('Error deactivating tenant:', error)
     } finally {
-      setIsLoading(false);
-      setShowMenu(false);
+      setIsLoading(false)
+      setShowMenu(false)
     }
-  };
+  }
 
   const handleDelete = async () => {
-    if (isLoading) return;
-    if (!confirm(t('confirm.deleteTenant'))) return;
+    if (isLoading) return
+    if (!confirm(t('confirm.deleteTenant'))) return
 
-    setIsLoading(true);
+    setIsLoading(true)
     try {
       const response = await fetch(`/api/super-admin/tenants/${tenant.id}`, {
         method: 'DELETE',
-      });
+      })
       if (response.ok) {
-        onUpdate();
+        onUpdate()
       }
     } catch (error) {
-      console.error('Error deleting tenant:', error);
+      console.error('Error deleting tenant:', error)
     } finally {
-      setIsLoading(false);
-      setShowMenu(false);
+      setIsLoading(false)
+      setShowMenu(false)
     }
-  };
+  }
 
   return (
     <div className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-6 relative">
@@ -114,7 +114,7 @@ export default function TenantCard({ tenant, onUpdate }: TenantCardProps) {
       <div className="absolute top-4 right-4">
         <span
           className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(
-            tenant.status
+            tenant.status,
           )}`}
         >
           {tenant.status}
@@ -128,7 +128,9 @@ export default function TenantCard({ tenant, onUpdate }: TenantCardProps) {
             <BuildingOfficeIcon className="w-6 h-6 text-orange-600" />
           </div>
           <div className="flex-1">
-            <h3 className="text-lg font-semibold text-gray-900">{tenant.name}</h3>
+            <h3 className="text-lg font-semibold text-gray-900">
+              {tenant.name}
+            </h3>
             <p className="text-sm text-gray-500 mt-1">
               Created {new Date(tenant.created_at).toLocaleDateString()}
             </p>
@@ -183,8 +185,8 @@ export default function TenantCard({ tenant, onUpdate }: TenantCardProps) {
               <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-20">
                 <button
                   onClick={() => {
-                    router.push(`/super-admin/tenants/${tenant.id}`);
-                    setShowMenu(false);
+                    router.push(`/super-admin/tenants/${tenant.id}`)
+                    setShowMenu(false)
                   }}
                   className="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                 >
@@ -226,5 +228,5 @@ export default function TenantCard({ tenant, onUpdate }: TenantCardProps) {
         </div>
       </div>
     </div>
-  );
+  )
 }

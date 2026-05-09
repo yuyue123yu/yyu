@@ -1,43 +1,49 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import { createClient } from '@/lib/supabase/client';
-import { ShieldCheckIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/solid';
+import { useState } from 'react'
+import { createClient } from '@/lib/supabase/client'
+import {
+  ShieldCheckIcon,
+  EyeIcon,
+  EyeSlashIcon,
+} from '@heroicons/react/24/solid'
 
 export default function SuperAdminLoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState('')
 
   const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    setIsLoading(true);
+    e.preventDefault()
+    setError('')
+    setIsLoading(true)
 
     try {
-      const supabase = createClient();
+      const supabase = createClient()
 
       // 步骤1: 登录前先登出，确保账号切换安全
-      await supabase.auth.signOut();
+      await supabase.auth.signOut()
 
       // 步骤2: 登录新账号
-      const { data, error: authError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+      const { data, error: authError } = await supabase.auth.signInWithPassword(
+        {
+          email,
+          password,
+        },
+      )
 
       if (authError) {
-        setError(authError.message);
-        setIsLoading(false);
-        return;
+        setError(authError.message)
+        setIsLoading(false)
+        return
       }
 
       if (!data.session) {
-        setError('登录成功但未获取到Session');
-        setIsLoading(false);
-        return;
+        setError('登录成功但未获取到Session')
+        setIsLoading(false)
+        return
       }
 
       // 步骤3: 将 session 写入 HTTP-only Cookie
@@ -50,25 +56,24 @@ export default function SuperAdminLoginPage() {
           access_token: data.session.access_token,
           refresh_token: data.session.refresh_token,
         }),
-      });
+      })
 
       if (!cookieResponse.ok) {
-        setError('写入Cookie失败');
-        setIsLoading(false);
-        return;
+        setError('写入Cookie失败')
+        setIsLoading(false)
+        return
       }
 
       // 等待 100ms 确保 Cookie 生效
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise((resolve) => setTimeout(resolve, 100))
 
       // 步骤4: 使用硬刷新跳转到 Dashboard（确保 Server Component 读取最新 Cookie）
-      window.location.href = '/super-admin/dashboard-simple';
-
+      window.location.href = '/super-admin/dashboard-simple'
     } catch (err: any) {
-      setError(err.message || '登录失败');
-      setIsLoading(false);
+      setError(err.message || '登录失败')
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 flex items-center justify-center p-4">
@@ -156,5 +161,5 @@ export default function SuperAdminLoginPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }

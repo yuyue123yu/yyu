@@ -1,19 +1,22 @@
-"use client";
+'use client'
 
-import Link from "next/link";
-import { ArrowRight, Sparkles, Phone, Mail } from "lucide-react";
-import { useLanguage } from "@/contexts/LanguageContext";
+import Link from 'next/link'
+import { ArrowRight, Sparkles, Phone, Mail } from 'lucide-react'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 export default function CTA() {
-  const { t } = useLanguage();
-  
+  const { t } = useLanguage()
+
   return (
     <section className="py-16 md:py-20 bg-gradient-to-br from-primary-700 via-primary-600 to-primary-500 text-white relative overflow-hidden">
       {/* Background pattern */}
       <div className="absolute inset-0 opacity-5">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-        }}></div>
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          }}
+        ></div>
       </div>
 
       <div className="container mx-auto px-6 text-center relative z-10">
@@ -28,23 +31,26 @@ export default function CTA() {
             <br />
             {t('home.legalProblems')}
           </h2>
-          
+
           <p className="text-lg mb-8 text-blue-100">
             {t('home.matchLawyer')}
             <br />
-            <span className="text-base mt-2 inline-block">✓ {t('common.register')} ✓ {t('home.freeConsultation')} ✓ {t('common.confirm')} ✓ {t('common.success')}</span>
+            <span className="text-base mt-2 inline-block">
+              ✓ {t('common.register')} ✓ {t('home.freeConsultation')} ✓{' '}
+              {t('common.confirm')} ✓ {t('common.success')}
+            </span>
           </p>
-          
+
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-            <Link 
-              href="/consultation" 
+            <Link
+              href="/consultation"
               className="group inline-flex items-center justify-center gap-2 bg-accent-500 hover:bg-accent-600 text-white px-10 py-4 rounded-xl font-bold transition-all text-lg shadow-2xl hover:shadow-accent-500/50"
             >
               {t('home.startFreeConsultation')}
               <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Link>
-            <Link 
-              href="/contact" 
+            <Link
+              href="/contact"
               className="inline-flex items-center justify-center gap-2 bg-white/10 backdrop-blur-sm text-white px-10 py-4 rounded-xl font-semibold hover:bg-white/20 transition-all text-lg border-2 border-white/30"
             >
               {t('home.contactSupport')}
@@ -64,5 +70,5 @@ export default function CTA() {
         </div>
       </div>
     </section>
-  );
+  )
 }

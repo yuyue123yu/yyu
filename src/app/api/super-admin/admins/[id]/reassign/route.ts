@@ -1,8 +1,8 @@
 // Admin Management API - Reassign Admin to Different Tenant
-import { NextRequest, NextResponse } from 'next/server';
-import { requireSuperAdmin } from '@/lib/middleware/super-admin';
-import { logAuditEvent } from '@/lib/audit';
-import { createClient } from '@/lib/supabase/server';
+import { NextRequest, NextResponse } from 'next/server'
+import { requireSuperAdmin } from '@/lib/middleware/super-admin'
+import { logAuditEvent } from '@/lib/audit'
+import { createClient } from '@/lib/supabase/server'
 
 /**
  * PATCH /api/super-admin/admins/:id/reassign
@@ -10,26 +10,26 @@ import { createClient } from '@/lib/supabase/server';
  */
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   // Verify super admin authentication
-  const authResult = await requireSuperAdmin(request);
+  const authResult = await requireSuperAdmin(request)
   if (authResult instanceof NextResponse) {
-    return authResult;
+    return authResult
   }
 
-  const { supabase } = authResult;
-  const { id } = params;
+  const { supabase } = authResult
+  const { id } = params
 
   try {
-    const body = await request.json();
-    const { tenant_id } = body;
+    const body = await request.json()
+    const { tenant_id } = body
 
     if (!tenant_id) {
       return NextResponse.json(
         { error: 'tenant_id is required' },
-        { status: 400 }
-      );
+        { status: 400 },
+      )
     }
 
     // Get current admin
@@ -37,18 +37,18 @@ export async function PATCH(
       .from('profiles')
       .select('*, tenants:tenant_id(name)')
       .eq('id', id)
-      .single();
+      .single()
 
     if (!currentAdmin) {
-      return NextResponse.json({ error: 'Admin not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Admin not found' }, { status: 404 })
     }
 
     // Verify user is an admin (not super admin)
     if (currentAdmin.user_type !== 'admin' || currentAdmin.super_admin) {
       return NextResponse.json(
         { error: 'User is not a tenant admin' },
-        { status: 400 }
-      );
+        { status: 400 },
+      )
     }
 
     // Verify target tenant exists
@@ -56,28 +56,28 @@ export async function PATCH(
       .from('tenants')
       .select('id, name, status')
       .eq('id', tenant_id)
-      .single();
+      .single()
 
     if (!targetTenant) {
       return NextResponse.json(
         { error: 'Target tenant not found' },
-        { status: 404 }
-      );
+        { status: 404 },
+      )
     }
 
     if (targetTenant.status !== 'active') {
       return NextResponse.json(
         { error: 'Target tenant is not active' },
-        { status: 400 }
-      );
+        { status: 400 },
+      )
     }
 
     // Check if already assigned to target tenant
     if (currentAdmin.tenant_id === tenant_id) {
       return NextResponse.json(
         { error: 'Admin is already assigned to this tenant' },
-        { status: 400 }
-      );
+        { status: 400 },
+      )
     }
 
     // Reassign admin
@@ -89,10 +89,10 @@ export async function PATCH(
       })
       .eq('id', id)
       .select()
-      .single();
+      .single()
 
     if (updateError) {
-      throw updateError;
+      throw updateError
     }
 
     // Log audit event
@@ -109,8 +109,8 @@ export async function PATCH(
           to_tenant_name: targetTenant.name,
         },
       },
-      request
-    );
+      request,
+    )
 
     return NextResponse.json({
       success: true,
@@ -124,12 +124,12 @@ export async function PATCH(
         id: targetTenant.id,
         name: targetTenant.name,
       },
-    });
+    })
   } catch (error) {
-    console.error('Error reassigning admin:', error);
+    console.error('Error reassigning admin:', error)
     return NextResponse.json(
       { error: 'Failed to reassign admin' },
-      { status: 500 }
-    );
+      { status: 500 },
+    )
   }
 }

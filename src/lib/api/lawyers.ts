@@ -1,50 +1,105 @@
 // Malaysia Lawyers API
 export interface Lawyer {
-  id: string;
-  name: string;
-  specialty: string[];
-  rating: number;
-  reviews: number;
-  location: string;
-  state: string;
-  experience: number;
-  responseTime: string;
-  available: boolean;
-  priceRange: string;
-  soldCount: number;
-  languages: string[];
-  education: string[];
-  certifications: string[];
-  bio: string;
-  avatar?: string;
-  successRate?: number;
+  id: string
+  name: string
+  specialty: string[]
+  rating: number
+  reviews: number
+  location: string
+  state: string
+  experience: number
+  responseTime: string
+  available: boolean
+  priceRange: string
+  soldCount: number
+  languages: string[]
+  education: string[]
+  certifications: string[]
+  bio: string
+  avatar?: string
+  successRate?: number
 }
 
 export interface LawyerSpecialty {
-  id: string;
-  name: string;
-  nameMs: string;
-  nameCn: string;
-  lawyerCount: number;
-  icon: string;
+  id: string
+  name: string
+  nameMs: string
+  nameCn: string
+  lawyerCount: number
+  icon: string
 }
 
 // Malaysia Lawyer Specialties
 export const lawyerSpecialties: LawyerSpecialty[] = [
-  { id: 'family', name: 'Family Law', nameMs: 'Undang-undang Keluarga', nameCn: 'Family Law', lawyerCount: 234, icon: '👨‍👩‍👧' },
-  { id: 'business', name: 'Business Law', nameMs: 'Undang-undang Perniagaan', nameCn: 'Business Law', lawyerCount: 312, icon: '💼' },
-  { id: 'property', name: 'Property Law', nameMs: 'Undang-undang Hartanah', nameCn: 'Property Law', lawyerCount: 198, icon: '🏠' },
-  { id: 'criminal', name: 'Criminal Law', nameMs: 'Undang-undang Jenayah', nameCn: 'Criminal Law', lawyerCount: 156, icon: '⚖️' },
-  { id: 'employment', name: 'Employment Law', nameMs: 'Undang-undang Pekerjaan', nameCn: 'Employment Law', lawyerCount: 187, icon: '👔' },
-  { id: 'ip', name: 'Intellectual Property', nameMs: 'Harta Intelek', nameCn: 'IP Law', lawyerCount: 89, icon: '💡' },
-];
+  {
+    id: 'family',
+    name: 'Family Law',
+    nameMs: 'Undang-undang Keluarga',
+    nameCn: 'Family Law',
+    lawyerCount: 234,
+    icon: '👨‍👩‍👧',
+  },
+  {
+    id: 'business',
+    name: 'Business Law',
+    nameMs: 'Undang-undang Perniagaan',
+    nameCn: 'Business Law',
+    lawyerCount: 312,
+    icon: '💼',
+  },
+  {
+    id: 'property',
+    name: 'Property Law',
+    nameMs: 'Undang-undang Hartanah',
+    nameCn: 'Property Law',
+    lawyerCount: 198,
+    icon: '🏠',
+  },
+  {
+    id: 'criminal',
+    name: 'Criminal Law',
+    nameMs: 'Undang-undang Jenayah',
+    nameCn: 'Criminal Law',
+    lawyerCount: 156,
+    icon: '⚖️',
+  },
+  {
+    id: 'employment',
+    name: 'Employment Law',
+    nameMs: 'Undang-undang Pekerjaan',
+    nameCn: 'Employment Law',
+    lawyerCount: 187,
+    icon: '👔',
+  },
+  {
+    id: 'ip',
+    name: 'Intellectual Property',
+    nameMs: 'Harta Intelek',
+    nameCn: 'IP Law',
+    lawyerCount: 89,
+    icon: '💡',
+  },
+]
 
 // Malaysian States
 export const malaysianStates = [
-  'Kuala Lumpur', 'Selangor', 'Penang', 'Johor', 'Perak', 'Kedah', 
-  'Kelantan', 'Terengganu', 'Pahang', 'Negeri Sembilan', 'Melaka', 
-  'Sabah', 'Sarawak', 'Perlis', 'Putrajaya', 'Labuan'
-];
+  'Kuala Lumpur',
+  'Selangor',
+  'Penang',
+  'Johor',
+  'Perak',
+  'Kedah',
+  'Kelantan',
+  'Terengganu',
+  'Pahang',
+  'Negeri Sembilan',
+  'Melaka',
+  'Sabah',
+  'Sarawak',
+  'Perlis',
+  'Putrajaya',
+  'Labuan',
+]
 
 // Mock Malaysia Lawyers Data
 const mockLawyers: Lawyer[] = [
@@ -64,7 +119,10 @@ const mockLawyers: Lawyer[] = [
     successRate: 95,
     languages: ['English', 'Malay', 'Arabic'],
     education: ['LL.B University of Malaya', 'LL.M Harvard Law School'],
-    certifications: ['Advocate & Solicitor (Malaysia)', 'Certified Corporate Lawyer'],
+    certifications: [
+      'Advocate & Solicitor (Malaysia)',
+      'Certified Corporate Lawyer',
+    ],
     bio: 'Experienced corporate lawyer specializing in business formation and contract law',
   },
   {
@@ -82,8 +140,14 @@ const mockLawyers: Lawyer[] = [
     soldCount: 203,
     successRate: 92,
     languages: ['English', 'Mandarin', 'Malay', 'Hokkien'],
-    education: ['LL.B National University of Singapore', 'Barrister-at-Law (Lincoln\'s Inn)'],
-    certifications: ['Advocate & Solicitor (Malaysia)', 'Family Law Specialist'],
+    education: [
+      'LL.B National University of Singapore',
+      "Barrister-at-Law (Lincoln's Inn)",
+    ],
+    certifications: [
+      'Advocate & Solicitor (Malaysia)',
+      'Family Law Specialist',
+    ],
     bio: 'Compassionate family law attorney with expertise in divorce and child custody',
   },
   {
@@ -177,8 +241,14 @@ const mockLawyers: Lawyer[] = [
     soldCount: 134,
     successRate: 90,
     languages: ['English', 'Malay'],
-    education: ['LL.B International Islamic University', 'Barrister-at-Law (Gray\'s Inn)'],
-    certifications: ['Advocate & Solicitor (Malaysia)', 'Criminal Law Specialist'],
+    education: [
+      'LL.B International Islamic University',
+      "Barrister-at-Law (Gray's Inn)",
+    ],
+    certifications: [
+      'Advocate & Solicitor (Malaysia)',
+      'Criminal Law Specialist',
+    ],
     bio: 'Experienced criminal defense lawyer with strong litigation skills',
   },
   {
@@ -197,63 +267,67 @@ const mockLawyers: Lawyer[] = [
     successRate: 88,
     languages: ['English', 'Mandarin', 'Malay'],
     education: ['LL.B University of Malaya', 'Labor Law Certification'],
-    certifications: ['Advocate & Solicitor (Malaysia)', 'Employment Law Expert'],
+    certifications: [
+      'Advocate & Solicitor (Malaysia)',
+      'Employment Law Expert',
+    ],
     bio: 'Dedicated employment lawyer helping workers and employers resolve disputes',
   },
-];
+]
 
 // Fetch lawyers list
 export async function fetchLawyers(filters?: {
-  specialty?: string;
-  location?: string;
-  minRating?: number;
-  maxPrice?: number;
-  available?: boolean;
+  specialty?: string
+  location?: string
+  minRating?: number
+  maxPrice?: number
+  available?: boolean
 }): Promise<Lawyer[]> {
-  await new Promise(resolve => setTimeout(resolve, 500));
-  
-  let filtered = mockLawyers;
-  
+  await new Promise((resolve) => setTimeout(resolve, 500))
+
+  let filtered = mockLawyers
+
   if (filters?.specialty) {
-    filtered = filtered.filter(l => l.specialty.includes(filters.specialty!));
+    filtered = filtered.filter((l) => l.specialty.includes(filters.specialty!))
   }
-  
+
   if (filters?.location) {
-    filtered = filtered.filter(l => l.state === filters.location);
+    filtered = filtered.filter((l) => l.state === filters.location)
   }
-  
+
   if (filters?.minRating) {
-    filtered = filtered.filter(l => l.rating >= filters.minRating!);
+    filtered = filtered.filter((l) => l.rating >= filters.minRating!)
   }
-  
+
   if (filters?.available !== undefined) {
-    filtered = filtered.filter(l => l.available === filters.available);
+    filtered = filtered.filter((l) => l.available === filters.available)
   }
-  
-  return filtered;
+
+  return filtered
 }
 
 // Fetch single lawyer details
 export async function fetchLawyerById(id: string): Promise<Lawyer | null> {
-  await new Promise(resolve => setTimeout(resolve, 300));
-  return mockLawyers.find(l => l.id === id) || null;
+  await new Promise((resolve) => setTimeout(resolve, 300))
+  return mockLawyers.find((l) => l.id === id) || null
 }
 
 // Search lawyers
 export async function searchLawyers(query: string): Promise<Lawyer[]> {
-  await new Promise(resolve => setTimeout(resolve, 400));
-  const lowerQuery = query.toLowerCase();
-  return mockLawyers.filter(l => 
-    l.name.toLowerCase().includes(lowerQuery) ||
-    l.specialty.some(s => s.toLowerCase().includes(lowerQuery)) ||
-    l.location.toLowerCase().includes(lowerQuery)
-  );
+  await new Promise((resolve) => setTimeout(resolve, 400))
+  const lowerQuery = query.toLowerCase()
+  return mockLawyers.filter(
+    (l) =>
+      l.name.toLowerCase().includes(lowerQuery) ||
+      l.specialty.some((s) => s.toLowerCase().includes(lowerQuery)) ||
+      l.location.toLowerCase().includes(lowerQuery),
+  )
 }
 
 // Fetch top lawyers
 export async function fetchTopLawyers(limit: number = 6): Promise<Lawyer[]> {
-  await new Promise(resolve => setTimeout(resolve, 300));
+  await new Promise((resolve) => setTimeout(resolve, 300))
   return [...mockLawyers]
     .sort((a, b) => b.soldCount - a.soldCount)
-    .slice(0, limit);
+    .slice(0, limit)
 }

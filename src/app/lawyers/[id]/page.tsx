@@ -1,32 +1,45 @@
-"use client";
+'use client'
 
-import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
-import Link from "next/link";
-import { ArrowLeft, Star, CheckCircle, Clock, Award, Briefcase, MapPin, Phone, Mail, Calendar, ShoppingCart, Heart } from "lucide-react";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { fetchLawyerById, type Lawyer } from "@/lib/api/lawyers";
+import { useEffect, useState } from 'react'
+import { useParams } from 'next/navigation'
+import Header from '@/components/layout/Header'
+import Footer from '@/components/layout/Footer'
+import Link from 'next/link'
+import {
+  ArrowLeft,
+  Star,
+  CheckCircle,
+  Clock,
+  Award,
+  Briefcase,
+  MapPin,
+  Phone,
+  Mail,
+  Calendar,
+  ShoppingCart,
+  Heart,
+} from 'lucide-react'
+import { useLanguage } from '@/contexts/LanguageContext'
+import { fetchLawyerById, type Lawyer } from '@/lib/api/lawyers'
 
 export default function LawyerDetailPage() {
-  const { t, language } = useLanguage();
-  const params = useParams();
-  const [lawyer, setLawyer] = useState<Lawyer | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { t, language } = useLanguage()
+  const params = useParams()
+  const [lawyer, setLawyer] = useState<Lawyer | null>(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const loadLawyer = async () => {
-      const id = params?.id as string;
+      const id = params?.id as string
       if (id) {
-        setLoading(true);
-        const data = await fetchLawyerById(id);
-        setLawyer(data);
-        setLoading(false);
+        setLoading(true)
+        const data = await fetchLawyerById(id)
+        setLawyer(data)
+        setLoading(false)
       }
-    };
-    loadLawyer();
-  }, [params]);
+    }
+    loadLawyer()
+  }, [params])
 
   if (loading) {
     return (
@@ -40,7 +53,7 @@ export default function LawyerDetailPage() {
         </main>
         <Footer />
       </>
-    );
+    )
   }
 
   if (!lawyer) {
@@ -49,15 +62,20 @@ export default function LawyerDetailPage() {
         <Header />
         <main className="min-h-screen bg-neutral-50 flex items-center justify-center">
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-neutral-900 mb-4">{t('pages.notFound')}</h1>
-            <Link href="/lawyers" className="text-primary-600 hover:text-primary-700">
+            <h1 className="text-2xl font-bold text-neutral-900 mb-4">
+              {t('pages.notFound')}
+            </h1>
+            <Link
+              href="/lawyers"
+              className="text-primary-600 hover:text-primary-700"
+            >
               {t('pages.backToLawyers')}
             </Link>
           </div>
         </main>
         <Footer />
       </>
-    );
+    )
   }
 
   return (
@@ -67,7 +85,10 @@ export default function LawyerDetailPage() {
         {/* Breadcrumb */}
         <section className="bg-white border-b">
           <div className="container mx-auto px-6 py-4">
-            <Link href="/lawyers" className="flex items-center gap-2 text-primary-600 hover:text-primary-700">
+            <Link
+              href="/lawyers"
+              className="flex items-center gap-2 text-primary-600 hover:text-primary-700"
+            >
               <ArrowLeft className="h-4 w-4" />
               {t('pages.backToLawyers')}
             </Link>
@@ -89,7 +110,9 @@ export default function LawyerDetailPage() {
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
-                          <h1 className="text-3xl font-bold text-neutral-900">{lawyer.name}</h1>
+                          <h1 className="text-3xl font-bold text-neutral-900">
+                            {lawyer.name}
+                          </h1>
                           {lawyer.available && (
                             <span className="px-3 py-1 bg-green-100 text-green-700 text-sm font-semibold rounded-full">
                               {t('lawyers.available')}
@@ -99,17 +122,26 @@ export default function LawyerDetailPage() {
                         <div className="flex items-center gap-4 mb-3">
                           <div className="flex items-center gap-1">
                             <Star className="h-5 w-5 text-yellow-500 fill-yellow-500" />
-                            <span className="text-xl font-bold text-neutral-900">{lawyer.rating}</span>
-                            <span className="text-neutral-600">({lawyer.reviews} {t('common.reviews')})</span>
+                            <span className="text-xl font-bold text-neutral-900">
+                              {lawyer.rating}
+                            </span>
+                            <span className="text-neutral-600">
+                              ({lawyer.reviews} {t('common.reviews')})
+                            </span>
                           </div>
                           <div className="flex items-center gap-1 text-neutral-600">
                             <Briefcase className="h-4 w-4" />
-                            <span>{lawyer.experience} {t('lawyers.yearsExp')}</span>
+                            <span>
+                              {lawyer.experience} {t('lawyers.yearsExp')}
+                            </span>
                           </div>
                         </div>
                         <div className="flex flex-wrap gap-2">
                           {lawyer.specialty.map((spec, idx) => (
-                            <span key={idx} className="px-3 py-1 bg-primary-100 text-primary-700 text-sm font-medium rounded-full">
+                            <span
+                              key={idx}
+                              className="px-3 py-1 bg-primary-100 text-primary-700 text-sm font-medium rounded-full"
+                            >
                               {spec}
                             </span>
                           ))}
@@ -120,50 +152,79 @@ export default function LawyerDetailPage() {
                     {/* Stats */}
                     <div className="grid grid-cols-3 gap-4 mb-6 pb-6 border-b">
                       <div className="text-center">
-                        <div className="text-2xl font-bold text-primary-600">{lawyer.soldCount}+</div>
-                        <div className="text-sm text-neutral-600">{t('lawyers.casesHandled')}</div>
+                        <div className="text-2xl font-bold text-primary-600">
+                          {lawyer.soldCount}+
+                        </div>
+                        <div className="text-sm text-neutral-600">
+                          {t('lawyers.casesHandled')}
+                        </div>
                       </div>
                       <div className="text-center">
-                        <div className="text-2xl font-bold text-primary-600">{lawyer.responseTime}</div>
-                        <div className="text-sm text-neutral-600">{t('lawyers.responseTime')}</div>
+                        <div className="text-2xl font-bold text-primary-600">
+                          {lawyer.responseTime}
+                        </div>
+                        <div className="text-sm text-neutral-600">
+                          {t('lawyers.responseTime')}
+                        </div>
                       </div>
                       <div className="text-center">
-                        <div className="text-2xl font-bold text-primary-600">{lawyer.successRate}%</div>
-                        <div className="text-sm text-neutral-600">{t('lawyers.successRate')}</div>
+                        <div className="text-2xl font-bold text-primary-600">
+                          {lawyer.successRate}%
+                        </div>
+                        <div className="text-sm text-neutral-600">
+                          {t('lawyers.successRate')}
+                        </div>
                       </div>
                     </div>
 
                     {/* About */}
                     <div className="mb-6">
-                      <h2 className="text-xl font-bold text-neutral-900 mb-3">{t('lawyers.about')}</h2>
+                      <h2 className="text-xl font-bold text-neutral-900 mb-3">
+                        {t('lawyers.about')}
+                      </h2>
                       <p className="text-neutral-700 leading-relaxed">
-                        {lawyer.bio || `${lawyer.name} is an experienced lawyer specializing in ${lawyer.specialty.join(', ')}. With ${lawyer.experience} years of experience, they have successfully handled over ${lawyer.soldCount} cases with a ${lawyer.successRate}% success rate.`}
+                        {lawyer.bio ||
+                          `${lawyer.name} is an experienced lawyer specializing in ${lawyer.specialty.join(', ')}. With ${lawyer.experience} years of experience, they have successfully handled over ${lawyer.soldCount} cases with a ${lawyer.successRate}% success rate.`}
                       </p>
                     </div>
 
                     {/* Education & Certifications */}
                     <div className="mb-6">
-                      <h2 className="text-xl font-bold text-neutral-900 mb-3">{t('lawyers.qualifications')}</h2>
+                      <h2 className="text-xl font-bold text-neutral-900 mb-3">
+                        {t('lawyers.qualifications')}
+                      </h2>
                       <div className="space-y-3">
                         <div className="flex items-start gap-3">
                           <Award className="h-5 w-5 text-primary-600 flex-shrink-0 mt-1" />
                           <div>
-                            <div className="font-semibold text-neutral-900">{t('lawyers.education')}</div>
-                            <div className="text-neutral-600">University of Malaya - LLB (Hons)</div>
+                            <div className="font-semibold text-neutral-900">
+                              {t('lawyers.education')}
+                            </div>
+                            <div className="text-neutral-600">
+                              University of Malaya - LLB (Hons)
+                            </div>
                           </div>
                         </div>
                         <div className="flex items-start gap-3">
                           <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0 mt-1" />
                           <div>
-                            <div className="font-semibold text-neutral-900">{t('lawyers.certification')}</div>
-                            <div className="text-neutral-600">Malaysian Bar Council Certified</div>
+                            <div className="font-semibold text-neutral-900">
+                              {t('lawyers.certification')}
+                            </div>
+                            <div className="text-neutral-600">
+                              Malaysian Bar Council Certified
+                            </div>
                           </div>
                         </div>
                         <div className="flex items-start gap-3">
                           <MapPin className="h-5 w-5 text-primary-600 flex-shrink-0 mt-1" />
                           <div>
-                            <div className="font-semibold text-neutral-900">{t('lawyers.location')}</div>
-                            <div className="text-neutral-600">{lawyer.location}</div>
+                            <div className="font-semibold text-neutral-900">
+                              {t('lawyers.location')}
+                            </div>
+                            <div className="text-neutral-600">
+                              {lawyer.location}
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -171,10 +232,15 @@ export default function LawyerDetailPage() {
 
                     {/* Languages */}
                     <div>
-                      <h2 className="text-xl font-bold text-neutral-900 mb-3">{t('lawyers.languages')}</h2>
+                      <h2 className="text-xl font-bold text-neutral-900 mb-3">
+                        {t('lawyers.languages')}
+                      </h2>
                       <div className="flex flex-wrap gap-2">
                         {lawyer.languages.map((lang, idx) => (
-                          <span key={idx} className="px-3 py-1 bg-neutral-100 text-neutral-700 text-sm font-medium rounded-lg">
+                          <span
+                            key={idx}
+                            className="px-3 py-1 bg-neutral-100 text-neutral-700 text-sm font-medium rounded-lg"
+                          >
                             {lang}
                           </span>
                         ))}
@@ -187,14 +253,20 @@ export default function LawyerDetailPage() {
                 <div className="lg:col-span-1">
                   <div className="bg-white rounded-xl shadow-lg p-6 sticky top-24">
                     <div className="mb-6">
-                      <div className="text-sm text-neutral-600 mb-1">{t('lawyers.consultationFee')}</div>
-                      <div className="text-3xl font-bold text-primary-600">{lawyer.priceRange}</div>
+                      <div className="text-sm text-neutral-600 mb-1">
+                        {t('lawyers.consultationFee')}
+                      </div>
+                      <div className="text-3xl font-bold text-primary-600">
+                        {lawyer.priceRange}
+                      </div>
                     </div>
 
                     <div className="space-y-3 mb-6">
                       <div className="flex items-center gap-2 text-sm text-neutral-600">
                         <Clock className="h-4 w-4" />
-                        <span>{t('lawyers.responseTime')}: {lawyer.responseTime}</span>
+                        <span>
+                          {t('lawyers.responseTime')}: {lawyer.responseTime}
+                        </span>
                       </div>
                       <div className="flex items-center gap-2 text-sm text-neutral-600">
                         <Calendar className="h-4 w-4" />
@@ -240,7 +312,9 @@ export default function LawyerDetailPage() {
         <section className="py-8 bg-white">
           <div className="container mx-auto px-6">
             <div className="max-w-6xl mx-auto">
-              <h2 className="text-2xl font-bold text-neutral-900 mb-6">{t('lawyers.clientReviews')}</h2>
+              <h2 className="text-2xl font-bold text-neutral-900 mb-6">
+                {t('lawyers.clientReviews')}
+              </h2>
               <div className="space-y-4">
                 {[1, 2, 3].map((i) => (
                   <div key={i} className="bg-neutral-50 rounded-lg p-6">
@@ -249,16 +323,22 @@ export default function LawyerDetailPage() {
                         👤
                       </div>
                       <div>
-                        <div className="font-semibold text-neutral-900">Client {i}</div>
+                        <div className="font-semibold text-neutral-900">
+                          Client {i}
+                        </div>
                         <div className="flex items-center gap-1">
                           {[...Array(5)].map((_, idx) => (
-                            <Star key={idx} className="h-4 w-4 text-yellow-500 fill-yellow-500" />
+                            <Star
+                              key={idx}
+                              className="h-4 w-4 text-yellow-500 fill-yellow-500"
+                            />
                           ))}
                         </div>
                       </div>
                     </div>
                     <p className="text-neutral-700">
-                      Excellent service! Very professional and responsive. Highly recommended.
+                      Excellent service! Very professional and responsive.
+                      Highly recommended.
                     </p>
                   </div>
                 ))}
@@ -269,5 +349,5 @@ export default function LawyerDetailPage() {
       </main>
       <Footer />
     </>
-  );
+  )
 }

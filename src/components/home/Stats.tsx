@@ -1,23 +1,23 @@
-"use client";
+'use client'
 
-import { useState, useEffect } from "react";
-import { Users, FileText, Award, TrendingUp } from "lucide-react";
-import { fetchLegalStatistics, type LegalStatistics } from "@/lib/api/govData";
+import { useState, useEffect } from 'react'
+import { Users, FileText, Award, TrendingUp } from 'lucide-react'
+import { fetchLegalStatistics, type LegalStatistics } from '@/lib/api/govData'
 
 export default function Stats() {
-  const [stats, setStats] = useState<LegalStatistics | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState<LegalStatistics | null>(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    loadStats();
-  }, []);
+    loadStats()
+  }, [])
 
   const loadStats = async () => {
-    setLoading(true);
-    const data = await fetchLegalStatistics();
-    setStats(data);
-    setLoading(false);
-  };
+    setLoading(true)
+    const data = await fetchLegalStatistics()
+    setStats(data)
+    setLoading(false)
+  }
 
   if (loading || !stats) {
     return (
@@ -28,35 +28,35 @@ export default function Stats() {
           </div>
         </div>
       </section>
-    );
+    )
   }
 
   const displayStats = [
     {
       icon: Users,
-      value: "500+",
-      label: "认证律师",
-      description: "专业法律服务团队"
+      value: '500+',
+      label: '认证律师',
+      description: '专业法律服务团队',
     },
     {
       icon: FileText,
-      value: stats.totalServices.toLocaleString() + "+",
-      label: "法律咨询服务",
-      description: "基于马来西亚政府数据"
+      value: stats.totalServices.toLocaleString() + '+',
+      label: '法律咨询服务',
+      description: '基于马来西亚政府数据',
     },
     {
       icon: Award,
-      value: "4.9/5",
-      label: "客户满意度",
-      description: "基于真实用户评价"
+      value: '4.9/5',
+      label: '客户满意度',
+      description: '基于真实用户评价',
     },
     {
       icon: TrendingUp,
-      value: "98%",
-      label: "问题解决率",
-      description: "专业高效的服务"
-    }
-  ];
+      value: '98%',
+      label: '问题解决率',
+      description: '专业高效的服务',
+    },
+  ]
 
   return (
     <section className="py-16 bg-gradient-to-br from-primary-600 to-primary-500 text-white">
@@ -72,7 +72,7 @@ export default function Stats() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {displayStats.map((stat, index) => {
-            const Icon = stat.icon;
+            const Icon = stat.icon
             return (
               <div
                 key={index}
@@ -85,17 +85,18 @@ export default function Stats() {
                 <div className="text-xl font-semibold mb-2">{stat.label}</div>
                 <div className="text-sm text-blue-100">{stat.description}</div>
               </div>
-            );
+            )
           })}
         </div>
 
         {/* Additional Info */}
         <div className="mt-12 text-center">
           <p className="text-sm text-blue-100">
-            数据来源: Legal Aid Department of Malaysia (JBG) | 最后更新: {new Date().toLocaleDateString('zh-CN')}
+            数据来源: Legal Aid Department of Malaysia (JBG) | 最后更新:{' '}
+            {new Date().toLocaleDateString('zh-CN')}
           </p>
         </div>
       </div>
     </section>
-  );
+  )
 }

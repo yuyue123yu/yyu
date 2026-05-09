@@ -1,9 +1,9 @@
-import { Metadata } from 'next';
+import { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: '服务条款 | LegalMY',
   description: 'LegalMY 服务条款 - 了解使用我们服务的条款和条件',
-};
+}
 
 export default function TermsPage() {
   return (
@@ -15,7 +15,9 @@ export default function TermsPage() {
 
           <div className="prose prose-lg max-w-none">
             <section className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">1. 服务说明</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                1. 服务说明
+              </h2>
               <p className="text-gray-700 mb-4">
                 LegalMY 是一个法律咨询平台，连接用户与专业律师。我们提供：
               </p>
@@ -28,10 +30,10 @@ export default function TermsPage() {
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">2. 用户责任</h2>
-              <p className="text-gray-700 mb-4">
-                使用我们的服务时，您同意：
-              </p>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                2. 用户责任
+              </h2>
+              <p className="text-gray-700 mb-4">使用我们的服务时，您同意：</p>
               <ul className="list-disc pl-6 text-gray-700 space-y-2">
                 <li>提供真实、准确的信息</li>
                 <li>遵守所有适用的法律法规</li>
@@ -42,10 +44,10 @@ export default function TermsPage() {
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">3. 律师服务</h2>
-              <p className="text-gray-700 mb-4">
-                重要声明：
-              </p>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                3. 律师服务
+              </h2>
+              <p className="text-gray-700 mb-4">重要声明：</p>
               <ul className="list-disc pl-6 text-gray-700 space-y-2">
                 <li>平台上的律师是独立执业的专业人士</li>
                 <li>LegalMY 不对律师的服务质量负责</li>
@@ -55,10 +57,10 @@ export default function TermsPage() {
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">4. 费用和支付</h2>
-              <p className="text-gray-700 mb-4">
-                关于费用：
-              </p>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                4. 费用和支付
+              </h2>
+              <p className="text-gray-700 mb-4">关于费用：</p>
               <ul className="list-disc pl-6 text-gray-700 space-y-2">
                 <li>咨询费用由律师设定</li>
                 <li>平台可能收取服务费</li>
@@ -68,10 +70,10 @@ export default function TermsPage() {
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">5. 退款政策</h2>
-              <p className="text-gray-700 mb-4">
-                退款条件：
-              </p>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                5. 退款政策
+              </h2>
+              <p className="text-gray-700 mb-4">退款条件：</p>
               <ul className="list-disc pl-6 text-gray-700 space-y-2">
                 <li>服务开始前可以取消并全额退款</li>
                 <li>服务开始后的退款由律师决定</li>
@@ -81,7 +83,9 @@ export default function TermsPage() {
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">6. 知识产权</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                6. 知识产权
+              </h2>
               <p className="text-gray-700 mb-4">
                 平台上的所有内容（包括但不限于文本、图片、Logo、设计）均受知识产权法保护。
                 未经许可，不得复制、修改或分发。
@@ -89,7 +93,9 @@ export default function TermsPage() {
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">7. 免责声明</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                7. 免责声明
+              </h2>
               <p className="text-gray-700 mb-4">
                 LegalMY 按"现状"提供服务，不提供任何明示或暗示的保证。
                 我们不对以下情况负责：
@@ -103,7 +109,9 @@ export default function TermsPage() {
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">8. 服务变更和终止</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                8. 服务变更和终止
+              </h2>
               <p className="text-gray-700 mb-4">
                 我们保留随时修改、暂停或终止服务的权利。
                 我们会提前通知重大变更。
@@ -111,16 +119,19 @@ export default function TermsPage() {
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">9. 争议解决</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                9. 争议解决
+              </h2>
               <p className="text-gray-700 mb-4">
-                本条款受马来西亚法律管辖。
-                任何争议应首先通过友好协商解决，
+                本条款受马来西亚法律管辖。 任何争议应首先通过友好协商解决，
                 协商不成的，提交马来西亚法院管辖。
               </p>
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">10. 联系我们</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                10. 联系我们
+              </h2>
               <p className="text-gray-700 mb-4">
                 如果您对本服务条款有任何疑问，请联系我们：
               </p>
@@ -134,5 +145,5 @@ export default function TermsPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }

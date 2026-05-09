@@ -1,89 +1,89 @@
-'use client';
+'use client'
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { withSuperAdminAuth } from '@/lib/auth/withSuperAdminAuth';
-import SuperAdminLayout from '@/components/super-admin/SuperAdminLayout';
-import TenantCard from '@/components/super-admin/TenantCard';
-import TenantFilters from '@/components/super-admin/TenantFilters';
-import { useLanguage } from '@/contexts/LanguageContext';
-import { PlusIcon } from '@heroicons/react/24/outline';
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { withSuperAdminAuth } from '@/lib/auth/withSuperAdminAuth'
+import SuperAdminLayout from '@/components/super-admin/SuperAdminLayout'
+import TenantCard from '@/components/super-admin/TenantCard'
+import TenantFilters from '@/components/super-admin/TenantFilters'
+import { useLanguage } from '@/contexts/LanguageContext'
+import { PlusIcon } from '@heroicons/react/24/outline'
 
 interface Tenant {
-  id: string;
-  name: string;
-  subdomain: string;
-  domain: string | null;
-  status: 'active' | 'inactive' | 'suspended';
-  user_count: number;
-  created_at: string;
+  id: string
+  name: string
+  subdomain: string
+  domain: string | null
+  status: 'active' | 'inactive' | 'suspended'
+  user_count: number
+  created_at: string
 }
 
 function TenantsPage() {
-  const router = useRouter();
-  const { t } = useLanguage();
-  const [tenants, setTenants] = useState<Tenant[]>([]);
-  const [filteredTenants, setFilteredTenants] = useState<Tenant[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const router = useRouter()
+  const { t } = useLanguage()
+  const [tenants, setTenants] = useState<Tenant[]>([])
+  const [filteredTenants, setFilteredTenants] = useState<Tenant[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
   const [filters, setFilters] = useState({
     status: 'all',
     search: '',
-  });
+  })
 
   useEffect(() => {
-    fetchTenants();
-  }, [currentPage]);
+    fetchTenants()
+  }, [currentPage])
 
   useEffect(() => {
-    applyFilters();
-  }, [tenants, filters]);
+    applyFilters()
+  }, [tenants, filters])
 
   const fetchTenants = async () => {
     try {
-      setIsLoading(true);
+      setIsLoading(true)
       const response = await fetch(
-        `/api/super-admin/tenants?page=${currentPage}&limit=10`
-      );
-      const data = await response.json();
+        `/api/super-admin/tenants?page=${currentPage}&limit=10`,
+      )
+      const data = await response.json()
 
       if (data.success) {
-        setTenants(data.tenants);
-        setTotalPages(data.totalPages);
+        setTenants(data.tenants)
+        setTotalPages(data.totalPages)
       }
     } catch (error) {
-      console.error('Error fetching tenants:', error);
+      console.error('Error fetching tenants:', error)
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   const applyFilters = () => {
-    let filtered = [...tenants];
+    let filtered = [...tenants]
 
     // Status filter
     if (filters.status !== 'all') {
-      filtered = filtered.filter((t) => t.status === filters.status);
+      filtered = filtered.filter((t) => t.status === filters.status)
     }
 
     // Search filter
     if (filters.search) {
-      const searchLower = filters.search.toLowerCase();
+      const searchLower = filters.search.toLowerCase()
       filtered = filtered.filter(
         (t) =>
           t.name.toLowerCase().includes(searchLower) ||
           t.subdomain.toLowerCase().includes(searchLower) ||
-          t.domain?.toLowerCase().includes(searchLower)
-      );
+          t.domain?.toLowerCase().includes(searchLower),
+      )
     }
 
-    setFilteredTenants(filtered);
-  };
+    setFilteredTenants(filtered)
+  }
 
   const handleFilterChange = (newFilters: any) => {
-    setFilters(newFilters);
-  };
+    setFilters(newFilters)
+  }
 
   return (
     <SuperAdminLayout>
@@ -91,10 +91,10 @@ function TenantsPage() {
         {/* Page Header */}
         <div className="space-y-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">{t('tenants.title')}</h1>
-            <p className="text-gray-600 mt-2">
-              {t('tenants.subtitle')}
-            </p>
+            <h1 className="text-3xl font-bold text-gray-900">
+              {t('tenants.title')}
+            </h1>
+            <p className="text-gray-600 mt-2">{t('tenants.subtitle')}</p>
           </div>
           <div className="flex justify-end">
             <button
@@ -130,7 +130,11 @@ function TenantsPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredTenants.map((tenant) => (
-              <TenantCard key={tenant.id} tenant={tenant} onUpdate={fetchTenants} />
+              <TenantCard
+                key={tenant.id}
+                tenant={tenant}
+                onUpdate={fetchTenants}
+              />
             ))}
           </div>
         )}
@@ -159,7 +163,7 @@ function TenantsPage() {
         )}
       </div>
     </SuperAdminLayout>
-  );
+  )
 }
 
-export default withSuperAdminAuth(TenantsPage);
+export default withSuperAdminAuth(TenantsPage)

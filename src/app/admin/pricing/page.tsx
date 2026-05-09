@@ -1,103 +1,111 @@
-"use client";
+'use client'
 
-import { useState, useEffect } from "react";
-import { Save, DollarSign, FileText, Users, Tag, ToggleLeft, ToggleRight } from "lucide-react";
+import { useState, useEffect } from 'react'
+import {
+  Save,
+  DollarSign,
+  FileText,
+  Users,
+  Tag,
+  ToggleLeft,
+  ToggleRight,
+} from 'lucide-react'
 
 interface PricingSettings {
-  currency: string;
+  currency: string
   consultation: {
     [key: string]: {
-      price: number;
-      duration: number;
-      description: string;
-      enabled: boolean;
-    };
-  };
+      price: number
+      duration: number
+      description: string
+      enabled: boolean
+    }
+  }
   documents: {
     [key: string]: {
-      price: number;
-      description: string;
-      enabled: boolean;
-    };
-  };
+      price: number
+      description: string
+      enabled: boolean
+    }
+  }
   membership: {
-    enabled: boolean;
+    enabled: boolean
     monthly: {
-      price: number;
-      description: string;
-      benefits: string[];
-    };
+      price: number
+      description: string
+      benefits: string[]
+    }
     yearly: {
-      price: number;
-      description: string;
-      benefits: string[];
-    };
-  };
+      price: number
+      description: string
+      benefits: string[]
+    }
+  }
   discounts: {
     [key: string]: {
-      enabled: boolean;
-      percentage: number;
-      description: string;
-    };
-  };
+      enabled: boolean
+      percentage: number
+      description: string
+    }
+  }
 }
 
 export default function PricingPage() {
-  const [settings, setSettings] = useState<PricingSettings | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
+  const [settings, setSettings] = useState<PricingSettings | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
 
   useEffect(() => {
-    loadSettings();
-  }, []);
+    loadSettings()
+  }, [])
 
   const loadSettings = async () => {
     try {
-      setLoading(true);
-      const response = await fetch('/api/tenant/pricing');
-      const data = await response.json();
+      setLoading(true)
+      const response = await fetch('/api/tenant/pricing')
+      const data = await response.json()
 
       if (data.success) {
-        setSettings(data.pricing);
+        setSettings(data.pricing)
       }
     } catch (error) {
-      console.error('Error loading settings:', error);
-      alert('加载设置失败');
+      console.error('Error loading settings:', error)
+      alert('加载设置失败')
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const handleSave = async () => {
-    if (!settings) return;
+    if (!settings) return
 
     try {
-      setSaving(true);
+      setSaving(true)
       const response = await fetch('/api/tenant/pricing', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(settings),
-      });
+      })
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (data.success) {
-        alert('价格配置已保存！');
+        alert('价格配置已保存！')
       } else {
-        alert(data.error || '保存失败');
+        alert(data.error || '保存失败')
       }
     } catch (error) {
-      console.error('Error saving settings:', error);
-      alert('保存失败，请重试');
+      console.error('Error saving settings:', error)
+      alert('保存失败，请重试')
     } finally {
-      setSaving(false);
+      setSaving(false)
     }
-  };
+  }
 
   const updateConsultation = (key: string, field: string, value: any) => {
-    if (!settings) return;
+    if (!settings) return
     setSettings({
       ...settings,
       consultation: {
@@ -107,11 +115,11 @@ export default function PricingPage() {
           [field]: value,
         },
       },
-    });
-  };
+    })
+  }
 
   const updateDocument = (key: string, field: string, value: any) => {
-    if (!settings) return;
+    if (!settings) return
     setSettings({
       ...settings,
       documents: {
@@ -121,11 +129,15 @@ export default function PricingPage() {
           [field]: value,
         },
       },
-    });
-  };
+    })
+  }
 
-  const updateMembership = (tier: 'monthly' | 'yearly', field: string, value: any) => {
-    if (!settings) return;
+  const updateMembership = (
+    tier: 'monthly' | 'yearly',
+    field: string,
+    value: any,
+  ) => {
+    if (!settings) return
     setSettings({
       ...settings,
       membership: {
@@ -135,11 +147,11 @@ export default function PricingPage() {
           [field]: value,
         },
       },
-    });
-  };
+    })
+  }
 
   const updateDiscount = (key: string, field: string, value: any) => {
-    if (!settings) return;
+    if (!settings) return
     setSettings({
       ...settings,
       discounts: {
@@ -149,8 +161,8 @@ export default function PricingPage() {
           [field]: value,
         },
       },
-    });
-  };
+    })
+  }
 
   if (loading || !settings) {
     return (
@@ -160,7 +172,7 @@ export default function PricingPage() {
           <p className="mt-4 text-neutral-600">加载中...</p>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -200,7 +212,9 @@ export default function PricingPage() {
             </label>
             <select
               value={settings.currency}
-              onChange={(e) => setSettings({ ...settings, currency: e.target.value })}
+              onChange={(e) =>
+                setSettings({ ...settings, currency: e.target.value })
+              }
               className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
             >
               <option value="MYR">马来西亚令吉 (MYR)</option>
@@ -218,20 +232,33 @@ export default function PricingPage() {
               <Users className="h-5 w-5 text-blue-600" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-neutral-900">咨询服务价格</h2>
-              <p className="text-sm text-neutral-600">设置不同级别的咨询服务价格</p>
+              <h2 className="text-xl font-bold text-neutral-900">
+                咨询服务价格
+              </h2>
+              <p className="text-sm text-neutral-600">
+                设置不同级别的咨询服务价格
+              </p>
             </div>
           </div>
 
           <div className="space-y-4">
             {Object.entries(settings.consultation).map(([key, service]) => (
-              <div key={key} className="border border-neutral-200 rounded-lg p-4">
+              <div
+                key={key}
+                className="border border-neutral-200 rounded-lg p-4"
+              >
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-semibold text-neutral-900">
-                    {key === 'basic' ? '基础咨询' : key === 'standard' ? '标准咨询' : '高级咨询'}
+                    {key === 'basic'
+                      ? '基础咨询'
+                      : key === 'standard'
+                        ? '标准咨询'
+                        : '高级咨询'}
                   </h3>
                   <button
-                    onClick={() => updateConsultation(key, 'enabled', !service.enabled)}
+                    onClick={() =>
+                      updateConsultation(key, 'enabled', !service.enabled)
+                    }
                     className="flex items-center gap-2"
                   >
                     {service.enabled ? (
@@ -253,7 +280,13 @@ export default function PricingPage() {
                     <input
                       type="number"
                       value={service.price}
-                      onChange={(e) => updateConsultation(key, 'price', parseFloat(e.target.value))}
+                      onChange={(e) =>
+                        updateConsultation(
+                          key,
+                          'price',
+                          parseFloat(e.target.value),
+                        )
+                      }
                       className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                       min="0"
                       step="10"
@@ -267,7 +300,13 @@ export default function PricingPage() {
                     <input
                       type="number"
                       value={service.duration}
-                      onChange={(e) => updateConsultation(key, 'duration', parseInt(e.target.value))}
+                      onChange={(e) =>
+                        updateConsultation(
+                          key,
+                          'duration',
+                          parseInt(e.target.value),
+                        )
+                      }
                       className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                       min="15"
                       step="15"
@@ -281,7 +320,9 @@ export default function PricingPage() {
                     <input
                       type="text"
                       value={service.description}
-                      onChange={(e) => updateConsultation(key, 'description', e.target.value)}
+                      onChange={(e) =>
+                        updateConsultation(key, 'description', e.target.value)
+                      }
                       className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                     />
                   </div>
@@ -298,22 +339,33 @@ export default function PricingPage() {
               <FileText className="h-5 w-5 text-purple-600" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-neutral-900">文档服务价格</h2>
+              <h2 className="text-xl font-bold text-neutral-900">
+                文档服务价格
+              </h2>
               <p className="text-sm text-neutral-600">设置文档相关服务的价格</p>
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             {Object.entries(settings.documents).map(([key, service]) => (
-              <div key={key} className="border border-neutral-200 rounded-lg p-4">
+              <div
+                key={key}
+                className="border border-neutral-200 rounded-lg p-4"
+              >
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-semibold text-neutral-900">
-                    {key === 'contract_review' ? '合同审查' : 
-                     key === 'legal_letter' ? '法律函件' : 
-                     key === 'agreement_draft' ? '协议起草' : '文件公证'}
+                    {key === 'contract_review'
+                      ? '合同审查'
+                      : key === 'legal_letter'
+                        ? '法律函件'
+                        : key === 'agreement_draft'
+                          ? '协议起草'
+                          : '文件公证'}
                   </h3>
                   <button
-                    onClick={() => updateDocument(key, 'enabled', !service.enabled)}
+                    onClick={() =>
+                      updateDocument(key, 'enabled', !service.enabled)
+                    }
                   >
                     {service.enabled ? (
                       <ToggleRight className="h-6 w-6 text-green-600" />
@@ -331,7 +383,9 @@ export default function PricingPage() {
                     <input
                       type="number"
                       value={service.price}
-                      onChange={(e) => updateDocument(key, 'price', parseFloat(e.target.value))}
+                      onChange={(e) =>
+                        updateDocument(key, 'price', parseFloat(e.target.value))
+                      }
                       className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                       min="0"
                       step="10"
@@ -345,7 +399,9 @@ export default function PricingPage() {
                     <input
                       type="text"
                       value={service.description}
-                      onChange={(e) => updateDocument(key, 'description', e.target.value)}
+                      onChange={(e) =>
+                        updateDocument(key, 'description', e.target.value)
+                      }
                       className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                     />
                   </div>
@@ -368,10 +424,15 @@ export default function PricingPage() {
               </div>
             </div>
             <button
-              onClick={() => setSettings({
-                ...settings,
-                membership: { ...settings.membership, enabled: !settings.membership.enabled }
-              })}
+              onClick={() =>
+                setSettings({
+                  ...settings,
+                  membership: {
+                    ...settings.membership,
+                    enabled: !settings.membership.enabled,
+                  },
+                })
+              }
               className="flex items-center gap-2"
             >
               {settings.membership.enabled ? (
@@ -389,7 +450,9 @@ export default function PricingPage() {
             <div className="grid grid-cols-2 gap-6">
               {/* 月度会员 */}
               <div className="border border-neutral-200 rounded-lg p-4">
-                <h3 className="font-semibold text-neutral-900 mb-4">月度会员</h3>
+                <h3 className="font-semibold text-neutral-900 mb-4">
+                  月度会员
+                </h3>
                 <div className="space-y-3">
                   <div>
                     <label className="block text-sm font-medium text-neutral-700 mb-2">
@@ -398,7 +461,13 @@ export default function PricingPage() {
                     <input
                       type="number"
                       value={settings.membership.monthly.price}
-                      onChange={(e) => updateMembership('monthly', 'price', parseFloat(e.target.value))}
+                      onChange={(e) =>
+                        updateMembership(
+                          'monthly',
+                          'price',
+                          parseFloat(e.target.value),
+                        )
+                      }
                       className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                       min="0"
                       step="10"
@@ -411,7 +480,13 @@ export default function PricingPage() {
                     <input
                       type="text"
                       value={settings.membership.monthly.description}
-                      onChange={(e) => updateMembership('monthly', 'description', e.target.value)}
+                      onChange={(e) =>
+                        updateMembership(
+                          'monthly',
+                          'description',
+                          e.target.value,
+                        )
+                      }
                       className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                     />
                   </div>
@@ -420,7 +495,9 @@ export default function PricingPage() {
 
               {/* 年度会员 */}
               <div className="border border-neutral-200 rounded-lg p-4">
-                <h3 className="font-semibold text-neutral-900 mb-4">年度会员</h3>
+                <h3 className="font-semibold text-neutral-900 mb-4">
+                  年度会员
+                </h3>
                 <div className="space-y-3">
                   <div>
                     <label className="block text-sm font-medium text-neutral-700 mb-2">
@@ -429,7 +506,13 @@ export default function PricingPage() {
                     <input
                       type="number"
                       value={settings.membership.yearly.price}
-                      onChange={(e) => updateMembership('yearly', 'price', parseFloat(e.target.value))}
+                      onChange={(e) =>
+                        updateMembership(
+                          'yearly',
+                          'price',
+                          parseFloat(e.target.value),
+                        )
+                      }
                       className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                       min="0"
                       step="10"
@@ -442,7 +525,13 @@ export default function PricingPage() {
                     <input
                       type="text"
                       value={settings.membership.yearly.description}
-                      onChange={(e) => updateMembership('yearly', 'description', e.target.value)}
+                      onChange={(e) =>
+                        updateMembership(
+                          'yearly',
+                          'description',
+                          e.target.value,
+                        )
+                      }
                       className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                     />
                   </div>
@@ -466,14 +555,22 @@ export default function PricingPage() {
 
           <div className="space-y-4">
             {Object.entries(settings.discounts).map(([key, discount]) => (
-              <div key={key} className="border border-neutral-200 rounded-lg p-4">
+              <div
+                key={key}
+                className="border border-neutral-200 rounded-lg p-4"
+              >
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-semibold text-neutral-900">
-                    {key === 'first_time' ? '首次咨询优惠' : 
-                     key === 'referral' ? '推荐好友优惠' : '批量服务优惠'}
+                    {key === 'first_time'
+                      ? '首次咨询优惠'
+                      : key === 'referral'
+                        ? '推荐好友优惠'
+                        : '批量服务优惠'}
                   </h3>
                   <button
-                    onClick={() => updateDiscount(key, 'enabled', !discount.enabled)}
+                    onClick={() =>
+                      updateDiscount(key, 'enabled', !discount.enabled)
+                    }
                   >
                     {discount.enabled ? (
                       <ToggleRight className="h-6 w-6 text-green-600" />
@@ -491,7 +588,13 @@ export default function PricingPage() {
                     <input
                       type="number"
                       value={discount.percentage}
-                      onChange={(e) => updateDiscount(key, 'percentage', parseFloat(e.target.value))}
+                      onChange={(e) =>
+                        updateDiscount(
+                          key,
+                          'percentage',
+                          parseFloat(e.target.value),
+                        )
+                      }
                       className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                       min="0"
                       max="100"
@@ -506,7 +609,9 @@ export default function PricingPage() {
                     <input
                       type="text"
                       value={discount.description}
-                      onChange={(e) => updateDiscount(key, 'description', e.target.value)}
+                      onChange={(e) =>
+                        updateDiscount(key, 'description', e.target.value)
+                      }
                       className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                     />
                   </div>
@@ -517,5 +622,5 @@ export default function PricingPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }

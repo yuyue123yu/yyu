@@ -1,8 +1,8 @@
 // Tenant Management API - Activate Tenant
-import { NextRequest, NextResponse } from 'next/server';
-import { requireSuperAdmin } from '@/lib/middleware/super-admin';
-import { logAuditEvent } from '@/lib/audit';
-import { createClient } from '@/lib/supabase/server';
+import { NextRequest, NextResponse } from 'next/server'
+import { requireSuperAdmin } from '@/lib/middleware/super-admin'
+import { logAuditEvent } from '@/lib/audit'
+import { createClient } from '@/lib/supabase/server'
 
 /**
  * POST /api/super-admin/tenants/:id/activate
@@ -10,16 +10,16 @@ import { createClient } from '@/lib/supabase/server';
  */
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   // Verify super admin authentication
-  const authResult = await requireSuperAdmin(request);
+  const authResult = await requireSuperAdmin(request)
   if (authResult instanceof NextResponse) {
-    return authResult;
+    return authResult
   }
 
-  const { supabase } = authResult;
-  const { id } = params;
+  const { supabase } = authResult
+  const { id } = params
 
   try {
     // Get current tenant
@@ -27,10 +27,10 @@ export async function POST(
       .from('tenants')
       .select('*')
       .eq('id', id)
-      .single();
+      .single()
 
     if (!currentTenant) {
-      return NextResponse.json({ error: 'Tenant not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Tenant not found' }, { status: 404 })
     }
 
     // Update tenant status to active
@@ -42,10 +42,10 @@ export async function POST(
       })
       .eq('id', id)
       .select()
-      .single();
+      .single()
 
     if (updateError) {
-      throw updateError;
+      throw updateError
     }
 
     // Log audit event
@@ -59,19 +59,19 @@ export async function POST(
           new_status: 'active',
         },
       },
-      request
-    );
+      request,
+    )
 
     return NextResponse.json({
       success: true,
       message: 'Tenant activated successfully',
       tenant,
-    });
+    })
   } catch (error) {
-    console.error('Error activating tenant:', error);
+    console.error('Error activating tenant:', error)
     return NextResponse.json(
       { error: 'Failed to activate tenant' },
-      { status: 500 }
-    );
+      { status: 500 },
+    )
   }
 }

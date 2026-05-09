@@ -1,33 +1,33 @@
-'use client';
+'use client'
 
-import { useEffect, useState } from 'react';
-import T from '@/components/super-admin/T';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useEffect, useState } from 'react'
+import T from '@/components/super-admin/T'
+import { useLanguage } from '@/contexts/LanguageContext'
 import {
   MagnifyingGlassIcon,
   FunnelIcon,
   XMarkIcon,
   ArrowDownTrayIcon,
-} from '@heroicons/react/24/outline';
+} from '@heroicons/react/24/outline'
 
 interface AuditLogFiltersProps {
   filters: {
-    action_type: string;
-    target_entity: string;
-    user_id: string;
-    tenant_id: string;
-    start_date: string;
-    end_date: string;
-    search: string;
-  };
-  onFilterChange: (filters: any) => void;
-  onExport: (format: 'csv' | 'json') => void;
-  isExporting: boolean;
+    action_type: string
+    target_entity: string
+    user_id: string
+    tenant_id: string
+    start_date: string
+    end_date: string
+    search: string
+  }
+  onFilterChange: (filters: any) => void
+  onExport: (format: 'csv' | 'json') => void
+  isExporting: boolean
 }
 
 interface Tenant {
-  id: string;
-  name: string;
+  id: string
+  name: string
 }
 
 export default function AuditLogFilters({
@@ -36,56 +36,56 @@ export default function AuditLogFilters({
   onExport,
   isExporting,
 }: AuditLogFiltersProps) {
-  const [tenants, setTenants] = useState<Tenant[]>([]);
-  const [isLoadingTenants, setIsLoadingTenants] = useState(true);
-  const [showExportMenu, setShowExportMenu] = useState(false);
-  const { language } = useLanguage();
+  const [tenants, setTenants] = useState<Tenant[]>([])
+  const [isLoadingTenants, setIsLoadingTenants] = useState(true)
+  const [showExportMenu, setShowExportMenu] = useState(false)
+  const { language } = useLanguage()
 
   useEffect(() => {
-    fetchTenants();
-  }, []);
+    fetchTenants()
+  }, [])
 
   const fetchTenants = async () => {
     try {
-      setIsLoadingTenants(true);
+      setIsLoadingTenants(true)
       const response = await fetch(
-        '/api/super-admin/tenants?limit=1000&status=active'
-      );
-      const data = await response.json();
+        '/api/super-admin/tenants?limit=1000&status=active',
+      )
+      const data = await response.json()
 
       if (data.success) {
-        setTenants(data.tenants);
+        setTenants(data.tenants)
       }
     } catch (error) {
-      console.error('Error fetching tenants:', error);
+      console.error('Error fetching tenants:', error)
     } finally {
-      setIsLoadingTenants(false);
+      setIsLoadingTenants(false)
     }
-  };
+  }
 
   const handleActionTypeChange = (action_type: string) => {
-    onFilterChange({ ...filters, action_type });
-  };
+    onFilterChange({ ...filters, action_type })
+  }
 
   const handleTargetEntityChange = (target_entity: string) => {
-    onFilterChange({ ...filters, target_entity });
-  };
+    onFilterChange({ ...filters, target_entity })
+  }
 
   const handleTenantChange = (tenant_id: string) => {
-    onFilterChange({ ...filters, tenant_id });
-  };
+    onFilterChange({ ...filters, tenant_id })
+  }
 
   const handleStartDateChange = (start_date: string) => {
-    onFilterChange({ ...filters, start_date });
-  };
+    onFilterChange({ ...filters, start_date })
+  }
 
   const handleEndDateChange = (end_date: string) => {
-    onFilterChange({ ...filters, end_date });
-  };
+    onFilterChange({ ...filters, end_date })
+  }
 
   const handleSearchChange = (search: string) => {
-    onFilterChange({ ...filters, search });
-  };
+    onFilterChange({ ...filters, search })
+  }
 
   const handleClearFilters = () => {
     onFilterChange({
@@ -96,13 +96,13 @@ export default function AuditLogFilters({
       start_date: '',
       end_date: '',
       search: '',
-    });
-  };
+    })
+  }
 
   const handleExport = (format: 'csv' | 'json') => {
-    setShowExportMenu(false);
-    onExport(format);
-  };
+    setShowExportMenu(false)
+    onExport(format)
+  }
 
   const hasActiveFilters =
     filters.action_type !== '' ||
@@ -111,28 +111,76 @@ export default function AuditLogFilters({
     filters.tenant_id !== '' ||
     filters.start_date !== '' ||
     filters.end_date !== '' ||
-    filters.search !== '';
+    filters.search !== ''
 
   // Action type options
   const actionTypes = [
     { value: '', label: language === 'zh' ? '所有操作' : 'All Actions' },
-    { value: 'tenant.create', label: language === 'zh' ? '创建租户' : 'Tenant Created' },
-    { value: 'tenant.update', label: language === 'zh' ? '更新租户' : 'Tenant Updated' },
-    { value: 'tenant.delete', label: language === 'zh' ? '删除租户' : 'Tenant Deleted' },
-    { value: 'tenant.activate', label: language === 'zh' ? '激活租户' : 'Tenant Activated' },
-    { value: 'tenant.deactivate', label: language === 'zh' ? '停用租户' : 'Tenant Deactivated' },
-    { value: 'user.create', label: language === 'zh' ? '创建用户' : 'User Created' },
-    { value: 'user.update', label: language === 'zh' ? '更新用户' : 'User Updated' },
-    { value: 'user.delete', label: language === 'zh' ? '删除用户' : 'User Deleted' },
-    { value: 'user.migrate', label: language === 'zh' ? '迁移用户' : 'User Migrated' },
-    { value: 'user.impersonate', label: language === 'zh' ? '模拟用户' : 'User Impersonated' },
-    { value: 'admin.create', label: language === 'zh' ? '创建管理员' : 'Admin Created' },
-    { value: 'admin.update', label: language === 'zh' ? '更新管理员' : 'Admin Updated' },
-    { value: 'admin.revoke', label: language === 'zh' ? '撤销管理员' : 'Admin Revoked' },
-    { value: 'password.reset', label: language === 'zh' ? '重置密码' : 'Password Reset' },
-    { value: 'settings.update', label: language === 'zh' ? '更新设置' : 'Settings Updated' },
-    { value: 'audit_logs.export', label: language === 'zh' ? '导出日志' : 'Logs Exported' },
-  ];
+    {
+      value: 'tenant.create',
+      label: language === 'zh' ? '创建租户' : 'Tenant Created',
+    },
+    {
+      value: 'tenant.update',
+      label: language === 'zh' ? '更新租户' : 'Tenant Updated',
+    },
+    {
+      value: 'tenant.delete',
+      label: language === 'zh' ? '删除租户' : 'Tenant Deleted',
+    },
+    {
+      value: 'tenant.activate',
+      label: language === 'zh' ? '激活租户' : 'Tenant Activated',
+    },
+    {
+      value: 'tenant.deactivate',
+      label: language === 'zh' ? '停用租户' : 'Tenant Deactivated',
+    },
+    {
+      value: 'user.create',
+      label: language === 'zh' ? '创建用户' : 'User Created',
+    },
+    {
+      value: 'user.update',
+      label: language === 'zh' ? '更新用户' : 'User Updated',
+    },
+    {
+      value: 'user.delete',
+      label: language === 'zh' ? '删除用户' : 'User Deleted',
+    },
+    {
+      value: 'user.migrate',
+      label: language === 'zh' ? '迁移用户' : 'User Migrated',
+    },
+    {
+      value: 'user.impersonate',
+      label: language === 'zh' ? '模拟用户' : 'User Impersonated',
+    },
+    {
+      value: 'admin.create',
+      label: language === 'zh' ? '创建管理员' : 'Admin Created',
+    },
+    {
+      value: 'admin.update',
+      label: language === 'zh' ? '更新管理员' : 'Admin Updated',
+    },
+    {
+      value: 'admin.revoke',
+      label: language === 'zh' ? '撤销管理员' : 'Admin Revoked',
+    },
+    {
+      value: 'password.reset',
+      label: language === 'zh' ? '重置密码' : 'Password Reset',
+    },
+    {
+      value: 'settings.update',
+      label: language === 'zh' ? '更新设置' : 'Settings Updated',
+    },
+    {
+      value: 'audit_logs.export',
+      label: language === 'zh' ? '导出日志' : 'Logs Exported',
+    },
+  ]
 
   // Entity type options
   const entityTypes = [
@@ -142,8 +190,11 @@ export default function AuditLogFilters({
     { value: 'users', label: language === 'zh' ? '用户' : 'Users' },
     { value: 'admins', label: language === 'zh' ? '管理员' : 'Admins' },
     { value: 'settings', label: language === 'zh' ? '设置' : 'Settings' },
-    { value: 'audit_logs', label: language === 'zh' ? '审计日志' : 'Audit Logs' },
-  ];
+    {
+      value: 'audit_logs',
+      label: language === 'zh' ? '审计日志' : 'Audit Logs',
+    },
+  ]
 
   return (
     <div className="bg-gradient-to-r from-orange-50 to-red-50 rounded-lg shadow p-4 border border-orange-200">
@@ -217,7 +268,9 @@ export default function AuditLogFilters({
               disabled={isLoadingTenants}
               className="flex-1 px-4 py-2 border border-orange-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <option value=""><T zh="所有租户" en="All Tenants" /></option>
+              <option value="">
+                <T zh="所有租户" en="All Tenants" />
+              </option>
               {tenants.map((tenant) => (
                 <option key={tenant.id} value={tenant.id}>
                   {tenant.name}
@@ -235,7 +288,11 @@ export default function AuditLogFilters({
               <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-orange-400" />
               <input
                 type="text"
-                placeholder={language === 'zh' ? '按用户邮箱或实体ID搜索...' : 'Search by user email or entity ID...'}
+                placeholder={
+                  language === 'zh'
+                    ? '按用户邮箱或实体ID搜索...'
+                    : 'Search by user email or entity ID...'
+                }
                 value={filters.search}
                 onChange={(e) => handleSearchChange(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 border border-orange-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white"
@@ -253,7 +310,13 @@ export default function AuditLogFilters({
                 className="flex items-center space-x-2 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <ArrowDownTrayIcon className="w-5 h-5" />
-                <span>{isExporting ? <T zh="导出中..." en="Exporting..." /> : <T zh="导出" en="Export" />}</span>
+                <span>
+                  {isExporting ? (
+                    <T zh="导出中..." en="Exporting..." />
+                  ) : (
+                    <T zh="导出" en="Export" />
+                  )}
+                </span>
               </button>
 
               {/* Export Dropdown Menu */}
@@ -282,12 +345,14 @@ export default function AuditLogFilters({
                 className="flex items-center space-x-2 px-4 py-2 bg-white border border-orange-300 text-orange-600 rounded-lg hover:bg-orange-50 transition-colors"
               >
                 <XMarkIcon className="w-5 h-5" />
-                <span><T zh="清除" en="Clear" /></span>
+                <span>
+                  <T zh="清除" en="Clear" />
+                </span>
               </button>
             )}
           </div>
         </div>
       </div>
     </div>
-  );
+  )
 }

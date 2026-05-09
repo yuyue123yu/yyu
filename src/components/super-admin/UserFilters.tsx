@@ -1,82 +1,82 @@
-'use client';
+'use client'
 
-import { useEffect, useState } from 'react';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useEffect, useState } from 'react'
+import { useLanguage } from '@/contexts/LanguageContext'
 import {
   MagnifyingGlassIcon,
   FunnelIcon,
   XMarkIcon,
-} from '@heroicons/react/24/outline';
+} from '@heroicons/react/24/outline'
 
 interface UserFiltersProps {
   filters: {
-    tenant_id: string;
-    user_type: string;
-    search: string;
-  };
-  onFilterChange: (filters: any) => void;
+    tenant_id: string
+    user_type: string
+    search: string
+  }
+  onFilterChange: (filters: any) => void
 }
 
 interface Tenant {
-  id: string;
-  name: string;
+  id: string
+  name: string
 }
 
 export default function UserFilters({
   filters,
   onFilterChange,
 }: UserFiltersProps) {
-  const { t } = useLanguage();
-  const [tenants, setTenants] = useState<Tenant[]>([]);
-  const [isLoadingTenants, setIsLoadingTenants] = useState(true);
+  const { t } = useLanguage()
+  const [tenants, setTenants] = useState<Tenant[]>([])
+  const [isLoadingTenants, setIsLoadingTenants] = useState(true)
 
   useEffect(() => {
-    fetchTenants();
-  }, []);
+    fetchTenants()
+  }, [])
 
   const fetchTenants = async () => {
     try {
-      setIsLoadingTenants(true);
+      setIsLoadingTenants(true)
       // Fetch all tenants without pagination for filter dropdown
       const response = await fetch(
-        '/api/super-admin/tenants?limit=1000&status=active'
-      );
-      const data = await response.json();
+        '/api/super-admin/tenants?limit=1000&status=active',
+      )
+      const data = await response.json()
 
       if (data.success) {
-        setTenants(data.tenants);
+        setTenants(data.tenants)
       }
     } catch (error) {
-      console.error('Error fetching tenants:', error);
+      console.error('Error fetching tenants:', error)
     } finally {
-      setIsLoadingTenants(false);
+      setIsLoadingTenants(false)
     }
-  };
+  }
 
   const handleTenantChange = (tenant_id: string) => {
-    onFilterChange({ ...filters, tenant_id });
-  };
+    onFilterChange({ ...filters, tenant_id })
+  }
 
   const handleUserTypeChange = (user_type: string) => {
-    onFilterChange({ ...filters, user_type });
-  };
+    onFilterChange({ ...filters, user_type })
+  }
 
   const handleSearchChange = (search: string) => {
-    onFilterChange({ ...filters, search });
-  };
+    onFilterChange({ ...filters, search })
+  }
 
   const handleClearFilters = () => {
     onFilterChange({
       tenant_id: 'all',
       user_type: 'all',
       search: '',
-    });
-  };
+    })
+  }
 
   const hasActiveFilters =
     filters.tenant_id !== 'all' ||
     filters.user_type !== 'all' ||
-    filters.search !== '';
+    filters.search !== ''
 
   return (
     <div className="bg-gradient-to-r from-orange-50 to-red-50 rounded-lg shadow p-4 border border-orange-200">
@@ -143,5 +143,5 @@ export default function UserFilters({
         </div>
       </div>
     </div>
-  );
+  )
 }
