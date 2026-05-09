@@ -17,7 +17,7 @@ export async function GET(
       return NextResponse.json(
         {
           success: false,
-          error: '未登录',
+          error: 'Not authenticated',
         },
         { status: 401 },
       )
@@ -71,7 +71,7 @@ export async function PATCH(
       return NextResponse.json(
         {
           success: false,
-          error: '未登录',
+          error: 'Not authenticated',
         },
         { status: 401 },
       )
@@ -102,7 +102,7 @@ export async function PATCH(
       return NextResponse.json(
         {
           success: false,
-          error: '权限不足',
+          error: 'Insufficient permissions',
         },
         { status: 403 },
       )
@@ -191,7 +191,7 @@ export async function PATCH(
     return NextResponse.json({
       success: true,
       user: updatedUser,
-      message: '用户信息更新成功',
+      message: '用户信息Updated successfully',
     })
   } catch (error: any) {
     console.error('Error updating user:', error)
@@ -221,7 +221,7 @@ export async function DELETE(
       return NextResponse.json(
         {
           success: false,
-          error: '未登录',
+          error: 'Not authenticated',
         },
         { status: 401 },
       )
@@ -251,7 +251,7 @@ export async function DELETE(
       return NextResponse.json(
         {
           success: false,
-          error: '权限不足，只有所有者可以删除用户',
+          error: 'Insufficient permissions，只有所有者可以删除用户',
         },
         { status: 403 },
       )
@@ -353,7 +353,7 @@ export async function DELETE(
 
     return NextResponse.json({
       success: true,
-      message: '用户删除成功',
+      message: '用户Deleted successfully',
     })
   } catch (error: any) {
     console.error('Error deleting user:', error)
