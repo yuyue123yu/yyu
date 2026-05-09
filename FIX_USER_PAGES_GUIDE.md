@@ -9,6 +9,7 @@
 ### 方案 1：暂时禁用这些页面（最快）
 
 如果这些页面暂时不需要使用，可以：
+
 1. 注释掉相关路由
 2. 或者添加一个临时的错误边界
 
@@ -38,12 +39,13 @@
 ### 修改步骤（以 contact/page.tsx 为例）
 
 **修改前**：
+
 ```typescript
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function ContactPage() {
   const { t, language } = useLanguage();
-  
+
   return (
     <div>
       <h1>{t('contact.title')}</h1>
@@ -54,12 +56,13 @@ export default function ContactPage() {
 ```
 
 **修改后**：
+
 ```typescript
 // 移除 import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function ContactPage() {
   // 移除 const { t, language } = useLanguage();
-  
+
   return (
     <div>
       <h1>联系我们</h1>
@@ -102,9 +105,11 @@ export default function RootLayout({ children }) {
 ## 建议
 
 **如果普通用户页面暂时不需要使用**：
+
 - 采用方案 1 或方案 2
 
 **如果普通用户页面需要继续使用**：
+
 - 采用方案 3（临时恢复 LanguageProvider）
 - 然后逐步移除不需要国际化的页面
 

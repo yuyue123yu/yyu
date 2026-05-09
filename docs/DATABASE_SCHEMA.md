@@ -32,6 +32,7 @@ The Super Admin System uses a multi-tenant PostgreSQL database architecture with
 | updated_at | timestamptz | NO | now() | Last update timestamp |
 
 **Indexes**:
+
 - PRIMARY KEY: id
 - UNIQUE: subdomain
 - UNIQUE: domain (where domain IS NOT NULL)
@@ -39,6 +40,7 @@ The Super Admin System uses a multi-tenant PostgreSQL database architecture with
 - INDEX: subscription_plan
 
 **RLS Policies**:
+
 - Super admins: Full access
 - Regular users: No access
 
@@ -59,16 +61,19 @@ The Super Admin System uses a multi-tenant PostgreSQL database architecture with
 | updated_at | timestamptz | NO | now() | Last update timestamp |
 
 **Indexes**:
+
 - PRIMARY KEY: id
 - UNIQUE: (tenant_id, key)
 - INDEX: tenant_id
 - FOREIGN KEY: tenant_id → tenants(id) ON DELETE CASCADE
 
 **RLS Policies**:
+
 - Super admins: Full access
 - Tenant admins: Read access for own tenant
 
 **Common Settings**:
+
 - `branding_primary_color`: Primary brand color
 - `branding_secondary_color`: Secondary brand color
 - `branding_logo_url`: Logo URL
@@ -98,6 +103,7 @@ The Super Admin System uses a multi-tenant PostgreSQL database architecture with
 | created_at | timestamptz | NO | now() | Action timestamp |
 
 **Indexes**:
+
 - PRIMARY KEY: id
 - INDEX: action_type
 - INDEX: target_entity
@@ -106,12 +112,14 @@ The Super Admin System uses a multi-tenant PostgreSQL database architecture with
 - INDEX: created_at (DESC)
 
 **RLS Policies**:
+
 - Super admins: Read-only access
 - Regular users: No access
 - INSERT: Allowed for all authenticated users
 - UPDATE/DELETE: Denied for all users (immutable)
 
 **Common Action Types**:
+
 - `tenant.create`, `tenant.update`, `tenant.delete`
 - `tenant.activate`, `tenant.deactivate`
 - `user.create`, `user.update`, `user.delete`
@@ -137,14 +145,17 @@ The Super Admin System uses a multi-tenant PostgreSQL database architecture with
 | updated_at | timestamptz | NO | now() | Last update timestamp |
 
 **Indexes**:
+
 - PRIMARY KEY: id
 - UNIQUE: key
 
 **RLS Policies**:
+
 - Super admins: Full access
 - Regular users: No access
 
 **Common Settings**:
+
 - `maintenance_mode`: true/false
 - `feature_multi_tenancy`: true/false
 - `feature_user_impersonation`: true/false
@@ -175,6 +186,7 @@ The Super Admin System uses a multi-tenant PostgreSQL database architecture with
 | created_at | timestamptz | NO | now() | Creation timestamp |
 
 **Indexes**:
+
 - PRIMARY KEY: id
 - UNIQUE: token
 - INDEX: user_id
@@ -182,10 +194,12 @@ The Super Admin System uses a multi-tenant PostgreSQL database architecture with
 - FOREIGN KEY: user_id → profiles(id) ON DELETE CASCADE
 
 **RLS Policies**:
+
 - Super admins: Full access
 - Regular users: No access
 
 **Token Properties**:
+
 - Length: 64 characters (256 bits)
 - Format: Hexadecimal
 - Expiration: 24 hours
@@ -205,11 +219,13 @@ The Super Admin System uses a multi-tenant PostgreSQL database architecture with
 | mfa_enabled | boolean | NO | false | MFA enabled flag |
 
 **Indexes Added**:
+
 - INDEX: tenant_id
 - INDEX: super_admin
 - FOREIGN KEY: tenant_id → tenants(id) ON DELETE RESTRICT
 
 **RLS Policies Updated**:
+
 - Super admins: Full access (bypass RLS)
 - Tenant users: Access only to own tenant data
 
@@ -218,6 +234,7 @@ The Super Admin System uses a multi-tenant PostgreSQL database architecture with
 ### 7. Other Tables (Modified)
 
 The following existing tables were modified to add tenant_id:
+
 - lawyers
 - consultations
 - orders
@@ -229,6 +246,7 @@ The following existing tables were modified to add tenant_id:
 - services
 
 **Changes**:
+
 - Added `tenant_id uuid NOT NULL` column
 - Added INDEX on tenant_id
 - Added FOREIGN KEY to tenants(id)
@@ -245,6 +263,7 @@ The following existing tables were modified to add tenant_id:
 **Returns**: uuid
 
 **Usage**:
+
 ```sql
 SELECT get_tenant_id();
 ```
@@ -258,6 +277,7 @@ SELECT get_tenant_id();
 **Returns**: boolean
 
 **Usage**:
+
 ```sql
 SELECT is_super_admin();
 ```
@@ -269,6 +289,7 @@ SELECT is_super_admin();
 **Purpose**: Log an audit event (called by triggers)
 
 **Parameters**:
+
 - action_type: text
 - target_entity: text
 - target_id: text
@@ -335,6 +356,7 @@ Execute SQL files in this order:
 ### Default Tenant
 
 A default tenant is automatically created:
+
 - Name: "Default Tenant"
 - Subdomain: "default"
 - Status: "active"
@@ -342,6 +364,7 @@ A default tenant is automatically created:
 ### Existing Data
 
 All existing data is migrated to the default tenant:
+
 - All profiles assigned to default tenant
 - All related data (lawyers, consultations, etc.) assigned to default tenant
 
@@ -352,6 +375,7 @@ All existing data is migrated to the default tenant:
 ### Indexes
 
 All tenant_id columns are indexed for fast filtering:
+
 ```sql
 CREATE INDEX idx_{table}_tenant_id ON {table}(tenant_id);
 ```
@@ -359,6 +383,7 @@ CREATE INDEX idx_{table}_tenant_id ON {table}(tenant_id);
 ### Query Optimization
 
 Always include tenant_id in WHERE clauses:
+
 ```sql
 SELECT * FROM profiles WHERE tenant_id = get_tenant_id();
 ```
@@ -366,6 +391,7 @@ SELECT * FROM profiles WHERE tenant_id = get_tenant_id();
 ### RLS Performance
 
 RLS policies are optimized to use indexes:
+
 - Super admin check is fast (single boolean)
 - Tenant ID comparison uses index
 
@@ -424,6 +450,7 @@ RLS policies are optimized to use indexes:
 ### Audit Trail
 
 All changes logged in audit_logs table:
+
 - Who made the change
 - What was changed
 - When it was changed
@@ -477,5 +504,5 @@ All changes logged in audit_logs table:
 
 ---
 
-*Last Updated: Current Session*
-*Version: 1.0.0*
+_Last Updated: Current Session_
+_Version: 1.0.0_

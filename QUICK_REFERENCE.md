@@ -3,16 +3,19 @@
 ## 🚀 快速开始
 
 ### 测试页面
+
 - Phase 2 测试: http://localhost:3000/super-admin/test
 - Phase 3 测试: http://localhost:3000/super-admin/tenants-test
 - Phase 4 测试: http://localhost:3000/super-admin/users-test
 - Phase 5 测试: http://localhost:3000/super-admin/system-test
 
 ### 测试账号
+
 - Email: test@example.com
 - Password: Test123456
 
 ### Supabase 项目
+
 - Project ID: ovtrvzbftinsfwytzgwy
 - URL: https://ovtrvzbftinsfwytzgwy.supabase.co
 
@@ -21,6 +24,7 @@
 ## 📁 文件结构
 
 ### 数据库迁移
+
 ```
 supabase/
 ├── 001_create_tenants_table.sql
@@ -35,6 +39,7 @@ supabase/
 ```
 
 ### 后端 API
+
 ```
 src/app/api/super-admin/
 ├── tenants/                    # 租户管理
@@ -73,6 +78,7 @@ src/app/api/super-admin/
 ```
 
 ### 中间件和工具
+
 ```
 src/lib/
 ├── middleware/
@@ -89,23 +95,25 @@ src/lib/
 ## 🔑 核心概念
 
 ### 1. 超级管理员认证
+
 ```typescript
-import { requireSuperAdmin } from '@/lib/middleware/super-admin';
+import { requireSuperAdmin } from '@/lib/middleware/super-admin'
 
 export async function GET(request: NextRequest) {
-  const authResult = await requireSuperAdmin(request);
+  const authResult = await requireSuperAdmin(request)
   if (authResult instanceof NextResponse) {
-    return authResult; // 认证失败
+    return authResult // 认证失败
   }
-  
-  const { user, supabase } = authResult;
+
+  const { user, supabase } = authResult
   // 继续处理...
 }
 ```
 
 ### 2. 审计日志
+
 ```typescript
-import { logAuditEvent } from '@/lib/audit';
+import { logAuditEvent } from '@/lib/audit'
 
 await logAuditEvent(
   {
@@ -114,18 +122,16 @@ await logAuditEvent(
     target_id: tenantId,
     changes: { name: 'New Tenant' },
   },
-  request
-);
+  request,
+)
 ```
 
 ### 3. 密码重置
-```typescript
-import { createPasswordResetToken } from '@/lib/auth/password-reset';
 
-const { token, reset_link } = await createPasswordResetToken(
-  userId,
-  createdBy
-);
+```typescript
+import { createPasswordResetToken } from '@/lib/auth/password-reset'
+
+const { token, reset_link } = await createPasswordResetToken(userId, createdBy)
 ```
 
 ---
@@ -133,15 +139,17 @@ const { token, reset_link } = await createPasswordResetToken(
 ## 📊 数据库表
 
 ### 核心表
-| 表名 | 用途 | 关键字段 |
-|------|------|----------|
-| tenants | 租户信息 | id, name, subdomain, status |
-| tenant_settings | 租户配置 | tenant_id, key, value |
-| audit_logs | 审计日志 | action_type, target_entity, user_id |
-| system_settings | 系统设置 | key, value |
-| password_reset_tokens | 密码重置令牌 | token, user_id, expires_at |
+
+| 表名                  | 用途         | 关键字段                            |
+| --------------------- | ------------ | ----------------------------------- |
+| tenants               | 租户信息     | id, name, subdomain, status         |
+| tenant_settings       | 租户配置     | tenant_id, key, value               |
+| audit_logs            | 审计日志     | action_type, target_entity, user_id |
+| system_settings       | 系统设置     | key, value                          |
+| password_reset_tokens | 密码重置令牌 | token, user_id, expires_at          |
 
 ### 修改的表（添加 tenant_id）
+
 - profiles
 - lawyers
 - consultations
@@ -158,15 +166,18 @@ const { token, reset_link } = await createPasswordResetToken(
 ## 🔐 安全机制
 
 ### RLS 策略
+
 - 所有表都有 RLS 策略
 - 超级管理员可以绕过 RLS（通过 `is_super_admin()` 函数）
 - 普通用户只能访问自己租户的数据
 
 ### 密码要求
+
 - **普通用户**: 8+ 字符，包含大小写字母和数字
 - **超级管理员**: 16+ 字符，包含大小写字母、数字和特殊字符
 
 ### 令牌安全
+
 - 256位加密令牌
 - 24小时过期
 - 单次使用
@@ -176,6 +187,7 @@ const { token, reset_link } = await createPasswordResetToken(
 ## 🎯 API 端点速查
 
 ### 租户管理
+
 ```bash
 # 创建租户
 POST /api/super-admin/tenants
@@ -207,6 +219,7 @@ Body: { settings: { key: value } }
 ```
 
 ### 用户管理
+
 ```bash
 # 列出用户
 GET /api/super-admin/users?tenant_id=xxx&page=1&limit=10
@@ -227,6 +240,7 @@ POST /api/super-admin/users/:id/deactivate
 ```
 
 ### 管理员管理
+
 ```bash
 # 创建管理员
 POST /api/super-admin/admins
@@ -244,6 +258,7 @@ DELETE /api/super-admin/admins/:id
 ```
 
 ### 密码重置
+
 ```bash
 # 发起密码重置
 POST /api/super-admin/password-reset
@@ -258,6 +273,7 @@ Body: { token, new_password }
 ```
 
 ### 审计日志
+
 ```bash
 # 查询审计日志
 GET /api/super-admin/audit-logs?action_type=xxx&start_date=xxx&end_date=xxx
@@ -267,6 +283,7 @@ GET /api/super-admin/audit-logs/export?format=csv
 ```
 
 ### 系统设置
+
 ```bash
 # 获取所有设置
 GET /api/super-admin/system-settings
@@ -281,6 +298,7 @@ Body: { enabled: true, message: "System maintenance" }
 ```
 
 ### 分析统计
+
 ```bash
 # 获取租户指标
 GET /api/super-admin/analytics/tenants/:id
@@ -298,21 +316,25 @@ Body: { format: "csv", tenant_ids?: [...] }
 ## 🛠️ 常用命令
 
 ### 开发服务器
+
 ```bash
 npm run dev
 ```
 
 ### 数据库迁移
+
 在 Supabase Dashboard SQL Editor 中执行：
+
 ```sql
 -- 按顺序执行 001-009 的 SQL 文件
 ```
 
 ### 创建超级管理员
+
 ```sql
 -- 在 Supabase SQL Editor 中执行
-UPDATE profiles 
-SET super_admin = true 
+UPDATE profiles
+SET super_admin = true
 WHERE email = 'your-email@example.com';
 ```
 
@@ -321,33 +343,34 @@ WHERE email = 'your-email@example.com';
 ## 📝 代码示例
 
 ### 创建新的超级管理员端点
+
 ```typescript
 // src/app/api/super-admin/example/route.ts
-import { NextRequest, NextResponse } from 'next/server';
-import { requireSuperAdmin } from '@/lib/middleware/super-admin';
-import { logAuditEvent } from '@/lib/audit';
+import { NextRequest, NextResponse } from 'next/server'
+import { requireSuperAdmin } from '@/lib/middleware/super-admin'
+import { logAuditEvent } from '@/lib/audit'
 
 export async function POST(request: NextRequest) {
   // 1. 验证超级管理员身份
-  const authResult = await requireSuperAdmin(request);
+  const authResult = await requireSuperAdmin(request)
   if (authResult instanceof NextResponse) {
-    return authResult;
+    return authResult
   }
 
-  const { user, supabase } = authResult;
+  const { user, supabase } = authResult
 
   try {
     // 2. 获取请求数据
-    const body = await request.json();
-    
+    const body = await request.json()
+
     // 3. 执行业务逻辑
     const { data, error } = await supabase
       .from('your_table')
       .insert(body)
       .select()
-      .single();
+      .single()
 
-    if (error) throw error;
+    if (error) throw error
 
     // 4. 记录审计日志
     await logAuditEvent(
@@ -357,20 +380,17 @@ export async function POST(request: NextRequest) {
         target_id: data.id,
         changes: body,
       },
-      request
-    );
+      request,
+    )
 
     // 5. 返回响应
     return NextResponse.json({
       success: true,
       data,
-    });
+    })
   } catch (error) {
-    console.error('Error:', error);
-    return NextResponse.json(
-      { error: 'Operation failed' },
-      { status: 500 }
-    );
+    console.error('Error:', error)
+    return NextResponse.json({ error: 'Operation failed' }, { status: 500 })
   }
 }
 ```
@@ -380,6 +400,7 @@ export async function POST(request: NextRequest) {
 ## 🐛 常见问题
 
 ### 1. 认证失败
+
 **问题**: API 返回 401 Unauthorized  
 **解决**: 确保用户的 `super_admin` 字段为 `true`
 
@@ -388,14 +409,17 @@ UPDATE profiles SET super_admin = true WHERE email = 'your-email@example.com';
 ```
 
 ### 2. RLS 策略阻止访问
+
 **问题**: 无法访问其他租户的数据  
 **解决**: 确保调用了 `requireSuperAdmin()` 中间件，它会设置 RLS 绕过
 
 ### 3. 密码重置令牌无效
+
 **问题**: 令牌验证失败  
 **解决**: 检查令牌是否过期（24小时）或已使用
 
 ### 4. 审计日志未记录
+
 **问题**: 操作没有出现在审计日志中  
 **解决**: 确保调用了 `logAuditEvent()` 函数
 
@@ -415,12 +439,14 @@ UPDATE profiles SET super_admin = true WHERE email = 'your-email@example.com';
 ## 🎉 下一步
 
 ### 准备开始 Phase 6
+
 1. 阅读 `.kiro/specs/super-admin-system/tasks.md` 中的 Phase 6 任务
 2. 创建超级管理员布局组件
 3. 实现登录页面
 4. 创建仪表板
 
 ### 需要帮助？
+
 - 查看测试页面了解 API 使用方式
 - 查看现有端点代码作为参考
 - 参考 Phase 完成文档了解详细信息

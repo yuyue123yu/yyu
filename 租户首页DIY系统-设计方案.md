@@ -3,13 +3,16 @@
 ## 1. 系统概述
 
 ### 目标
+
 让每个租户能够通过可视化界面自定义他们的首页，包括：
+
 - 页面布局和组件排列
 - 品牌元素（Logo、颜色、字体）
 - 内容（文本、图片、链接）
 - 功能模块的启用/禁用
 
 ### 用户角色
+
 - **Super Admin**: 管理所有租户，创建新模板和组件
 - **Tenant Admin**: 定制自己租户的首页
 - **End User**: 访问租户定制后的首页
@@ -85,26 +88,26 @@ CREATE INDEX idx_tenant_themes_tenant ON public.tenant_themes(tenant_id);
 
 ```typescript
 interface LayoutConfig {
-  version: string; // '1.0'
-  sections: Section[];
+  version: string // '1.0'
+  sections: Section[]
   globalSettings: {
-    maxWidth: string; // 'full' | 'container' | 'narrow'
-    backgroundColor: string;
-    padding: string;
-  };
+    maxWidth: string // 'full' | 'container' | 'narrow'
+    backgroundColor: string
+    padding: string
+  }
 }
 
 interface Section {
-  id: string;
-  componentType: string; // 'hero', 'features', 'cta', etc.
-  order: number;
-  visible: boolean;
-  props: Record<string, any>; // 组件特定属性
+  id: string
+  componentType: string // 'hero', 'features', 'cta', etc.
+  order: number
+  visible: boolean
+  props: Record<string, any> // 组件特定属性
   style: {
-    backgroundColor?: string;
-    padding?: string;
-    margin?: string;
-  };
+    backgroundColor?: string
+    padding?: string
+    margin?: string
+  }
 }
 ```
 
@@ -197,48 +200,48 @@ interface Section {
 
 ```typescript
 interface ThemeColors {
-  primary: string;
-  secondary: string;
-  accent: string;
-  background: string;
-  surface: string;
+  primary: string
+  secondary: string
+  accent: string
+  background: string
+  surface: string
   text: {
-    primary: string;
-    secondary: string;
-    disabled: string;
-  };
-  success: string;
-  warning: string;
-  error: string;
-  info: string;
+    primary: string
+    secondary: string
+    disabled: string
+  }
+  success: string
+  warning: string
+  error: string
+  info: string
 }
 
 interface ThemeTypography {
   fontFamily: {
-    heading: string;
-    body: string;
-  };
+    heading: string
+    body: string
+  }
   fontSize: {
-    xs: string;
-    sm: string;
-    base: string;
-    lg: string;
-    xl: string;
-    '2xl': string;
-    '3xl': string;
-    '4xl': string;
-  };
+    xs: string
+    sm: string
+    base: string
+    lg: string
+    xl: string
+    '2xl': string
+    '3xl': string
+    '4xl': string
+  }
   fontWeight: {
-    normal: number;
-    medium: number;
-    semibold: number;
-    bold: number;
-  };
+    normal: number
+    medium: number
+    semibold: number
+    bold: number
+  }
   lineHeight: {
-    tight: number;
-    normal: number;
-    relaxed: number;
-  };
+    tight: number
+    normal: number
+    relaxed: number
+  }
 }
 ```
 
@@ -296,22 +299,30 @@ interface ThemeTypography {
 
 ```typescript
 interface ComponentSchema {
-  type: string;
-  properties: Record<string, PropertySchema>;
-  required?: string[];
+  type: string
+  properties: Record<string, PropertySchema>
+  required?: string[]
 }
 
 interface PropertySchema {
-  type: 'string' | 'number' | 'boolean' | 'array' | 'object' | 'image' | 'color' | 'link';
-  label: string;
-  description?: string;
-  default?: any;
-  options?: Array<{ label: string; value: any }>;
+  type:
+    | 'string'
+    | 'number'
+    | 'boolean'
+    | 'array'
+    | 'object'
+    | 'image'
+    | 'color'
+    | 'link'
+  label: string
+  description?: string
+  default?: any
+  options?: Array<{ label: string; value: any }>
   validation?: {
-    min?: number;
-    max?: number;
-    pattern?: string;
-  };
+    min?: number
+    max?: number
+    pattern?: string
+  }
 }
 ```
 
@@ -370,55 +381,66 @@ interface PropertySchema {
 ### 4.1 页面管理 API
 
 **GET /api/tenant-admin/pages**
+
 - 获取当前租户的所有页面
 - Response: `{ pages: TenantPage[] }`
 
 **GET /api/tenant-admin/pages/:pageType**
+
 - 获取特定页面配置
 - Response: `{ page: TenantPage }`
 
 **PUT /api/tenant-admin/pages/:pageType**
+
 - 更新页面配置
 - Request: `{ layout_config: LayoutConfig, seo_config?: SEOConfig }`
 - Response: `{ page: TenantPage }`
 
 **POST /api/tenant-admin/pages/:pageType/publish**
+
 - 发布页面
 - Response: `{ page: TenantPage }`
 
 **POST /api/tenant-admin/pages/:pageType/preview**
+
 - 生成预览链接
 - Response: `{ preview_url: string, expires_at: string }`
 
 ### 4.2 组件库 API
 
 **GET /api/tenant-admin/components**
+
 - 获取可用组件列表
 - Query: `category`, `search`
 - Response: `{ components: PageComponent[] }`
 
 **GET /api/tenant-admin/components/:id**
+
 - 获取组件详情和 schema
 - Response: `{ component: PageComponent }`
 
 ### 4.3 主题管理 API
 
 **GET /api/tenant-admin/theme**
+
 - 获取当前租户主题
 - Response: `{ theme: TenantTheme }`
 
 **PUT /api/tenant-admin/theme**
+
 - 更新主题配置
 - Request: `{ colors?: ThemeColors, typography?: ThemeTypography }`
 - Response: `{ theme: TenantTheme }`
 
 **POST /api/tenant-admin/theme/reset**
+
 - 重置为默认主题
 - Response: `{ theme: TenantTheme }`
 
 ### 4.4 公开访问 API
 
 **GET /api/public/[subdomain]/page/:pageType**
+
 - 获取租户的公开页面配置
 - Response: `{ page: TenantPage, theme: TenantTheme }`
 
@@ -447,6 +469,7 @@ src/app/admin/pages/
 ### 5.2 页面编辑器核心组件
 
 **PageEditor.tsx**:
+
 ```typescript
 'use client';
 
@@ -471,7 +494,7 @@ export default function PageEditor({ pageType, initialConfig, theme }: PageEdito
       props: getDefaultProps(componentType),
       style: {}
     };
-    
+
     setConfig({
       ...config,
       sections: [...config.sections, newSection]
@@ -483,7 +506,7 @@ export default function PageEditor({ pageType, initialConfig, theme }: PageEdito
   const updateSection = (sectionId: string, updates: Partial<Section>) => {
     setConfig({
       ...config,
-      sections: config.sections.map(s => 
+      sections: config.sections.map(s =>
         s.id === sectionId ? { ...s, ...updates } : s
       )
     });
@@ -504,7 +527,7 @@ export default function PageEditor({ pageType, initialConfig, theme }: PageEdito
     const result = Array.from(config.sections);
     const [removed] = result.splice(startIndex, 1);
     result.splice(endIndex, 0, removed);
-    
+
     setConfig({
       ...config,
       sections: result.map((s, i) => ({ ...s, order: i + 1 }))
@@ -534,7 +557,7 @@ export default function PageEditor({ pageType, initialConfig, theme }: PageEdito
     <div className="flex h-screen">
       {/* 组件库侧边栏 */}
       <ComponentLibrary onAddComponent={addSection} />
-      
+
       {/* 画布区域 */}
       <Canvas
         config={config}
@@ -543,14 +566,14 @@ export default function PageEditor({ pageType, initialConfig, theme }: PageEdito
         onSelectSection={setSelectedSection}
         onReorder={reorderSections}
       />
-      
+
       {/* 属性编辑面板 */}
       <PropertyPanel
         section={config.sections.find(s => s.id === selectedSection)}
         onUpdate={(updates) => updateSection(selectedSection!, updates)}
         onDelete={() => deleteSection(selectedSection!)}
       />
-      
+
       {/* 顶部工具栏 */}
       <div className="fixed top-0 right-0 p-4 flex gap-2">
         <button onClick={handleSave} disabled={!isDirty}>
@@ -568,6 +591,7 @@ export default function PageEditor({ pageType, initialConfig, theme }: PageEdito
 ### 5.3 动态组件渲染
 
 **DynamicComponent.tsx**:
+
 ```typescript
 import Hero from '@/components/Hero';
 import Features from '@/components/Features';
@@ -591,11 +615,11 @@ interface DynamicComponentProps {
 
 export default function DynamicComponent({ section, theme, isEditing }: DynamicComponentProps) {
   const Component = componentMap[section.componentType];
-  
+
   if (!Component) {
     return <div>Unknown component: {section.componentType}</div>;
   }
-  
+
   return (
     <div
       style={{
@@ -614,6 +638,7 @@ export default function DynamicComponent({ section, theme, isEditing }: DynamicC
 ### 5.4 公开页面渲染
 
 **src/app/[subdomain]/page.tsx**:
+
 ```typescript
 import { notFound } from 'next/navigation';
 import DynamicComponent from '@/components/DynamicComponent';
@@ -621,17 +646,17 @@ import DynamicComponent from '@/components/DynamicComponent';
 export default async function TenantHomePage({ params }: { params: { subdomain: string } }) {
   // 获取租户页面配置
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/public/${params.subdomain}/page/home`);
-  
+
   if (!res.ok) {
     notFound();
   }
-  
+
   const { page, theme } = await res.json();
-  
+
   if (!page.is_published) {
     notFound();
   }
-  
+
   return (
     <div style={{ backgroundColor: page.layout_config.globalSettings.backgroundColor }}>
       {page.layout_config.sections
@@ -679,18 +704,21 @@ export default async function TenantHomePage({ params }: { params: { subdomain: 
 ## 7. 实现步骤
 
 ### Phase 1: 数据库和 API (2-3 天)
+
 1. 创建数据库表
 2. 实现页面管理 API
 3. 实现组件库 API
 4. 实现主题管理 API
 
 ### Phase 2: 组件库 (3-4 天)
+
 1. 重构现有组件为可配置组件
 2. 定义组件 Schema
 3. 创建组件预览
 4. 添加默认配置
 
 ### Phase 3: 页面编辑器 (4-5 天)
+
 1. 创建编辑器布局
 2. 实现组件拖拽
 3. 实现属性编辑面板
@@ -698,18 +726,21 @@ export default async function TenantHomePage({ params }: { params: { subdomain: 
 5. 实现保存和发布
 
 ### Phase 4: 主题编辑器 (2-3 天)
+
 1. 创建颜色选择器
 2. 创建字体配置
 3. 实现主题预览
 4. 实现主题应用
 
 ### Phase 5: 公开页面渲染 (2-3 天)
+
 1. 实现动态路由
 2. 实现组件渲染
 3. 实现主题应用
 4. 优化性能
 
 ### Phase 6: 测试和优化 (2-3 天)
+
 1. 功能测试
 2. 性能优化
 3. 响应式适配

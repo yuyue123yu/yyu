@@ -23,7 +23,8 @@
 3. 复制粘贴以下命令并按回车:
 
 ```javascript
-localStorage.clear(); location.reload();
+localStorage.clear()
+location.reload()
 ```
 
 4. 页面会自动刷新
@@ -34,13 +35,17 @@ localStorage.clear(); location.reload();
 如果上面的方法都不行,在 Console 中运行:
 
 **切换到中文**:
+
 ```javascript
-localStorage.setItem('superadmin-language', 'zh'); location.reload();
+localStorage.setItem('superadmin-language', 'zh')
+location.reload()
 ```
 
 **切换到英文**:
+
 ```javascript
-localStorage.setItem('superadmin-language', 'en'); location.reload();
+localStorage.setItem('superadmin-language', 'en')
+location.reload()
 ```
 
 ### 方法 4: 重启开发服务器
@@ -54,11 +59,13 @@ localStorage.setItem('superadmin-language', 'en'); location.reload();
 切换语言后,检查以下内容是否改变:
 
 ### 中文 (zh)
+
 - 左侧菜单: **仪表板**、**租户管理**、**用户管理**
 - 顶部标题: **超级管理员**
 - 右上角: **管理员**、**退出登录**
 
 ### 英文 (en)
+
 - 左侧菜单: **Dashboard**、**Tenants**、**Users**
 - 顶部标题: **Super Admin**
 - 右上角: **Admin**、**Logout**
@@ -66,6 +73,7 @@ localStorage.setItem('superadmin-language', 'en'); location.reload();
 ## 🔍 检查语言切换按钮
 
 语言切换按钮应该在:
+
 - **位置**: 顶部导航栏右侧
 - **图标**: 🌐 (地球图标)
 - **旁边**: 通知铃铛 (🔔) 的左边
@@ -98,13 +106,13 @@ localStorage.setItem('superadmin-language', 'en'); location.reload();
 
 ```javascript
 // 1. 检查当前语言
-console.log('Current language:', localStorage.getItem('superadmin-language'));
+console.log('Current language:', localStorage.getItem('superadmin-language'))
 
 // 2. 检查 LanguageContext 是否加载
-console.log('LanguageContext loaded:', typeof window !== 'undefined');
+console.log('LanguageContext loaded:', typeof window !== 'undefined')
 
 // 3. 检查是否有错误
-console.log('Check for errors above');
+console.log('Check for errors above')
 ```
 
 然后截图发给我,我会帮您诊断问题!

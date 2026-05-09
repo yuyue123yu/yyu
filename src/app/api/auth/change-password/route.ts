@@ -1,113 +1,138 @@
 // Force dynamic rendering
-export const dynamic = 'force-dynamic';
-export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
 
-import { NextRequest, NextResponse } from 'next/server';
-import { createServerClient } from '@/lib/supabase/server';
+import { NextRequest, NextResponse } from 'next/server'
+import { createServerClient } from '@/lib/supabase/server'
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createServerClient();
-    
-    // 1. 验证用户登录
-    const { data: { session } } = await supabase.auth.getSession();
+    const supabase = await createServerClient()
+
+    // 1. Verify user login
+    const {
+      data: { session },
+    } = await supabase.auth.getSession()
     if (!session) {
-      return NextResponse.json({ 
-        success: false,
-        error: '未登�? 
-      }, { status: 401 });
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Not authenticated',
+        },
+        { status: 401 },
+      )
     }
 
-    // 2. 获取请求数据
-    const { currentPassword, newPassword, confirmPassword } = await request.json();
+    // 2. Get request data
+    const { currentPassword, newPassword, confirmPassword } =
+      await request.json()
 
-    // 3. 验证数据
+    // 3. Validate data
     if (!currentPassword || !newPassword || !confirmPassword) {
-      return NextResponse.json({ 
-        success: false,
-        error: '请填写所有必填字�? 
-      }, { status: 400 });
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Please fill in all required fields',
+        },
+        { status: 400 },
+      )
     }
 
     if (newPassword !== confirmPassword) {
-      return NextResponse.json({ 
-        success: false,
-        error: '两次输入的密码不一�? 
-      }, { status: 400 });
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Passwords do not match',
+        },
+        { status: 400 },
+      )
     }
 
-    // 4. 验证密码强度
-    const passwordValidation = validatePasswordStrength(newPassword);
+    // 4. Validate password strength
+    const passwordValidation = validatePasswordStrength(newPassword)
     if (!passwordValidation.isValid) {
-      return NextResponse.json({ 
-        success: false,
-        error: passwordValidation.message 
-      }, { status: 400 });
+      return NextResponse.json(
+        {
+          success: false,
+          error: passwordValidation.message,
+        },
+        { status: 400 },
+      )
     }
 
-    // 5. 验证当前密码（通过尝试登录�?
+    // 5. Verify current password (by attempting login)
     const { error: signInError } = await supabase.auth.signInWithPassword({
       email: session.user.email!,
       password: currentPassword,
-    });
+    })
 
     if (signInError) {
-      return NextResponse.json({ 
-        success: false,
-        error: '当前密码不正�? 
-      }, { status: 400 });
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Current password is incorrect',
+        },
+        { status: 400 },
+      )
     }
 
-    // 6. 更新密码
+    // 6. Update password
     const { error: updateError } = await supabase.auth.updateUser({
       password: newPassword,
-    });
+    })
 
     if (updateError) {
-      return NextResponse.json({ 
-        success: false,
-        error: updateError.message 
-      }, { status: 500 });
+      return NextResponse.json(
+        {
+          success: false,
+          error: updateError.message,
+        },
+        { status: 500 },
+      )
     }
 
-    // 7. 记录密码修改历史
+    // 7. Log password change history
     await supabase.from('password_reset_history').insert({
       user_id: session.user.id,
       reset_method: 'self',
-      ip_address: request.headers.get('x-forwarded-for') || 
-                  request.headers.get('x-real-ip') || 
-                  'unknown',
+      ip_address:
+        request.headers.get('x-forwarded-for') ||
+        request.headers.get('x-real-ip') ||
+        'unknown',
       user_agent: request.headers.get('user-agent') || 'unknown',
-    });
+    })
 
-    // 8. 记录审计日志
+    // 8. Log audit trail
     await supabase.from('audit_logs').insert({
       user_id: session.user.id,
       action: 'change_password',
       resource_type: 'user',
       resource_id: session.user.id,
       details: { method: 'self' },
-    });
+    })
 
-    // TODO: 发送密码修改通知邮件
+    // TODO: Send password change notification email
 
     return NextResponse.json({
       success: true,
-      message: '密码修改成功',
-    });
+      message: 'Password changed successfully',
+    })
   } catch (error: any) {
-    console.error('Error changing password:', error);
-    return NextResponse.json({
-      success: false,
-      error: '密码修改失败，请稍后重试',
-    }, { status: 500 });
+    console.error('Error changing password:', error)
+    return NextResponse.json(
+      {
+        success: false,
+        error: 'Failed to change password, please try again later',
+      },
+      { status: 500 },
+    )
   }
 }
 
 interface PasswordValidation {
-  isValid: boolean;
-  message: string;
-  strength: 'weak' | 'medium' | 'strong';
+  isValid: boolean
+  message: string
+  strength: 'weak' | 'medium' | 'strong'
 }
 
 function validatePasswordStrength(password: string): PasswordValidation {
@@ -117,52 +142,52 @@ function validatePasswordStrength(password: string): PasswordValidation {
     lowercase: /[a-z]/.test(password),
     number: /[0-9]/.test(password),
     special: /[!@#$%^&*(),.?":{}|<>]/.test(password),
-  };
+  }
 
-  const passedChecks = Object.values(checks).filter(Boolean).length;
+  const passedChecks = Object.values(checks).filter(Boolean).length
 
   if (!checks.length) {
     return {
       isValid: false,
-      message: '密码至少需�?8 个字�?,
+      message: 'Password must be at least 8 characters',
       strength: 'weak',
-    };
+    }
   }
 
   if (!checks.uppercase) {
     return {
       isValid: false,
-      message: '密码必须包含至少一个大写字�?,
+      message: 'Password must contain at least one uppercase letter',
       strength: 'weak',
-    };
+    }
   }
 
   if (!checks.lowercase) {
     return {
       isValid: false,
-      message: '密码必须包含至少一个小写字�?,
+      message: 'Password must contain at least one lowercase letter',
       strength: 'weak',
-    };
+    }
   }
 
   if (!checks.number) {
     return {
       isValid: false,
-      message: '密码必须包含至少一个数�?,
+      message: 'Password must contain at least one number',
       strength: 'weak',
-    };
+    }
   }
 
-  let strength: 'weak' | 'medium' | 'strong' = 'weak';
+  let strength: 'weak' | 'medium' | 'strong' = 'weak'
   if (passedChecks >= 5) {
-    strength = 'strong';
+    strength = 'strong'
   } else if (passedChecks >= 4) {
-    strength = 'medium';
+    strength = 'medium'
   }
 
   return {
     isValid: true,
-    message: '密码强度符合要求',
+    message: 'Password strength meets requirements',
     strength,
-  };
+  }
 }

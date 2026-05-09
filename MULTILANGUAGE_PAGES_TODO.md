@@ -3,6 +3,7 @@
 ## 📋 当前状态
 
 ✅ **已完成**:
+
 - 首页所有组件 (Hero, Services, Promotions, FeaturedLawyers, UserReviews, Testimonials, BlogSection, FAQ, CTA, SearchFilters)
 - Header 组件
 - Footer 组件
@@ -10,6 +11,7 @@
 - 翻译字典（已添加所有页面需要的翻译键）
 
 ❌ **待更新** (需要添加多语言支持):
+
 1. `/services` - 服务列表页
 2. `/services/[category]` - 服务详情页
 3. `/lawyers` - 律师列表页
@@ -34,25 +36,29 @@
 每个页面需要进行以下更新：
 
 ### 1. 导入语言钩子
-```typescript
-"use client";  // 如果还没有的话
 
-import { useLanguage } from "@/contexts/LanguageContext";
+```typescript
+'use client' // 如果还没有的话
+
+import { useLanguage } from '@/contexts/LanguageContext'
 ```
 
 ### 2. 在组件中使用钩子
+
 ```typescript
 export default function PageName() {
-  const { t } = useLanguage();
-  
+  const { t } = useLanguage()
+
   // ... 组件代码
 }
 ```
 
 ### 3. 替换所有硬编码文本
+
 将所有中文硬编码文本替换为翻译函数调用：
 
 **之前:**
+
 ```typescript
 <h1>专业法律服务</h1>
 <p>涵盖7大法律领域</p>
@@ -60,6 +66,7 @@ export default function PageName() {
 ```
 
 **之后:**
+
 ```typescript
 <h1>{t('pages.servicesTitle')}</h1>
 <p>{t('pages.servicesSubtitle')}</p>
@@ -67,19 +74,20 @@ export default function PageName() {
 ```
 
 ### 4. 处理动态内容
+
 对于数组中的数据，需要为每个语言创建对应的字段：
 
 **之前:**
+
 ```typescript
-const services = [
-  { title: "家庭法", description: "离婚、监护权..." }
-];
+const services = [{ title: '家庭法', description: '离婚、监护权...' }]
 ```
 
 **之后:**
+
 ```typescript
 const services = [
-  { 
+  {
     titleKey: "services.family",
     descKey: "services.familyDesc"
   }
@@ -94,19 +102,22 @@ const services = [
 
 所有页面需要的翻译键已经添加到 `src/contexts/LanguageContext.tsx` 中：
 
-### 通用键 (common.*)
+### 通用键 (common.\*)
+
 - viewAll, learnMore, getStarted
 - search, filter, sortBy
 - price, rating, reviews, cases
 - loading, success, error
 - hot, recommended, new
 
-### 服务键 (services.*)
+### 服务键 (services.\*)
+
 - debt, family, business, property
 - criminal, employment, ip
 - 每个服务的描述 (debtDesc, familyDesc, etc.)
 
-### 页面键 (pages.*)
+### 页面键 (pages.\*)
+
 - servicesTitle, servicesSubtitle
 - lawyersTitle, lawyersSubtitle
 - consultationTitle, consultationSubtitle
@@ -117,20 +128,16 @@ const services = [
 ## 🎯 优先级
 
 **高优先级** (用户最常访问):
+
 1. `/services` 和 `/services/[category]`
 2. `/lawyers`
 3. `/consultation`
 4. `/templates`
 5. `/knowledge`
 
-**中优先级**:
-6. `/login` 和 `/register`
-7. `/cart` 和 `/favorites`
-8. `/contact`
+**中优先级**: 6. `/login` 和 `/register` 7. `/cart` 和 `/favorites` 8. `/contact`
 
-**低优先级** (静态内容页):
-9. `/about`, `/careers`, `/help`
-10. `/privacy`, `/terms`
+**低优先级** (静态内容页): 9. `/about`, `/careers`, `/help` 10. `/privacy`, `/terms`
 
 ## 💡 示例：服务页面更新
 

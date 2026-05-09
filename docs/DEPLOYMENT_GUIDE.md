@@ -173,14 +173,14 @@ Execute SQL files in order via Supabase Dashboard:
 
 ```sql
 -- Check tables exist
-SELECT table_name 
-FROM information_schema.tables 
+SELECT table_name
+FROM information_schema.tables
 WHERE table_schema = 'public'
 ORDER BY table_name;
 
 -- Check RLS policies
-SELECT schemaname, tablename, policyname 
-FROM pg_policies 
+SELECT schemaname, tablename, policyname
+FROM pg_policies
 WHERE schemaname = 'public'
 ORDER BY tablename, policyname;
 
@@ -280,6 +280,7 @@ vercel --prod
 1. Go to Project Settings → Domains
 2. Add domain: `malai.com`
 3. Add DNS records as instructed:
+
    ```
    Type: A
    Name: @
@@ -289,6 +290,7 @@ vercel --prod
    Name: www
    Value: cname.vercel-dns.com
    ```
+
 4. Wait for DNS propagation (up to 48 hours)
 5. Verify domain is active
 
@@ -377,6 +379,7 @@ SELECT * FROM tenants WHERE subdomain = 'default';
 #### Error Tracking (Optional)
 
 Consider integrating:
+
 - Sentry for error tracking
 - LogRocket for session replay
 - Datadog for APM
@@ -390,6 +393,7 @@ Consider integrating:
 #### Vercel Dashboard
 
 Monitor:
+
 - Deployment status
 - Build logs
 - Function logs
@@ -399,6 +403,7 @@ Monitor:
 #### Supabase Dashboard
 
 Monitor:
+
 - Database size
 - Active connections
 - Query performance
@@ -432,6 +437,7 @@ chmod +x health-check.sh
 ### Alerts
 
 Set up alerts for:
+
 - Application downtime
 - High error rates
 - Slow response times
@@ -463,6 +469,7 @@ vercel logs
 ### Performance Monitoring
 
 Monitor key metrics:
+
 - Page load time (< 2 seconds)
 - API response time (< 500ms)
 - Database query time (< 100ms)
@@ -537,6 +544,7 @@ ON CONFLICT (key) DO UPDATE SET value = 'true';
 ```
 
 Or via Super Admin Panel:
+
 1. Log in to super admin panel
 2. Go to Settings
 3. Enable Maintenance Mode
@@ -563,6 +571,7 @@ ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 **Problem**: Vercel deployment fails
 
 **Solutions**:
+
 1. Check build logs in Vercel dashboard
 2. Verify all environment variables are set
 3. Test build locally: `npm run build`
@@ -574,6 +583,7 @@ ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 **Problem**: Cannot connect to database
 
 **Solutions**:
+
 1. Check Supabase project status
 2. Verify connection string
 3. Check IP whitelist (if enabled)
@@ -585,6 +595,7 @@ ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 **Problem**: Emails not being sent
 
 **Solutions**:
+
 1. Verify Resend API key
 2. Check domain verification
 3. Review Resend dashboard for errors
@@ -596,6 +607,7 @@ ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 **Problem**: Users cannot access data
 
 **Solutions**:
+
 1. Check RLS policies are enabled
 2. Verify super_admin flag is set
 3. Check tenant_id is set correctly
@@ -678,5 +690,5 @@ ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 
 ---
 
-*Last Updated: Current Session*
-*Version: 1.0.0*
+_Last Updated: Current Session_
+_Version: 1.0.0_

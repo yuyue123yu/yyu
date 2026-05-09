@@ -11,11 +11,13 @@
 All API endpoints require super admin authentication. Include the Supabase session token in the request headers.
 
 **Headers**:
+
 ```
 Authorization: Bearer {supabase_access_token}
 ```
 
 **Authentication Check**:
+
 - User must be authenticated
 - User must have `super_admin = true` in profiles table
 - RLS bypass is enabled for super admins
@@ -25,6 +27,7 @@ Authorization: Bearer {supabase_access_token}
 ## Response Format
 
 ### Success Response
+
 ```json
 {
   "success": true,
@@ -34,6 +37,7 @@ Authorization: Bearer {supabase_access_token}
 ```
 
 ### Error Response
+
 ```json
 {
   "success": false,
@@ -54,6 +58,7 @@ Authorization: Bearer {supabase_access_token}
 **Description**: Create a new tenant with default admin account
 
 **Request Body**:
+
 ```json
 {
   "name": "Acme Corporation",
@@ -67,6 +72,7 @@ Authorization: Bearer {supabase_access_token}
 ```
 
 **Response**:
+
 ```json
 {
   "success": true,
@@ -94,12 +100,14 @@ Authorization: Bearer {supabase_access_token}
 **Description**: Get paginated list of tenants
 
 **Query Parameters**:
+
 - `page` (number): Page number (default: 1)
 - `limit` (number): Items per page (default: 20)
 - `status` (string): Filter by status
 - `search` (string): Search by name or subdomain
 
 **Response**:
+
 ```json
 {
   "success": true,
@@ -119,6 +127,7 @@ Authorization: Bearer {supabase_access_token}
 **Description**: Get detailed information about a tenant
 
 **Response**:
+
 ```json
 {
   "success": true,
@@ -144,6 +153,7 @@ Authorization: Bearer {supabase_access_token}
 **Description**: Update tenant information
 
 **Request Body**:
+
 ```json
 {
   "name": "Acme Corp",
@@ -153,6 +163,7 @@ Authorization: Bearer {supabase_access_token}
 ```
 
 **Response**:
+
 ```json
 {
   "success": true,
@@ -169,6 +180,7 @@ Authorization: Bearer {supabase_access_token}
 **Description**: Delete a tenant (archives data)
 
 **Response**:
+
 ```json
 {
   "success": true,
@@ -185,6 +197,7 @@ Authorization: Bearer {supabase_access_token}
 **Description**: Activate a tenant
 
 **Response**:
+
 ```json
 {
   "success": true,
@@ -201,6 +214,7 @@ Authorization: Bearer {supabase_access_token}
 **Description**: Deactivate a tenant
 
 **Response**:
+
 ```json
 {
   "success": true,
@@ -219,6 +233,7 @@ Authorization: Bearer {supabase_access_token}
 **Description**: Get all settings for a tenant
 
 **Response**:
+
 ```json
 {
   "success": true,
@@ -241,6 +256,7 @@ Authorization: Bearer {supabase_access_token}
 **Description**: Update a specific setting
 
 **Request Body**:
+
 ```json
 {
   "value": "#dc2626"
@@ -248,6 +264,7 @@ Authorization: Bearer {supabase_access_token}
 ```
 
 **Response**:
+
 ```json
 {
   "success": true,
@@ -264,6 +281,7 @@ Authorization: Bearer {supabase_access_token}
 **Description**: Update multiple settings at once
 
 **Request Body**:
+
 ```json
 {
   "settings": {
@@ -275,6 +293,7 @@ Authorization: Bearer {supabase_access_token}
 ```
 
 **Response**:
+
 ```json
 {
   "success": true,
@@ -293,6 +312,7 @@ Authorization: Bearer {supabase_access_token}
 **Description**: Get paginated list of users across all tenants
 
 **Query Parameters**:
+
 - `page` (number): Page number
 - `limit` (number): Items per page
 - `tenant_id` (uuid): Filter by tenant
@@ -300,6 +320,7 @@ Authorization: Bearer {supabase_access_token}
 - `search` (string): Search by email, name, phone
 
 **Response**:
+
 ```json
 {
   "success": true,
@@ -319,6 +340,7 @@ Authorization: Bearer {supabase_access_token}
 **Description**: Get detailed user information
 
 **Response**:
+
 ```json
 {
   "success": true,
@@ -346,6 +368,7 @@ Authorization: Bearer {supabase_access_token}
 **Description**: Update user information
 
 **Request Body**:
+
 ```json
 {
   "full_name": "Jane Doe",
@@ -355,6 +378,7 @@ Authorization: Bearer {supabase_access_token}
 ```
 
 **Response**:
+
 ```json
 {
   "success": true,
@@ -371,6 +395,7 @@ Authorization: Bearer {supabase_access_token}
 **Description**: Migrate user to different tenant
 
 **Request Body**:
+
 ```json
 {
   "target_tenant_id": "uuid"
@@ -378,6 +403,7 @@ Authorization: Bearer {supabase_access_token}
 ```
 
 **Response**:
+
 ```json
 {
   "success": true,
@@ -395,6 +421,7 @@ Authorization: Bearer {supabase_access_token}
 **Description**: Create impersonation session for user
 
 **Response**:
+
 ```json
 {
   "success": true,
@@ -415,6 +442,7 @@ Authorization: Bearer {supabase_access_token}
 **Description**: Toggle user active status
 
 **Response**:
+
 ```json
 {
   "success": true,
@@ -433,6 +461,7 @@ Authorization: Bearer {supabase_access_token}
 **Description**: Create tenant admin account
 
 **Request Body**:
+
 ```json
 {
   "email": "admin@example.com",
@@ -443,6 +472,7 @@ Authorization: Bearer {supabase_access_token}
 ```
 
 **Response**:
+
 ```json
 {
   "success": true,
@@ -460,10 +490,12 @@ Authorization: Bearer {supabase_access_token}
 **Description**: Get list of all tenant admins
 
 **Query Parameters**:
+
 - `limit` (number): Items per page
 - `tenant_id` (uuid): Filter by tenant
 
 **Response**:
+
 ```json
 {
   "success": true,
@@ -480,6 +512,7 @@ Authorization: Bearer {supabase_access_token}
 **Description**: Reassign admin to different tenant
 
 **Request Body**:
+
 ```json
 {
   "tenant_id": "uuid"
@@ -487,6 +520,7 @@ Authorization: Bearer {supabase_access_token}
 ```
 
 **Response**:
+
 ```json
 {
   "success": true,
@@ -503,6 +537,7 @@ Authorization: Bearer {supabase_access_token}
 **Description**: Revoke admin privileges
 
 **Response**:
+
 ```json
 {
   "success": true,
@@ -521,6 +556,7 @@ Authorization: Bearer {supabase_access_token}
 **Description**: Initiate password reset for user
 
 **Request Body**:
+
 ```json
 {
   "email": "user@example.com"
@@ -528,6 +564,7 @@ Authorization: Bearer {supabase_access_token}
 ```
 
 **Response**:
+
 ```json
 {
   "success": true,
@@ -544,10 +581,12 @@ Authorization: Bearer {supabase_access_token}
 **Description**: Get password reset history
 
 **Query Parameters**:
+
 - `user_id` (uuid): Filter by user
 - `limit` (number): Items to return
 
 **Response**:
+
 ```json
 {
   "success": true,
@@ -566,6 +605,7 @@ Authorization: Bearer {supabase_access_token}
 **Description**: Query audit logs with filters
 
 **Query Parameters**:
+
 - `page` (number): Page number
 - `limit` (number): Items per page
 - `action_type` (string): Filter by action type
@@ -576,6 +616,7 @@ Authorization: Bearer {supabase_access_token}
 - `end_date` (datetime): End date
 
 **Response**:
+
 ```json
 {
   "success": true,
@@ -595,6 +636,7 @@ Authorization: Bearer {supabase_access_token}
 **Description**: Export audit logs to CSV or JSON
 
 **Query Parameters**:
+
 - `format` (string): csv or json
 - Same filters as query endpoint
 
@@ -611,6 +653,7 @@ Authorization: Bearer {supabase_access_token}
 **Description**: Get all system settings
 
 **Response**:
+
 ```json
 {
   "success": true,
@@ -627,6 +670,7 @@ Authorization: Bearer {supabase_access_token}
 **Description**: Update a system setting
 
 **Request Body**:
+
 ```json
 {
   "value": "true"
@@ -634,6 +678,7 @@ Authorization: Bearer {supabase_access_token}
 ```
 
 **Response**:
+
 ```json
 {
   "success": true,
@@ -650,6 +695,7 @@ Authorization: Bearer {supabase_access_token}
 **Description**: Toggle maintenance mode
 
 **Response**:
+
 ```json
 {
   "success": true,
@@ -668,6 +714,7 @@ Authorization: Bearer {supabase_access_token}
 **Description**: Get metrics for a tenant
 
 **Response**:
+
 ```json
 {
   "success": true,
@@ -689,9 +736,11 @@ Authorization: Bearer {supabase_access_token}
 **Description**: Compare metrics across tenants
 
 **Query Parameters**:
+
 - `tenant_ids` (array): Tenant IDs to compare
 
 **Response**:
+
 ```json
 {
   "success": true,
@@ -710,6 +759,7 @@ Authorization: Bearer {supabase_access_token}
 **Description**: Generate MFA secret and QR code
 
 **Response**:
+
 ```json
 {
   "success": true,
@@ -728,6 +778,7 @@ Authorization: Bearer {supabase_access_token}
 **Description**: Verify MFA token and enable MFA
 
 **Request Body**:
+
 ```json
 {
   "token": "123456",
@@ -736,6 +787,7 @@ Authorization: Bearer {supabase_access_token}
 ```
 
 **Response**:
+
 ```json
 {
   "success": true,
@@ -752,6 +804,7 @@ Authorization: Bearer {supabase_access_token}
 **Description**: Check if user has MFA enabled
 
 **Response**:
+
 ```json
 {
   "success": true,
@@ -768,6 +821,7 @@ Authorization: Bearer {supabase_access_token}
 **Description**: Validate MFA token during login
 
 **Request Body**:
+
 ```json
 {
   "token": "123456"
@@ -775,6 +829,7 @@ Authorization: Bearer {supabase_access_token}
 ```
 
 **Response**:
+
 ```json
 {
   "success": true,
@@ -786,29 +841,31 @@ Authorization: Bearer {supabase_access_token}
 
 ## Error Codes
 
-| Code | Status | Description |
-|------|--------|-------------|
-| AUTHENTICATION_ERROR | 401 | Authentication failed |
-| AUTHORIZATION_ERROR | 403 | Insufficient permissions |
-| VALIDATION_ERROR | 400 | Validation failed |
-| NOT_FOUND_ERROR | 404 | Resource not found |
-| CONFLICT_ERROR | 409 | Resource conflict |
-| RATE_LIMIT_ERROR | 429 | Rate limit exceeded |
-| DATABASE_ERROR | 500 | Database operation failed |
-| EXTERNAL_SERVICE_ERROR | 502 | External service error |
-| SESSION_ERROR | 401 | Session error |
-| MFA_ERROR | 401 | MFA verification failed |
+| Code                   | Status | Description               |
+| ---------------------- | ------ | ------------------------- |
+| AUTHENTICATION_ERROR   | 401    | Authentication failed     |
+| AUTHORIZATION_ERROR    | 403    | Insufficient permissions  |
+| VALIDATION_ERROR       | 400    | Validation failed         |
+| NOT_FOUND_ERROR        | 404    | Resource not found        |
+| CONFLICT_ERROR         | 409    | Resource conflict         |
+| RATE_LIMIT_ERROR       | 429    | Rate limit exceeded       |
+| DATABASE_ERROR         | 500    | Database operation failed |
+| EXTERNAL_SERVICE_ERROR | 502    | External service error    |
+| SESSION_ERROR          | 401    | Session error             |
+| MFA_ERROR              | 401    | MFA verification failed   |
 
 ---
 
 ## Rate Limiting
 
 **Default Limits**:
+
 - 60 requests per minute
 - 1000 requests per hour
 - 10000 requests per day
 
 **Headers**:
+
 ```
 X-RateLimit-Limit: 60
 X-RateLimit-Remaining: 59
@@ -820,10 +877,12 @@ X-RateLimit-Reset: 1640000000
 ## Pagination
 
 **Query Parameters**:
+
 - `page`: Page number (default: 1)
 - `limit`: Items per page (default: 20, max: 100)
 
 **Response**:
+
 ```json
 {
   "data": [...],
@@ -840,6 +899,7 @@ X-RateLimit-Reset: 1640000000
 ## Filtering
 
 **Common Filters**:
+
 - `status`: Filter by status
 - `search`: Search by text
 - `start_date`: Start date (ISO 8601)
@@ -852,10 +912,12 @@ X-RateLimit-Reset: 1640000000
 ## Sorting
 
 **Query Parameter**:
+
 - `sort`: Field to sort by
 - `order`: asc or desc (default: desc)
 
 **Example**:
+
 ```
 GET /api/super-admin/users?sort=created_at&order=desc
 ```
@@ -875,5 +937,5 @@ GET /api/super-admin/users?sort=created_at&order=desc
 
 ---
 
-*Last Updated: Current Session*
-*Version: 1.0.0*
+_Last Updated: Current Session_
+_Version: 1.0.0_

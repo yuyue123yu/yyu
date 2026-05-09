@@ -3,6 +3,7 @@
 ## 🎯 背景
 
 我们已经成功修复了 `/admin` 登录系统，使用了GPT之前建议的方案：
+
 1. 登录时将Session写入HTTP-only Cookie
 2. Server Component从Cookie读取Session验证权限
 3. 避免了客户端race condition问题
@@ -16,12 +17,14 @@
 ## 🔴 当前问题
 
 ### 问题描述
+
 - 访问：`http://localhost:3000/super-admin/login`
 - 输入正确的邮箱密码（`admin@legalmy.com`）
 - 点击登录
 - **结果**：登录成功，但无法跳转到 `/super-admin/dashboard-simple`，停留在登录页或跳转回登录页
 
 ### 已确认正常的部分
+
 1. ✅ 登录API调用成功（`signInWithPassword`返回成功）
 2. ✅ Cookie写入成功（`/api/auth/callback`返回200）
 3. ✅ 数据库数据正确（用户有`super_admin=true`权限）
@@ -33,6 +36,7 @@
 ## 📝 代码实现
 
 ### 1. Super Admin 登录页面
+
 **文件**：`src/app/super-admin/login/page.tsx`
 
 ```typescript
@@ -116,6 +120,7 @@ export default function SuperAdminLoginPage() {
 ```
 
 ### 2. Super Admin Dashboard
+
 **文件**：`src/app/super-admin/dashboard-simple/page.tsx`
 
 ```typescript
@@ -152,14 +157,15 @@ export default async function SimpleDashboard() {
 ```
 
 ### 3. Supabase Server 客户端
+
 **文件**：`src/lib/supabase/server.ts`
 
 ```typescript
-import { createServerClient as createSupabaseServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
+import { createServerClient as createSupabaseServerClient } from '@supabase/ssr'
+import { cookies } from 'next/headers'
 
 export async function createServerClient() {
-  const cookieStore = await cookies();
+  const cookieStore = await cookies()
 
   return createSupabaseServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -169,52 +175,50 @@ export async function createServerClient() {
         get(name: string) {
           // 优先读取我们自定义的 cookie
           if (name === 'sb-access-token') {
-            return cookieStore.get('sb-access-token')?.value;
+            return cookieStore.get('sb-access-token')?.value
           }
           if (name === 'sb-refresh-token') {
-            return cookieStore.get('sb-refresh-token')?.value;
+            return cookieStore.get('sb-refresh-token')?.value
           }
           // 兼容 Supabase 默认的 cookie 名称
-          return cookieStore.get(name)?.value;
+          return cookieStore.get(name)?.value
         },
         set(name: string, value: string, options: any) {
           try {
-            cookieStore.set({ name, value, ...options });
+            cookieStore.set({ name, value, ...options })
           } catch (error) {
             // 在Server Component中可能无法设置cookie
           }
         },
         remove(name: string, options: any) {
           try {
-            cookieStore.set({ name, value: '', ...options });
+            cookieStore.set({ name, value: '', ...options })
           } catch (error) {
             // 在Server Component中可能无法删除cookie
           }
         },
       },
-    }
-  );
+    },
+  )
 }
 ```
 
 ### 4. Cookie API 路由
+
 **文件**：`src/app/api/auth/callback/route.ts`
 
 ```typescript
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(req: NextRequest) {
   try {
-    const { access_token, refresh_token } = await req.json();
+    const { access_token, refresh_token } = await req.json()
 
     if (!access_token || !refresh_token) {
-      return NextResponse.json(
-        { error: 'Missing tokens' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Missing tokens' }, { status: 400 })
     }
 
-    const res = NextResponse.json({ ok: true });
+    const res = NextResponse.json({ ok: true })
 
     // 写入 Supabase session cookie
     res.cookies.set('sb-access-token', access_token, {
@@ -223,7 +227,7 @@ export async function POST(req: NextRequest) {
       sameSite: 'lax',
       secure: process.env.NODE_ENV === 'production',
       maxAge: 60 * 60 * 24 * 7, // 7 天
-    });
+    })
 
     res.cookies.set('sb-refresh-token', refresh_token, {
       httpOnly: true,
@@ -231,14 +235,11 @@ export async function POST(req: NextRequest) {
       sameSite: 'lax',
       secure: process.env.NODE_ENV === 'production',
       maxAge: 60 * 60 * 24 * 30, // 30 天
-    });
+    })
 
-    return res;
+    return res
   } catch (error: any) {
-    return NextResponse.json(
-      { error: error.message },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: error.message }, { status: 500 })
   }
 }
 ```
@@ -248,18 +249,21 @@ export async function POST(req: NextRequest) {
 ## 🔍 对比：Admin vs Super Admin
 
 ### Admin系统（✅ 正常工作）
+
 - 登录页面：`/admin/login`
 - Dashboard：`/admin`
 - Layout：`/admin/layout.tsx`（Server Component）
 - 使用：`AdminLayoutClient.tsx`（Client Component）
 
 ### Super Admin系统（❌ 不工作）
+
 - 登录页面：`/super-admin/login`
 - Dashboard：`/super-admin/dashboard-simple`
 - Layout：**没有专门的layout.tsx**
 - 直接使用：Server Component Dashboard
 
 ### 关键差异
+
 1. **Admin有Layout**，Super Admin没有Layout
 2. **Admin使用混合架构**（Server Component Layout + Client Component UI），Super Admin只有Server Component Dashboard
 3. **路径不同**：`/admin` vs `/super-admin/dashboard-simple`
@@ -289,6 +293,7 @@ export async function POST(req: NextRequest) {
 ## 📊 测试结果
 
 ### 测试1：使用测试页面登录
+
 - 页面：`http://localhost:3000/test-super-admin-login`
 - 步骤1：登出旧账号 ✅
 - 步骤2：登录新账号 ✅
@@ -296,6 +301,7 @@ export async function POST(req: NextRequest) {
 - 步骤4：跳转到Dashboard ❌（失败，停留在登录页或跳转回登录页）
 
 ### 测试2：直接访问Dashboard
+
 - 在Admin系统登录后（Cookie已存在）
 - 直接访问：`http://localhost:3000/super-admin/dashboard-simple`
 - 结果：**需要测试**
@@ -309,6 +315,7 @@ export async function POST(req: NextRequest) {
 3. **提供方案**：如何修复Super Admin登录问题？
 
 ### 可能的方向
+
 - 是否需要创建`/super-admin/layout.tsx`？
 - Dashboard的Server Component实现是否有问题？
 - 路径或路由配置是否需要调整？
@@ -330,6 +337,7 @@ export async function POST(req: NextRequest) {
 ## 🎯 期望结果
 
 用户在 `/super-admin/login` 登录成功后：
+
 1. 能够成功跳转到 `/super-admin/dashboard-simple`
 2. 看到Dashboard界面
 3. 不会被重定向回登录页

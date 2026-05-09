@@ -34,26 +34,26 @@ const CORRUPTED_FILES = [
 
 // Common corrupted Chinese patterns and their English replacements
 const REPLACEMENTS = {
-  '未登录': 'Not authenticated',
-  '未授权': 'Unauthorized',
-  '无效的请求': 'Invalid request',
-  '缺少必需参数': 'Missing required parameters',
-  '数据库错误': 'Database error',
-  '操作成功': 'Operation successful',
-  '操作失败': 'Operation failed',
-  '创建成功': 'Created successfully',
-  '更新成功': 'Updated successfully',
-  '删除成功': 'Deleted successfully',
-  '获取成功': 'Retrieved successfully',
-  '保存成功': 'Saved successfully',
-  '发送成功': 'Sent successfully',
-  '验证失败': 'Validation failed',
-  '权限不足': 'Insufficient permissions',
-  '资源不存在': 'Resource not found',
-  '服务器错误': 'Server error',
-  '请求超时': 'Request timeout',
-  '网络错误': 'Network error',
-  '配置错误': 'Configuration error',
+  未登录: 'Not authenticated',
+  未授权: 'Unauthorized',
+  无效的请求: 'Invalid request',
+  缺少必需参数: 'Missing required parameters',
+  数据库错误: 'Database error',
+  操作成功: 'Operation successful',
+  操作失败: 'Operation failed',
+  创建成功: 'Created successfully',
+  更新成功: 'Updated successfully',
+  删除成功: 'Deleted successfully',
+  获取成功: 'Retrieved successfully',
+  保存成功: 'Saved successfully',
+  发送成功: 'Sent successfully',
+  验证失败: 'Validation failed',
+  权限不足: 'Insufficient permissions',
+  资源不存在: 'Resource not found',
+  服务器错误: 'Server error',
+  请求超时: 'Request timeout',
+  网络错误: 'Network error',
+  配置错误: 'Configuration error',
 }
 
 function fixCorruptedFile(filePath) {
@@ -94,7 +94,5 @@ console.log(`Processing ${CORRUPTED_FILES.length} files...\n`)
 CORRUPTED_FILES.forEach(fixCorruptedFile)
 
 console.log('\n✅ Corrupted Chinese character fix completed!')
-console.log(
-  '\nNote: This replaced corrupted Chinese with English equivalents.',
-)
+console.log('\nNote: This replaced corrupted Chinese with English equivalents.')
 console.log('Content was rephrased for compliance with licensing restrictions.')

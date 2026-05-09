@@ -1,27 +1,32 @@
-import { FaSearch, FaCalendarAlt, FaComments, FaCheckCircle } from "react-icons/fa";
+import {
+  FaSearch,
+  FaCalendarAlt,
+  FaComments,
+  FaCheckCircle,
+} from 'react-icons/fa'
 
 const steps = [
   {
     icon: FaSearch,
-    title: "搜索律师",
-    description: "按领域、地区、语言筛选",
+    title: '搜索律师',
+    description: '按领域、地区、语言筛选',
   },
   {
     icon: FaCalendarAlt,
-    title: "预约咨询",
-    description: "选择时间预约",
+    title: '预约咨询',
+    description: '选择时间预约',
   },
   {
     icon: FaComments,
-    title: "在线咨询",
-    description: "与律师沟通",
+    title: '在线咨询',
+    description: '与律师沟通',
   },
   {
     icon: FaCheckCircle,
-    title: "获得建议",
-    description: "获得法律方案",
+    title: '获得建议',
+    description: '获得法律方案',
   },
-];
+]
 
 export default function HowItWorks() {
   return (
@@ -48,13 +53,11 @@ export default function HowItWorks() {
               <h3 className="text-lg font-semibold text-gray-900 mb-2">
                 {step.title}
               </h3>
-              <p className="text-gray-600 text-sm">
-                {step.description}
-              </p>
+              <p className="text-gray-600 text-sm">{step.description}</p>
             </div>
           ))}
         </div>
       </div>
     </section>
-  );
+  )
 }

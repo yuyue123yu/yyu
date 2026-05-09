@@ -5,6 +5,7 @@
 ### ✅ 已完成的部分
 
 #### 1. **翻译基础设施** (100%)
+
 - ✅ LanguageContext 创建完成
 - ✅ LanguageSwitcher 组件完成
 - ✅ 所有翻译键已添加（中文、英语、马来语）
@@ -12,8 +13,9 @@
 - ✅ 语言切换功能正常
 
 #### 2. **首页组件** (100% - 11个组件)
+
 - ✅ Hero
-- ✅ Promotions  
+- ✅ Promotions
 - ✅ Services
 - ✅ SearchFilters
 - ✅ FeaturedLawyers
@@ -26,6 +28,7 @@
 - ✅ Footer
 
 #### 3. **其他页面** (1/18 完成)
+
 - ✅ `/services` - 服务列表页 (刚刚完成)
 
 ---
@@ -33,6 +36,7 @@
 ## ⏳ 待完成的页面 (17个)
 
 ### 🔴 高优先级 (用户最常访问)
+
 1. ❌ `/services/[category]` - 服务详情页
 2. ❌ `/lawyers` - 律师列表页
 3. ❌ `/consultation` - 在线咨询页
@@ -40,6 +44,7 @@
 5. ❌ `/knowledge` - 法律知识库页
 
 ### 🟡 中优先级
+
 6. ❌ `/knowledge/[id]` - 知识详情页
 7. ❌ `/login` - 登录页
 8. ❌ `/register` - 注册页
@@ -49,6 +54,7 @@
 12. ❌ `/review` - 文件审核页
 
 ### 🟢 低优先级 (静态内容页)
+
 13. ❌ `/about` - 关于我们页
 14. ❌ `/careers` - 加入我们页
 15. ❌ `/help` - 帮助中心页
@@ -62,7 +68,9 @@
 ### 立即执行（高优先级页面）
 
 #### 1. 更新 `/services/[category]` 页面
+
 **需要翻译的内容：**
+
 - 页面标题和描述
 - "返回服务列表" 按钮
 - "服务项目" 标题
@@ -74,7 +82,9 @@
 **预计时间：** 10分钟
 
 #### 2. 更新 `/lawyers` 页面
+
 **需要翻译的内容：**
+
 - 页面标题和副标题
 - 搜索框占位符
 - 筛选条件标签（专业领域、地区、评分、在线状态）
@@ -86,7 +96,9 @@
 **预计时间：** 15分钟
 
 #### 3. 更新 `/consultation` 页面
+
 **需要翻译的内容：**
+
 - 页面标题和副标题
 - 表单标签（姓名、邮箱、电话、类别、描述）
 - 占位符文本
@@ -97,7 +109,9 @@
 **预计时间：** 10分钟
 
 #### 4. 更新 `/templates` 页面
+
 **需要翻译的内容：**
+
 - 页面标题和副标题
 - 搜索框占位符
 - 分类筛选标签
@@ -108,7 +122,9 @@
 **预计时间：** 15分钟
 
 #### 5. 更新 `/knowledge` 页面
+
 **需要翻译的内容：**
+
 - 页面标题和副标题
 - 搜索框占位符
 - 知识分类标签
@@ -128,20 +144,23 @@
 
 1. **添加 `"use client"` 指令**
 2. **导入 useLanguage 钩子**
+
    ```typescript
-   import { useLanguage } from "@/contexts/LanguageContext";
+   import { useLanguage } from '@/contexts/LanguageContext'
    ```
 
 3. **在组件中使用钩子**
+
    ```typescript
-   const { t, language } = useLanguage();
+   const { t, language } = useLanguage()
    ```
 
 4. **替换硬编码文本**
+
    ```typescript
    // 之前：
    <h1>专业法律服务</h1>
-   
+
    // 之后：
    <h1>{t('pages.servicesTitle')}</h1>
    ```
@@ -180,16 +199,24 @@
 
 ```typescript
 // 简单翻译
-{t('common.search')}
+{
+  t('common.search')
+}
 
 // 嵌套键
-{t('pages.servicesTitle')}
+{
+  t('pages.servicesTitle')
+}
 
 // 动态内容
-{t(service.titleKey)}
+{
+  t(service.titleKey)
+}
 
 // 条件翻译
-{language === 'zh' ? '中文' : language === 'en' ? 'English' : 'Bahasa'}
+{
+  language === 'zh' ? '中文' : language === 'en' ? 'English' : 'Bahasa'
+}
 ```
 
 ---
@@ -219,7 +246,7 @@
 ## 📈 预计完成时间
 
 - **高优先级页面** (5个): ~65分钟
-- **中优先级页面** (7个): ~70分钟  
+- **中优先级页面** (7个): ~70分钟
 - **低优先级页面** (5个): ~50分钟
 
 **总计**: 约 3小时工作量

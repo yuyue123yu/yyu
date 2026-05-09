@@ -5,6 +5,7 @@
 ### ✅ 已完成翻译的页面和组件
 
 #### 主要页面
+
 1. **仪表板** (`src/app/super-admin/page.tsx`) - 100% 完成
 2. **租户管理** (`src/app/super-admin/tenants/page.tsx`) - 100% 完成
 3. **租户详情** (`src/app/super-admin/tenants/[id]/page.tsx`) - ✨ **刚刚完成**
@@ -16,6 +17,7 @@
 9. **登录页面** (`src/app/super-admin/login/page.tsx`) - 100% 完成
 
 #### 组件
+
 1. **SuperAdminNav** - 100% 完成
 2. **SuperAdminHeader** - 100% 完成
 3. **LanguageSwitcher** - 100% 完成
@@ -86,11 +88,13 @@ import T from '@/components/super-admin/T';
 ### 选项 A：使用 T 组件完成剩余翻译（推荐）
 
 **优点**：
+
 - 快速完成
 - 代码简洁
 - 易于维护
 
 **步骤**：
+
 1. 翻译 TenantWizard 组件
 2. 翻译 OEMConfigForm 组件
 3. 翻译 AuditLogFilters 组件
@@ -101,10 +105,12 @@ import T from '@/components/super-admin/T';
 ### 选项 B：继续使用 t() 函数
 
 **优点**：
+
 - 统一的翻译方式
 - 集中管理翻译
 
 **缺点**：
+
 - 需要在 LanguageContext 中添加大量翻译键
 - 维护成本高
 - 耗时较长
@@ -114,11 +120,13 @@ import T from '@/components/super-admin/T';
 ## 🎨 混合使用方案（最佳实践）
 
 **建议**：
+
 - **主要页面**：继续使用 `t()` 函数（已完成）
 - **详情页面和组件**：使用 T 组件（快速简单）
 - **新功能**：优先使用 T 组件
 
 这样可以：
+
 1. ✅ 保持主要页面的专业翻译
 2. ✅ 快速完成剩余页面的翻译
 3. ✅ 降低维护成本
@@ -127,16 +135,19 @@ import T from '@/components/super-admin/T';
 ## 📊 完成度统计
 
 ### 页面翻译
+
 - ✅ 主要页面：9/9 (100%)
 - ✅ 租户详情页：1/1 (100%)
 - ⏳ 其他详情页：待定
 
 ### 组件翻译
+
 - ✅ 导航和布局组件：3/3 (100%)
 - ✅ 筛选和表格组件：4/4 (100%)
 - ⏳ 表单组件：0/4 (0%)
 
 ### 总体进度
+
 - **已完成**：16/20 (80%)
 - **待完成**：4/20 (20%)
 
@@ -156,16 +167,19 @@ import T from '@/components/super-admin/T';
 ## 📌 重要提示
 
 ### 语言切换范围
+
 - ✅ **超级管理员系统**：完全支持中英文切换
 - ✅ **普通管理系统**：保持原样，不受影响
 - ✅ **网页端**：保持原样，不受影响
 
 ### 语言持久化
+
 - 语言选择保存在 `localStorage`
 - 键名：`superadmin-language`
 - 刷新页面后语言设置保持不变
 
 ### 独立性
+
 - 超级管理员系统有独立的 `LanguageProvider`
 - 位于 `src/app/super-admin/layout.tsx`
 - 不影响其他系统的语言设置

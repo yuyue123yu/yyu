@@ -1,16 +1,20 @@
 # 修复所有 API 路由的字段名
 
 ## 问题
+
 API 路由中使用的字段名与数据库表不匹配：
+
 - API 使用: `key`, `value`, `role`
 - 数据库使用: `setting_key`, `setting_value`, `user_type`
 
 ## 需要修复的文件
 
 ### 已修复 ✅
+
 1. `src/app/api/tenant/branding/route.ts`
 
 ### 待修复 ⏳
+
 1. `src/app/api/tenant/branding/upload-logo/route.ts`
 2. `src/app/api/tenant/pricing/route.ts`
 3. `src/app/api/tenant/features/route.ts`
@@ -25,6 +29,7 @@ API 路由中使用的字段名与数据库表不匹配：
 ## 修复规则
 
 ### 1. profiles 表字段
+
 ```typescript
 // 错误 ❌
 .select('tenant_id, role')
@@ -42,6 +47,7 @@ if (profile.user_type !== 'owner' && profile.user_type !== 'admin')
 ```
 
 ### 2. tenant_settings 表字段
+
 ```typescript
 // 错误 ❌
 .select('value')

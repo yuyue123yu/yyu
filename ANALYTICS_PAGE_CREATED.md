@@ -3,6 +3,7 @@
 ## ✅ 已完成的工作
 
 ### 1. 创建 Analytics 页面
+
 - **文件**: `src/app/super-admin/analytics/page.tsx`
 - **路由**: `/super-admin/analytics`
 - **状态**: ✅ 完成
@@ -10,31 +11,38 @@
 ### 2. 页面功能
 
 #### 系统级指标卡片（4个）
+
 - 总用户数 - 显示增长趋势
 - 总咨询数 - 显示增长趋势
 - 总收入 - 显示增长趋势
 - 活跃律师 - 显示增长趋势
 
 #### 过滤器
+
 - 时间范围选择器（每日/每周/每月）
 - 租户选择器（所有租户或特定租户）
 
 #### 导出功能
+
 - 导出 CSV 按钮
 - 导出 PDF 按钮
 
 #### 租户对比表格
+
 - 显示所有租户的关键指标
 - 包含：租户名称、用户数、咨询数、收入、活跃律师
 
 #### 趋势分析区域
+
 - 预留图表区域（待实现）
 - 显示占位符提示
 
 ### 3. i18n 支持
+
 已在 `src/contexts/LanguageContext.tsx` 中添加完整的中英文翻译：
 
 **中文翻译**:
+
 - `analytics.title`: '数据分析'
 - `analytics.subtitle`: '查看系统和租户的分析数据'
 - `analytics.exportCsv`: '导出 CSV'
@@ -42,6 +50,7 @@
 - 等等...
 
 **英文翻译**:
+
 - `analytics.title`: 'Analytics'
 - `analytics.subtitle`: 'View system and tenant analytics data'
 - `analytics.exportCsv`: 'Export CSV'
@@ -49,6 +58,7 @@
 - 等等...
 
 ### 4. 设计特点
+
 - ✅ 使用 SuperAdminLayout 布局
 - ✅ 使用 withSuperAdminAuth 保护路由
 - ✅ 遵循现有的 super admin 设计模式
@@ -57,6 +67,7 @@
 - ✅ 橙色主题色（与 super admin 一致）
 
 ### 5. 数据状态
+
 - ✅ 加载状态（loading spinner）
 - ✅ 错误处理（console.error）
 - ⚠️ 使用占位符数据（TODO: 连接真实 API）
@@ -91,6 +102,7 @@
 ## 📸 页面预览
 
 页面现在可以在以下 URL 访问：
+
 - **开发环境**: `http://localhost:3000/super-admin/analytics`
 - **生产环境**: `https://your-domain.com/super-admin/analytics`
 

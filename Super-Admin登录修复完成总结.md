@@ -11,11 +11,13 @@
 ## 📋 问题回顾
 
 ### 初始问题
+
 - ❌ 无法登录 Super Admin
 - ❌ 错误信息："登录功能已禁用，所有API接口已被禁用"
 - ❌ 点击登录按钮后没有任何反应
 
 ### 根本原因
+
 1. **数据库表结构问题**
    - `profiles.tenant_id` 字段是 NOT NULL
    - Super Admin 不应该属于任何租户，`tenant_id` 必须是 NULL
@@ -35,12 +37,15 @@
 ## 🔧 修复步骤
 
 ### 步骤 1：诊断问题
+
 创建了诊断脚本：
+
 - `诊断Super-Admin状态.sql`
 - `诊断Super-Admin状态-修复版.sql`
 - `快速诊断.sql`
 
 **诊断结果**：
+
 - ✅ 用户存在
 - ✅ 邮箱已确认
 - ❌ tenant_id 字段是 NOT NULL（需要修复）
@@ -48,6 +53,7 @@
 - ❌ Super Admin 权限配置不正确
 
 ### 步骤 2：修复数据库
+
 执行了 `最终修复Super-Admin.sql` 脚本：
 
 ```sql
@@ -78,6 +84,7 @@ INSERT INTO profiles (
 ```
 
 **修复结果**：
+
 - ✅ tenant_id 字段已设置为可空
 - ✅ 约束已删除
 - ✅ Super Admin profile 已创建
@@ -88,6 +95,7 @@ INSERT INTO profiles (
 ### 步骤 3：修复代码问题
 
 #### 3.1 暂时禁用 Audit Log
+
 **文件**：`src/contexts/SuperAdminAuthContext.tsx`
 
 ```typescript
@@ -111,43 +119,45 @@ try {
 ```
 
 #### 3.2 简化登录流程
+
 **文件**：`src/app/super-admin/login/page.tsx`
 
 ```typescript
 const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setError('');
-  setIsLoading(true);
+  e.preventDefault()
+  setError('')
+  setIsLoading(true)
 
   try {
-    console.log('开始登录...', { email });
-    
+    console.log('开始登录...', { email })
+
     // 直接登录，不检查 MFA
-    await login(email, password);
-    
-    console.log('登录成功，准备跳转...');
-    
+    await login(email, password)
+
+    console.log('登录成功，准备跳转...')
+
     // 直接跳转到仪表板
-    router.push('/super-admin');
-    
-    console.log('跳转命令已发送');
+    router.push('/super-admin')
+
+    console.log('跳转命令已发送')
   } catch (err: any) {
-    console.error('登录失败:', err);
-    setError(err.message || '登录失败');
+    console.error('登录失败:', err)
+    setError(err.message || '登录失败')
   } finally {
-    setIsLoading(false);
+    setIsLoading(false)
   }
-};
+}
 ```
 
 #### 3.3 修复权限验证
+
 **文件**：`src/lib/auth/withSuperAdminAuth.tsx`
 
 ```typescript
 const checkAuth = async () => {
   try {
     const supabase = createClient(); // 移除 await，createClient 是同步的
-    
+
     // Check if user is authenticated
     const {
       data: { user },
@@ -159,6 +169,7 @@ const checkAuth = async () => {
 ```
 
 #### 3.4 添加 POST 方法支持
+
 **文件**：`src/app/api/super-admin/audit-logs/route.ts`
 
 添加了 POST 方法处理函数（虽然暂时未使用）。
@@ -168,8 +179,9 @@ const checkAuth = async () => {
 ## ✅ 修复验证
 
 ### 数据库验证
+
 ```sql
-SELECT 
+SELECT
   u.id as user_id,
   u.email,
   u.email_confirmed_at,
@@ -191,6 +203,7 @@ WHERE u.email = '403940124@qq.com';
 | tenant_id | NULL | ✅ |
 
 ### 登录测试
+
 1. ✅ 访问 http://localhost:3000/super-admin/login
 2. ✅ 输入邮箱和密码
 3. ✅ 点击登录按钮
@@ -202,42 +215,47 @@ WHERE u.email = '403940124@qq.com';
 ## 📝 待办事项（TODO）
 
 ### 1. 修复 Audit Log 功能
+
 **优先级**：中
 
 **问题**：
+
 - `audit_logs` 表字段名是 `super_admin_id`
 - API 代码使用的是 `user_id`
 - RLS 策略限制了访问
 
 **解决方案**：
+
 ```typescript
 // 修改 API 代码
-const { data, error } = await supabase
-  .from('audit_logs')
-  .insert({
-    super_admin_id: user.id,  // 改为 super_admin_id
-    action_type,
-    target_entity,
-    target_id: target_id || null,
-    details: details || null,
-    ip_address: request.headers.get('x-forwarded-for') || 'unknown',
-    user_agent: request.headers.get('user-agent') || 'unknown',
-  });
+const { data, error } = await supabase.from('audit_logs').insert({
+  super_admin_id: user.id, // 改为 super_admin_id
+  action_type,
+  target_entity,
+  target_id: target_id || null,
+  details: details || null,
+  ip_address: request.headers.get('x-forwarded-for') || 'unknown',
+  user_agent: request.headers.get('user-agent') || 'unknown',
+})
 ```
 
 **然后重新启用**：
+
 - `src/contexts/SuperAdminAuthContext.tsx` 中的 audit log 代码
 - 测试登录和登出是否正常记录
 
 ### 2. 更新数据库迁移脚本
+
 **优先级**：低
 
 **问题**：
+
 - Migration 009 将所有表的 `tenant_id` 设置为 NOT NULL
 - 但 Super Admin 需要 `tenant_id` 为 NULL
 
 **解决方案**：
 创建新的迁移脚本 `012_fix_super_admin_tenant_id.sql`：
+
 ```sql
 -- 允许 profiles.tenant_id 为 NULL（为 Super Admin）
 ALTER TABLE profiles ALTER COLUMN tenant_id DROP NOT NULL;
@@ -251,9 +269,11 @@ ALTER TABLE profiles ADD CONSTRAINT profiles_tenant_id_check
 ```
 
 ### 3. 添加 MFA 功能（可选）
+
 **优先级**：低
 
 当前登录流程已经简化，移除了 MFA 检查。如果需要 MFA：
+
 1. 确保 `/api/super-admin/mfa/check` API 正常工作
 2. 恢复登录页面的 MFA 检查逻辑
 3. 测试 MFA 流程
@@ -285,6 +305,7 @@ ALTER TABLE profiles ADD CONSTRAINT profiles_tenant_id_check
 ### RLS 策略
 
 确保 RLS 策略正确处理 Super Admin：
+
 ```sql
 -- 示例：允许 Super Admin 访问所有数据
 CREATE POLICY "Super admins can access all data"
@@ -304,12 +325,14 @@ CREATE POLICY "Super admins can access all data"
 ## 📊 修复前后对比
 
 ### 修复前 ❌
+
 - 无法登录 Super Admin
 - 数据库表结构不支持 Super Admin
 - Audit log 阻塞登录流程
 - 权限验证代码有错误
 
 ### 修复后 ✅
+
 - Super Admin 可以正常登录
 - 数据库表结构支持 Super Admin（tenant_id 可为 NULL）
 - 登录流程简化，不被 audit log 阻塞
@@ -321,16 +344,19 @@ CREATE POLICY "Super admins can access all data"
 ## 🎯 下一步建议
 
 ### 立即可做
+
 1. ✅ 测试所有 Super Admin 功能
 2. ✅ 创建第一个租户
 3. ✅ 配置系统设置
 
 ### 短期计划
+
 1. 修复 Audit Log 功能
 2. 测试租户管理功能
 3. 测试用户管理功能
 
 ### 长期计划
+
 1. 添加 MFA 双因素认证
 2. 完善审计日志功能
 3. 准备生产环境部署
@@ -342,6 +368,7 @@ CREATE POLICY "Super admins can access all data"
 如果遇到问题：
 
 1. **检查数据库状态**：
+
    ```sql
    SELECT * FROM profiles WHERE email = '403940124@qq.com';
    ```

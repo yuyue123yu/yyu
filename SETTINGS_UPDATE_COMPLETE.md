@@ -11,11 +11,13 @@
 ### 1️⃣ 访问系统设置页面
 
 打开浏览器访问：
+
 ```
 http://localhost:3000/admin/settings
 ```
 
 使用测试账号登录：
+
 - 邮箱：test@example.com
 - 密码：Test123456
 
@@ -45,12 +47,12 @@ http://localhost:3000/admin/settings
 
 ```typescript
 // 保存成功后
-alert("设置保存成功！页面将自动刷新以应用更改。");
+alert('设置保存成功！页面将自动刷新以应用更改。')
 
 // 1.5秒后自动刷新页面
 setTimeout(() => {
-  window.location.reload();
-}, 1500);
+  window.location.reload()
+}, 1500)
 ```
 
 ### 为什么需要刷新？
@@ -85,6 +87,7 @@ Header 组件重新加载
 4. 查看 `value` 字段中的 `siteName`
 
 **预期值**：
+
 ```json
 {
   "siteName": "东南亚法律平台",
@@ -103,10 +106,14 @@ Header 组件重新加载
 4. 输入以下代码并回车：
 
 ```javascript
-const { createClient } = await import('./lib/supabase/client');
-const supabase = await createClient();
-const { data } = await supabase.from('settings').select('*').eq('key', 'site').single();
-console.log('Site settings:', data);
+const { createClient } = await import('./lib/supabase/client')
+const supabase = await createClient()
+const { data } = await supabase
+  .from('settings')
+  .select('*')
+  .eq('key', 'site')
+  .single()
+console.log('Site settings:', data)
 ```
 
 5. 查看输出的 `value.siteName`
@@ -120,10 +127,11 @@ console.log('Site settings:', data);
 **原因**：测试用户不是管理员
 
 **解决方法**：
+
 ```sql
 -- 在 Supabase SQL Editor 执行
-UPDATE profiles 
-SET user_type = 'admin' 
+UPDATE profiles
+SET user_type = 'admin'
 WHERE email = 'test@example.com';
 ```
 
@@ -137,11 +145,13 @@ WHERE email = 'test@example.com';
 ### 问题 3：刷新后仍显示旧名称
 
 **可能原因**：
+
 1. 浏览器缓存
 2. 数据没有真正保存
 3. Header 组件读取失败
 
 **解决方法**：
+
 1. 硬刷新浏览器（Ctrl + Shift + R）
 2. 清除浏览器缓存
 3. 检查浏览器 Console 是否有错误
@@ -152,6 +162,7 @@ WHERE email = 'test@example.com';
 **原因**：Header 组件无法连接数据库
 
 **解决方法**：
+
 1. 检查 `.env.local` 文件中的 Supabase 配置
 2. 确认 Supabase 项目正常运行
 3. 检查网络连接
@@ -163,6 +174,7 @@ WHERE email = 'test@example.com';
 除了网站名称，您还可以修改：
 
 ### 网站设置
+
 - ✅ 网站名称
 - ✅ 网站描述
 - ✅ 联系邮箱
@@ -170,20 +182,24 @@ WHERE email = 'test@example.com';
 - ✅ 默认语言（中文/English/Bahasa Malaysia）
 
 ### 邮件设置
+
 - 启用邮件通知
 - 新咨询通知
 - 新订单通知
 
 ### 通知设置
+
 - 推送通知
 - 短信通知
 
 ### 安全设置
+
 - 邮箱验证
 - 双因素认证
 - 会话超时时间
 
 ### 系统设置
+
 - 维护模式
 - 允许注册
 
@@ -212,6 +228,7 @@ WHERE email = 'test@example.com';
 ## 总结
 
 ✅ **已完成**：
+
 1. Header 组件从数据库加载网站名称
 2. 系统设置页面保存到数据库
 3. 保存后自动刷新页面

@@ -9,6 +9,7 @@
 服务分类页面 (`/services/[category]/page.tsx`) 在静态导出时失败，导致所有服务分类链接返回404。
 
 ### 错误信息
+
 ```
 Error: An unsupported type was passed to use(): [object Object]
 ```
@@ -18,19 +19,29 @@ Error: An unsupported type was passed to use(): [object Object]
 在服务器组件中错误地使用了 `use(params)` 而不是 `await params`。
 
 **错误代码**:
-```typescript
-import { use } from "react";
 
-export default function ServiceDetailPage({ params }: { params: Promise<{ category: string }> }) {
-  const { category } = use(params);  // ❌ 错误：在服务器组件中使用 use()
+```typescript
+import { use } from 'react'
+
+export default function ServiceDetailPage({
+  params,
+}: {
+  params: Promise<{ category: string }>
+}) {
+  const { category } = use(params) // ❌ 错误：在服务器组件中使用 use()
   // ...
 }
 ```
 
 **正确代码**:
+
 ```typescript
-export default async function ServiceDetailPage({ params }: { params: Promise<{ category: string }> }) {
-  const { category } = await params;  // ✅ 正确：在服务器组件中使用 await
+export default async function ServiceDetailPage({
+  params,
+}: {
+  params: Promise<{ category: string }>
+}) {
+  const { category } = await params // ✅ 正确：在服务器组件中使用 await
   // ...
 }
 ```
@@ -44,11 +55,13 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
 **文件**: `src/app/services/[category]/page.tsx`
 
 **修改**:
+
 1. 移除 `import { use } from "react";`
 2. 将组件改为 `async function`
 3. 将 `use(params)` 改为 `await params`
 
 **结果**:
+
 - ✅ 构建成功
 - ✅ 生成了6个服务分类HTML文件
 - ✅ 所有服务链接现在都能正常访问
@@ -69,6 +82,7 @@ out/services/ip.html           - 知识产权
 ## 构建验证
 
 ### 构建输出
+
 ```
 ✓ Compiled successfully
 ✓ Linting and checking validity of types
@@ -88,6 +102,7 @@ Route (app)                              Size     First Load JS
 ```
 
 ### 验证结果
+
 ✅ **所有页面构建成功**
 ✅ **没有错误**
 ✅ **所有动态路由都生成了静态HTML**
@@ -97,6 +112,7 @@ Route (app)                              Size     First Load JS
 ## 完整的页面列表
 
 ### 主要页面 (19个)
+
 1. ✅ `/` - 首页
 2. ✅ `/login` - 登录
 3. ✅ `/register` - 注册
@@ -111,6 +127,7 @@ Route (app)                              Size     First Load JS
 12. ✅ `/contact` - 联系我们
 
 ### 动态路由页面 (12个)
+
 13. ✅ `/services/family` - 家庭法
 14. ✅ `/services/business` - 商业法
 15. ✅ `/services/property` - 房产法
@@ -131,25 +148,30 @@ Route (app)                              Size     First Load JS
 ## Footer链接验证
 
 ### 第1列 - 服务
+
 - ✅ `/services/family` - 家庭法
 - ✅ `/services/business` - 商业法
 - ✅ `/services/property` - 房产法
 - ✅ `/services/criminal` - 刑事法
 
 ### 第2列 - 律师
+
 - ✅ `/lawyers` - 浏览律师
 - ✅ `/consultation` - 加入我们
 
 ### 第3列 - 关于
+
 - ✅ `/contact` - 关于我们
 - ✅ `/knowledge` - 法律资讯
 - ✅ `/contact` - 联系我们
 
 ### 第4列 - 支持
+
 - ✅ `/contact` - 帮助中心
 - ✅ `/contact` - 常见问题
 
 ### 第5列 - 法律
+
 - ✅ `/contact` - 隐私政策
 - ✅ `/contact` - 服务条款
 
@@ -176,6 +198,7 @@ Route (app)                              Size     First Load JS
 ### 我们的修复
 
 服务分类页面是**服务器组件**，因此：
+
 - ✅ 使用 `async function`
 - ✅ 使用 `await params`
 - ✅ 可以在构建时预渲染
@@ -188,6 +211,7 @@ Route (app)                              Size     First Load JS
 ✅ **代码已提交并推送**
 
 **提交信息**:
+
 ```
 Fix service category pages - change use() to await for server components
 - Remove use() import
@@ -196,7 +220,8 @@ Fix service category pages - change use() to await for server components
 - All service pages now build successfully
 ```
 
-**GitHub Actions**: 
+**GitHub Actions**:
+
 - 自动构建已触发
 - 预计2-5分钟后部署完成
 
@@ -232,6 +257,7 @@ Fix service category pages - change use() to await for server components
 ## 所有已实现的功能
 
 ### ✅ 核心功能
+
 1. 完整的页面结构（24个页面）
 2. 动态路由静态生成
 3. 真实PDF下载功能
@@ -239,24 +265,28 @@ Fix service category pages - change use() to await for server components
 5. 多语言支持（英语、马来语、中文）
 
 ### ✅ 法律服务
+
 1. 6大服务分类
 2. 详细服务说明
 3. 价格和时间信息
 4. 在线咨询功能
 
 ### ✅ 法律文书
+
 1. 690+个模板
 2. 8大分类
 3. 真实PDF下载
 4. 专业格式
 
 ### ✅ 法律知识
+
 1. 6篇文章（可扩展）
 2. 详细内容页
 3. 分类筛选
 4. 搜索功能
 
 ### ✅ 律师服务
+
 1. 律师列表
 2. 律师详情
 3. 在线咨询
@@ -267,15 +297,18 @@ Fix service category pages - change use() to await for server components
 ## 修复历程总结
 
 ### 第1次修复 - 添加generateStaticParams
+
 - 为动态路由添加了 `generateStaticParams`
 - 但使用了错误的 `use(params)` 语法
 
 ### 第2次修复 - 修正服务器组件语法 ✅
+
 - 将 `use(params)` 改为 `await params`
 - 将组件改为 `async function`
 - 构建成功，所有页面生成
 
 ### 教训
+
 1. **服务器组件和客户端组件的区别很重要**
 2. **必须本地构建测试，不能只看代码**
 3. **错误信息要仔细分析**
@@ -286,15 +319,18 @@ Fix service category pages - change use() to await for server components
 ## 最终确认
 
 ### 构建状态
+
 ✅ **本地构建成功**
 ✅ **所有页面生成**
 ✅ **没有错误**
 
 ### 部署状态
+
 🔄 **正在部署**
 ⏱️ **预计2-5分钟完成**
 
 ### 功能状态
+
 ✅ **所有链接正常**
 ✅ **PDF下载正常**
 ✅ **表单提交正常**
@@ -305,6 +341,7 @@ Fix service category pages - change use() to await for server components
 ## 承诺
 
 这次我：
+
 1. ✅ 找到了真正的根本原因
 2. ✅ 本地构建测试验证
 3. ✅ 检查了生成的文件

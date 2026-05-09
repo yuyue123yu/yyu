@@ -84,15 +84,18 @@ ON CONFLICT (key) DO NOTHING;
 ### 已实现功能
 
 ✅ **从数据库加载设置**
+
 - 页面加载时自动从数据库读取设置
 - 显示加载状态
 
 ✅ **保存设置到数据库**
+
 - 点击"保存设置"按钮保存到数据库
 - 使用 upsert 操作（存在则更新，不存在则插入）
 - 显示保存成功提示
 
 ✅ **设置分类存储**
+
 - site - 网站设置
 - email - 邮件设置
 - notification - 通知设置
@@ -155,7 +158,7 @@ export function SettingsProvider({ children }) {
       .select("*")
       .eq("key", "site")
       .single();
-    
+
     if (data) {
       setSettings(data.value);
     }
@@ -175,24 +178,24 @@ export const useSettings = () => useContext(SettingsContext);
 
 ```typescript
 // 在任何组件中
-const [siteName, setSiteName] = useState("LegalMY");
+const [siteName, setSiteName] = useState('LegalMY')
 
 useEffect(() => {
   const loadSiteName = async () => {
-    const supabase = await createClient();
+    const supabase = await createClient()
     const { data } = await supabase
-      .from("settings")
-      .select("value")
-      .eq("key", "site")
-      .single();
-    
+      .from('settings')
+      .select('value')
+      .eq('key', 'site')
+      .single()
+
     if (data) {
-      setSiteName(data.value.siteName);
+      setSiteName(data.value.siteName)
     }
-  };
-  
-  loadSiteName();
-}, []);
+  }
+
+  loadSiteName()
+}, [])
 ```
 
 ---
@@ -204,10 +207,11 @@ useEffect(() => {
 **原因**：测试用户不是管理员
 
 **解决方案**：
+
 ```sql
 -- 将测试用户设置为管理员
-UPDATE profiles 
-SET user_type = 'admin' 
+UPDATE profiles
+SET user_type = 'admin'
 WHERE email = 'test@example.com';
 ```
 
@@ -216,6 +220,7 @@ WHERE email = 'test@example.com';
 **原因**：settings 表为空
 
 **解决方案**：
+
 - 确认已执行插入默认设置的 SQL
 - 或手动在 Supabase Dashboard 中添加数据
 
@@ -224,6 +229,7 @@ WHERE email = 'test@example.com';
 **原因**：前端缓存问题
 
 **解决方案**：
+
 - 清除浏览器缓存
 - 硬刷新（Ctrl + Shift + R）
 
@@ -232,12 +238,14 @@ WHERE email = 'test@example.com';
 ## 总结
 
 ✅ **已完成：**
+
 1. 创建 settings 表结构
 2. 修改系统设置页面连接数据库
 3. 实现加载和保存功能
 4. 添加权限控制
 
 ⏳ **待完成：**
+
 1. 在 Supabase 执行 SQL 创建表
 2. 测试保存和加载功能
 3. （可选）在前端页面显示动态网站名称

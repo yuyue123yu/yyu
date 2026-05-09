@@ -3,6 +3,7 @@
 ## ✅ 已完成的任务
 
 ### Task 3.1: Tenant CRUD Endpoints
+
 - ✅ 3.1.1 POST /api/super-admin/tenants - 创建租户
 - ✅ 3.1.2 GET /api/super-admin/tenants - 列出租户（带分页）
 - ✅ 3.1.3 GET /api/super-admin/tenants/:id - 获取租户详情
@@ -12,6 +13,7 @@
 - ✅ 3.1.7 POST /api/super-admin/tenants/:id/deactivate - 停用租户
 
 ### Task 3.2: OEM Configuration Endpoints
+
 - ✅ 3.2.1 GET /api/super-admin/tenants/:id/settings - 获取所有设置
 - ✅ 3.2.2 PUT /api/super-admin/tenants/:id/settings/:key - 更新单个设置
 - ✅ 3.2.3 POST /api/super-admin/tenants/:id/settings/bulk - 批量更新设置
@@ -39,39 +41,53 @@ src/app/super-admin/tenants-test/page.tsx      # 测试页面
 ### 1. 租户 CRUD 操作
 
 #### GET /api/super-admin/tenants
+
 列出所有租户，支持分页和过滤
+
 - **查询参数**: `page`, `limit`, `status`, `search`
 - **返回**: 租户列表、总数、分页信息
 
 #### POST /api/super-admin/tenants
+
 创建新租户
+
 - **请求体**: `name`, `subdomain`, `primary_domain`, `subscription_plan`, `metadata`
 - **验证**: 子域名和主域名唯一性
 - **返回**: 创建的租户信息
 
 #### GET /api/super-admin/tenants/:id
+
 获取租户详情
+
 - **返回**: 租户信息、设置、统计数据（用户数）
 
 #### PATCH /api/super-admin/tenants/:id
+
 更新租户配置
+
 - **请求体**: `name`, `subdomain`, `primary_domain`, `status`, `subscription_plan`, `metadata`
 - **验证**: 子域名和主域名唯一性（如果修改）
 - **返回**: 更新后的租户信息
 
 #### DELETE /api/super-admin/tenants/:id
+
 删除租户
+
 - **保护**: 不能删除默认租户
 - **级联**: 自动删除相关数据（CASCADE）
 - **审计**: 记录删除操作
 
 #### POST /api/super-admin/tenants/:id/activate
+
 激活租户
+
 - **操作**: 将状态设置为 `active`
 - **审计**: 记录状态变更
 
 #### POST /api/super-admin/tenants/:id/deactivate
+
 停用租户
+
 - **保护**: 不能停用默认租户
 - **操作**: 将状态设置为 `inactive`
 - **审计**: 记录状态变更
@@ -79,17 +95,23 @@ src/app/super-admin/tenants-test/page.tsx      # 测试页面
 ### 2. OEM 配置管理
 
 #### GET /api/super-admin/tenants/:id/settings
+
 获取租户的所有设置
+
 - **返回**: 设置对象（key-value 格式）
 
 #### PUT /api/super-admin/tenants/:id/settings/:key
+
 更新单个设置
+
 - **请求体**: `value`
 - **操作**: Upsert（不存在则创建，存在则更新）
 - **审计**: 记录设置变更
 
 #### POST /api/super-admin/tenants/:id/settings/bulk
+
 批量更新设置
+
 - **请求体**: `settings` 对象
 - **操作**: 批量 Upsert
 - **审计**: 记录所有变更
@@ -117,6 +139,7 @@ src/app/super-admin/tenants-test/page.tsx      # 测试页面
 ### 方法 1: 使用测试页面（推荐）
 
 1. **访问测试页面**
+
    ```
    http://localhost:3000/super-admin/tenants-test
    ```
@@ -209,9 +232,9 @@ SELECT * FROM tenants ORDER BY created_at DESC;
 SELECT * FROM tenant_settings WHERE tenant_id = 'your-tenant-id';
 
 -- 查看审计日志
-SELECT * FROM audit_logs 
-WHERE action_type LIKE 'tenant%' 
-ORDER BY created_at DESC 
+SELECT * FROM audit_logs
+WHERE action_type LIKE 'tenant%'
+ORDER BY created_at DESC
 LIMIT 20;
 ```
 
@@ -263,11 +286,13 @@ LIMIT 20;
 Phase 3 测试通过后，可以继续执行：
 
 ### Phase 4: Backend API - User Management
+
 - Task 4.1: Cross-Tenant User Management Endpoints (6 个子任务)
 - Task 4.2: Admin Management Endpoints (5 个子任务)
 - Task 4.3: Password Reset Endpoints (5 个子任务)
 
 ### Phase 5: Backend API - System Management
+
 - Task 5.1: Audit Log Endpoints (4 个子任务)
 - Task 5.2: System Settings Endpoints (4 个子任务)
 - Task 5.3: Analytics Endpoints (4 个子任务)
@@ -296,6 +321,7 @@ Phase 3 测试通过后，可以继续执行：
 ## 🎉 总结
 
 Phase 3 已成功完成！我们创建了：
+
 - ✅ 7 个租户管理 API 端点
 - ✅ 3 个 OEM 配置 API 端点
 - ✅ 1 个完整的测试页面

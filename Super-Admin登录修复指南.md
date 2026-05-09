@@ -3,17 +3,18 @@
 ## 🔍 问题诊断
 
 ### 当前状态
+
 - ❌ 无法登录 Super Admin
 - ❌ 错误信息："登录功能已禁用，所有API接口已被禁用"
 - ❌ 用户邮箱：`403940124@qq.com`
 
 ### 根本原因
+
 数据库表 `profiles` 存在以下问题：
 
 1. **tenant_id 字段是 NOT NULL**
    - Migration 009 将所有表的 `tenant_id` 设置为 NOT NULL
    - 但 Super Admin 不应该属于任何租户，`tenant_id` 应该是 NULL
-   
 2. **可能存在 user_type 检查约束**
    - 约束名：`profiles_user_type_check`
    - 限制了 `user_type` 的可选值
@@ -45,6 +46,7 @@
 
 4. **查看执行结果**
    脚本会显示详细的执行日志：
+
    ```
    ========================================
    开始修复 profiles 表...
@@ -55,28 +57,28 @@
    ✅ tenant_id 字段已设置为可空
    ✅ super_admin 字段已存在
    ✅ user_type 字段已存在
-   
+
    ✅ profiles 表结构修复完成
-   
+
    ========================================
    开始创建 Super Admin...
    ========================================
-   
+
    ✅ 找到用户: 403940124@qq.com
       用户ID: [UUID]
-   
+
    清理旧数据...
    正在创建 Super Admin profile...
    ✅ Super Admin 已创建
-   
+
    ========================================
    🎉 创建成功！
    ========================================
-   
+
    登录信息：
      邮箱: 403940124@qq.com
      密码: (您在 Authentication 中设置的密码)
-   
+
    登录地址：
      http://localhost:3000/super-admin/login
    ```
@@ -94,6 +96,7 @@
 ### 步骤 2：测试登录
 
 1. **访问登录页面**
+
    ```
    http://localhost:3000/super-admin/login
    ```
@@ -130,7 +133,7 @@
 
 ```sql
 -- 检查用户是否存在
-SELECT 
+SELECT
   u.id,
   u.email,
   u.email_confirmed_at,
@@ -143,6 +146,7 @@ WHERE u.email = '403940124@qq.com';
 ```
 
 **期望结果：**
+
 - `email_confirmed_at` 不为 NULL（邮箱已确认）
 - `super_admin` = true
 - `user_type` = 'super_admin'
@@ -165,6 +169,7 @@ WHERE u.email = '403940124@qq.com';
 ## 📋 脚本做了什么？
 
 ### 1. 修复表结构
+
 ```sql
 -- 删除 user_type 检查约束（如果存在）
 ALTER TABLE profiles DROP CONSTRAINT profiles_user_type_check;
@@ -178,6 +183,7 @@ ALTER TABLE profiles ADD COLUMN IF NOT EXISTS user_type TEXT DEFAULT 'user';
 ```
 
 ### 2. 创建 Super Admin
+
 ```sql
 -- 删除旧的 profile（如果存在）
 DELETE FROM profiles WHERE id = [user_id];
@@ -195,6 +201,7 @@ INSERT INTO profiles (
 ```
 
 ### 3. 验证结果
+
 - 检查 Super Admin 是否创建成功
 - 显示登录信息
 - 显示最终状态表格
@@ -220,15 +227,18 @@ INSERT INTO profiles (
 ### 为什么需要修改表结构？
 
 原始的 Migration 009 将 `tenant_id` 设置为 NOT NULL，这是为了：
+
 - 确保普通用户必须属于某个租户
 - 实现多租户数据隔离
 
 但是 Super Admin 是特殊的：
+
 - 不属于任何租户
 - 需要访问所有租户的数据
 - 因此 `tenant_id` 必须是 NULL
 
 修复脚本将 `tenant_id` 改为可空，同时保留外键约束，这样：
+
 - ✅ Super Admin 可以有 NULL tenant_id
 - ✅ 普通用户仍然需要有效的 tenant_id（通过应用层逻辑控制）
 - ✅ 数据完整性得到保证

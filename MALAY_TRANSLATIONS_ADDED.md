@@ -3,19 +3,23 @@
 ## ✅ 已完成的工作
 
 ### 1. 更新 Language 类型
+
 修改了 `src/contexts/LanguageContext.tsx` 中的 `Language` 类型定义：
+
 ```typescript
 // 之前
-type Language = 'zh' | 'en';
+type Language = 'zh' | 'en'
 
 // 现在
-type Language = 'zh' | 'en' | 'ms';
+type Language = 'zh' | 'en' | 'ms'
 ```
 
 ### 2. 添加完整的马来语翻译
+
 在 `translations` 对象中添加了 `ms` (Bahasa Malaysia) 翻译，包括：
 
 #### 网页端通用翻译 (`common.*`)
+
 - `common.contact`: 'Hubungi Kami'
 - `common.login`: 'Log Masuk'
 - `common.register`: 'Daftar'
@@ -29,6 +33,7 @@ type Language = 'zh' | 'en' | 'ms';
 - `common.price`: 'Harga'
 
 #### 首页翻译 (`home.*`)
+
 - `home.heroTitle`: 'Platform Perundingan Undang-undang Profesional'
 - `home.searchLawyers`: 'Cari Peguam'
 - `home.searchButton`: 'Cari'
@@ -47,6 +52,7 @@ type Language = 'zh' | 'en' | 'ms';
 - `home.clientRating`: 'Penilaian Pelanggan'
 
 #### 服务分类翻译 (`services.*`)
+
 - `services.debt`: 'Pertikaian Hutang'
 - `services.family`: 'Undang-undang Keluarga'
 - `services.business`: 'Undang-undang Perniagaan'
@@ -56,6 +62,7 @@ type Language = 'zh' | 'en' | 'ms';
 - `services.ip`: 'Harta Intelek'
 
 #### 模板页面翻译 (`pages.*`)
+
 - `pages.templatesTitle`: 'Templat Dokumen Undang-undang'
 - `pages.templatesSubtitle`: 'Templat Dokumen Undang-undang Profesional'
 - `pages.searchTemplates`: 'Cari templat...'
@@ -85,7 +92,9 @@ type Language = 'zh' | 'en' | 'ms';
 - `pages.downloadNow`: 'Muat Turun Sekarang'
 
 ### 3. 更新 localStorage 逻辑
+
 修改了 `LanguageProvider` 中的 `useEffect`，使其支持马来语：
+
 ```typescript
 // 之前
 if (savedLanguage && (savedLanguage === 'zh' || savedLanguage === 'en')) {
@@ -97,19 +106,22 @@ if (savedLanguage && (savedLanguage === 'zh' || savedLanguage === 'en' || savedL
 ## 📊 当前状态
 
 ### 支持的语言
-| 语言 | 代码 | 状态 | 翻译数量 |
-|------|------|------|---------|
-| 中文 | zh | ✅ 完整 | 120+ keys |
-| English | en | ✅ 完整 | 120+ keys |
-| Bahasa Malaysia | ms | ✅ 完整 | 120+ keys |
+
+| 语言            | 代码 | 状态    | 翻译数量  |
+| --------------- | ---- | ------- | --------- |
+| 中文            | zh   | ✅ 完整 | 120+ keys |
+| English         | en   | ✅ 完整 | 120+ keys |
+| Bahasa Malaysia | ms   | ✅ 完整 | 120+ keys |
 
 ### 网页端多语言功能
+
 - ✅ 语言切换器正常工作
 - ✅ 支持三种语言切换
 - ✅ 语言选择保存在 localStorage
 - ✅ 所有页面翻译完整
 
 ### 超级管理员系统
+
 - ✅ 独立的语言系统
 - ✅ 支持中文和英文
 - ⚠️ 不支持马来语（按设计，超级管理员系统只需要中英文）
@@ -148,6 +160,7 @@ if (savedLanguage && (savedLanguage === 'zh' || savedLanguage === 'en' || savedL
 ## 🔄 下一步
 
 如果需要为其他网页端页面添加翻译，请：
+
 1. 检查页面使用的翻译 key
 2. 在 `LanguageContext.tsx` 的三个语言对象（zh, en, ms）中添加对应的翻译
 3. 测试语言切换功能

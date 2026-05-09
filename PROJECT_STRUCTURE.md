@@ -56,6 +56,7 @@ malaysia-legal-consultation/
 ### 应用目录 (app/)
 
 采用 Next.js 14 的 App Router 架构：
+
 - **layout.tsx**: 定义整个应用的布局结构（Header + 内容 + Footer）
 - **page.tsx**: 首页路由，组合各个组件形成完整页面
 - **globals.css**: 全局样式，包含 Tailwind 指令和自定义 CSS 类
@@ -63,6 +64,7 @@ malaysia-legal-consultation/
 ### 组件目录 (components/)
 
 所有可复用的 UI 组件：
+
 - **Header.tsx**: 响应式导航栏，包含移动端菜单
 - **Footer.tsx**: 网站底部，包含链接和社交媒体
 - **Hero.tsx**: 首页主视觉区，包含搜索功能
@@ -99,34 +101,41 @@ malaysia-legal-consultation/
 ## 技术栈
 
 ### 前端框架
+
 - **Next.js 14**: React 框架，支持 SSR 和 SSG
 - **React 18**: UI 库
 - **TypeScript**: 类型安全的 JavaScript
 
 ### 样式方案
+
 - **Tailwind CSS**: 实用优先的 CSS 框架
 - **自定义 CSS 类**: 在 globals.css 中定义的可复用样式
 
 ### 图标库
+
 - **React Icons**: 包含多种图标集的 React 组件
 
 ### 工具库
+
 - **clsx**: 条件类名组合
 - **date-fns**: 日期处理
 
 ## 开发规范
 
 ### 组件命名
+
 - 使用 PascalCase（如 `TopLawyers.tsx`）
 - 一个文件一个组件
 - 组件名与文件名保持一致
 
 ### 样式规范
+
 - 优先使用 Tailwind 实用类
 - 复杂样式使用 `@layer components` 定义
 - 响应式设计使用 Tailwind 断点（sm, md, lg, xl）
 
 ### TypeScript 规范
+
 - 所有组件使用 TypeScript
 - 定义清晰的接口和类型
 - 避免使用 `any` 类型
@@ -134,23 +143,27 @@ malaysia-legal-consultation/
 ## 待开发功能
 
 ### 第一阶段（当前）
+
 - [x] 项目初始化
 - [x] 首页设计
 - [x] 基础组件开发
 
 ### 第二阶段
+
 - [ ] 律师列表页面
 - [ ] 律师详情页面
 - [ ] 搜索和筛选功能
 - [ ] 用户认证系统
 
 ### 第三阶段
+
 - [ ] 预约系统
 - [ ] 支付集成
 - [ ] 用户面板
 - [ ] 律师面板
 
 ### 第四阶段
+
 - [ ] 在线咨询功能
 - [ ] 评价系统
 - [ ] 管理后台
@@ -159,7 +172,9 @@ malaysia-legal-consultation/
 ## 扩展建议
 
 ### 添加新页面
+
 在 `app/` 目录下创建新文件夹，例如：
+
 ```
 app/
 └── lawyers/
@@ -169,7 +184,9 @@ app/
 ```
 
 ### 添加新组件
+
 在 `components/` 目录下创建新文件：
+
 ```typescript
 export default function MyComponent() {
   return <div>My Component</div>;
@@ -177,11 +194,13 @@ export default function MyComponent() {
 ```
 
 ### 添加 API 路由
+
 在 `app/api/` 目录下创建路由处理器：
+
 ```typescript
 // app/api/lawyers/route.ts
 export async function GET() {
-  return Response.json({ lawyers: [] });
+  return Response.json({ lawyers: [] })
 }
 ```
 
@@ -195,11 +214,13 @@ export async function GET() {
 ## 部署建议
 
 ### Vercel（推荐）
+
 - 最简单的部署方式
 - 自动 CI/CD
 - 全球 CDN
 
 ### 其他平台
+
 - Netlify
 - AWS Amplify
 - 自托管（Docker + Nginx）

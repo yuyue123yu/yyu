@@ -21,6 +21,7 @@
 5. 粘贴以下策略：
 
 **策略 1 - 公开读取：**
+
 ```sql
 CREATE POLICY "Public Access"
 ON storage.objects FOR SELECT
@@ -28,6 +29,7 @@ USING (bucket_id = 'templates');
 ```
 
 **策略 2 - 认证用户上传：**
+
 ```sql
 CREATE POLICY "Authenticated Upload"
 ON storage.objects FOR INSERT
@@ -35,6 +37,7 @@ WITH CHECK (bucket_id = 'templates' AND auth.role() = 'authenticated');
 ```
 
 **策略 3 - 认证用户删除：**
+
 ```sql
 CREATE POLICY "Authenticated Delete"
 ON storage.objects FOR DELETE
@@ -90,6 +93,7 @@ USING (bucket_id = 'templates' AND auth.role() = 'authenticated');
 ## 当前功能状态
 
 ✅ **已实现（后端逻辑）：**
+
 - 文件选择处理
 - 文件类型验证（PDF, Word, Excel）
 - 文件大小验证（最大 10MB）
@@ -98,6 +102,7 @@ USING (bucket_id = 'templates' AND auth.role() = 'authenticated');
 - 保存到数据库
 
 ⏳ **待完成（前端UI）：**
+
 - 文件选择按钮
 - 文件信息显示
 - 上传进度条
@@ -108,14 +113,17 @@ USING (bucket_id = 'templates' AND auth.role() = 'authenticated');
 ## 建议
 
 **选项 A：先使用URL方式**
+
 - 优点：立即可用，无需修改代码
 - 缺点：需要手动上传文件到其他地方
 
 **选项 B：完成文件上传UI**
+
 - 优点：用户体验好，功能完整
 - 缺点：需要修改代码
 
 **我的建议：**
+
 1. 先完成 Supabase Storage Bucket 创建（步骤1和2）
 2. 使用URL方式测试其他功能
 3. 稍后我帮您完成文件上传UI

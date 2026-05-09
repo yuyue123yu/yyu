@@ -22,10 +22,12 @@
 ## 📍 如何使用
 
 ### 访问超级管理系统
+
 1. 打开浏览器访问：`http://localhost:3000/super-admin/login`
 2. 使用您的超级管理员账号登录（邮箱：403940124@qq.com）
 
 ### 切换语言
+
 1. 登录后，查看右上角导航栏
 2. 找到 🌐 地球图标
 3. 点击图标，会显示语言选项：
@@ -36,6 +38,7 @@
 6. 语言选择会自动保存
 
 ### 已翻译的页面
+
 - ✅ 登录页面
 - ✅ 仪表板
 - ✅ 租户管理
@@ -49,12 +52,14 @@
 ## 🔍 验证测试
 
 ### 测试普通系统（确保没有影响）
+
 1. 访问 `http://localhost:3000/`
 2. 访问 `http://localhost:3000/lawyers`
 3. 访问 `http://localhost:3000/consultation`
 4. 确认这些页面和之前一样正常工作
 
 ### 测试超级管理系统（新功能）
+
 1. 访问 `http://localhost:3000/super-admin/login`
 2. 登录后，点击右上角 🌐 图标
 3. 切换到 "English"，所有文本变为英文
@@ -65,6 +70,7 @@
 ## 📊 技术实现
 
 ### 架构设计
+
 ```
 根布局 (src/app/layout.tsx)
 ├── LanguageProvider (普通系统)
@@ -79,6 +85,7 @@
 ```
 
 ### 关键文件
+
 - `src/contexts/LanguageContext.tsx` - 共享的语言上下文
 - `src/app/super-admin/layout.tsx` - 超级管理系统独立布局
 - `src/components/super-admin/LanguageSwitcher.tsx` - 语言切换器组件
@@ -120,6 +127,7 @@
 ## 📞 如有问题
 
 如果发现任何问题，请检查：
+
 1. 浏览器控制台是否有错误
 2. 语言切换器是否显示
 3. 翻译是否正确显示

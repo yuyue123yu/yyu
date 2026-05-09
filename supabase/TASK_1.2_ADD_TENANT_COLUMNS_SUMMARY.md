@@ -1,26 +1,32 @@
 # Task 1.2: Add Tenant Columns - Migration Summary
 
 ## Overview
+
 This migration adds multi-tenant support to the LegalMY platform by adding `tenant_id` and `super_admin` columns to existing tables.
 
 ## Migration File
+
 **File**: `supabase/006_add_tenant_columns.sql`
 
 ## What This Migration Does
 
 ### 1. Creates Default Tenant
+
 - Checks if a default tenant exists (subdomain: 'default')
 - Creates one if it doesn't exist
 - All existing data will be assigned to this default tenant
 
 ### 2. Modifies Profiles Table
+
 - Adds `tenant_id` column (UUID, references tenants.id)
 - Adds `super_admin` column (BOOLEAN, default false)
 - Creates indexes for performance
 - Migrates existing profiles to default tenant
 
 ### 3. Adds tenant_id to Multi-Tenant Tables
+
 The following tables receive the `tenant_id` column:
+
 - ✅ lawyers
 - ✅ consultations
 - ✅ orders
@@ -32,13 +38,17 @@ The following tables receive the `tenant_id` column:
 - ✅ services
 
 ### 4. Foreign Key Constraints
+
 All `tenant_id` columns have:
+
 - Foreign key reference to `tenants(id)`
 - `ON DELETE CASCADE` behavior
 - Proper indexing for query performance
 
 ### 5. Indexes Created
+
 Performance indexes on all tenant_id columns:
+
 - `idx_profiles_tenant`
 - `idx_profiles_super_admin` (partial index for super_admin = true)
 - `idx_lawyers_tenant`
@@ -54,46 +64,55 @@ Performance indexes on all tenant_id columns:
 ## Safety Features
 
 ### Idempotent Operations
+
 - Uses `ADD COLUMN IF NOT EXISTS` to avoid conflicts
 - Uses `DROP CONSTRAINT IF EXISTS` before adding constraints
 - Uses `DROP INDEX IF EXISTS` before creating indexes
 - Safe to run multiple times
 
 ### Data Preservation
+
 - Existing data is preserved
 - All existing records are migrated to the default tenant
 - No data loss occurs during migration
 
 ### Validation
+
 - Comprehensive validation at the end
 - Checks all columns were added successfully
 - Reports any missing columns
 - Provides clear success/failure messages
 
 ## Prerequisites
+
 - The `tenants` table must exist (run `001_create_tenants_table.sql` first)
 - The `uuid-ossp` extension must be enabled
 
 ## How to Run
 
 ### Option 1: Supabase Dashboard
+
 1. Go to Supabase Dashboard → SQL Editor
 2. Copy the contents of `006_add_tenant_columns.sql`
 3. Paste and run the migration
 4. Check the output for success messages
 
 ### Option 2: Supabase CLI
+
 ```bash
 supabase db push
 ```
 
 ### Option 3: psql Command Line
+
 ```bash
 psql -h your-db-host -U postgres -d your-database -f supabase/006_add_tenant_columns.sql
 ```
 
 ## Expected Output
+
 When successful, you should see:
+
 ```
 NOTICE:  Created default tenant with id: [UUID]
 NOTICE:  Profiles table updated with tenant_id and super_admin columns
@@ -113,19 +132,21 @@ NOTICE:  Migration 006_add_tenant_columns completed successfully!
 After running the migration, verify with these queries:
 
 ### Check Profiles Table
+
 ```sql
-SELECT 
-  column_name, 
-  data_type, 
+SELECT
+  column_name,
+  data_type,
   is_nullable
 FROM information_schema.columns
-WHERE table_name = 'profiles' 
+WHERE table_name = 'profiles'
   AND column_name IN ('tenant_id', 'super_admin');
 ```
 
 ### Check All Tenant Columns
+
 ```sql
-SELECT 
+SELECT
   table_name,
   column_name
 FROM information_schema.columns
@@ -135,8 +156,9 @@ ORDER BY table_name;
 ```
 
 ### Check Indexes
+
 ```sql
-SELECT 
+SELECT
   tablename,
   indexname
 FROM pg_indexes
@@ -146,6 +168,7 @@ ORDER BY tablename;
 ```
 
 ### Check Foreign Keys
+
 ```sql
 SELECT
   tc.table_name,
@@ -163,8 +186,9 @@ ORDER BY tc.table_name;
 ```
 
 ### Check Default Tenant
+
 ```sql
-SELECT 
+SELECT
   id,
   name,
   subdomain,
@@ -198,6 +222,7 @@ ALTER TABLE public.services DROP COLUMN IF EXISTS tenant_id;
 ## Next Steps
 
 After this migration:
+
 1. ✅ Task 1.2 is complete
 2. Next: Task 1.3 - Update RLS policies for tenant scoping
 3. Then: Task 1.4 - Create super admin helper functions
@@ -212,6 +237,7 @@ After this migration:
 - [x] 1.2.6 Create indexes on all tenant_id columns
 
 ## Requirements Satisfied
+
 - ✅ Requirement 7: Data Isolation and Tenant Scoping
 - ✅ All tables have tenant_id column
 - ✅ Profiles table has super_admin column
@@ -220,6 +246,7 @@ After this migration:
 - ✅ Foreign key constraints added
 
 ## Notes
+
 - The migration is **idempotent** - safe to run multiple times
 - All existing data is migrated to a "default" tenant
 - The `tenant_id` columns initially allow NULL but are populated with default tenant

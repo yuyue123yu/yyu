@@ -3,6 +3,7 @@
 ## 🔴 问题说明
 
 Vercel CLI 在 Windows 中文用户名环境下有一个已知 bug：
+
 ```
 Error: 老大 @ vercel 53.2.0 node-v24.15.0 win32 (x64) is not a legal HTTP header value
 ```
@@ -36,6 +37,7 @@ Error: 老大 @ vercel 53.2.0 node-v24.15.0 win32 (x64) is not a legal HTTP head
 ### 步骤 3：配置项目（2 分钟）
 
 #### 基本设置（自动检测，无需修改）
+
 - **Framework Preset**: Next.js ✓
 - **Root Directory**: `./` ✓
 - **Build Command**: `npm run build` ✓
@@ -45,13 +47,13 @@ Error: 老大 @ vercel 53.2.0 node-v24.15.0 win32 (x64) is not a legal HTTP head
 
 点击 "Environment Variables"，添加以下 5 个变量：
 
-| 变量名 | 值 | 说明 |
-|--------|-----|------|
-| `NEXT_PUBLIC_SUPABASE_URL` | `https://xxx.supabase.co` | 从 Supabase 获取 |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | `eyJxxx...` | 从 Supabase 获取 |
-| `SUPABASE_SERVICE_ROLE_KEY` | `eyJxxx...` | 从 Supabase 获取 |
-| `NEXT_PUBLIC_SITE_URL` | `https://yyu.vercel.app` | 暂时填这个 |
-| `NODE_ENV` | `production` | 固定值 |
+| 变量名                          | 值                        | 说明             |
+| ------------------------------- | ------------------------- | ---------------- |
+| `NEXT_PUBLIC_SUPABASE_URL`      | `https://xxx.supabase.co` | 从 Supabase 获取 |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | `eyJxxx...`               | 从 Supabase 获取 |
+| `SUPABASE_SERVICE_ROLE_KEY`     | `eyJxxx...`               | 从 Supabase 获取 |
+| `NEXT_PUBLIC_SITE_URL`          | `https://yyu.vercel.app`  | 暂时填这个       |
+| `NODE_ENV`                      | `production`              | 固定值           |
 
 **如何获取 Supabase 环境变量？**
 
@@ -74,12 +76,15 @@ Error: 老大 @ vercel 53.2.0 node-v24.15.0 win32 (x64) is not a legal HTTP head
 ## ✅ 部署后验证
 
 ### 1. 获取您的域名
+
 部署完成后，Vercel 会显示您的域名：
+
 ```
 https://yyu-xxx.vercel.app
 ```
 
 ### 2. 更新环境变量
+
 1. 在 Vercel 项目中，进入 **Settings → Environment Variables**
 2. 找到 `NEXT_PUBLIC_SITE_URL`
 3. 点击 "Edit"
@@ -88,6 +93,7 @@ https://yyu-xxx.vercel.app
 6. 重新部署：进入 **Deployments** → 点击最新部署 → 点击 "Redeploy"
 
 ### 3. 测试网站
+
 访问以下地址：
 
 - **主站**：`https://yyu-xxx.vercel.app`
@@ -95,7 +101,9 @@ https://yyu-xxx.vercel.app
 - **Super Admin**：`https://yyu-xxx.vercel.app/super-admin`
 
 ### 4. 检查健康状态
+
 访问 `/api/health`，应该返回：
+
 ```json
 {
   "status": "ok",
@@ -113,12 +121,14 @@ https://yyu-xxx.vercel.app
 您的网站已上线！
 
 ### 自动功能
+
 - ✅ **永不关闭**：24/7 运行
 - ✅ **自动 HTTPS**：SSL 证书自动配置
 - ✅ **全球 CDN**：访问速度快
 - ✅ **自动部署**：推送代码自动更新
 
 ### 访问地址
+
 - 主站：`https://yyu-xxx.vercel.app`
 - Super Admin：`https://yyu-xxx.vercel.app/super-admin`
 - API 健康检查：`https://yyu-xxx.vercel.app/api/health`
@@ -128,19 +138,23 @@ https://yyu-xxx.vercel.app
 ## 📈 下一步
 
 ### 1. 绑定自定义域名（可选）
+
 1. 在 Vercel 项目设置中点击 "Domains"
 2. 添加您的域名（如 `legalmy.com`）
 3. 在域名提供商配置 DNS
 
 ### 2. 提交搜索引擎
+
 - Google Search Console：https://search.google.com/search-console
 - Bing Webmaster Tools：https://www.bing.com/webmasters
 
 ### 3. 开启监控
+
 - Vercel Analytics（已自动开启）
 - Sentry 错误监控（推荐）
 
 ### 4. 开始推广
+
 - 社交媒体分享
 - Google Ads
 - Facebook Ads
@@ -151,6 +165,7 @@ https://yyu-xxx.vercel.app
 ## 💡 为什么网页部署更好？
 
 ### 优点
+
 - ✅ **可视化界面**：更直观
 - ✅ **环境变量管理**：更方便
 - ✅ **部署日志**：可以查看详细日志
@@ -159,6 +174,7 @@ https://yyu-xxx.vercel.app
 - ✅ **无需命令行**：避免 CLI 问题
 
 ### 缺点
+
 - 无（真的没有缺点）
 
 ---
@@ -166,16 +182,19 @@ https://yyu-xxx.vercel.app
 ## 🆘 遇到问题？
 
 ### 部署失败
+
 1. 检查环境变量是否正确
 2. 检查 Supabase 连接是否正常
 3. 查看 Vercel 部署日志
 
 ### 网站无法访问
+
 1. 等待 DNS 生效（2-3 分钟）
 2. 清除浏览器缓存
 3. 检查 Vercel 部署状态
 
 ### 数据库连接失败
+
 1. 检查 Supabase URL 是否正确
 2. 检查 API Key 是否正确
 3. 检查 Supabase 项目是否暂停
@@ -185,6 +204,7 @@ https://yyu-xxx.vercel.app
 ## 📋 检查清单
 
 ### 部署前
+
 - [x] 代码已推送到 GitHub ✓
 - [ ] 已登录 Vercel
 - [ ] 已导入项目
@@ -192,12 +212,14 @@ https://yyu-xxx.vercel.app
 - [ ] 已点击 Deploy
 
 ### 部署后
+
 - [ ] 网站可以访问
 - [ ] `/api/health` 返回 OK
 - [ ] 登录功能正常
 - [ ] Super Admin 可以登录
 
 ### 下一步
+
 - [ ] 更新 `NEXT_PUBLIC_SITE_URL`
 - [ ] 提交 Google Search Console
 - [ ] 开启 Vercel Analytics

@@ -15,6 +15,7 @@
 **文件 1**: `src/app/api/tenant/notifications/route.ts`
 
 **功能**：
+
 - ✅ GET 接口 - 获取通知配置
 - ✅ PUT 接口 - 更新通知配置
 - ✅ 权限验证（Owner, Admin）
@@ -23,6 +24,7 @@
 - ✅ 审计日志记录
 
 **默认配置包含**：
+
 - 邮件通知配置（SMTP 服务器、发件人、邮件模板）
 - 短信通知配置（服务商、短信模板）
 - 通知接收人（管理员、咨询、付款、文档）
@@ -32,6 +34,7 @@
 **文件 2**: `src/app/api/tenant/notifications/test/route.ts`
 
 **功能**：
+
 - ✅ POST 接口 - 测试通知发送
 - ✅ 支持邮件和短信测试
 - ✅ 验证配置是否正确
@@ -44,6 +47,7 @@
 **文件**: `src/app/admin/notifications/page.tsx`
 
 **功能**：
+
 - ✅ 标签式导航（4 个主要标签）
 - ✅ 邮件通知配置
   - 启用/禁用开关
@@ -75,6 +79,7 @@
 **文件**: `src/app/admin/AdminLayoutClient.tsx`
 
 **更新**：
+
 - ✅ 添加"通知设置"菜单项
 - ✅ 使用 Bell 图标
 - ✅ 链接到 `/admin/notifications`
@@ -86,18 +91,21 @@
 ### 1. 邮件通知
 
 **SMTP 配置**：
+
 - SMTP 主机和端口
 - 用户名和密码
 - SSL/TLS 选项
 - 发件人名称和邮箱
 
 **邮件模板**：
+
 - 新咨询请求
 - 咨询已确认
 - 付款成功
 - 文档已准备好
 
 **功能**：
+
 - 自定义邮件主题和内容
 - 支持变量替换（如 {{client_name}}、{{order_id}}）
 - 测试邮件发送
@@ -107,15 +115,18 @@
 ### 2. 短信通知
 
 **服务商支持**：
+
 - Twilio
 - 阿里云
 - 腾讯云
 
 **短信模板**：
+
 - 咨询提醒
 - 付款确认
 
 **功能**：
+
 - 自定义短信内容
 - 支持变量替换
 - 测试短信发送
@@ -125,12 +136,14 @@
 ### 3. 接收人管理
 
 **接收人类型**：
+
 - 管理员邮箱（接收所有通知）
 - 咨询通知邮箱（接收咨询相关通知）
 - 付款通知邮箱（接收付款相关通知）
 - 文档通知邮箱（接收文档相关通知）
 
 **功能**：
+
 - 添加多个接收人
 - 删除接收人
 - 分类管理
@@ -140,6 +153,7 @@
 ### 4. 触发条件
 
 **支持的事件**：
+
 1. 新咨询请求
 2. 咨询已确认
 3. 咨询已取消
@@ -150,6 +164,7 @@
 8. 新用户注册
 
 **配置选项**：
+
 - 启用/禁用事件
 - 选择通知对象（管理员、律师、客户）
 
@@ -160,6 +175,7 @@
 ### 数据结构
 
 存储在 `tenant_settings` 表：
+
 ```json
 {
   "tenant_id": "uuid",
@@ -229,16 +245,19 @@
 ### API 端点
 
 **GET `/api/tenant/notifications`**
+
 - 获取租户的通知配置
 - 返回默认值或已保存的设置
 
 **PUT `/api/tenant/notifications`**
+
 - 更新租户的通知配置
 - 验证必填字段
 - 权限：Owner, Admin
 - 记录审计日志
 
 **POST `/api/tenant/notifications/test`**
+
 - 测试通知发送
 - 支持邮件和短信
 - 模拟发送（实际项目需集成真实服务）
@@ -332,10 +351,12 @@
 ### 当前实现
 
 **模拟功能**：
+
 - ⚠️ 邮件发送是模拟的（实际项目需要集成 nodemailer）
 - ⚠️ 短信发送是模拟的（实际项目需要集成 Twilio 等服务）
 
 **实际功能**：
+
 - ✅ 通知配置保存
 - ✅ 模板管理
 - ✅ 接收人管理
@@ -345,9 +366,10 @@
 ### 生产环境实现建议
 
 **邮件发送**：
+
 ```typescript
 // 使用 nodemailer
-import nodemailer from 'nodemailer';
+import nodemailer from 'nodemailer'
 
 const transporter = nodemailer.createTransport({
   host: config.email.smtp.host,
@@ -357,31 +379,32 @@ const transporter = nodemailer.createTransport({
     user: config.email.smtp.auth.user,
     pass: config.email.smtp.auth.pass,
   },
-});
+})
 
 await transporter.sendMail({
   from: `${config.email.from.name} <${config.email.from.email}>`,
   to: recipient,
   subject: template.subject,
   text: template.body,
-});
+})
 ```
 
 **短信发送**：
+
 ```typescript
 // 使用 Twilio
-import twilio from 'twilio';
+import twilio from 'twilio'
 
 const client = twilio(
   config.sms.config.account_sid,
-  config.sms.config.auth_token
-);
+  config.sms.config.auth_token,
+)
 
 await client.messages.create({
   body: template.content,
   from: config.sms.config.from_number,
   to: recipient,
-});
+})
 ```
 
 ---
@@ -389,12 +412,14 @@ await client.messages.create({
 ## 📁 文件清单
 
 ### 新增文件
+
 1. `src/app/api/tenant/notifications/route.ts` - 通知配置 API
 2. `src/app/api/tenant/notifications/test/route.ts` - 通知测试 API
 3. `src/app/admin/notifications/page.tsx` - 通知设置页面
 4. `Phase7-通知设置-开发完成.md` - 开发完成报告
 
 ### 修改文件
+
 1. `src/app/admin/AdminLayoutClient.tsx` - 添加"通知设置"菜单项
 
 ---
@@ -404,6 +429,7 @@ await client.messages.create({
 **Phase 7: 通知设置** 功能已完成！
 
 ### 已实现的功能
+
 - ✅ 邮件通知配置
 - ✅ 短信通知配置
 - ✅ 接收人管理
@@ -414,6 +440,7 @@ await client.messages.create({
 ### 租户自助 DIY 系统 - 全部完成！
 
 **已完成所有 7 个阶段**：
+
 1. ✅ Phase 1: 品牌设置
 2. ✅ Phase 2: 价格配置
 3. ✅ Phase 3: 功能开关
@@ -427,6 +454,7 @@ await client.messages.create({
 ### 系统完整能力
 
 租户现在可以：
+
 - ✅ 自主管理品牌形象（Logo、颜色、公司信息）
 - ✅ 自主设置服务价格（咨询、文档、会员、折扣）
 - ✅ 自主控制功能模块（15+ 个功能开关）

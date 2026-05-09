@@ -1,14 +1,17 @@
 # Task 1.1.5: Password Reset Tokens Table - COMPLETE ✅
 
 ## Migration File Created
+
 **File**: `supabase/005_create_password_reset_tokens_table.sql`
 
 ## What Was Implemented
 
 ### 1. Password Reset Tokens Table
+
 Created `public.password_reset_tokens` table with the following structure:
 
 **Columns**:
+
 - `id` (UUID, PRIMARY KEY) - Unique identifier
 - `user_id` (UUID, FOREIGN KEY → auth.users) - User whose password is being reset
 - `token` (TEXT, UNIQUE, NOT NULL) - 256-bit cryptographically secure token
@@ -18,6 +21,7 @@ Created `public.password_reset_tokens` table with the following structure:
 - `created_at` (TIMESTAMP WITH TIME ZONE, DEFAULT NOW()) - Creation timestamp
 
 **Constraints**:
+
 - Primary key on `id`
 - Unique constraint on `token`
 - Foreign key `user_id` → `auth.users(id)` with ON DELETE CASCADE
@@ -25,6 +29,7 @@ Created `public.password_reset_tokens` table with the following structure:
 - NOT NULL constraints on `user_id`, `token`, `expires_at`, `created_at`
 
 ### 2. Performance Indexes
+
 Created 5 indexes for optimal query performance:
 
 1. **idx_password_reset_tokens_token** - Fast token lookups (most common query)
@@ -34,20 +39,24 @@ Created 5 indexes for optimal query performance:
 5. **idx_password_reset_tokens_active** - Composite partial index for active token validation (WHERE used_at IS NULL)
 
 ### 3. Row Level Security (RLS)
+
 - RLS enabled on the table
 - Service role has full access (temporary, will be updated with super_admin policies)
 - Users can view their own reset tokens for validation
 
 ### 4. Helper Functions
+
 Created 3 utility functions for token management:
 
 #### cleanup_expired_password_reset_tokens()
+
 - Removes tokens expired more than 7 days ago
 - Returns count of deleted tokens
 - Maintains database hygiene
 - SECURITY DEFINER for elevated privileges
 
 #### validate_password_reset_token(token_value TEXT)
+
 - Validates a token and returns validation status
 - Returns: `is_valid`, `user_id`, `token_id`, `error_message`
 - Checks:
@@ -57,6 +66,7 @@ Created 3 utility functions for token management:
 - SECURITY DEFINER for secure validation
 
 #### mark_password_reset_token_used(token_value TEXT)
+
 - Marks a token as used after successful password change
 - Updates `used_at` timestamp
 - Returns boolean success status
@@ -64,12 +74,15 @@ Created 3 utility functions for token management:
 - SECURITY DEFINER for secure updates
 
 ### 5. Documentation
+
 - Comprehensive table and column comments
 - Function documentation
 - Inline SQL comments explaining logic
 
 ### 6. Validation
+
 Built-in validation checks that verify:
+
 - Table creation successful
 - Unique constraint on token exists
 - Foreign key constraints exist
@@ -80,22 +93,26 @@ Built-in validation checks that verify:
 ## Acceptance Criteria Met ✅
 
 ✅ **password_reset_tokens table created with proper constraints**
+
 - Table created with all required columns
 - Primary key, unique, and foreign key constraints in place
 - NOT NULL constraints on critical fields
 
 ✅ **Indexes created for performance**
+
 - 5 indexes covering all query patterns
 - Composite partial index for active token lookups
 - Indexes on token, user_id, expires_at, created_by
 
 ✅ **Support for token expiration and single-use validation**
+
 - `expires_at` column for 24-hour expiration
 - `used_at` column for single-use tracking
 - `validate_password_reset_token()` function checks both
 - `mark_password_reset_token_used()` enforces single-use
 
 ✅ **Audit trail with created_by field**
+
 - `created_by` tracks which super admin initiated reset
 - `created_at` timestamp for creation time
 - Index on `created_by` for audit queries
@@ -104,6 +121,7 @@ Built-in validation checks that verify:
 ## Requirements Satisfied
 
 **Requirement 5: Password Recovery System** - Acceptance Criteria:
+
 1. ✅ Super admin can initiate password reset (table supports this)
 2. ✅ System generates Password_Reset_Token (table stores tokens)
 3. ✅ System sends password reset email (table provides token data)
@@ -116,6 +134,7 @@ Built-in validation checks that verify:
 ## How to Execute
 
 ### Option 1: Supabase Dashboard (Recommended)
+
 1. Open Supabase Dashboard
 2. Navigate to SQL Editor
 3. Copy contents of `supabase/005_create_password_reset_tokens_table.sql`
@@ -123,6 +142,7 @@ Built-in validation checks that verify:
 5. Verify success messages in output
 
 ### Option 2: Supabase CLI
+
 ```bash
 # If using Supabase CLI with migrations
 supabase db push
@@ -132,12 +152,15 @@ psql $DATABASE_URL -f supabase/005_create_password_reset_tokens_table.sql
 ```
 
 ### Option 3: Direct psql
+
 ```bash
 psql -h <host> -U <user> -d <database> -f supabase/005_create_password_reset_tokens_table.sql
 ```
 
 ## Expected Output
+
 When executed successfully, you should see:
+
 ```
 NOTICE:  ✓ Password reset tokens table created successfully
 NOTICE:  ✓ Unique constraint on token verified
@@ -150,6 +173,7 @@ NOTICE:  ✓ RLS policies enabled (will be updated with super_admin policies in 
 ## Usage Examples
 
 ### Creating a Password Reset Token
+
 ```sql
 -- Super admin initiates password reset
 INSERT INTO public.password_reset_tokens (user_id, token, expires_at, created_by)
@@ -162,6 +186,7 @@ VALUES (
 ```
 
 ### Validating a Token
+
 ```sql
 -- Check if token is valid
 SELECT * FROM validate_password_reset_token('token-value-here');
@@ -174,6 +199,7 @@ SELECT * FROM validate_password_reset_token('token-value-here');
 ```
 
 ### Marking Token as Used
+
 ```sql
 -- After successful password change
 SELECT mark_password_reset_token_used('token-value-here');
@@ -182,6 +208,7 @@ SELECT mark_password_reset_token_used('token-value-here');
 ```
 
 ### Cleaning Up Expired Tokens
+
 ```sql
 -- Run periodically (e.g., daily cron job)
 SELECT cleanup_expired_password_reset_tokens();
@@ -190,16 +217,17 @@ SELECT cleanup_expired_password_reset_tokens();
 ```
 
 ### Viewing User's Reset History
+
 ```sql
 -- View all reset tokens for a user
-SELECT 
+SELECT
   id,
   token,
   expires_at,
   used_at,
   created_by,
   created_at,
-  CASE 
+  CASE
     WHEN used_at IS NOT NULL THEN 'Used'
     WHEN expires_at < NOW() THEN 'Expired'
     ELSE 'Active'
@@ -222,6 +250,7 @@ ORDER BY created_at DESC;
 ## Integration with Super Admin System
 
 This table integrates with:
+
 - **auth.users** - References users whose passwords are being reset
 - **audit_logs** - Password reset actions should be logged (Task 1.1.3)
 - **profiles** - Super admin flag determines who can create tokens (Task 1.2)
@@ -231,6 +260,7 @@ This table integrates with:
 ## Next Steps
 
 After executing this migration:
+
 1. ✅ **Task 1.1.5 Complete** - Password reset tokens table created
 2. ⏭️ **Task 1.2** - Add super_admin column to profiles table (enables RLS policies)
 3. ⏭️ **Task 2.x** - Implement password reset API endpoints

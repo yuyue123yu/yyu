@@ -72,16 +72,16 @@ src/
 提供语言状态和翻译功能:
 
 ```typescript
-const { language, setLanguage, t } = useLanguage();
+const { language, setLanguage, t } = useLanguage()
 
 // 获取当前语言
-console.log(language); // 'zh' 或 'en'
+console.log(language) // 'zh' 或 'en'
 
 // 切换语言
-setLanguage('en');
+setLanguage('en')
 
 // 翻译文本
-const title = t('dashboard.title'); // '仪表板' 或 'Dashboard'
+const title = t('dashboard.title') // '仪表板' 或 'Dashboard'
 ```
 
 #### 2. LanguageSwitcher
@@ -110,7 +110,7 @@ const translations = {
     'myPage.title': 'My Page Title',
     'myPage.description': 'This is description',
   },
-};
+}
 ```
 
 ### 步骤 2: 在组件中使用翻译
@@ -159,6 +159,7 @@ export default function MyPage() {
 ```
 
 示例:
+
 - `nav.dashboard` - 导航菜单中的"仪表板"
 - `dashboard.title` - 仪表板页面的标题
 - `dashboard.totalUsers` - 仪表板中的"用户总数"
@@ -169,11 +170,13 @@ export default function MyPage() {
 ### 1. 始终使用翻译函数
 
 ❌ **错误**:
+
 ```typescript
 <h1>仪表板</h1>
 ```
 
 ✅ **正确**:
+
 ```typescript
 <h1>{t('dashboard.title')}</h1>
 ```
@@ -181,6 +184,7 @@ export default function MyPage() {
 ### 2. 为新页面添加翻译
 
 创建新页面时,记得:
+
 1. 在翻译字典中添加所有文本
 2. 在组件中使用 `useLanguage()` hook
 3. 用 `t()` 函数包裹所有显示文本
@@ -195,15 +199,15 @@ export default function MyPage() {
 ### 查看当前语言
 
 ```typescript
-const { language } = useLanguage();
-console.log('Current language:', language);
+const { language } = useLanguage()
+console.log('Current language:', language)
 ```
 
 ### 测试翻译
 
 ```typescript
-const { t } = useLanguage();
-console.log('Dashboard title:', t('dashboard.title'));
+const { t } = useLanguage()
+console.log('Dashboard title:', t('dashboard.title'))
 ```
 
 ### 检查缺失的翻译
@@ -234,16 +238,22 @@ t('nonexistent.key') // 返回 'nonexistent.key'
 
 ```typescript
 const translations = {
-  zh: { /* 中文翻译 */ },
-  en: { /* 英文翻译 */ },
-  ja: { /* 日语翻译 */ },
-};
+  zh: {
+    /* 中文翻译 */
+  },
+  en: {
+    /* 英文翻译 */
+  },
+  ja: {
+    /* 日语翻译 */
+  },
+}
 ```
 
 2. 更新 `Language` 类型:
 
 ```typescript
-type Language = 'zh' | 'en' | 'ja';
+type Language = 'zh' | 'en' | 'ja'
 ```
 
 3. 在 `LanguageSwitcher.tsx` 中添加选项:
@@ -253,7 +263,7 @@ const languages = [
   { code: 'zh' as const, name: '中文', flag: '🇨🇳' },
   { code: 'en' as const, name: 'English', flag: '🇺🇸' },
   { code: 'ja' as const, name: '日本語', flag: '🇯🇵' },
-];
+]
 ```
 
 ---

@@ -32,32 +32,32 @@ graph TB
         TA[Tenant Admin Panel<br/>/admin/*]
         TU[Tenant User Interface<br/>/*]
     end
-    
+
     subgraph "Application Layer"
         SAA[Super Admin API<br/>/api/super-admin/*]
         TAA[Tenant Admin API<br/>/api/admin/*]
         TUA[Tenant User API<br/>/api/*]
         AUTH[Auth Middleware<br/>Tenant Context]
     end
-    
+
     subgraph "Data Layer"
         RLS[Row-Level Security]
         DB[(Supabase PostgreSQL)]
         AUDIT[(Audit Logs<br/>Immutable)]
     end
-    
+
     SA --> SAA
     TA --> TAA
     TU --> TUA
-    
+
     SAA --> AUTH
     TAA --> AUTH
     TUA --> AUTH
-    
+
     AUTH --> RLS
     RLS --> DB
     SAA --> AUDIT
-    
+
     style SA fill:#ff6b6b
     style SAA fill:#ff6b6b
     style AUDIT fill:#ffd93d
@@ -82,7 +82,7 @@ sequenceDiagram
     participant Supabase Auth
     participant Database
     participant Session
-    
+
     User->>App: Login with credentials
     App->>Supabase Auth: Authenticate
     Supabase Auth->>Database: Verify credentials
@@ -91,7 +91,7 @@ sequenceDiagram
     Supabase Auth->>App: JWT with user_id, tenant_id, super_admin
     App->>Session: Set tenant context
     App->>User: Redirect to appropriate panel
-    
+
     alt Super Admin
         User->>App: Access /super-admin
         App->>Session: Verify super_admin = true
@@ -158,37 +158,37 @@ CREATE INDEX idx_tenant_settings_key ON public.tenant_settings(setting_key);
 ```typescript
 interface OEMConfiguration {
   branding: {
-    siteName: string;
-    logo: string;
-    favicon: string;
-    primaryColor: string;
-    secondaryColor: string;
-    accentColor: string;
-  };
+    siteName: string
+    logo: string
+    favicon: string
+    primaryColor: string
+    secondaryColor: string
+    accentColor: string
+  }
   features: {
-    ecommerce: boolean;
-    templates: boolean;
-    articles: boolean;
-    consultations: boolean;
-    reviews: boolean;
-  };
+    ecommerce: boolean
+    templates: boolean
+    articles: boolean
+    consultations: boolean
+    reviews: boolean
+  }
   languages: {
-    default: 'en' | 'zh' | 'ms';
-    enabled: Array<'en' | 'zh' | 'ms'>;
-  };
+    default: 'en' | 'zh' | 'ms'
+    enabled: Array<'en' | 'zh' | 'ms'>
+  }
   business: {
-    currency: string;
-    timezone: string;
+    currency: string
+    timezone: string
     consultationPricing: {
-      min: number;
-      max: number;
-    };
-  };
+      min: number
+      max: number
+    }
+  }
   email: {
-    fromName: string;
-    fromEmail: string;
-    replyTo: string;
-  };
+    fromName: string
+    fromEmail: string
+    replyTo: string
+  }
 }
 ```
 
@@ -226,6 +226,7 @@ CREATE INDEX idx_audit_logs_created_at ON public.audit_logs(created_at DESC);
 ```
 
 **Action Types**:
+
 - `tenant.create`, `tenant.update`, `tenant.delete`, `tenant.activate`, `tenant.deactivate`
 - `user.create`, `user.update`, `user.delete`, `user.migrate`, `user.impersonate`
 - `admin.create`, `admin.update`, `admin.revoke`
@@ -252,6 +253,7 @@ CREATE INDEX idx_system_settings_key ON public.system_settings(setting_key);
 ```
 
 **System Setting Keys**:
+
 - `maintenance_mode`: `{ enabled: boolean, message: string }`
 - `feature_flags`: `{ [key: string]: boolean }`
 - `api_rate_limits`: `{ default: number, premium: number }`
@@ -266,7 +268,7 @@ Add tenant_id and super_admin columns.
 
 ```sql
 -- Add new columns to existing profiles table
-ALTER TABLE public.profiles 
+ALTER TABLE public.profiles
   ADD COLUMN IF NOT EXISTS tenant_id UUID REFERENCES public.tenants(id) ON DELETE CASCADE,
   ADD COLUMN IF NOT EXISTS super_admin BOOLEAN DEFAULT false;
 
@@ -389,84 +391,100 @@ All super admin API routes are prefixed with `/api/super-admin` and require supe
 
 ```typescript
 // src/middleware/superAdminAuth.ts
-import { createClient } from '@/lib/supabase/server';
-import { NextResponse } from 'next/server';
+import { createClient } from '@/lib/supabase/server'
+import { NextResponse } from 'next/server'
 
 export async function requireSuperAdmin(request: Request) {
-  const supabase = await createClient();
-  
-  const { data: { user }, error } = await supabase.auth.getUser();
-  
+  const supabase = await createClient()
+
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser()
+
   if (error || !user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
-  
+
   // Check super_admin flag
   const { data: profile } = await supabase
     .from('profiles')
     .select('super_admin')
     .eq('id', user.id)
-    .single();
-  
+    .single()
+
   if (!profile?.super_admin) {
-    return NextResponse.json({ error: 'Forbidden: Super admin access required' }, { status: 403 });
+    return NextResponse.json(
+      { error: 'Forbidden: Super admin access required' },
+      { status: 403 },
+    )
   }
-  
+
   // Enable RLS bypass for super admin
   await supabase.rpc('set_config', {
     setting: 'app.bypass_rls',
-    value: 'true'
-  });
-  
-  return { user, supabase };
+    value: 'true',
+  })
+
+  return { user, supabase }
 }
 ```
 
 #### 1. Tenant Management API
 
 **POST /api/super-admin/tenants**
+
 - Create a new tenant
 - Request body: `{ name, subdomain, primary_domain, subscription_plan, oem_config }`
 - Response: `{ tenant_id, admin_account }`
 
 **GET /api/super-admin/tenants**
+
 - List all tenants with pagination
 - Query params: `page`, `limit`, `status`, `search`
 - Response: `{ tenants: [], total, page, limit }`
 
 **GET /api/super-admin/tenants/:id**
+
 - Get tenant details
 - Response: `{ tenant, settings, stats }`
 
 **PATCH /api/super-admin/tenants/:id**
+
 - Update tenant configuration
 - Request body: `{ name?, subdomain?, status?, subscription_plan? }`
 - Response: `{ tenant }`
 
 **DELETE /api/super-admin/tenants/:id**
+
 - Delete tenant (with confirmation)
 - Response: `{ success, archived_data_id }`
 
 **POST /api/super-admin/tenants/:id/activate**
+
 - Activate a tenant
 - Response: `{ tenant }`
 
 **POST /api/super-admin/tenants/:id/deactivate**
+
 - Deactivate a tenant
 - Response: `{ tenant }`
 
 #### 2. OEM Configuration API
 
 **GET /api/super-admin/tenants/:id/settings**
+
 - Get all settings for a tenant
 - Response: `{ settings: { [key: string]: any } }`
 
 **PUT /api/super-admin/tenants/:id/settings/:key**
+
 - Update a specific setting
 - Request body: `{ value: any }`
 - Response: `{ setting }`
 
 **POST /api/super-admin/tenants/:id/settings/bulk**
+
 - Bulk update settings
 - Request body: `{ settings: { [key: string]: any } }`
 - Response: `{ updated_count }`
@@ -474,66 +492,79 @@ export async function requireSuperAdmin(request: Request) {
 #### 3. User Management API
 
 **GET /api/super-admin/users**
+
 - List all users across tenants
 - Query params: `page`, `limit`, `tenant_id`, `user_type`, `search`
 - Response: `{ users: [], total, page, limit }`
 
 **GET /api/super-admin/users/:id**
+
 - Get user details
 - Response: `{ user, tenant, activity }`
 
 **PATCH /api/super-admin/users/:id**
+
 - Update user details
 - Request body: `{ user_type?, tenant_id?, full_name?, phone? }`
 - Response: `{ user }`
 
 **POST /api/super-admin/users/:id/migrate**
+
 - Migrate user to different tenant
 - Request body: `{ target_tenant_id }`
 - Response: `{ user, migrated_data_count }`
 
 **POST /api/super-admin/users/:id/impersonate**
+
 - Start impersonation session
 - Response: `{ impersonation_token, expires_at }`
 
 **POST /api/super-admin/users/:id/deactivate**
+
 - Deactivate user account
 - Response: `{ user }`
 
 #### 4. Admin Management API
 
 **POST /api/super-admin/admins**
+
 - Create tenant admin account
 - Request body: `{ email, full_name, tenant_id }`
 - Response: `{ admin, activation_link }`
 
 **GET /api/super-admin/admins**
+
 - List all tenant admins
 - Query params: `tenant_id`, `page`, `limit`
 - Response: `{ admins: [], total }`
 
 **PATCH /api/super-admin/admins/:id/reassign**
+
 - Reassign admin to different tenant
 - Request body: `{ tenant_id }`
 - Response: `{ admin }`
 
 **DELETE /api/super-admin/admins/:id**
+
 - Revoke admin privileges
 - Response: `{ success }`
 
 #### 5. Password Reset API
 
 **POST /api/super-admin/password-reset**
+
 - Initiate password reset for any user
 - Request body: `{ user_id }`
 - Response: `{ reset_token, reset_link, expires_at }`
 
 **GET /api/super-admin/password-reset/history**
+
 - View password reset history
 - Query params: `user_id`, `page`, `limit`
 - Response: `{ resets: [], total }`
 
 **POST /api/reset-password** (public endpoint)
+
 - Complete password reset with token
 - Request body: `{ token, new_password }`
 - Response: `{ success }`
@@ -541,11 +572,13 @@ export async function requireSuperAdmin(request: Request) {
 #### 6. Audit Log API
 
 **GET /api/super-admin/audit-logs**
+
 - Query audit logs
 - Query params: `page`, `limit`, `action_type`, `target_entity`, `super_admin_id`, `start_date`, `end_date`
 - Response: `{ logs: [], total, page, limit }`
 
 **GET /api/super-admin/audit-logs/export**
+
 - Export audit logs
 - Query params: `format` (csv|json), `start_date`, `end_date`
 - Response: File download
@@ -553,15 +586,18 @@ export async function requireSuperAdmin(request: Request) {
 #### 7. System Settings API
 
 **GET /api/super-admin/system-settings**
+
 - Get all system settings
 - Response: `{ settings: { [key: string]: any } }`
 
 **PUT /api/super-admin/system-settings/:key**
+
 - Update system setting
 - Request body: `{ value: any }`
 - Response: `{ setting }`
 
 **POST /api/super-admin/system-settings/maintenance-mode**
+
 - Toggle maintenance mode
 - Request body: `{ enabled: boolean, message?: string }`
 - Response: `{ maintenance_mode }`
@@ -569,16 +605,19 @@ export async function requireSuperAdmin(request: Request) {
 #### 8. Analytics API
 
 **GET /api/super-admin/analytics/tenants/:id**
+
 - Get tenant analytics
 - Query params: `start_date`, `end_date`, `metrics`
 - Response: `{ metrics: { user_count, consultation_count, revenue, active_lawyers }, trends: [] }`
 
 **GET /api/super-admin/analytics/compare**
+
 - Compare metrics across tenants
 - Query params: `tenant_ids`, `metric`, `start_date`, `end_date`
 - Response: `{ comparison: [] }`
 
 **POST /api/super-admin/analytics/export**
+
 - Export analytics report
 - Request body: `{ tenant_id?, format, metrics, start_date, end_date }`
 - Response: File download
@@ -633,24 +672,24 @@ graph TD
     SAL[SuperAdminLayout] --> SAN[SuperAdminNav]
     SAL --> SAH[SuperAdminHeader]
     SAL --> SAC[SuperAdminContent]
-    
+
     SAC --> Dashboard
     SAC --> TenantList
     SAC --> UserList
     SAC --> AuditLogs
-    
+
     TenantList --> TenantCard
     TenantList --> TenantFilters
-    
+
     TenantCard --> TenantActions
     TenantCard --> TenantStats
-    
+
     UserList --> UserTable
     UserList --> UserFilters
-    
+
     UserTable --> UserRow
     UserRow --> UserActions
-    
+
     AuditLogs --> AuditLogTable
     AuditLogs --> AuditLogFilters
     AuditLogs --> AuditLogExport
@@ -661,39 +700,42 @@ graph TD
 The super admin panel uses React Context for state management with the following contexts:
 
 **SuperAdminContext**:
+
 ```typescript
 interface SuperAdminContextType {
-  user: SuperAdminUser | null;
-  loading: boolean;
-  tenants: Tenant[];
-  selectedTenant: Tenant | null;
-  setSelectedTenant: (tenant: Tenant | null) => void;
-  refreshTenants: () => Promise<void>;
-  bypassRLS: boolean;
-  setBypassRLS: (bypass: boolean) => void;
+  user: SuperAdminUser | null
+  loading: boolean
+  tenants: Tenant[]
+  selectedTenant: Tenant | null
+  setSelectedTenant: (tenant: Tenant | null) => void
+  refreshTenants: () => Promise<void>
+  bypassRLS: boolean
+  setBypassRLS: (bypass: boolean) => void
 }
 ```
 
 **AuditLogContext**:
+
 ```typescript
 interface AuditLogContextType {
-  logs: AuditLog[];
-  filters: AuditLogFilters;
-  setFilters: (filters: AuditLogFilters) => void;
-  exportLogs: (format: 'csv' | 'json') => Promise<void>;
-  refreshLogs: () => Promise<void>;
+  logs: AuditLog[]
+  filters: AuditLogFilters
+  setFilters: (filters: AuditLogFilters) => void
+  exportLogs: (format: 'csv' | 'json') => Promise<void>
+  refreshLogs: () => Promise<void>
 }
 ```
 
 **TenantContext** (for tenant-scoped operations):
+
 ```typescript
 interface TenantContextType {
-  currentTenant: Tenant | null;
-  settings: OEMConfiguration | null;
-  updateSettings: (key: string, value: any) => Promise<void>;
-  users: User[];
-  analytics: TenantAnalytics | null;
-  refreshData: () => Promise<void>;
+  currentTenant: Tenant | null
+  settings: OEMConfiguration | null
+  updateSettings: (key: string, value: any) => Promise<void>
+  users: User[]
+  analytics: TenantAnalytics | null
+  refreshData: () => Promise<void>
 }
 ```
 
@@ -707,21 +749,21 @@ export function withSuperAdminAuth(Component: React.ComponentType) {
   return function SuperAdminRoute(props: any) {
     const { user, loading } = useSuperAdmin();
     const router = useRouter();
-    
+
     useEffect(() => {
       if (!loading && (!user || !user.super_admin)) {
         router.push('/super-admin/login');
       }
     }, [user, loading, router]);
-    
+
     if (loading) {
       return <LoadingSpinner />;
     }
-    
+
     if (!user || !user.super_admin) {
       return null;
     }
-    
+
     return <Component {...props} />;
   };
 }
@@ -761,7 +803,7 @@ const superAdminNavItems = [
     href: '/super-admin/settings',
     icon: Settings,
   },
-];
+]
 ```
 
 ## Data Models
@@ -771,140 +813,140 @@ const superAdminNavItems = [
 ```typescript
 // Tenant
 interface Tenant {
-  id: string;
-  name: string;
-  subdomain: string;
-  primary_domain: string | null;
-  status: 'active' | 'inactive' | 'suspended';
-  subscription_plan: 'free' | 'basic' | 'premium' | 'enterprise';
-  subscription_start_date: string | null;
-  subscription_end_date: string | null;
-  created_at: string;
-  updated_at: string;
-  created_by: string;
-  user_count: number;
-  metadata: Record<string, any>;
+  id: string
+  name: string
+  subdomain: string
+  primary_domain: string | null
+  status: 'active' | 'inactive' | 'suspended'
+  subscription_plan: 'free' | 'basic' | 'premium' | 'enterprise'
+  subscription_start_date: string | null
+  subscription_end_date: string | null
+  created_at: string
+  updated_at: string
+  created_by: string
+  user_count: number
+  metadata: Record<string, any>
 }
 
 // Tenant Settings
 interface TenantSetting {
-  id: string;
-  tenant_id: string;
-  setting_key: string;
-  setting_value: any;
-  created_at: string;
-  updated_at: string;
+  id: string
+  tenant_id: string
+  setting_key: string
+  setting_value: any
+  created_at: string
+  updated_at: string
 }
 
 // OEM Configuration (stored in tenant_settings)
 interface OEMConfiguration {
   branding: {
-    siteName: string;
-    logo: string;
-    favicon: string;
-    primaryColor: string;
-    secondaryColor: string;
-    accentColor: string;
-  };
+    siteName: string
+    logo: string
+    favicon: string
+    primaryColor: string
+    secondaryColor: string
+    accentColor: string
+  }
   features: {
-    ecommerce: boolean;
-    templates: boolean;
-    articles: boolean;
-    consultations: boolean;
-    reviews: boolean;
-  };
+    ecommerce: boolean
+    templates: boolean
+    articles: boolean
+    consultations: boolean
+    reviews: boolean
+  }
   languages: {
-    default: 'en' | 'zh' | 'ms';
-    enabled: Array<'en' | 'zh' | 'ms'>;
-  };
+    default: 'en' | 'zh' | 'ms'
+    enabled: Array<'en' | 'zh' | 'ms'>
+  }
   business: {
-    currency: string;
-    timezone: string;
+    currency: string
+    timezone: string
     consultationPricing: {
-      min: number;
-      max: number;
-    };
-  };
+      min: number
+      max: number
+    }
+  }
   email: {
-    fromName: string;
-    fromEmail: string;
-    replyTo: string;
-  };
+    fromName: string
+    fromEmail: string
+    replyTo: string
+  }
 }
 
 // Audit Log
 interface AuditLog {
-  id: string;
-  super_admin_id: string;
-  action_type: string;
-  target_entity: string;
-  target_id: string | null;
-  changes: Record<string, any> | null;
-  ip_address: string | null;
-  user_agent: string | null;
-  session_id: string | null;
-  created_at: string;
+  id: string
+  super_admin_id: string
+  action_type: string
+  target_entity: string
+  target_id: string | null
+  changes: Record<string, any> | null
+  ip_address: string | null
+  user_agent: string | null
+  session_id: string | null
+  created_at: string
 }
 
 // System Setting
 interface SystemSetting {
-  id: string;
-  setting_key: string;
-  setting_value: any;
-  description: string | null;
-  created_at: string;
-  updated_at: string;
+  id: string
+  setting_key: string
+  setting_value: any
+  description: string | null
+  created_at: string
+  updated_at: string
 }
 
 // Super Admin User (extends Profile)
 interface SuperAdminUser {
-  id: string;
-  email: string;
-  full_name: string | null;
-  phone: string | null;
-  avatar_url: string | null;
-  user_type: 'admin';
-  super_admin: boolean;
-  tenant_id: string | null;
-  created_at: string;
-  updated_at: string;
+  id: string
+  email: string
+  full_name: string | null
+  phone: string | null
+  avatar_url: string | null
+  user_type: 'admin'
+  super_admin: boolean
+  tenant_id: string | null
+  created_at: string
+  updated_at: string
 }
 
 // Password Reset Token
 interface PasswordResetToken {
-  id: string;
-  user_id: string;
-  token: string;
-  expires_at: string;
-  used_at: string | null;
-  created_by: string | null;
-  created_at: string;
+  id: string
+  user_id: string
+  token: string
+  expires_at: string
+  used_at: string | null
+  created_by: string | null
+  created_at: string
 }
 
 // Tenant Analytics
 interface TenantAnalytics {
-  tenant_id: string;
+  tenant_id: string
   period: {
-    start: string;
-    end: string;
-  };
+    start: string
+    end: string
+  }
   metrics: {
-    user_count: number;
-    new_users: number;
-    active_users: number;
-    consultation_count: number;
-    completed_consultations: number;
-    order_count: number;
-    revenue: number;
-    active_lawyers: number;
-    average_rating: number;
-  };
+    user_count: number
+    new_users: number
+    active_users: number
+    consultation_count: number
+    completed_consultations: number
+    order_count: number
+    revenue: number
+    active_lawyers: number
+    average_rating: number
+  }
   trends: Array<{
-    date: string;
-    users: number;
-    consultations: number;
-    revenue: number;
-  }>;
+    date: string
+    users: number
+    consultations: number
+    revenue: number
+  }>
 }
 ```
 
@@ -938,15 +980,15 @@ DECLARE
   is_sa BOOLEAN;
 BEGIN
   user_id := auth.uid();
-  
+
   IF user_id IS NULL THEN
     RETURN false;
   END IF;
-  
+
   SELECT super_admin INTO is_sa
   FROM public.profiles
   WHERE id = user_id;
-  
+
   RETURN COALESCE(is_sa, false);
 END;
 $$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
@@ -984,7 +1026,7 @@ BEGIN
     current_setting('app.session_id', true)
   )
   RETURNING id INTO log_id;
-  
+
   RETURN log_id;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
@@ -1005,12 +1047,12 @@ BEGIN
     UPDATE public.tenants
     SET user_count = user_count - 1
     WHERE id = OLD.tenant_id;
-    
+
     UPDATE public.tenants
     SET user_count = user_count + 1
     WHERE id = NEW.tenant_id;
   END IF;
-  
+
   RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;
@@ -1037,7 +1079,7 @@ sequenceDiagram
     participant App
     participant Supabase
     participant MFA as MFA Service
-    
+
     SA->>App: Enter email + password
     App->>Supabase: Authenticate
     Supabase->>App: Return session (MFA pending)
@@ -1053,11 +1095,11 @@ sequenceDiagram
 
 ```typescript
 // src/lib/mfa/totp.ts
-import * as OTPAuth from 'otpauth';
-import * as QRCode from 'qrcode';
+import * as OTPAuth from 'otpauth'
+import * as QRCode from 'qrcode'
 
 export async function generateMFASecret(email: string) {
-  const secret = new OTPAuth.Secret({ size: 20 });
+  const secret = new OTPAuth.Secret({ size: 20 })
   const totp = new OTPAuth.TOTP({
     issuer: 'LegalMY Super Admin',
     label: email,
@@ -1065,16 +1107,16 @@ export async function generateMFASecret(email: string) {
     digits: 6,
     period: 30,
     secret: secret,
-  });
-  
-  const uri = totp.toString();
-  const qrCode = await QRCode.toDataURL(uri);
-  
+  })
+
+  const uri = totp.toString()
+  const qrCode = await QRCode.toDataURL(uri)
+
   return {
     secret: secret.base32,
     qrCode,
     uri,
-  };
+  }
 }
 
 export function verifyMFAToken(secret: string, token: string): boolean {
@@ -1083,16 +1125,17 @@ export function verifyMFAToken(secret: string, token: string): boolean {
     digits: 6,
     period: 30,
     secret: OTPAuth.Secret.fromBase32(secret),
-  });
-  
-  const delta = totp.validate({ token, window: 1 });
-  return delta !== null;
+  })
+
+  const delta = totp.validate({ token, window: 1 })
+  return delta !== null
 }
 ```
 
 ### Session Management
 
 **Session Configuration**:
+
 - Session timeout: 15 minutes of inactivity
 - Absolute session timeout: 8 hours
 - Re-authentication required after timeout
@@ -1102,11 +1145,11 @@ export function verifyMFAToken(secret: string, token: string): boolean {
 
 ```typescript
 // src/lib/session/superAdminSession.ts
-import { createClient } from '@/lib/supabase/server';
+import { createClient } from '@/lib/supabase/server'
 
 export async function createSuperAdminSession(userId: string) {
-  const supabase = await createClient();
-  
+  const supabase = await createClient()
+
   // Set session metadata
   const { data, error } = await supabase.auth.updateUser({
     data: {
@@ -1114,44 +1157,47 @@ export async function createSuperAdminSession(userId: string) {
       session_started_at: new Date().toISOString(),
       last_activity_at: new Date().toISOString(),
     },
-  });
-  
-  if (error) throw error;
-  
-  return data;
+  })
+
+  if (error) throw error
+
+  return data
 }
 
 export async function validateSuperAdminSession() {
-  const supabase = await createClient();
-  
-  const { data: { user }, error } = await supabase.auth.getUser();
-  
+  const supabase = await createClient()
+
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser()
+
   if (error || !user) {
-    return { valid: false, reason: 'no_user' };
+    return { valid: false, reason: 'no_user' }
   }
-  
-  const sessionStarted = new Date(user.user_metadata.session_started_at);
-  const lastActivity = new Date(user.user_metadata.last_activity_at);
-  const now = new Date();
-  
+
+  const sessionStarted = new Date(user.user_metadata.session_started_at)
+  const lastActivity = new Date(user.user_metadata.last_activity_at)
+  const now = new Date()
+
   // Check absolute timeout (8 hours)
   if (now.getTime() - sessionStarted.getTime() > 8 * 60 * 60 * 1000) {
-    return { valid: false, reason: 'absolute_timeout' };
+    return { valid: false, reason: 'absolute_timeout' }
   }
-  
+
   // Check inactivity timeout (15 minutes)
   if (now.getTime() - lastActivity.getTime() > 15 * 60 * 1000) {
-    return { valid: false, reason: 'inactivity_timeout' };
+    return { valid: false, reason: 'inactivity_timeout' }
   }
-  
+
   // Update last activity
   await supabase.auth.updateUser({
     data: {
       last_activity_at: now.toISOString(),
     },
-  });
-  
-  return { valid: true };
+  })
+
+  return { valid: true }
 }
 ```
 
@@ -1199,46 +1245,48 @@ CREATE POLICY "tenant_scoped_delete"
 
 ```typescript
 // src/middleware/tenantContext.ts
-import { createClient } from '@/lib/supabase/server';
-import { NextResponse } from 'next/server';
+import { createClient } from '@/lib/supabase/server'
+import { NextResponse } from 'next/server'
 
 export async function setTenantContext(request: Request) {
-  const supabase = await createClient();
-  
-  const { data: { user } } = await supabase.auth.getUser();
-  
+  const supabase = await createClient()
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
   if (!user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
-  
+
   // Get user's tenant_id
   const { data: profile } = await supabase
     .from('profiles')
     .select('tenant_id, super_admin')
     .eq('id', user.id)
-    .single();
-  
+    .single()
+
   if (!profile) {
-    return NextResponse.json({ error: 'Profile not found' }, { status: 404 });
+    return NextResponse.json({ error: 'Profile not found' }, { status: 404 })
   }
-  
+
   // Set tenant context in session
   if (profile.tenant_id) {
     await supabase.rpc('set_config', {
       setting: 'app.current_tenant_id',
-      value: profile.tenant_id
-    });
+      value: profile.tenant_id,
+    })
   }
-  
+
   // Set bypass flag for super admins
   if (profile.super_admin) {
     await supabase.rpc('set_config', {
       setting: 'app.bypass_rls',
-      value: 'false' // Default to false, explicitly enable when needed
-    });
+      value: 'false', // Default to false, explicitly enable when needed
+    })
   }
-  
-  return { user, profile, supabase };
+
+  return { user, profile, supabase }
 }
 ```
 
@@ -1248,48 +1296,46 @@ export async function setTenantContext(request: Request) {
 
 ```typescript
 // src/lib/audit/logger.ts
-import { createClient } from '@/lib/supabase/server';
+import { createClient } from '@/lib/supabase/server'
 
 export interface AuditLogEntry {
-  action_type: string;
-  target_entity: string;
-  target_id?: string;
-  changes?: Record<string, any>;
+  action_type: string
+  target_entity: string
+  target_id?: string
+  changes?: Record<string, any>
 }
 
-export async function logAuditEvent(
-  entry: AuditLogEntry,
-  request?: Request
-) {
-  const supabase = await createClient();
-  
-  const { data: { user } } = await supabase.auth.getUser();
-  
+export async function logAuditEvent(entry: AuditLogEntry, request?: Request) {
+  const supabase = await createClient()
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
   if (!user) {
-    throw new Error('Cannot log audit event: No authenticated user');
+    throw new Error('Cannot log audit event: No authenticated user')
   }
-  
+
   // Extract IP and user agent from request
-  const ip_address = request?.headers.get('x-forwarded-for') || 
-                     request?.headers.get('x-real-ip') || 
-                     null;
-  const user_agent = request?.headers.get('user-agent') || null;
-  
+  const ip_address =
+    request?.headers.get('x-forwarded-for') ||
+    request?.headers.get('x-real-ip') ||
+    null
+  const user_agent = request?.headers.get('user-agent') || null
+
   // Log the event
-  const { error } = await supabase
-    .from('audit_logs')
-    .insert({
-      super_admin_id: user.id,
-      action_type: entry.action_type,
-      target_entity: entry.target_entity,
-      target_id: entry.target_id || null,
-      changes: entry.changes || null,
-      ip_address,
-      user_agent,
-    });
-  
+  const { error } = await supabase.from('audit_logs').insert({
+    super_admin_id: user.id,
+    action_type: entry.action_type,
+    target_entity: entry.target_entity,
+    target_id: entry.target_id || null,
+    changes: entry.changes || null,
+    ip_address,
+    user_agent,
+  })
+
   if (error) {
-    console.error('Failed to log audit event:', error);
+    console.error('Failed to log audit event:', error)
     // Don't throw - audit logging should not break operations
   }
 }
@@ -1299,36 +1345,38 @@ export function withAuditLog(actionType: string, targetEntity: string) {
   return function (
     target: any,
     propertyKey: string,
-    descriptor: PropertyDescriptor
+    descriptor: PropertyDescriptor,
   ) {
-    const originalMethod = descriptor.value;
-    
+    const originalMethod = descriptor.value
+
     descriptor.value = async function (...args: any[]) {
-      const result = await originalMethod.apply(this, args);
-      
+      const result = await originalMethod.apply(this, args)
+
       // Log after successful operation
       await logAuditEvent({
         action_type: actionType,
         target_entity: targetEntity,
         target_id: result?.id,
         changes: result,
-      });
-      
-      return result;
-    };
-    
-    return descriptor;
-  };
+      })
+
+      return result
+    }
+
+    return descriptor
+  }
 }
 ```
 
 ### Password Security
 
 **Password Requirements**:
+
 - Super admin: Minimum 16 characters, must include uppercase, lowercase, numbers, and special characters
 - Regular users: Minimum 8 characters, must include uppercase, lowercase, and numbers
 
 **Password Reset Security**:
+
 - Tokens expire after 24 hours
 - Tokens are single-use
 - Tokens are cryptographically random (256-bit)
@@ -1337,19 +1385,22 @@ export function withAuditLog(actionType: string, targetEntity: string) {
 
 ```typescript
 // src/lib/auth/passwordReset.ts
-import { createClient } from '@/lib/supabase/server';
-import { randomBytes } from 'crypto';
+import { createClient } from '@/lib/supabase/server'
+import { randomBytes } from 'crypto'
 
-export async function createPasswordResetToken(userId: string, createdBy: string) {
-  const supabase = await createClient();
-  
+export async function createPasswordResetToken(
+  userId: string,
+  createdBy: string,
+) {
+  const supabase = await createClient()
+
   // Generate secure random token
-  const token = randomBytes(32).toString('hex');
-  
+  const token = randomBytes(32).toString('hex')
+
   // Set expiration to 24 hours from now
-  const expiresAt = new Date();
-  expiresAt.setHours(expiresAt.getHours() + 24);
-  
+  const expiresAt = new Date()
+  expiresAt.setHours(expiresAt.getHours() + 24)
+
   // Store token
   const { data, error } = await supabase
     .from('password_reset_tokens')
@@ -1360,48 +1411,48 @@ export async function createPasswordResetToken(userId: string, createdBy: string
       created_by: createdBy,
     })
     .select()
-    .single();
-  
-  if (error) throw error;
-  
+    .single()
+
+  if (error) throw error
+
   return {
     token,
     expires_at: expiresAt,
     reset_link: `${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${token}`,
-  };
+  }
 }
 
 export async function validatePasswordResetToken(token: string) {
-  const supabase = await createClient();
-  
+  const supabase = await createClient()
+
   const { data, error } = await supabase
     .from('password_reset_tokens')
     .select('*')
     .eq('token', token)
     .is('used_at', null)
-    .single();
-  
+    .single()
+
   if (error || !data) {
-    return { valid: false, reason: 'invalid_token' };
+    return { valid: false, reason: 'invalid_token' }
   }
-  
-  const now = new Date();
-  const expiresAt = new Date(data.expires_at);
-  
+
+  const now = new Date()
+  const expiresAt = new Date(data.expires_at)
+
   if (now > expiresAt) {
-    return { valid: false, reason: 'expired' };
+    return { valid: false, reason: 'expired' }
   }
-  
-  return { valid: true, data };
+
+  return { valid: true, data }
 }
 
 export async function markTokenAsUsed(token: string) {
-  const supabase = await createClient();
-  
+  const supabase = await createClient()
+
   await supabase
     .from('password_reset_tokens')
     .update({ used_at: new Date().toISOString() })
-    .eq('token', token);
+    .eq('token', token)
 }
 ```
 
@@ -1484,17 +1535,17 @@ To ensure existing functionality continues to work:
 // src/lib/compatibility/tenantFallback.ts
 export async function ensureTenantContext(supabase: any) {
   try {
-    const tenantId = await supabase.rpc('get_tenant_id');
-    
+    const tenantId = await supabase.rpc('get_tenant_id')
+
     if (!tenantId) {
       // Fallback to default tenant
       await supabase.rpc('set_config', {
         setting: 'app.current_tenant_id',
-        value: '00000000-0000-0000-0000-000000000001'
-      });
+        value: '00000000-0000-0000-0000-000000000001',
+      })
     }
   } catch (error) {
-    console.error('Failed to ensure tenant context:', error);
+    console.error('Failed to ensure tenant context:', error)
     // Log to monitoring service
   }
 }
@@ -1507,16 +1558,19 @@ export async function ensureTenantContext(supabase: any) {
 The super admin panel is completely separate from the existing admin panel:
 
 **Routing**:
+
 - Super admin: `/super-admin/*`
 - Tenant admin: `/admin/*`
 - User interface: `/*`
 
 **Shared Components**:
+
 - Authentication context (extended for super admin)
 - UI component library (buttons, forms, tables)
 - Supabase client utilities
 
 **Differences**:
+
 - Super admin has distinct visual theme (red/orange accent vs. primary blue)
 - Super admin navigation includes tenant management
 - Super admin can bypass tenant scoping
@@ -1549,9 +1603,9 @@ export function SuperAdminAuthProvider({ children }: { children: React.ReactNode
   const [profile, setProfile] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
   const [requireMFA, setRequireMFA] = useState(false);
-  
+
   const supabase = await createClient();
-  
+
   useEffect(() => {
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -1562,7 +1616,7 @@ export function SuperAdminAuthProvider({ children }: { children: React.ReactNode
         setLoading(false);
       }
     });
-    
+
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
@@ -1575,29 +1629,29 @@ export function SuperAdminAuthProvider({ children }: { children: React.ReactNode
         setLoading(false);
       }
     );
-    
+
     return () => subscription.unsubscribe();
   }, []);
-  
+
   async function loadProfile(userId: string) {
     const { data } = await supabase
       .from('profiles')
       .select('*')
       .eq('id', userId)
       .single();
-    
+
     setProfile(data);
     setLoading(false);
   }
-  
+
   async function signIn(email: string, password: string, mfaToken?: string) {
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
-    
+
     if (error) throw error;
-    
+
     // Check if MFA is required
     if (data.user && !mfaToken) {
       const { data: profile } = await supabase
@@ -1605,26 +1659,26 @@ export function SuperAdminAuthProvider({ children }: { children: React.ReactNode
         .select('super_admin')
         .eq('id', data.user.id)
         .single();
-      
+
       if (profile?.super_admin) {
         setRequireMFA(true);
         throw new Error('MFA_REQUIRED');
       }
     }
-    
+
     // Verify MFA token if provided
     if (mfaToken) {
       // Implement MFA verification
       // This would call a custom API endpoint
     }
   }
-  
+
   async function signOut() {
     await supabase.auth.signOut();
     setUser(null);
     setProfile(null);
   }
-  
+
   return (
     <SuperAdminAuthContext.Provider value={{ user, profile, loading, signIn, signOut, requireMFA }}>
       {children}
@@ -1646,6 +1700,7 @@ export function useSuperAdminAuth() {
 **Email Templates**:
 
 The system sends emails for:
+
 - Tenant admin account creation
 - Password reset
 - User migration notifications
@@ -1656,14 +1711,14 @@ The system sends emails for:
 
 ```typescript
 // src/lib/email/emailService.ts
-import { Resend } from 'resend';
+import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY)
 
 export async function sendTenantAdminWelcome(
   email: string,
   tenantName: string,
-  activationLink: string
+  activationLink: string,
 ) {
   await resend.emails.send({
     from: 'LegalMY Super Admin <noreply@legalmy.com>',
@@ -1676,13 +1731,13 @@ export async function sendTenantAdminWelcome(
       <a href="${activationLink}">Activate Account</a>
       <p>This link will expire in 24 hours.</p>
     `,
-  });
+  })
 }
 
 export async function sendPasswordResetEmail(
   email: string,
   resetLink: string,
-  ipAddress: string
+  ipAddress: string,
 ) {
   await resend.emails.send({
     from: 'LegalMY Security <security@legalmy.com>',
@@ -1696,13 +1751,13 @@ export async function sendPasswordResetEmail(
       <p>This link will expire in 24 hours.</p>
       <p>If you did not request this reset, please ignore this email.</p>
     `,
-  });
+  })
 }
 
 export async function sendUserMigrationNotification(
   email: string,
   fromTenant: string,
-  toTenant: string
+  toTenant: string,
 ) {
   await resend.emails.send({
     from: 'LegalMY <noreply@legalmy.com>',
@@ -1714,7 +1769,7 @@ export async function sendUserMigrationNotification(
       <p>You can continue to access your account with the same credentials.</p>
       <p>If you have any questions, please contact support.</p>
     `,
-  });
+  })
 }
 ```
 
@@ -1728,40 +1783,48 @@ export class SuperAdminError extends Error {
   constructor(
     message: string,
     public code: string,
-    public statusCode: number = 500
+    public statusCode: number = 500,
   ) {
-    super(message);
-    this.name = 'SuperAdminError';
+    super(message)
+    this.name = 'SuperAdminError'
   }
 }
 
 export class TenantNotFoundError extends SuperAdminError {
   constructor(tenantId: string) {
-    super(`Tenant not found: ${tenantId}`, 'TENANT_NOT_FOUND', 404);
+    super(`Tenant not found: ${tenantId}`, 'TENANT_NOT_FOUND', 404)
   }
 }
 
 export class InsufficientPermissionsError extends SuperAdminError {
   constructor(action: string) {
-    super(`Insufficient permissions for action: ${action}`, 'INSUFFICIENT_PERMISSIONS', 403);
+    super(
+      `Insufficient permissions for action: ${action}`,
+      'INSUFFICIENT_PERMISSIONS',
+      403,
+    )
   }
 }
 
 export class TenantIsolationViolationError extends SuperAdminError {
   constructor(details: string) {
-    super(`Tenant isolation violation: ${details}`, 'TENANT_ISOLATION_VIOLATION', 403);
+    super(
+      `Tenant isolation violation: ${details}`,
+      'TENANT_ISOLATION_VIOLATION',
+      403,
+    )
   }
 }
 
 export class MFARequiredError extends SuperAdminError {
   constructor() {
-    super('Multi-factor authentication required', 'MFA_REQUIRED', 401);
+    super('Multi-factor authentication required', 'MFA_REQUIRED', 401)
   }
 }
 
 export class SessionExpiredError extends SuperAdminError {
   constructor(reason: string) {
-    super(`Session expired: ${reason}`, 'SESSION_EXPIRED', 401);
+    super(`Session expired: ${reason}`, 'SESSION_EXPIRED', 401)
   }
 }
 ```
@@ -1775,44 +1838,47 @@ export class SessionExpiredError extends SuperAdminError {
 
 ```typescript
 // src/lib/errors/errorHandler.ts
-import { NextResponse } from 'next/server';
-import { SuperAdminError } from './superAdminErrors';
-import { logAuditEvent } from '@/lib/audit/logger';
+import { NextResponse } from 'next/server'
+import { SuperAdminError } from './superAdminErrors'
+import { logAuditEvent } from '@/lib/audit/logger'
 
 export async function handleSuperAdminError(error: unknown, request?: Request) {
-  console.error('Super admin error:', error);
-  
+  console.error('Super admin error:', error)
+
   if (error instanceof SuperAdminError) {
     // Log security-related errors
-    if (error.code === 'TENANT_ISOLATION_VIOLATION' || 
-        error.code === 'INSUFFICIENT_PERMISSIONS') {
-      await logAuditEvent({
-        action_type: 'security.error',
-        target_entity: 'system',
-        changes: {
-          error_code: error.code,
-          error_message: error.message,
+    if (
+      error.code === 'TENANT_ISOLATION_VIOLATION' ||
+      error.code === 'INSUFFICIENT_PERMISSIONS'
+    ) {
+      await logAuditEvent(
+        {
+          action_type: 'security.error',
+          target_entity: 'system',
+          changes: {
+            error_code: error.code,
+            error_message: error.message,
+          },
         },
-      }, request);
+        request,
+      )
     }
-    
+
     return NextResponse.json(
       { error: error.message, code: error.code },
-      { status: error.statusCode }
-    );
+      { status: error.statusCode },
+    )
   }
-  
+
   // Unknown error
-  return NextResponse.json(
-    { error: 'Internal server error' },
-    { status: 500 }
-  );
+  return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
 }
 ```
 
 ## Testing Strategy
 
 This feature is NOT suitable for property-based testing because it involves:
+
 - Infrastructure configuration (database schema, RLS policies)
 - UI rendering and user interactions
 - External service integrations (Supabase Auth, email service)
@@ -1825,23 +1891,27 @@ Instead, the testing strategy focuses on:
 Test individual functions and components with specific examples:
 
 **Database Functions**:
+
 - Test `get_tenant_id()` returns correct tenant ID from session
 - Test `is_super_admin()` correctly identifies super admin users
 - Test `log_audit_event()` creates audit log entries
 - Test `update_tenant_user_count()` maintains accurate counts
 
 **Authentication**:
+
 - Test MFA token generation and verification
 - Test session validation with various timeout scenarios
 - Test password reset token creation and validation
 
 **API Endpoints**:
+
 - Test tenant CRUD operations
 - Test user migration logic
 - Test OEM configuration updates
 - Test audit log queries
 
 **UI Components**:
+
 - Test TenantCard renders tenant information correctly
 - Test UserTable displays users with proper formatting
 - Test AuditLogTable filters and displays logs
@@ -1852,12 +1922,14 @@ Test individual functions and components with specific examples:
 Test interactions between components:
 
 **Tenant Creation Flow**:
+
 1. Create tenant via API
 2. Verify tenant exists in database
 3. Verify default admin account created
 4. Verify tenant settings initialized
 
 **User Migration Flow**:
+
 1. Create user in tenant A
 2. Migrate user to tenant B
 3. Verify user's tenant_id updated
@@ -1865,6 +1937,7 @@ Test interactions between components:
 5. Verify audit log entry created
 
 **RLS Policy Enforcement**:
+
 1. Authenticate as tenant A user
 2. Attempt to query tenant B data
 3. Verify query returns empty result
@@ -1877,12 +1950,14 @@ Test interactions between components:
 Test complete user workflows:
 
 **Super Admin Login**:
+
 1. Navigate to /super-admin/login
 2. Enter credentials
 3. Enter MFA code
 4. Verify redirected to dashboard
 
 **Create New Tenant**:
+
 1. Navigate to /super-admin/tenants/new
 2. Fill out tenant creation form
 3. Configure OEM settings
@@ -1891,6 +1966,7 @@ Test complete user workflows:
 6. Verify welcome email sent to admin
 
 **Password Reset**:
+
 1. Navigate to user details
 2. Click "Reset Password"
 3. Verify reset email sent
@@ -1904,21 +1980,25 @@ Test complete user workflows:
 Test security controls:
 
 **RLS Bypass Protection**:
+
 - Verify non-super-admin cannot set bypass flag
 - Verify bypass flag resets after operation
 - Verify audit log captures bypass usage
 
 **Session Security**:
+
 - Verify session expires after inactivity
 - Verify session expires after absolute timeout
 - Verify re-authentication required after expiry
 
 **MFA Enforcement**:
+
 - Verify super admin login requires MFA
 - Verify MFA token validation
 - Verify failed MFA attempts logged
 
 **Tenant Isolation**:
+
 - Verify tenant A cannot access tenant B data
 - Verify API endpoints enforce tenant scoping
 - Verify RLS policies prevent cross-tenant queries
@@ -1928,16 +2008,19 @@ Test security controls:
 Test system performance under load:
 
 **Multi-Tenant Query Performance**:
+
 - Measure query time with 100 tenants
 - Measure query time with 1000 tenants
 - Verify indexes are used effectively
 
 **Audit Log Performance**:
+
 - Measure audit log write performance
 - Measure audit log query performance with 1M+ records
 - Verify pagination works efficiently
 
 **Session Management**:
+
 - Measure session validation overhead
 - Test concurrent session handling
 
@@ -1962,14 +2045,14 @@ export const testTenants = [
     status: 'active',
     subscription_plan: 'basic',
   },
-];
+]
 
 export const testSuperAdmin = {
   id: 'super-admin-1',
   email: 'superadmin@test.com',
   super_admin: true,
   tenant_id: null,
-};
+}
 
 export const testTenantAdmin = {
   id: 'tenant-admin-1',
@@ -1977,7 +2060,7 @@ export const testTenantAdmin = {
   user_type: 'admin',
   super_admin: false,
   tenant_id: 'tenant-1',
-};
+}
 ```
 
 ---

@@ -3,6 +3,7 @@
 ## 当前状态
 
 模板管理页面已经添加了文件上传的基础代码，包括：
+
 - ✅ 文件选择处理函数 `handleFileSelect`
 - ✅ 文件上传函数 `uploadFile`
 - ✅ 上传状态管理 (`uploading`, `uploadProgress`, `selectedFile`)
@@ -34,7 +35,7 @@ USING (bucket_id = 'templates');
 CREATE POLICY "Authenticated users can upload templates"
 ON storage.objects FOR INSERT
 WITH CHECK (
-  bucket_id = 'templates' 
+  bucket_id = 'templates'
   AND auth.role() = 'authenticated'
 );
 
@@ -42,7 +43,7 @@ WITH CHECK (
 CREATE POLICY "Users can update templates"
 ON storage.objects FOR UPDATE
 USING (
-  bucket_id = 'templates' 
+  bucket_id = 'templates'
   AND auth.role() = 'authenticated'
 );
 
@@ -50,7 +51,7 @@ USING (
 CREATE POLICY "Authenticated users can delete templates"
 ON storage.objects FOR DELETE
 USING (
-  bucket_id = 'templates' 
+  bucket_id = 'templates'
   AND auth.role() = 'authenticated'
 );
 ```
@@ -94,8 +95,10 @@ USING (
 替换为：
 
 ```tsx
-{/* 文件上传区域 */}
-<div>
+{
+  /* 文件上传区域 */
+}
+;<div>
   <label className="block text-sm font-medium text-neutral-700 mb-2">
     上传文件 *
   </label>
@@ -120,8 +123,8 @@ USING (
         <button
           type="button"
           onClick={() => {
-            setSelectedFile(null);
-            setFormData({ ...formData, file_size: '' });
+            setSelectedFile(null)
+            setFormData({ ...formData, file_size: '' })
           }}
           className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-all"
         >
@@ -146,7 +149,9 @@ USING (
       <div className="space-y-2">
         <div className="flex items-center justify-between text-sm">
           <span className="text-neutral-600">上传中...</span>
-          <span className="text-primary-600 font-medium">{uploadProgress}%</span>
+          <span className="text-primary-600 font-medium">
+            {uploadProgress}%
+          </span>
         </div>
         <div className="w-full bg-neutral-200 rounded-full h-2">
           <div
@@ -264,25 +269,29 @@ USING (
 
 ### 问题 1: 上传失败 "Bucket not found"
 
-**解决方案**: 
+**解决方案**:
+
 - 确认已在 Supabase 创建 `templates` bucket
 - 检查 bucket 名称是否正确
 
 ### 问题 2: 上传失败 "Row level security policy"
 
 **解决方案**:
+
 - 确认已执行 Storage 策略 SQL
 - 确认用户已登录
 
 ### 问题 3: 文件上传后无法访问
 
 **解决方案**:
+
 - 确认 bucket 设置为 Public
 - 检查 Storage 策略中的 SELECT 权限
 
 ### 问题 4: 上传进度一直是 0%
 
 **解决方案**:
+
 - Supabase Storage 上传不支持实时进度
 - 可以改为显示"上传中..."状态
 
@@ -296,14 +305,14 @@ USING (
 
 ```tsx
 const handleDrop = (e: React.DragEvent) => {
-  e.preventDefault();
-  const file = e.dataTransfer.files[0];
+  e.preventDefault()
+  const file = e.dataTransfer.files[0]
   if (file) {
-    handleFileSelect({ target: { files: [file] } } as any);
+    handleFileSelect({ target: { files: [file] } } as any)
   }
-};
+}
 
-<div
+;<div
   onDrop={handleDrop}
   onDragOver={(e) => e.preventDefault()}
   className="..."
@@ -337,6 +346,7 @@ const handleDrop = (e: React.DragEvent) => {
 ✅ **文件上传功能已基本实现！**
 
 只需要：
+
 1. 在 Supabase 创建 Storage Bucket
 2. 设置访问策略
 3. 修改UI添加文件上传组件

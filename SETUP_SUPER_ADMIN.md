@@ -3,6 +3,7 @@
 ## 问题说明
 
 测试页面显示 "Profile not found" 错误，这是因为：
+
 1. 当前登录用户在 `auth.users` 表中存在
 2. 但在 `profiles` 表中没有对应的记录
 
@@ -62,7 +63,7 @@ END $$;
 
 ```sql
 -- 查看所有 super admin
-SELECT 
+SELECT
   id,
   email,
   user_type,
@@ -96,8 +97,8 @@ INSERT INTO profiles (
   tenant_id,
   created_at,
   updated_at
-) 
-SELECT 
+)
+SELECT
   id,
   email,
   'admin',
@@ -129,7 +130,7 @@ INSERT INTO profiles (
   created_at,
   updated_at
 )
-SELECT 
+SELECT
   u.id,
   u.email,
   'client', -- 默认为普通用户
@@ -144,7 +145,7 @@ WHERE NOT EXISTS (
 
 -- 然后将特定用户设置为 super admin
 UPDATE profiles
-SET 
+SET
   super_admin = true,
   user_type = 'admin'
 WHERE email = 'your-email@example.com'; -- 修改为你的邮箱
@@ -153,11 +154,13 @@ WHERE email = 'your-email@example.com'; -- 修改为你的邮箱
 ## 验证步骤
 
 1. **检查 profile 是否创建**:
+
 ```sql
 SELECT * FROM profiles WHERE email = 'your-email@example.com';
 ```
 
 2. **检查 super_admin 标志**:
+
 ```sql
 SELECT id, email, super_admin, user_type, tenant_id
 FROM profiles
@@ -165,6 +168,7 @@ WHERE email = 'your-email@example.com';
 ```
 
 应该看到：
+
 - `super_admin`: `true`
 - `user_type`: `admin`
 - `tenant_id`: `00000000-0000-0000-0000-000000000001`
@@ -182,13 +186,17 @@ WHERE email = 'your-email@example.com';
 ## 常见问题
 
 ### Q: 为什么需要 profile？
+
 A: 系统使用 `profiles` 表存储用户的额外信息（如 `super_admin` 标志、`tenant_id` 等），而 Supabase Auth 只存储基本的认证信息。
 
 ### Q: 可以有多个 super admin 吗？
+
 A: 可以！只需要对多个用户执行相同的设置步骤。
 
 ### Q: 如何撤销 super admin 权限？
+
 A: 执行以下 SQL：
+
 ```sql
 UPDATE profiles
 SET super_admin = false
@@ -198,6 +206,7 @@ WHERE email = 'user-email@example.com';
 ## 下一步
 
 设置完成后，你可以：
+
 1. 测试 Phase 2 功能（认证和中间件）
 2. 测试 Phase 3 功能（租户管理）
 3. 继续开发 Phase 4（用户管理）

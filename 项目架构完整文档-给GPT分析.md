@@ -12,6 +12,7 @@
 ## 🏗️ 技术架构
 
 ### 前端技术栈
+
 - **框架**：Next.js 14.2.20 (App Router)
 - **语言**：TypeScript 5
 - **样式**：Tailwind CSS 3.4.1
@@ -20,6 +21,7 @@
 - **表单处理**：原生 React Hooks
 
 ### 后端技术栈
+
 - **数据库**：Supabase (PostgreSQL)
 - **认证**：Supabase Auth
 - **存储**：Supabase Storage
@@ -27,6 +29,7 @@
 - **ORM**：Supabase Client
 
 ### 部署架构
+
 - **前端托管**：Vercel
 - **数据库**：Supabase Cloud
 - **CDN**：Vercel Edge Network
@@ -92,6 +95,7 @@ malai/
 ### 核心表结构
 
 #### 1. `tenants` - 租户表
+
 ```sql
 CREATE TABLE tenants (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -104,6 +108,7 @@ CREATE TABLE tenants (
 ```
 
 #### 2. `profiles` - 用户表
+
 ```sql
 CREATE TABLE profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id),
@@ -117,41 +122,43 @@ CREATE TABLE profiles (
 ```
 
 #### 3. `tenant_settings` - 租户设置表
+
 ```sql
 CREATE TABLE tenant_settings (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   tenant_id UUID REFERENCES tenants(id) UNIQUE,
-  
+
   -- 品牌设置
   site_name TEXT DEFAULT 'LegalMY',
   logo_url TEXT,
   primary_color TEXT DEFAULT '#1E40AF',
   secondary_color TEXT DEFAULT '#F59E0B',
-  
+
   -- 价格设置
   currency TEXT DEFAULT 'MYR',
   consultation_base_price DECIMAL(10,2) DEFAULT 150.00,
   review_base_price DECIMAL(10,2) DEFAULT 300.00,
-  
+
   -- 功能开关
   enable_online_payment BOOLEAN DEFAULT TRUE,
   enable_lawyer_registration BOOLEAN DEFAULT TRUE,
-  
+
   -- SEO 设置
   meta_title TEXT,
   meta_description TEXT,
-  
+
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 ```
 
 #### 4. `services` - 服务表（新增）
+
 ```sql
 CREATE TABLE services (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   tenant_id UUID REFERENCES tenants(id) NOT NULL,
-  
+
   -- 基本信息（多语言）
   name_zh TEXT,
   name_en TEXT,
@@ -161,22 +168,22 @@ CREATE TABLE services (
   description_en TEXT,
   description_tc TEXT NOT NULL,
   description_ms TEXT,
-  
+
   -- 分类和图标
   category TEXT NOT NULL, -- 'debt', 'family', 'business', etc.
   icon_name TEXT DEFAULT 'Briefcase',
-  
+
   -- 价格设置
   base_price DECIMAL(10,2) NOT NULL DEFAULT 0,
   currency TEXT DEFAULT 'MYR',
-  
+
   -- 显示设置
   case_count INTEGER DEFAULT 0,
   is_active BOOLEAN DEFAULT TRUE,
   is_featured BOOLEAN DEFAULT FALSE,
   badge TEXT, -- 'hot', 'recommended', 'new'
   display_order INTEGER DEFAULT 0,
-  
+
   -- SEO 设置
   slug TEXT,
   meta_title_zh TEXT,
@@ -187,7 +194,7 @@ CREATE TABLE services (
   meta_description_en TEXT,
   meta_description_tc TEXT,
   meta_description_ms TEXT,
-  
+
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -234,14 +241,14 @@ USING (
 
 async function handleSubmit() {
   // 步骤1: 登录前先登出（防止账号切换问题）
-  await supabase.auth.signOut();
-  
+  await supabase.auth.signOut()
+
   // 步骤2: 登录新账号
   const { data, error } = await supabase.auth.signInWithPassword({
     email: formData.email,
     password: formData.password,
-  });
-  
+  })
+
   // 步骤3: 将 session 写入 HTTP-only Cookie
   await fetch('/api/auth/callback', {
     method: 'POST',
@@ -249,10 +256,10 @@ async function handleSubmit() {
       access_token: data.session.access_token,
       refresh_token: data.session.refresh_token,
     }),
-  });
-  
+  })
+
   // 步骤4: 跳转到 Dashboard
-  router.replace('/admin');
+  router.replace('/admin')
 }
 ```
 
@@ -262,18 +269,18 @@ async function handleSubmit() {
 // src/app/api/auth/callback/route.ts
 
 export async function POST(req: NextRequest) {
-  const { access_token, refresh_token } = await req.json();
-  
-  const res = NextResponse.json({ ok: true });
-  
+  const { access_token, refresh_token } = await req.json()
+
+  const res = NextResponse.json({ ok: true })
+
   res.cookies.set('sb-access-token', access_token, {
-    httpOnly: true,  // 防止 XSS
+    httpOnly: true, // 防止 XSS
     sameSite: 'lax', // 防止 CSRF
     secure: process.env.NODE_ENV === 'production', // HTTPS only
     maxAge: 60 * 60 * 24 * 7, // 7 天
-  });
-  
-  return res;
+  })
+
+  return res
 }
 ```
 
@@ -284,25 +291,25 @@ export async function POST(req: NextRequest) {
 
 export default async function AdminLayout({ children }) {
   const supabase = await createServerClient();
-  
+
   // 步骤1: 验证 Session
   const { data: { session } } = await supabase.auth.getSession();
   if (!session) redirect('/admin/login');
-  
+
   // 步骤2: 获取用户 Profile
   const { data: profile } = await supabase
     .from('profiles')
     .select('*')
     .eq('id', session.user.id)
     .maybeSingle();
-  
+
   if (!profile) redirect('/admin/login');
-  
+
   // 步骤3: 验证管理员权限
   if (profile.user_type !== 'admin' && !profile.super_admin) {
     redirect('/admin/login');
   }
-  
+
   // 步骤4: 传递给客户端组件
   return <AdminLayoutClient user={session.user} profile={profile}>
     {children}
@@ -317,6 +324,7 @@ export default async function AdminLayout({ children }) {
 ### 1. 租户自助 DIY 系统（100% 完成）
 
 **功能板块**：
+
 - ✅ 品牌设置（Logo、颜色、公司信息）
 - ✅ 价格配置（已集成到服务管理）
 - ✅ 功能开关（在线支付、律师注册）
@@ -326,6 +334,7 @@ export default async function AdminLayout({ children }) {
 - ✅ 通知设置
 
 **API 路由**：
+
 - `POST /api/tenant/branding` - 更新品牌设置
 - `POST /api/tenant/branding/upload-logo` - 上传 Logo
 - `GET /api/public/tenant-config` - 获取租户配置（公开）
@@ -335,6 +344,7 @@ export default async function AdminLayout({ children }) {
 **核心理念**：一个地方管理所有设置（价格、显示、SEO）
 
 **功能**：
+
 - ✅ 服务列表（排序、启用/停用、删除）
 - ✅ 服务编辑（4 个标签页）
   - 基本信息（多语言名称和描述）
@@ -343,6 +353,7 @@ export default async function AdminLayout({ children }) {
   - SEO 设置（Slug、Meta 标签）
 
 **API 路由**：
+
 - `GET /api/admin/services` - 获取服务列表
 - `POST /api/admin/services` - 创建服务
 - `GET /api/admin/services/[id]` - 获取单个服务
@@ -351,6 +362,7 @@ export default async function AdminLayout({ children }) {
 - `GET /api/public/services` - 公开服务列表（前台使用）
 
 **前台集成**：
+
 ```typescript
 // src/components/home/Services.tsx
 // 从 /api/public/services 动态读取服务数据
@@ -360,29 +372,41 @@ export default async function AdminLayout({ children }) {
 ### 3. 多语言系统
 
 **支持语言**：
+
 - 繁体中文（默认）
 - 简体中文
 - English
 - Bahasa Malaysia
 
 **实现方式**：
+
 ```typescript
 // src/contexts/LanguageContext.tsx
 const translations = {
-  tc: { /* 繁体中文 */ },
-  zh: { /* 简体中文 */ },
-  en: { /* English */ },
-  ms: { /* Malay */ },
-};
+  tc: {
+    /* 繁体中文 */
+  },
+  zh: {
+    /* 简体中文 */
+  },
+  en: {
+    /* English */
+  },
+  ms: {
+    /* Malay */
+  },
+}
 ```
 
 ### 4. 品牌定制
 
 **Logo 显示位置**：
+
 - 首页顶部导航栏（Header）
 - 首页底部页脚（Footer）
 
 **实现**：
+
 ```typescript
 // components/Header.tsx
 {settings.logoUrl ? (
@@ -407,11 +431,13 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 ### Supabase 配置
 
 **Storage Bucket**：
+
 - 名称：`tenant-assets`
 - 权限：公开读取，认证用户上传
 - 用途：存储租户 Logo 和其他资源
 
 **Auth 配置**：
+
 - Email/Password 认证
 - 允许的重定向 URL：`/admin`, `/api/auth/callback`
 
@@ -420,18 +446,22 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 ## 🐛 已解决的关键问题
 
 ### 1. RLS 无限递归（已修复）
+
 **问题**：profiles 表的 RLS 策略导致无限递归  
 **解决**：简化策略，使用 `auth.uid()` 而不是子查询
 
 ### 2. 用户租户关联（已修复）
+
 **问题**：新用户的 `tenant_id` 为 NULL  
 **解决**：创建用户时自动关联到第一个活跃租户
 
 ### 3. 账号切换问题（已修复）
+
 **问题**：切换账号后登录页进不去  
 **解决**：登录前自动调用 `signOut()`，清除旧 Session
 
 ### 4. Cookie 写入失败（已修复）
+
 **问题**：客户端无法写入 HTTP-only Cookie  
 **解决**：通过 API 路由在服务端写入 Cookie
 
@@ -491,6 +521,7 @@ API 查询 services 表（WHERE is_active = TRUE）
 **Node Version**: 18.x
 
 **环境变量**（必须配置）：
+
 ```
 NEXT_PUBLIC_SUPABASE_URL
 NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -499,6 +530,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY
 ### 域名配置
 
 **需要配置的域名**：
+
 1. 主域名（例如：legalmy.com）
 2. Supabase 允许的重定向 URL
 
@@ -513,18 +545,22 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY
 ## ⚠️ 已知限制和注意事项
 
 ### 1. 多租户识别
+
 **当前方案**：使用第一个活跃租户  
 **未来优化**：根据域名识别租户
 
 ### 2. 图片优化
+
 **当前**：使用 `<img>` 标签  
 **建议**：改用 Next.js `<Image>` 组件
 
 ### 3. 缓存策略
+
 **当前**：API 有基本缓存头  
 **建议**：配置 Vercel Edge Caching
 
 ### 4. 错误监控
+
 **当前**：控制台日志  
 **建议**：集成 Sentry 或 Vercel Analytics
 
@@ -533,11 +569,13 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY
 ## 📈 性能指标
 
 ### 当前性能（本地开发）
+
 - 首页加载：< 1s
 - API 响应：< 200ms
 - 服务列表加载：< 300ms
 
 ### 目标性能（生产环境）
+
 - 首页加载：< 2s
 - API 响应：< 500ms
 - Lighthouse 分数：> 90
@@ -562,6 +600,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY
 ## 📝 待办事项（上线后）
 
 ### 短期（1-2 周）
+
 - [ ] 配置自定义域名
 - [ ] 设置 Vercel Analytics
 - [ ] 配置错误监控
@@ -569,6 +608,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY
 - [ ] SEO 优化（Sitemap、Robots.txt）
 
 ### 中期（1-2 月）
+
 - [ ] 根据域名识别租户
 - [ ] 完善律师管理功能
 - [ ] 完善咨询管理功能
@@ -576,6 +616,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY
 - [ ] 用户注册和登录
 
 ### 长期（3-6 月）
+
 - [ ] 移动端 App
 - [ ] 多语言内容管理
 - [ ] 高级分析和报表
@@ -609,6 +650,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY
 这是一个功能完整、架构清晰、安全可靠的多租户法律咨询平台。所有核心功能已开发完成，数据库结构稳定，认证流程安全，可以放心上线。
 
 **关键特点**：
+
 - ✅ 100% TypeScript
 - ✅ 服务端渲染（SSR）
 - ✅ 多租户隔离

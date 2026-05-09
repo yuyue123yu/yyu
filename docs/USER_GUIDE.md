@@ -71,6 +71,7 @@ The dashboard provides an overview of your system.
 ### Recent Activity
 
 View the latest super admin actions:
+
 - Tenant creations
 - User migrations
 - System changes
@@ -149,12 +150,14 @@ Customize the tenant's branding and features:
 ### Activating/Deactivating Tenants
 
 **To Deactivate**:
+
 1. Go to tenant details
 2. Click "Deactivate" button
 3. Confirm action
 4. Users will no longer be able to access
 
 **To Activate**:
+
 1. Go to tenant details
 2. Click "Activate" button
 3. Confirm action
@@ -185,6 +188,7 @@ Customize the tenant's branding and features:
 ### User Details
 
 Click on a user to view:
+
 - Personal information
 - Tenant assignment
 - User type
@@ -231,12 +235,14 @@ Temporarily access the system as a user:
 ### Deactivating/Activating Users
 
 **To Deactivate**:
+
 1. Go to user details
 2. Click "Deactivate" button
 3. Confirm action
 4. User cannot log in
 
 **To Activate**:
+
 1. Go to user details
 2. Click "Activate" button
 3. User can log in again
@@ -264,6 +270,7 @@ Temporarily access the system as a user:
 5. Send link to admin via email
 
 **Activation Link**:
+
 - Valid for 24 hours
 - Single-use only
 - Admin sets their own password
@@ -325,6 +332,7 @@ Use filters to find specific logs:
 ### Viewing Log Details
 
 Click on a log entry to expand:
+
 - Full change details (JSON)
 - User agent information
 - IP address
@@ -340,6 +348,7 @@ Click on a log entry to expand:
 4. File downloads automatically
 
 **Export includes**:
+
 - All filtered logs
 - All fields
 - Timestamp
@@ -360,11 +369,13 @@ Put the system in maintenance mode:
 4. Confirm action
 
 **Effects**:
+
 - Only super admins can access
 - All other users see maintenance message
 - No data is affected
 
 **To Disable**:
+
 - Click "Disable Maintenance" button
 
 ### Feature Flags
@@ -396,6 +407,7 @@ Configure API rate limits:
 4. Click "Save Rate Limits"
 
 **Recommended Values**:
+
 - Per minute: 60
 - Per hour: 1000
 - Per day: 10000
@@ -425,6 +437,7 @@ Set default configuration for new tenants:
 4. Click "Save OEM Configuration"
 
 **Validation**:
+
 - Must be valid JSON
 - Required fields must be present
 
@@ -462,10 +475,12 @@ Set default configuration for new tenants:
 ### Session Management
 
 **Session Timeouts**:
+
 - **Inactivity**: 15 minutes
 - **Absolute**: 8 hours
 
 **After Timeout**:
+
 - Automatically logged out
 - Must log in again
 - MFA required
@@ -473,6 +488,7 @@ Set default configuration for new tenants:
 ### Password Security
 
 **Requirements for Super Admins**:
+
 - Minimum 16 characters
 - At least one uppercase letter
 - At least one lowercase letter
@@ -480,6 +496,7 @@ Set default configuration for new tenants:
 - At least one special character
 
 **Password Reset**:
+
 1. Click "Forgot Password" on login page
 2. Enter email address
 3. Check email for reset link
@@ -507,6 +524,7 @@ Set default configuration for new tenants:
 **Problem**: Login fails
 
 **Solutions**:
+
 1. Check email and password
 2. Verify MFA code is current (refreshes every 30 seconds)
 3. Try backup code if MFA code doesn't work
@@ -518,6 +536,7 @@ Set default configuration for new tenants:
 **Problem**: MFA code rejected
 
 **Solutions**:
+
 1. Wait for code to refresh (30 seconds)
 2. Check device time is synchronized
 3. Use backup code instead
@@ -528,6 +547,7 @@ Set default configuration for new tenants:
 **Problem**: No data visible
 
 **Solutions**:
+
 1. Check filters are not too restrictive
 2. Click "Clear Filters"
 3. Verify super_admin flag is set
@@ -539,6 +559,7 @@ Set default configuration for new tenants:
 **Problem**: Export fails or downloads empty file
 
 **Solutions**:
+
 1. Check filters are not excluding all data
 2. Try smaller date range
 3. Check browser download settings
@@ -550,6 +571,7 @@ Set default configuration for new tenants:
 **Problem**: Pages load slowly
 
 **Solutions**:
+
 1. Use filters to reduce data
 2. Reduce page size (limit parameter)
 3. Check internet connection
@@ -561,6 +583,7 @@ Set default configuration for new tenants:
 **Problem**: Activation/reset emails not arriving
 
 **Solutions**:
+
 1. Check spam/junk folder
 2. Verify email address is correct
 3. Wait a few minutes (may be delayed)
@@ -571,11 +594,11 @@ Set default configuration for new tenants:
 
 ## Keyboard Shortcuts
 
-| Shortcut | Action |
-|----------|--------|
-| `Ctrl/Cmd + K` | Search |
-| `Ctrl/Cmd + /` | Show shortcuts |
-| `Esc` | Close modal |
+| Shortcut       | Action              |
+| -------------- | ------------------- |
+| `Ctrl/Cmd + K` | Search              |
+| `Ctrl/Cmd + /` | Show shortcuts      |
+| `Esc`          | Close modal         |
 | `Ctrl/Cmd + S` | Save (when editing) |
 
 ---
@@ -592,6 +615,7 @@ Set default configuration for new tenants:
 ### Reporting Issues
 
 When reporting issues, include:
+
 - What you were trying to do
 - What happened instead
 - Error messages (if any)
@@ -637,22 +661,25 @@ When reporting issues, include:
 ### Status Values
 
 **Tenant Status**:
+
 - `active` - Tenant is active
 - `inactive` - Tenant is inactive
 - `suspended` - Tenant is suspended
 
 **Subscription Plans**:
+
 - `free` - Free plan
 - `basic` - Basic plan
 - `pro` - Professional plan
 - `enterprise` - Enterprise plan
 
 **User Types**:
+
 - `client` - Regular user
 - `lawyer` - Lawyer user
 - `admin` - Tenant administrator
 
 ---
 
-*Last Updated: Current Session*
-*Version: 1.0.0*
+_Last Updated: Current Session_
+_Version: 1.0.0_

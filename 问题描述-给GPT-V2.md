@@ -1,6 +1,7 @@
 # Next.js 14 + Supabase 管理员登录问题 - 第二次咨询
 
 ## 🔴 核心问题
+
 使用 Next.js 14 App Router + Supabase Auth，管理员登录后**无法进入Dashboard**，总是被重定向回登录页。
 
 ---
@@ -8,6 +9,7 @@
 ## 📊 当前状态
 
 ### ✅ 已确认正常的部分
+
 1. **Supabase Auth登录成功** - `signInWithPassword()` 返回成功，无错误
 2. **数据库数据正确**：
    ```sql
@@ -22,6 +24,7 @@
 4. **密码正确** - 在Supabase Dashboard手动设置的密码
 
 ### ❌ 问题现象
+
 1. 在 `/admin/login-v2` 输入正确的邮箱密码
 2. 点击登录，控制台显示"登录成功！跳转到 /admin-v2"
 3. 页面跳转到 `/admin/login`（旧版登录页，不是 `/admin-v2`）
@@ -32,11 +35,13 @@
 ## 🏗️ 技术架构
 
 ### 技术栈
+
 - **Next.js**: 14.2.35 (App Router)
 - **Supabase**: @supabase/supabase-js ^2.105.1, @supabase/ssr ^0.10.2
 - **React**: 18.3.0
 
 ### 文件结构
+
 ```
 src/
 ├── lib/
@@ -61,12 +66,13 @@ src/
 ## 📝 代码实现
 
 ### 1. 服务端 Supabase 客户端 (`src/lib/supabase/server.ts`)
+
 ```typescript
-import { createServerClient as createSupabaseServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
+import { createServerClient as createSupabaseServerClient } from '@supabase/ssr'
+import { cookies } from 'next/headers'
 
 export async function createServerClient() {
-  const cookieStore = await cookies();
+  const cookieStore = await cookies()
 
   return createSupabaseServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -74,29 +80,30 @@ export async function createServerClient() {
     {
       cookies: {
         get(name: string) {
-          return cookieStore.get(name)?.value;
+          return cookieStore.get(name)?.value
         },
         set(name: string, value: string, options: any) {
           try {
-            cookieStore.set({ name, value, ...options });
+            cookieStore.set({ name, value, ...options })
           } catch (error) {
             // 在Server Component中可能无法设置cookie
           }
         },
         remove(name: string, options: any) {
           try {
-            cookieStore.set({ name, value: '', ...options });
+            cookieStore.set({ name, value: '', ...options })
           } catch (error) {
             // 在Server Component中可能无法删除cookie
           }
         },
       },
-    }
-  );
+    },
+  )
 }
 ```
 
 ### 2. 登录页面 (`src/app/admin/login-v2/page.tsx`)
+
 ```typescript
 'use client';
 
@@ -144,6 +151,7 @@ export default function AdminLoginV2Page() {
 ```
 
 ### 3. Server Component Layout (`src/app/admin-v2/layout.tsx`)
+
 ```typescript
 import { createServerClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
@@ -160,7 +168,7 @@ export default async function AdminLayout({
   console.log('=== Admin-V2 Layout 权限检查 ===');
   console.log('Session:', session ? '存在' : '不存在');
   console.log('Session Error:', sessionError);
-  
+
   // 服务端权限检查 - 无 race condition
   if (!session) {
     console.log('❌ 无Session，重定向到登录页');
@@ -201,6 +209,7 @@ export default async function AdminLayout({
 ```
 
 ### 4. Server Component Dashboard (`src/app/admin-v2/page.tsx`)
+
 ```typescript
 import { createServerClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
@@ -232,18 +241,21 @@ export default async function AdminDashboard() {
 ## 🔍 已尝试的解决方案
 
 ### 方案1: 客户端改进（GPT第一次建议）
+
 - ✅ 在Layout中等待 `loading` 完成再检查权限
 - ✅ 登录前先 `signOut()` 确保账号切换安全
 - ✅ 使用 `router.replace()` 而不是 `router.push()`
 - ❌ **结果：失败，还是跳转回登录页**
 
 ### 方案2: Server Components（GPT第一次建议）
+
 - ✅ 创建了 `src/lib/supabase/server.ts`
 - ✅ 将 Layout 和 Dashboard 改为 Server Component
 - ✅ 使用服务端 Session 验证，避免客户端 race condition
 - ❌ **结果：失败，还是跳转回登录页**
 
 ### 方案3: 禁用RLS测试
+
 - ✅ 执行了 `ALTER TABLE profiles DISABLE ROW LEVEL SECURITY;`
 - ✅ 确认 `rowsecurity = false`
 - ❌ **结果：失败，还是跳转回登录页**
@@ -290,6 +302,7 @@ export default async function AdminDashboard() {
 ## 🎯 期望结果
 
 用户在 `/admin/login-v2` 登录成功后：
+
 1. 能够成功跳转到 `/admin-v2`
 2. 看到Dashboard界面
 3. 不会被重定向回登录页

@@ -14,12 +14,14 @@
 ### 1. 静态页面生成超时（核心问题）
 
 **错误信息：**
+
 ```
 Error: Static page generation for /_not-found is still timing out after 3 attempts.
 ⚠ Restarted static page generation for [页面] because it took more than 60 seconds
 ```
 
 **影响范围：**
+
 - 所有页面（149 个页面）都超时
 - 包括：主页、admin 页面、super-admin 页面、API 路由等
 
@@ -28,11 +30,13 @@ Error: Static page generation for /_not-found is still timing out after 3 attemp
 ### 2. 动态服务器使用错误
 
 **错误信息：**
+
 ```
 Error: Dynamic server usage: Route /api/public/services couldn't be rendered statically because it used `cookies`.
 ```
 
 **受影响的 API 路由：**
+
 - `/api/public/services`
 - `/api/public/tenant-config`
 - `/api/tenant/branding`
@@ -52,6 +56,7 @@ Error: Dynamic server usage: Route /api/public/services couldn't be rendered sta
 ### 3. 事件处理器传递错误
 
 **错误信息：**
+
 ```
 Error: Event handlers cannot be passed to Client Component props.
 {onClick: function onClick, className: ..., children: ...}
@@ -71,20 +76,22 @@ If you need interactivity, consider converting part of this to a Client Componen
 **修改文件：** `next.config.mjs`
 
 **修改前：**
+
 ```javascript
 const nextConfig = {
-  output: 'standalone',  // Docker 专用
+  output: 'standalone', // Docker 专用
   // ...
-};
+}
 ```
 
 **修改后：**
+
 ```javascript
 const nextConfig = {
   // 移除了 output: 'standalone'
   // Vercel 不需要这个配置
   // ...
-};
+}
 ```
 
 ---
@@ -94,13 +101,14 @@ const nextConfig = {
 **修改文件：** `next.config.mjs`
 
 **添加：**
+
 ```javascript
 const nextConfig = {
   experimental: {
-    staticPageGenerationTimeout: 180,  // 从 60 秒增加到 180 秒
+    staticPageGenerationTimeout: 180, // 从 60 秒增加到 180 秒
   },
   // ...
-};
+}
 ```
 
 ---
@@ -112,8 +120,8 @@ const nextConfig = {
 ```typescript
 // 全局 API 路由配置
 // 强制所有 API 路由为动态渲染
-export const dynamic = 'force-dynamic';
-export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
 ```
 
 **注意：** 这个文件创建了，但可能没有被正确应用到所有 API 路由。
@@ -123,6 +131,7 @@ export const runtime = 'nodejs';
 ## 📊 完整的构建日志（关键部分）
 
 ### 构建开始
+
 ```
 22:59:05.777 Running build in Washington, D.C., USA (East) – iad1
 22:59:06.777 Running "vercel build"
@@ -138,6 +147,7 @@ export const runtime = 'nodejs';
 ```
 
 ### 动态服务器错误
+
 ```
 23:00:24.832 獲取服務列表失敗: n [Error]: Dynamic server usage: Route /api/public/services couldn't be rendered statically because it used `cookies`.
 23:00:24.864 获取租户配置失败: n [Error]: Dynamic server usage: Route /api/public/tenant-config couldn't be rendered statically because it used `cookies`.
@@ -152,6 +162,7 @@ export const runtime = 'nodejs';
 ```
 
 ### 事件处理器错误
+
 ```
 23:00:26.784 Error: Event handlers cannot be passed to Client Component props.
   {onClick: function onClick, className: ..., children: ...}
@@ -160,6 +171,7 @@ If you need interactivity, consider converting part of this to a Client Componen
 ```
 
 ### 超时警告（60 秒后）
+
 ```
 23:01:26.754  ⚠ Sending SIGTERM signal to Next.js build worker due to timeout of 60 seconds.
 23:01:26.770  ⚠ Restarted static page generation for /_not-found because it took more than 60 seconds
@@ -169,6 +181,7 @@ If you need interactivity, consider converting part of this to a Client Componen
 ```
 
 ### 最终失败
+
 ```
 23:03:26.806  ⚠ Sending SIGTERM signal to Next.js build worker due to timeout of 60 seconds. (第 3 次)
 23:03:26.825 > Build error occurred
@@ -206,8 +219,8 @@ If you need interactivity, consider converting part of this to a Client Componen
 
 ```typescript
 // 例如：src/app/api/public/services/route.ts
-export const dynamic = 'force-dynamic';
-export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
 
 export async function GET(request: Request) {
   // ... 现有代码
@@ -215,6 +228,7 @@ export async function GET(request: Request) {
 ```
 
 **需要修改的文件列表：**
+
 - `src/app/api/public/services/route.ts`
 - `src/app/api/public/tenant-config/route.ts`
 - `src/app/api/tenant/branding/route.ts`
@@ -236,7 +250,7 @@ export async function GET(request: Request) {
 ```javascript
 const nextConfig = {
   // ... 现有配置
-  
+
   // 强制所有 /api 路由为动态
   async headers() {
     return [
@@ -249,9 +263,9 @@ const nextConfig = {
           },
         ],
       },
-    ];
+    ]
   },
-};
+}
 ```
 
 **注意：** 这个方法可能不够，仍然需要在路由文件中添加 `export const dynamic = 'force-dynamic'`。
@@ -276,18 +290,18 @@ const nextConfig = {
 const nextConfig = {
   // Vercel 部署配置
   reactStrictMode: true,
-  
+
   // 图片优化配置
   images: {
     unoptimized: true,
   },
-  
+
   // 实验性功能
   experimental: {
     // 跳过静态生成错误
     staticPageGenerationTimeout: 180,
   },
-  
+
   // TypeScript 和 ESLint 配置
   typescript: {
     ignoreBuildErrors: false,
@@ -295,11 +309,11 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: false,
   },
-  
+
   // 本地开发时注释掉 basePath
   // basePath: '/yyu',
   // assetPrefix: '/yyu/',
-  
+
   // 安全 Headers
   async headers() {
     return [
@@ -340,11 +354,11 @@ const nextConfig = {
           },
         ],
       },
-    ];
+    ]
   },
-};
+}
 
-export default nextConfig;
+export default nextConfig
 ```
 
 ### package.json
@@ -392,14 +406,17 @@ export default nextConfig;
 ## 🎯 优先级建议
 
 ### 高优先级（必须修复）
+
 1. ✅ 为所有使用 `cookies()` 的 API 路由添加 `export const dynamic = 'force-dynamic'`
 2. ✅ 确保超时时间足够（已设置为 180 秒）
 
 ### 中优先级（建议修复）
+
 3. 🔶 修复事件处理器传递问题
 4. 🔶 优化页面生成性能
 
 ### 低优先级（可选）
+
 5. 🔹 添加更详细的错误日志
 6. 🔹 优化构建配置
 

@@ -9,6 +9,7 @@
 ### 1. 服务列表页面 - `src/app/services/page.tsx`
 
 **修改前：**
+
 ```tsx
 {
   id: 'family',
@@ -24,6 +25,7 @@
 ```
 
 **修改后：**
+
 ```tsx
 {
   id: 'debt',
@@ -39,6 +41,7 @@
 ```
 
 **变更说明：**
+
 - ✅ ID 从 `family` 改为 `debt`
 - ✅ 图标从 `Users` 改为 `Scale`（天平，象征法律和公正）
 - ✅ 标题改为"债务纠纷"
@@ -51,20 +54,22 @@
 ### 2. 服务详情页面 - `src/app/services/[category]/page.tsx`
 
 #### 更新静态路径生成
+
 ```tsx
 export function generateStaticParams() {
   return [
-    { category: 'debt' },      // ✅ 从 'family' 改为 'debt'
+    { category: 'debt' }, // ✅ 从 'family' 改为 'debt'
     { category: 'business' },
     { category: 'property' },
     { category: 'criminal' },
     { category: 'employment' },
     { category: 'ip' },
-  ];
+  ]
 }
 ```
 
 #### 添加债务纠纷详细内容
+
 ```tsx
 'debt': {
   title: "债务纠纷法律服务",
@@ -89,16 +94,17 @@ export function generateStaticParams() {
 
 **服务项目详情：**
 
-| 服务名称 | 价格范围 | 预计时间 | 说明 |
-|---------|---------|---------|------|
-| 债务追讨 | RM 1,500-5,000 | 2-6个月 | 帮助债权人追讨欠款 |
-| 破产申请 | RM 3,000-8,000 | 3-9个月 | 协助个人或企业申请破产保护 |
-| 债务重组 | RM 2,500-7,000 | 3-12个月 | 重新安排债务还款计划 |
-| 债权人保护 | RM 1,800-4,500 | 2-8个月 | 保护债权人的合法权益 |
-| 还款协议 | RM 800-2,500 | 1-3个月 | 协商制定合理的还款协议 |
-| 债务清偿 | RM 2,000-6,000 | 3-10个月 | 协助完成债务清偿程序 |
+| 服务名称   | 价格范围       | 预计时间 | 说明                       |
+| ---------- | -------------- | -------- | -------------------------- |
+| 债务追讨   | RM 1,500-5,000 | 2-6个月  | 帮助债权人追讨欠款         |
+| 破产申请   | RM 3,000-8,000 | 3-9个月  | 协助个人或企业申请破产保护 |
+| 债务重组   | RM 2,500-7,000 | 3-12个月 | 重新安排债务还款计划       |
+| 债权人保护 | RM 1,800-4,500 | 2-8个月  | 保护债权人的合法权益       |
+| 还款协议   | RM 800-2,500   | 1-3个月  | 协商制定合理的还款协议     |
+| 债务清偿   | RM 2,000-6,000 | 3-10个月 | 协助完成债务清偿程序       |
 
 **服务流程：**
+
 1. **债务评估** - 分析债务状况
 2. **法律咨询** - 制定解决方案
 3. **协商谈判** - 与债权人沟通
@@ -106,14 +112,16 @@ export function generateStaticParams() {
 5. **执行跟进** - 确保权益落实
 
 #### 更新默认服务
+
 ```tsx
-const service = serviceDetails[decodedCategory] || serviceDetails['debt'];
+const service = serviceDetails[decodedCategory] || serviceDetails['debt']
 // 从 serviceDetails['family'] 改为 serviceDetails['debt']
 ```
 
 ### 3. 首页服务组件 - `src/components/home/Services.tsx`
 
 **修改前：**
+
 ```tsx
 {
   icon: Users,
@@ -128,6 +136,7 @@ const service = serviceDetails[decodedCategory] || serviceDetails['debt'];
 ```
 
 **修改后：**
+
 ```tsx
 {
   icon: Scale,
@@ -142,6 +151,7 @@ const service = serviceDetails[decodedCategory] || serviceDetails['debt'];
 ```
 
 **变更说明：**
+
 - ✅ 图标更新为 `Scale`（天平）
 - ✅ 标题和描述更新
 - ✅ 案例数量增加到 2,850+
@@ -153,13 +163,17 @@ const service = serviceDetails[decodedCategory] || serviceDetails['debt'];
 ## 设计考虑
 
 ### 图标选择
+
 使用 **Scale**（天平）图标代表债务纠纷服务：
+
 - 天平是法律和公正的象征
 - 在债务纠纷中，需要平衡债权人和债务人的权益
 - 视觉上清晰易识别
 
 ### 配色方案
+
 选择 **琥珀色**（Amber）：
+
 - `from-amber-400 to-amber-500` 渐变
 - 琥珀色代表警示和重要性
 - 与其他服务类别的配色区分明显
@@ -168,7 +182,9 @@ const service = serviceDetails[decodedCategory] || serviceDetails['debt'];
 ### 内容策略
 
 #### 服务范围全面
+
 涵盖债务纠纷的主要场景：
+
 - **债务追讨** - 债权人视角
 - **破产申请** - 债务人保护
 - **债务重组** - 双方协商
@@ -177,12 +193,14 @@ const service = serviceDetails[decodedCategory] || serviceDetails['debt'];
 - **债务清偿** - 执行落实
 
 #### 价格定位合理
+
 - 最低服务（还款协议）：RM 800-2,500
 - 中等服务（债务追讨）：RM 1,500-5,000
 - 高端服务（破产申请）：RM 3,000-8,000
 - 价格范围符合马来西亚市场实际情况
 
 #### 时间预估现实
+
 - 快速服务（还款协议）：1-3个月
 - 常规服务（债务追讨）：2-6个月
 - 复杂服务（债务重组）：3-12个月
@@ -191,12 +209,14 @@ const service = serviceDetails[decodedCategory] || serviceDetails['debt'];
 ## 马来西亚债务法律背景
 
 ### 相关法律法规
+
 1. **Insolvency Act 1967** - 破产法
 2. **Companies Act 2016** - 公司法（企业破产）
 3. **Limitation Act 1953** - 时效法（债务追讨时限）
 4. **Contracts Act 1950** - 合同法（债务合同）
 
 ### 常见债务纠纷类型
+
 - 个人贷款纠纷
 - 信用卡债务
 - 商业债务
@@ -205,6 +225,7 @@ const service = serviceDetails[decodedCategory] || serviceDetails['debt'];
 - 供应商欠款
 
 ### 解决途径
+
 1. **协商和解** - 最快最经济
 2. **调解** - 第三方介入
 3. **民事诉讼** - 法院判决
@@ -213,6 +234,7 @@ const service = serviceDetails[decodedCategory] || serviceDetails['debt'];
 ## 构建验证
 
 ### 构建结果
+
 ```bash
 ✓ Compiled successfully
 
@@ -226,6 +248,7 @@ Route (app)                              Size     First Load JS
 ```
 
 ### 生成的文件
+
 - ✅ `out/services/debt.html` - 债务纠纷详情页
 - ✅ `out/services/debt.txt` - 文本版本
 - ❌ `out/services/family.html` - 已删除（不再生成）
@@ -233,17 +256,20 @@ Route (app)                              Size     First Load JS
 ## 用户体验改进
 
 ### 视觉识别
+
 - **琥珀色配色** - 在6个服务类别中独特且醒目
 - **天平图标** - 清晰传达法律服务的专业性
 - **"热销"徽章** - 保持用户关注度
 
 ### 内容完整性
+
 - **6项具体服务** - 覆盖债务纠纷的主要场景
 - **明确价格范围** - 帮助用户预算
 - **时间预估** - 设定合理期望
 - **5步服务流程** - 让用户了解整个过程
 
 ### 导航一致性
+
 - 所有链接从 `/services/family` 更新为 `/services/debt`
 - 首页、服务列表页、详情页保持一致
 - 面包屑导航正常工作
@@ -259,6 +285,7 @@ Route (app)                              Size     First Load JS
 ## 测试清单
 
 ### 功能测试 ✅
+
 - [x] 首页显示"债务纠纷"服务卡片
 - [x] 点击卡片跳转到 `/services/debt`
 - [x] 服务列表页显示债务纠纷
@@ -266,18 +293,21 @@ Route (app)                              Size     First Load JS
 - [x] 所有链接正常工作
 
 ### 构建测试 ✅
+
 - [x] `npm run build` 成功
 - [x] 生成 `debt.html` 文件
 - [x] 不再生成 `family.html` 文件
 - [x] 无编译错误
 
 ### 内容测试 ✅
+
 - [x] 所有文本内容完整
 - [x] 价格和时间信息准确
 - [x] 服务流程清晰
 - [x] 图标和配色正确
 
 ### 响应式测试 ✅
+
 - [x] 移动端显示正常
 - [x] 平板端显示正常
 - [x] 桌面端显示正常

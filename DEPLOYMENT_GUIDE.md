@@ -3,6 +3,7 @@
 ## 📋 部署前准备清单
 
 ### 1. 确认项目状态
+
 - [x] 所有功能测试通过
 - [x] 语言切换正常工作
 - [x] 无编译错误
@@ -27,23 +28,26 @@ const nextConfig = {
   // 取消下面两行的注释
   basePath: '/yyu',
   assetPrefix: '/yyu/',
-};
+}
 
-export default nextConfig;
+export default nextConfig
 ```
 
-**重要**: 
+**重要**:
+
 - `basePath: '/yyu'` 中的 `yyu` 是你的仓库名称
 - 如果你的仓库名不是 `yyu`，请修改为你的实际仓库名
 
 ### 1.2 验证配置
 
 运行本地构建测试：
+
 ```bash
 npm run build
 ```
 
 如果构建成功，你会看到：
+
 ```
 ✓ Compiled successfully
 ✓ Collecting page data
@@ -82,6 +86,7 @@ git push origin main
 ```
 
 如果你的主分支是 `master`，使用：
+
 ```bash
 git push origin master
 ```
@@ -116,6 +121,7 @@ git push origin master
 ### 4.1 推送代码会自动触发部署
 
 当你执行 `git push` 后，GitHub Actions 会自动：
+
 1. 检测到代码推送
 2. 运行构建流程
 3. 部署到 GitHub Pages
@@ -132,6 +138,7 @@ git push origin master
 ### 4.3 部署状态
 
 你会看到两个任务：
+
 - ✅ **build** - 构建项目
 - ✅ **deploy** - 部署到 GitHub Pages
 
@@ -152,6 +159,7 @@ https://yuyue123yu.github.io/yyu/
 ### 5.2 测试网站
 
 访问网站后，测试以下功能：
+
 - [ ] 首页正常显示
 - [ ] 语言切换正常工作
 - [ ] 所有链接可以点击
@@ -167,6 +175,7 @@ https://yuyue123yu.github.io/yyu/
 **症状**: GitHub Actions 显示红色 ❌
 
 **解决方案**:
+
 1. 点击失败的工作流查看错误日志
 2. 常见原因：
    - 构建错误：检查代码是否有错误
@@ -178,6 +187,7 @@ https://yuyue123yu.github.io/yyu/
 **症状**: 访问网站显示 "404 Page Not Found"
 
 **解决方案**:
+
 1. 确认 GitHub Pages 已启用
 2. 确认选择了 "GitHub Actions" 作为源
 3. 等待几分钟让 DNS 生效
@@ -188,6 +198,7 @@ https://yuyue123yu.github.io/yyu/
 **症状**: 网站显示但样式混乱或图片不显示
 
 **解决方案**:
+
 1. 确认 `next.config.mjs` 中的 basePath 正确
 2. 确认 basePath 与仓库名一致
 3. 重新构建并部署
@@ -197,6 +208,7 @@ https://yuyue123yu.github.io/yyu/
 **症状**: 点击链接后显示 404
 
 **解决方案**:
+
 1. 这是正常的，因为 GitHub Pages 不支持客户端路由
 2. 解决方法：使用 hash 路由或配置 404.html
 3. 或者考虑使用 Vercel/Netlify 部署
@@ -218,6 +230,7 @@ https://yuyue123yu.github.io/yyu/
 在你的域名提供商处添加 DNS 记录：
 
 **A 记录**:
+
 ```
 185.199.108.153
 185.199.109.153
@@ -226,6 +239,7 @@ https://yuyue123yu.github.io/yyu/
 ```
 
 **或 CNAME 记录**:
+
 ```
 yuyue123yu.github.io
 ```
@@ -235,6 +249,7 @@ yuyue123yu.github.io
 ## 📊 部署后检查清单
 
 ### 功能测试
+
 - [ ] 首页加载正常
 - [ ] 语言切换工作
 - [ ] 服务页面可访问
@@ -245,11 +260,13 @@ yuyue123yu.github.io
 - [ ] 下载功能正常
 
 ### 性能测试
+
 - [ ] 首次加载速度 < 5秒
 - [ ] 页面切换流畅
 - [ ] 移动端体验良好
 
 ### SEO 检查
+
 - [ ] 页面标题正确
 - [ ] Meta 描述存在
 - [ ] 图片有 alt 属性
@@ -261,12 +278,14 @@ yuyue123yu.github.io
 每次更新代码后：
 
 1. **本地测试**
+
    ```bash
    npm run dev
    # 测试所有功能
    ```
 
 2. **提交代码**
+
    ```bash
    git add .
    git commit -m "更新说明"
@@ -285,24 +304,28 @@ yuyue123yu.github.io
 如果 GitHub Pages 不满足需求，可以考虑：
 
 ### Vercel (推荐)
+
 - ✅ 支持服务端渲染
 - ✅ 自动 HTTPS
 - ✅ 全球 CDN
 - ✅ 零配置部署
 
 部署到 Vercel：
+
 ```bash
 npm install -g vercel
 vercel
 ```
 
 ### Netlify
+
 - ✅ 简单易用
 - ✅ 持续部署
 - ✅ 表单处理
 - ✅ 免费 SSL
 
 ### Cloudflare Pages
+
 - ✅ 快速全球访问
 - ✅ 无限带宽
 - ✅ 免费 SSL
@@ -312,6 +335,7 @@ vercel
 ## 📞 需要帮助？
 
 如果遇到问题：
+
 1. 查看 GitHub Actions 日志
 2. 检查浏览器控制台错误
 3. 参考 Next.js 部署文档
@@ -326,4 +350,3 @@ vercel
 **网站地址**: https://yuyue123yu.github.io/yyu/
 
 记得分享给你的用户！🎉
-

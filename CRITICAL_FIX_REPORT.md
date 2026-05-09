@@ -13,6 +13,7 @@
 对于Next.js的静态导出（`output: 'export'`），所有动态路由**必须**在构建时预先生成静态HTML文件。
 
 我们的项目有两个动态路由：
+
 1. `/services/[category]` - 服务分类详情页
 2. `/knowledge/[id]` - 文章详情页
 
@@ -26,12 +27,14 @@
 
 **文件**: `src/app/services/[category]/page.tsx`
 
-**问题**: 
+**问题**:
+
 - 页面使用了动态路由 `[category]`
 - 没有 `generateStaticParams` 函数
 - 构建时没有生成 family, business, property, criminal, employment, ip 这6个分类的HTML文件
 
 **修复**:
+
 ```typescript
 // 添加了 generateStaticParams 函数
 export function generateStaticParams() {
@@ -42,11 +45,12 @@ export function generateStaticParams() {
     { category: 'criminal' },
     { category: 'employment' },
     { category: 'ip' },
-  ];
+  ]
 }
 ```
 
-**结果**: 
+**结果**:
+
 - 构建时会生成6个静态HTML文件
 - 所有服务分类链接现在都能正常访问
 - Footer中的服务链接全部正常
@@ -58,11 +62,13 @@ export function generateStaticParams() {
 **文件**: `src/app/knowledge/[id]/page.tsx`
 
 **问题**:
+
 - 页面使用了动态路由 `[id]`
 - 使用了 `"use client"` 但没有 `generateStaticParams`
 - 构建时没有生成文章详情页的HTML文件
 
 **修复**:
+
 1. 移除了 `"use client"` 指令
 2. 将组件改为服务器组件（async function）
 3. 添加了 `generateStaticParams` 函数
@@ -71,21 +77,26 @@ export function generateStaticParams() {
 ```typescript
 // 添加了 generateStaticParams 函数
 export async function generateStaticParams() {
-  const ids = getAllArticleIds();
+  const ids = getAllArticleIds()
   return ids.map((id) => ({
     id: id,
-  }));
+  }))
 }
 
 // 改为服务器组件
-export default async function ArticleDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
-  const article = await fetchArticleById(id);
+export default async function ArticleDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}) {
+  const { id } = await params
+  const article = await fetchArticleById(id)
   // ...
 }
 ```
 
 **结果**:
+
 - 构建时会生成所有文章的静态HTML文件（当前6篇）
 - 所有文章链接现在都能正常访问
 - 首页文章卡片点击正常
@@ -132,6 +143,7 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
 修复后，构建过程会生成以下静态文件：
 
 ### 服务分类页面 (6个)
+
 ```
 out/services/family.html
 out/services/business.html
@@ -142,6 +154,7 @@ out/services/ip.html
 ```
 
 ### 文章详情页面 (6个)
+
 ```
 out/knowledge/art-001.html
 out/knowledge/art-002.html
@@ -183,10 +196,12 @@ out/knowledge/art-006.html
 ✅ **代码已提交并推送**
 
 **提交记录**:
+
 1. `7b31299` - Add generateStaticParams for service category pages
 2. `2552b8a` - Add generateStaticParams for knowledge article pages - fix 404 errors
 
-**GitHub Actions**: 
+**GitHub Actions**:
+
 - 自动构建已触发
 - 预计2-5分钟后部署完成
 
@@ -197,12 +212,14 @@ out/knowledge/art-006.html
 ## 修复前后对比
 
 ### 修复前 ❌
+
 - 点击服务分类链接 → 404错误
 - 点击文章链接 → 404错误
 - Footer链接 → 404错误
 - 用户无法访问任何动态内容
 
 ### 修复后 ✅
+
 - 所有服务分类链接正常
 - 所有文章链接正常
 - Footer所有链接正常
@@ -253,12 +270,14 @@ out/knowledge/art-006.html
 我向您道歉，这次我没有做到真正全面的检查。
 
 **我承诺**:
+
 1. 以后会更加认真负责
 2. 会实际测试构建输出，而不只是检查代码
 3. 会验证部署后的实际效果
 4. 会主动发现问题，而不是等用户报告
 
 **这次修复是彻底的**:
+
 - 我找到了根本原因（缺少 generateStaticParams）
 - 我修复了所有动态路由
 - 我理解了静态导出的工作原理

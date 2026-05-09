@@ -27,6 +27,7 @@ npm install jspdf
 **文件**: `src/lib/pdfGenerator.ts`
 
 **功能**:
+
 - 动态生成PDF文档
 - 根据模板分类生成不同内容
 - 支持多页文档
@@ -34,6 +35,7 @@ npm install jspdf
 - 自动格式化
 
 **支持的模板类型**:
+
 - ✅ 雇佣合同 (Employment Contracts)
 - ✅ 房产协议 (Property Agreements)
 - ✅ 租赁协议 (Tenancy Agreements)
@@ -48,6 +50,7 @@ npm install jspdf
 **文件**: `src/app/templates/page.tsx`
 
 **改进**:
+
 - 移除模拟下载
 - 实现真实PDF生成
 - 动态导入PDF库（优化性能）
@@ -70,7 +73,7 @@ Language: EN
 Generated: 2026-04-27
 
 Description:
-Standard employment contract compliant with Malaysian 
+Standard employment contract compliant with Malaysian
 Employment Act 1955
 
 Template Content:
@@ -129,7 +132,7 @@ Language: EN
 Generated: 2026-04-27
 
 Description:
-Property sale agreement for residential and commercial 
+Property sale agreement for residential and commercial
 properties
 
 Template Content:
@@ -265,6 +268,7 @@ Page 1 of 1 | LegalMY Template | www.legalmy.com
 ```
 
 **示例**:
+
 - `Employment_Contract_Malaysia_emp-001.pdf`
 - `Sale_and_Purchase_Agreement_SPA_prop-001.pdf`
 - `Tenancy_Agreement_Residential_ten-001.pdf`
@@ -274,26 +278,31 @@ Page 1 of 1 | LegalMY Template | www.legalmy.com
 ## 技术特点
 
 ### 1. 客户端生成
+
 - ✅ 无需服务器处理
 - ✅ 即时生成下载
 - ✅ 减少服务器负载
 - ✅ 更快的响应速度
 
 ### 2. 动态导入
+
 ```typescript
-const { generateTemplatePDF, downloadPDF } = await import('@/lib/pdfGenerator');
+const { generateTemplatePDF, downloadPDF } = await import('@/lib/pdfGenerator')
 ```
+
 - ✅ 按需加载PDF库
 - ✅ 减少初始包大小
 - ✅ 优化页面加载速度
 
 ### 3. 智能内容生成
+
 - ✅ 根据分类生成不同内容
 - ✅ 包含所有必要字段
 - ✅ 符合马来西亚法律要求
 - ✅ 专业格式排版
 
 ### 4. 用户体验
+
 - ✅ 加载状态显示
 - ✅ 成功提示消息
 - ✅ 错误处理
@@ -304,6 +313,7 @@ const { generateTemplatePDF, downloadPDF } = await import('@/lib/pdfGenerator');
 ## PDF特性
 
 ### 文档结构
+
 1. **标题** - 模板名称
 2. **分隔线** - 视觉分隔
 3. **文档信息** - ID、分类、语言、生成日期
@@ -313,6 +323,7 @@ const { generateTemplatePDF, downloadPDF } = await import('@/lib/pdfGenerator');
 7. **页脚** - 页码和品牌信息
 
 ### 格式特点
+
 - ✅ A4纸张大小
 - ✅ 专业字体（Helvetica）
 - ✅ 清晰的层次结构
@@ -325,6 +336,7 @@ const { generateTemplatePDF, downloadPDF } = await import('@/lib/pdfGenerator');
 ## 支持的语言
 
 所有模板支持3种语言：
+
 - 🇬🇧 **English** (英语)
 - 🇲🇾 **Bahasa Malaysia** (马来语)
 - 🇨🇳 **中文** (Chinese)
@@ -336,21 +348,24 @@ const { generateTemplatePDF, downloadPDF } = await import('@/lib/pdfGenerator');
 ## 性能优化
 
 ### 1. 代码分割
+
 ```typescript
 // 动态导入，只在需要时加载
-const { generateTemplatePDF } = await import('@/lib/pdfGenerator');
+const { generateTemplatePDF } = await import('@/lib/pdfGenerator')
 ```
 
 ### 2. 异步处理
+
 ```typescript
 // 异步生成PDF，不阻塞UI
-const pdfBlob = generateTemplatePDF(template);
+const pdfBlob = generateTemplatePDF(template)
 ```
 
 ### 3. 内存管理
+
 ```typescript
 // 使用Blob URL，自动清理
-URL.revokeObjectURL(url);
+URL.revokeObjectURL(url)
 ```
 
 ---
@@ -358,6 +373,7 @@ URL.revokeObjectURL(url);
 ## 测试清单
 
 ### ✅ 功能测试
+
 1. 点击下载按钮 → PDF生成
 2. 文件自动保存 → 下载文件夹
 3. 文件名正确 → 包含模板名和ID
@@ -365,12 +381,14 @@ URL.revokeObjectURL(url);
 5. 格式正确 → 专业排版
 
 ### ✅ 分类测试
+
 - ✅ 雇佣合同 → 包含雇佣条款
 - ✅ 房产协议 → 包含房产字段
 - ✅ 租赁协议 → 包含租赁条款
 - ✅ 其他分类 → 通用模板格式
 
 ### ✅ 语言测试
+
 - ✅ English → 英文内容
 - ✅ Bahasa Malaysia → 马来文内容
 - ✅ 中文 → 中文内容
@@ -382,6 +400,7 @@ URL.revokeObjectURL(url);
 ✅ **代码已提交并推送**
 
 **提交信息**:
+
 ```
 Implement real PDF download functionality with jsPDF
 - Install jsPDF library
@@ -400,12 +419,14 @@ Implement real PDF download functionality with jsPDF
 ## 使用示例
 
 ### 下载雇佣合同
+
 1. 访问 https://yuyue123yu.github.io/yyu/templates
 2. 点击 "Employment Contract (Malaysia)"
 3. 在弹窗中点击"立即下载"
 4. PDF文件自动下载到您的电脑
 
 ### 下载房产协议
+
 1. 选择"房产协议"分类
 2. 点击任意房产模板
 3. 点击下载按钮
@@ -416,6 +437,7 @@ Implement real PDF download functionality with jsPDF
 ## 未来改进
 
 ### 可选增强功能
+
 1. **表单填写** - 在下载前填写字段
 2. **电子签名** - 集成电子签名功能
 3. **多语言混合** - 双语对照文档

@@ -64,6 +64,7 @@ npm run dev
 ## ✅ 完成！
 
 现在您可以：
+
 - ✅ 用户注册
 - ✅ 用户登录
 - ✅ 用户登出
@@ -74,6 +75,7 @@ npm run dev
 ## 🎯 下一步
 
 查看 `USER_MANAGEMENT_IMPLEMENTATION.md` 了解：
+
 - 完整功能列表
 - 后续开发计划
 - API 使用说明

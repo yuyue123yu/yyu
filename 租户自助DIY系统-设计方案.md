@@ -1,6 +1,7 @@
 # 租户自助 DIY 系统 - 设计方案
 
 ## 🎯 目标
+
 让租户管理员可以自主配置品牌、价格、功能，无需超级管理员介入。
 
 ---
@@ -8,6 +9,7 @@
 ## 🎨 租户可自主配置的功能
 
 ### 1. **品牌设置** (Branding)
+
 - ✅ 上传 Logo（支持预览）
 - ✅ 设置主题颜色（主色、辅色）
 - ✅ 设置公司名称
@@ -16,11 +18,13 @@
 - ✅ 设置社交媒体链接
 
 ### 2. **域名配置** (Domain)
+
 - ✅ 配置自定义域名
 - ✅ 查看子域名（系统自动分配）
 - ⚠️ 自定义域名需要 DNS 验证（提供教程）
 
 ### 3. **价格配置** (Pricing)
+
 - ✅ 设置咨询服务价格
 - ✅ 设置文档服务价格
 - ✅ 设置会员套餐价格
@@ -28,6 +32,7 @@
 - ✅ 启用/禁用特定服务
 
 ### 4. **功能开关** (Features)
+
 - ✅ 启用/禁用咨询功能
 - ✅ 启用/禁用律师展示
 - ✅ 启用/禁用文章功能
@@ -35,6 +40,7 @@
 - ✅ 启用/禁用会员系统
 
 ### 5. **内容管理** (Content)
+
 - ✅ 编辑首页横幅文案
 - ✅ 编辑服务介绍
 - ✅ 编辑关于我们
@@ -42,12 +48,14 @@
 - ✅ 自定义页脚内容
 
 ### 6. **SEO 设置** (SEO)
+
 - ✅ 设置网站标题
 - ✅ 设置网站描述
 - ✅ 设置关键词
 - ✅ 上传 Favicon
 
 ### 7. **通知设置** (Notifications)
+
 - ✅ 配置邮件通知
 - ✅ 配置短信通知
 - ✅ 设置通知接收人
@@ -206,9 +214,9 @@
 // PUT - 更新配置
 
 // 示例：
-GET  /api/tenant/settings/branding
-PUT  /api/tenant/settings/branding
-POST /api/tenant/settings/logo-upload
+GET / api / tenant / settings / branding
+PUT / api / tenant / settings / branding
+POST / api / tenant / settings / logo - upload
 ```
 
 ### 2. 文件上传
@@ -253,11 +261,11 @@ const { data: profile } = await supabase
   .from('profiles')
   .select('tenant_id, role')
   .eq('id', userId)
-  .single();
+  .single()
 
 // 必须是 owner 或 admin 角色
 if (profile.role !== 'owner' && profile.role !== 'admin') {
-  return { error: '权限不足' };
+  return { error: '权限不足' }
 }
 
 // 只能修改自己租户的设置
@@ -265,7 +273,7 @@ const { data, error } = await supabase
   .from('tenant_settings')
   .update({ value: newConfig })
   .eq('tenant_id', profile.tenant_id)
-  .eq('key', settingKey);
+  .eq('key', settingKey)
 ```
 
 ### 超级管理员权限
@@ -282,6 +290,7 @@ const { data, error } = await supabase
 ## 📋 实施步骤
 
 ### Phase 1: 品牌设置（最重要）
+
 1. ✅ 创建品牌设置页面
 2. ✅ Logo 上传功能
 3. ✅ 颜色选择器
@@ -290,28 +299,33 @@ const { data, error } = await supabase
 6. ✅ 前台自动应用
 
 ### Phase 2: 价格配置
+
 1. ✅ 创建价格配置页面
 2. ✅ 服务价格表单
 3. ✅ 会员套餐配置
 4. ✅ 前台价格显示
 
 ### Phase 3: 功能开关
+
 1. ✅ 创建功能开关页面
 2. ✅ 开关组件
 3. ✅ 前台根据开关显示/隐藏功能
 
 ### Phase 4: 内容管理
+
 1. ✅ 创建内容编辑页面
 2. ✅ 富文本编辑器
 3. ✅ FAQ 管理
 4. ✅ 前台内容显示
 
 ### Phase 5: 域名配置
+
 1. ✅ 域名设置页面
 2. ✅ DNS 验证逻辑
 3. ✅ 域名解析教程
 
 ### Phase 6: SEO 和通知
+
 1. ✅ SEO 设置页面
 2. ✅ 通知配置页面
 
@@ -359,18 +373,21 @@ const { data, error } = await supabase
 ## 🔒 安全考虑
 
 ### 1. 文件上传安全
+
 - ✅ 限制文件类型（只允许图片）
 - ✅ 限制文件大小（最大 5MB）
 - ✅ 文件名随机化
 - ✅ 病毒扫描（可选）
 
 ### 2. 配置验证
+
 - ✅ 颜色格式验证（HEX）
 - ✅ URL 格式验证
 - ✅ 价格范围验证
 - ✅ 必填字段验证
 
 ### 3. 权限验证
+
 - ✅ 只能修改自己租户的配置
 - ✅ 必须是 owner 或 admin 角色
 - ✅ 记录所有配置修改（审计日志）
@@ -402,10 +419,10 @@ const { data: tenant } = await supabase
   .from('tenants')
   .select('permissions')
   .eq('id', tenantId)
-  .single();
+  .single()
 
 if (!tenant.permissions.can_change_branding) {
-  return { error: '您的套餐不支持修改品牌设置，请联系客服升级' };
+  return { error: '您的套餐不支持修改品牌设置，请联系客服升级' }
 }
 ```
 
@@ -416,18 +433,21 @@ if (!tenant.permissions.can_change_branding) {
 ### 套餐分级
 
 **基础版**（免费或低价）
+
 - ❌ 不能修改 Logo
 - ✅ 可以修改颜色
 - ❌ 不能自定义域名
 - ✅ 基础功能
 
 **专业版**
+
 - ✅ 可以上传 Logo
 - ✅ 完全自定义颜色
 - ✅ 自定义子域名
 - ✅ 所有功能
 
 **企业版**
+
 - ✅ 所有专业版功能
 - ✅ 自定义域名
 - ✅ 去除平台品牌
@@ -447,6 +467,7 @@ if (!tenant.permissions.can_change_branding) {
 6. ✅ **SEO 优化** - 自己设置 SEO 信息
 
 **你的工作量大大减少**：
+
 - ❌ 不需要每次帮租户改 Logo
 - ❌ 不需要手动修改价格
 - ❌ 不需要帮忙开关功能

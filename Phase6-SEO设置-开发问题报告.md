@@ -5,6 +5,7 @@
 **问题描述**: 在创建 SEO 管理页面时，`fsWrite` 工具无法正常工作
 
 **错误信息**:
+
 ```
 Provided input does not match the required schema for this tool: [
   {
@@ -29,6 +30,7 @@ Provided input does not match the required schema for this tool: [
 ### 1. API 路由 - 完成 ✅
 
 **文件 1**: `src/app/api/tenant/seo/route.ts`
+
 - ✅ GET 接口 - 获取 SEO 配置
 - ✅ PUT 接口 - 更新 SEO 配置
 - ✅ 默认配置包含：
@@ -40,6 +42,7 @@ Provided input does not match the required schema for this tool: [
   - 高级设置
 
 **文件 2**: `src/app/api/tenant/seo/upload-favicon/route.ts`
+
 - ✅ POST 接口 - 上传 Favicon
 - ✅ 支持 ICO, PNG, JPG, SVG 格式
 - ✅ 文件大小限制 1MB
@@ -55,6 +58,7 @@ Provided input does not match the required schema for this tool: [
 **状态**: 无法创建
 
 **计划功能**：
+
 - 标签式导航（基础 SEO、Favicon、Open Graph、Twitter、结构化数据、高级设置）
 - 基础 SEO 编辑
 - Favicon 上传
@@ -77,11 +81,12 @@ Provided input does not match the required schema for this tool: [
 **文件路径**: `src/app/admin/seo/page.tsx`
 
 **页面结构**：
-```typescript
-"use client";
 
-import { useState, useEffect } from "react";
-import { Save, Search, Image, Share2, Code, Settings } from "lucide-react";
+```typescript
+'use client'
+
+import { useState, useEffect } from 'react'
+import { Save, Search, Image, Share2, Code, Settings } from 'lucide-react'
 
 // 6 个标签：
 // 1. 基础 SEO - 标题、描述、关键词
@@ -97,6 +102,7 @@ export default function SEOPage() {
 ```
 
 **参考文件**：
+
 - `src/app/admin/content/page.tsx` - 标签式导航
 - `src/app/admin/branding/page.tsx` - 文件上传
 - `src/app/admin/domain/page.tsx` - 复杂表单
@@ -108,15 +114,16 @@ export default function SEOPage() {
 **文件**: `src/app/admin/AdminLayoutClient.tsx`
 
 **需要添加**：
+
 ```typescript
-import { Search } from 'lucide-react'; // 添加图标
+import { Search } from 'lucide-react' // 添加图标
 
 const menuItems = [
   // ... 其他菜单项
   { icon: Globe, label: '域名配置', href: '/admin/domain' },
   { icon: Search, label: 'SEO 设置', href: '/admin/seo' }, // 新增
   { icon: Settings, label: '系统设置', href: '/admin/settings' },
-];
+]
 ```
 
 ---
@@ -126,6 +133,7 @@ const menuItems = [
 ### 标签 1: 基础 SEO
 
 **字段**：
+
 - 网站标题（必填）
 - 网站描述（必填）
 - 关键词（数组，可添加/删除）
@@ -135,12 +143,14 @@ const menuItems = [
 ### 标签 2: Favicon
 
 **字段**：
+
 - Favicon (16x16 或 32x32)
 - Apple Touch Icon (180x180)
 - Favicon 32x32
 - Favicon 16x16
 
 **功能**：
+
 - 文件上传
 - 预览图标
 - 删除图标
@@ -148,6 +158,7 @@ const menuItems = [
 ### 标签 3: Open Graph
 
 **字段**：
+
 - 启用/禁用开关
 - OG 标题
 - OG 描述
@@ -159,6 +170,7 @@ const menuItems = [
 ### 标签 4: Twitter Card
 
 **字段**：
+
 - 启用/禁用开关
 - 卡片类型（summary, summary_large_image）
 - Twitter 站点账号
@@ -170,6 +182,7 @@ const menuItems = [
 ### 标签 5: 结构化数据
 
 **字段**：
+
 - 启用/禁用开关
 - 组织信息（名称、Logo、URL、描述、电话、邮箱）
 - 地址信息（街道、城市、地区、邮编、国家）
@@ -179,6 +192,7 @@ const menuItems = [
 ### 标签 6: 高级设置
 
 **字段**：
+
 - Robots 设置（index/noindex, follow/nofollow）
 - Canonical URL
 - 备用语言（数组）
@@ -194,70 +208,70 @@ const menuItems = [
 ```typescript
 interface SEOSettings {
   basic: {
-    site_title: string;
-    site_description: string;
-    keywords: string[];
-    author: string;
-    language: string;
-  };
+    site_title: string
+    site_description: string
+    keywords: string[]
+    author: string
+    language: string
+  }
   favicon: {
-    favicon_url: string;
-    apple_touch_icon_url: string;
-    favicon_32_url: string;
-    favicon_16_url: string;
-  };
+    favicon_url: string
+    apple_touch_icon_url: string
+    favicon_32_url: string
+    favicon_16_url: string
+  }
   open_graph: {
-    enabled: boolean;
-    og_title: string;
-    og_description: string;
-    og_image: string;
-    og_type: string;
-    og_locale: string;
-    og_site_name: string;
-  };
+    enabled: boolean
+    og_title: string
+    og_description: string
+    og_image: string
+    og_type: string
+    og_locale: string
+    og_site_name: string
+  }
   twitter: {
-    enabled: boolean;
-    card_type: string;
-    twitter_site: string;
-    twitter_creator: string;
-    twitter_title: string;
-    twitter_description: string;
-    twitter_image: string;
-  };
+    enabled: boolean
+    card_type: string
+    twitter_site: string
+    twitter_creator: string
+    twitter_title: string
+    twitter_description: string
+    twitter_image: string
+  }
   structured_data: {
-    enabled: boolean;
+    enabled: boolean
     organization: {
-      name: string;
-      logo: string;
-      url: string;
-      description: string;
-      telephone: string;
-      email: string;
+      name: string
+      logo: string
+      url: string
+      description: string
+      telephone: string
+      email: string
       address: {
-        street: string;
-        city: string;
-        region: string;
-        postal_code: string;
-        country: string;
-      };
-      social_links: string[];
-    };
+        street: string
+        city: string
+        region: string
+        postal_code: string
+        country: string
+      }
+      social_links: string[]
+    }
     local_business: {
-      enabled: boolean;
-      business_type: string;
-      price_range: string;
-      opening_hours: string;
-    };
-  };
+      enabled: boolean
+      business_type: string
+      price_range: string
+      opening_hours: string
+    }
+  }
   advanced: {
-    robots: string;
-    canonical_url: string;
-    alternate_languages: any[];
-    google_site_verification: string;
-    bing_site_verification: string;
-    google_analytics_id: string;
-    google_tag_manager_id: string;
-  };
+    robots: string
+    canonical_url: string
+    alternate_languages: any[]
+    google_site_verification: string
+    bing_site_verification: string
+    google_analytics_id: string
+    google_tag_manager_id: string
+  }
 }
 ```
 
@@ -319,6 +333,7 @@ interface SEOSettings {
 ## 📞 需要帮助？
 
 如果需要：
+
 - SEO 页面的完整代码
 - 具体功能的实现建议
 - 前端应用 SEO 配置的方法

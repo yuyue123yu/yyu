@@ -10,11 +10,13 @@
 ## ⏱️ 接下来会发生什么
 
 ### 1. GitHub Actions 自动构建 (2-3分钟)
+
 - 安装依赖
 - 构建项目
 - 生成静态文件
 
 ### 2. 自动部署到 GitHub Pages (1-2分钟)
+
 - 上传构建文件
 - 配置 GitHub Pages
 - 发布网站
@@ -26,17 +28,21 @@
 ## 📊 查看部署进度
 
 ### 方法 1: 在浏览器中查看
+
 打开这个链接：
+
 ```
 https://github.com/yuyue123yu/yyu/actions
 ```
 
 你会看到：
+
 - 🟡 **黄色圆圈** = 正在运行（请等待）
 - ✅ **绿色勾号** = 部署成功！
 - ❌ **红色叉号** = 部署失败（需要查看错误）
 
 ### 方法 2: 在终端中查看
+
 ```bash
 # 每30秒检查一次状态
 watch -n 30 'curl -s https://api.github.com/repos/yuyue123yu/yyu/actions/runs | grep -o "\"status\":\"[^\"]*\"" | head -1'
@@ -47,6 +53,7 @@ watch -n 30 'curl -s https://api.github.com/repos/yuyue123yu/yyu/actions/runs | 
 ## 🌐 你的网站地址
 
 部署完成后，访问：
+
 ```
 https://yuyue123yu.github.io/yyu/
 ```
@@ -55,23 +62,25 @@ https://yuyue123yu.github.io/yyu/
 
 ## ⏰ 时间线
 
-| 时间 | 状态 | 说明 |
-|------|------|------|
-| 现在 | ✅ 已推送 | 代码已上传到 GitHub |
+| 时间   | 状态      | 说明                    |
+| ------ | --------- | ----------------------- |
+| 现在   | ✅ 已推送 | 代码已上传到 GitHub     |
 | +1分钟 | 🟡 构建中 | GitHub Actions 正在构建 |
 | +3分钟 | 🟡 部署中 | 正在部署到 GitHub Pages |
-| +5分钟 | ✅ 完成 | 网站已上线！ |
+| +5分钟 | ✅ 完成   | 网站已上线！            |
 
 ---
 
 ## 🎯 下一步
 
 ### 现在 (立即)
+
 1. 打开浏览器
 2. 访问: https://github.com/yuyue123yu/yyu/actions
 3. 观察部署进度
 
 ### 5分钟后
+
 1. 访问: https://yuyue123yu.github.io/yyu/
 2. 测试网站功能
 3. 切换语言
@@ -96,12 +105,14 @@ https://yuyue123yu.github.io/yyu/
 ## 🔔 通知
 
 ### 如果5分钟后还是404：
+
 1. 检查 GitHub Actions 是否完成（绿色✅）
 2. 等待额外5分钟（DNS传播）
 3. 清除浏览器缓存（Ctrl + Shift + Delete）
 4. 尝试无痕模式
 
 ### 如果看到错误：
+
 1. 访问 Actions 页面查看错误日志
 2. 截图错误信息
 3. 告诉我错误内容
@@ -111,6 +122,7 @@ https://yuyue123yu.github.io/yyu/
 ## 🎊 预期结果
 
 当一切正常时，你会看到：
+
 - 漂亮的首页
 - 蓝色和金色的配色
 - 三种语言切换

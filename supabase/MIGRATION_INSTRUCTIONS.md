@@ -1,9 +1,11 @@
 # Tenants Table Migration Instructions
 
 ## Overview
+
 This migration creates the `tenants` table for the Super Admin System, enabling multi-tenant management capabilities.
 
 ## Migration File
+
 - **File**: `supabase/001_create_tenants_table.sql`
 - **Task**: 1.1.1 - Create tenants table with indexes
 - **Requirements**: Req 1, 2, 7, 8, 9
@@ -11,6 +13,7 @@ This migration creates the `tenants` table for the Super Admin System, enabling 
 ## What This Migration Creates
 
 ### 1. Tenants Table
+
 - **id**: UUID primary key
 - **name**: Tenant organization name
 - **subdomain**: Unique subdomain (e.g., client1.legalmy.com)
@@ -24,6 +27,7 @@ This migration creates the `tenants` table for the Super Admin System, enabling 
 - **metadata**: JSONB for flexible configuration
 
 ### 2. Indexes
+
 - `idx_tenants_subdomain`: For subdomain lookups (most common)
 - `idx_tenants_status`: For filtering by status
 - `idx_tenants_subscription_plan`: For subscription queries
@@ -31,11 +35,13 @@ This migration creates the `tenants` table for the Super Admin System, enabling 
 - `idx_tenants_created_by`: For audit queries
 
 ### 3. Row-Level Security (RLS)
+
 - Enables RLS on the tenants table
 - Temporary policy allowing service role access
 - **Note**: Super admin policies will be added in a later migration after the `super_admin` column is added to the `profiles` table
 
 ### 4. Triggers
+
 - `update_tenants_updated_at`: Automatically updates `updated_at` timestamp
 
 ## How to Execute This Migration
@@ -85,14 +91,17 @@ node scripts/apply-migration.js
 After executing the migration, verify it worked:
 
 ### Using Supabase Dashboard
+
 1. Go to Table Editor
 2. Look for `tenants` table in the list
 3. Click on it to see the schema
 
 ### Using SQL Editor
+
 Run this query:
+
 ```sql
-SELECT 
+SELECT
   table_name,
   column_name,
   data_type,
@@ -104,6 +113,7 @@ ORDER BY ordinal_position;
 ```
 
 ### Using Node.js
+
 ```bash
 node scripts/execute-tenants-migration.js
 ```
@@ -113,18 +123,22 @@ Should show: "✅ Tenants table already exists!"
 ## Troubleshooting
 
 ### Error: "relation already exists"
+
 - The table is already created. No action needed.
 - Run verification steps to confirm.
 
 ### Error: "function update_updated_at_column() does not exist"
+
 - This function should exist from the base schema
 - If not, run `supabase/schema.sql` first
 
 ### Error: "permission denied"
+
 - Make sure you're using the service role key
 - Or execute through the Supabase Dashboard (which has full permissions)
 
 ### Error: "column super_admin does not exist"
+
 - This is expected! The RLS policies in this migration use a temporary policy
 - Super admin-specific policies will be added in a later migration
 
@@ -151,6 +165,7 @@ DROP TABLE IF EXISTS public.tenants CASCADE;
 ## Support
 
 If you encounter issues:
+
 1. Check the Supabase Dashboard logs
 2. Verify your database connection
 3. Ensure you have the necessary permissions

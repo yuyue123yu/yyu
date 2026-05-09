@@ -108,7 +108,7 @@ res.cookies.set('sb-access-token', access_token, {
   sameSite: 'lax',
   secure: true, // 生产环境必须为 true
   maxAge: 60 * 60 * 24 * 7,
-});
+})
 ```
 
 ---
@@ -116,22 +116,26 @@ res.cookies.set('sb-access-token', access_token, {
 ## ✅ 部署后验证
 
 ### 1. 访问前台网站
+
 ```
 https://your-domain.vercel.app
 ```
 
 **检查项**：
+
 - [ ] 首页正常加载
 - [ ] 服务卡片显示正确
 - [ ] Logo 显示正确
 - [ ] 语言切换正常
 
 ### 2. 访问 Admin 后台
+
 ```
 https://your-domain.vercel.app/admin/login
 ```
 
 **检查项**：
+
 - [ ] 登录页面正常
 - [ ] 能够成功登录
 - [ ] 仪表板正常显示
@@ -141,6 +145,7 @@ https://your-domain.vercel.app/admin/login
 ### 3. 测试账号切换
 
 **步骤**：
+
 1. 使用账号 A 登录
 2. 查看服务列表
 3. 退出登录
@@ -148,6 +153,7 @@ https://your-domain.vercel.app/admin/login
 5. 再次查看服务列表
 
 **预期**：
+
 - [ ] 账号 B 能正常登录
 - [ ] 看到账号 B 的数据
 - [ ] 没有账号 A 的数据残留
@@ -161,6 +167,7 @@ https://your-domain.vercel.app/admin/login
 **原因**：环境变量未配置
 
 **解决**：
+
 1. 检查 Vercel Dashboard 中的环境变量
 2. 确保变量名正确（包括 `NEXT_PUBLIC_` 前缀）
 3. 重新部署
@@ -170,6 +177,7 @@ https://your-domain.vercel.app/admin/login
 **原因**：Supabase 未配置允许的域名
 
 **解决**：
+
 1. 在 Supabase Dashboard 中添加 Vercel 域名
 2. 更新「Redirect URLs」
 3. 清除浏览器缓存重试
@@ -179,6 +187,7 @@ https://your-domain.vercel.app/admin/login
 **原因**：生产环境未启用 HTTPS
 
 **解决**：
+
 1. 确保使用 Vercel 提供的 HTTPS 域名
 2. 检查 Cookie 设置中 `secure: true`
 3. 不要使用 HTTP 访问
@@ -188,6 +197,7 @@ https://your-domain.vercel.app/admin/login
 **原因**：Supabase Storage 权限问题
 
 **解决**：
+
 1. 检查 Storage Bucket 的公开访问权限
 2. 确认 RLS 策略允许公开读取
 3. 验证图片 URL 是否正确
@@ -225,10 +235,10 @@ Next.js 自动优化图片，确保使用 `next/image`：
 ```typescript
 import Image from 'next/image';
 
-<Image 
-  src={logoUrl} 
-  alt="Logo" 
-  width={150} 
+<Image
+  src={logoUrl}
+  alt="Logo"
+  width={150}
   height={40}
   priority
 />
@@ -243,7 +253,7 @@ return NextResponse.json(data, {
   headers: {
     'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
   },
-});
+})
 ```
 
 ---
@@ -298,10 +308,12 @@ COPY (SELECT * FROM tenant_settings) TO '/tmp/settings_backup.csv' CSV HEADER;
 您的网站现在已经上线了！
 
 **访问地址**：
+
 - 前台：`https://your-domain.vercel.app`
 - 后台：`https://your-domain.vercel.app/admin`
 
 **下一步**：
+
 1. 测试所有功能
 2. 配置自定义域名
 3. 设置监控和告警

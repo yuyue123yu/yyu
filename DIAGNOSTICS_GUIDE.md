@@ -15,17 +15,20 @@
 系统诊断会自动检查以下7个关键领域:
 
 ### 1. **数据库连接** (Database)
+
 - ✅ 检查 Supabase 数据库连接是否正常
 - ✅ 测量响应时间
 - ❌ 如果失败,检查环境变量配置
 
 ### 2. **RLS 策略** (Row Level Security)
+
 - ✅ 验证 RLS 策略是否正常工作
 - ✅ 检查是否存在无限递归问题
 - ✅ 测试辅助函数 (`is_super_admin`, `get_user_tenant_id`)
 - ❌ 如果失败,需要执行 `010_fix_rls_infinite_recursion_v2.sql`
 
 ### 3. **表结构完整性** (Tables)
+
 - ✅ 验证所有必需的数据库表是否存在
 - 检查的表包括:
   - `profiles`, `tenants`, `tenant_settings`
@@ -35,17 +38,20 @@
 - ⚠️ 如果缺少表,显示警告并列出缺少的表名
 
 ### 4. **超级管理员权限** (Authentication)
+
 - ✅ 验证当前用户是否已登录
 - ✅ 检查用户是否具有超级管理员权限
 - ✅ 显示用户ID、邮箱、租户ID
 - ❌ 如果失败,需要设置 `super_admin = true`
 
 ### 5. **租户管理 API** (API)
+
 - ✅ 测试租户管理 API 端点是否正常
 - ✅ 验证 API 响应格式
 - ❌ 如果失败,检查 API 路由和权限
 
 ### 6. **环境变量** (Configuration)
+
 - ✅ 检查所有必需的环境变量是否已配置
 - 必需的变量:
   - `NEXT_PUBLIC_SUPABASE_URL`
@@ -54,6 +60,7 @@
 - ❌ 如果缺少,需要在 `.env.local` 中添加
 
 ### 7. **辅助函数** (Helper Functions)
+
 - ✅ 验证数据库辅助函数是否已创建
 - 检查的函数:
   - `is_super_admin()` - 检查用户是否为超级管理员
@@ -71,6 +78,7 @@
 ### 结果摘要
 
 诊断完成后会显示:
+
 - **总测试数**: 执行的测试总数
 - **通过**: 成功的测试数量
 - **警告**: 有警告的测试数量
@@ -80,12 +88,14 @@
 
 ### 问题 1: RLS 无限递归错误
 
-**症状**: 
+**症状**:
+
 ```
 infinite recursion detected in policy for relation 'profiles'
 ```
 
 **解决方案**:
+
 1. 在 Supabase Dashboard 的 SQL Editor 中执行:
    ```sql
    -- 文件: supabase/010_fix_rls_infinite_recursion_v2.sql
@@ -94,12 +104,14 @@ infinite recursion detected in policy for relation 'profiles'
 
 ### 问题 2: 缺少环境变量
 
-**症状**: 
+**症状**:
+
 ```
 Missing environment variables: SUPABASE_SERVICE_ROLE_KEY
 ```
 
 **解决方案**:
+
 1. 打开 `.env.local` 文件
 2. 添加缺少的环境变量:
    ```env
@@ -111,12 +123,14 @@ Missing environment variables: SUPABASE_SERVICE_ROLE_KEY
 
 ### 问题 3: 超级管理员权限不足
 
-**症状**: 
+**症状**:
+
 ```
 Current user is not a super admin
 ```
 
 **解决方案**:
+
 1. 在 Supabase Dashboard 的 SQL Editor 中执行:
    ```sql
    UPDATE public.profiles
@@ -127,12 +141,14 @@ Current user is not a super admin
 
 ### 问题 4: 缺少数据库表
 
-**症状**: 
+**症状**:
+
 ```
 Missing tables: tenants, audit_logs
 ```
 
 **解决方案**:
+
 1. 按顺序执行所有迁移SQL文件 (001-009)
 2. 在 Supabase Dashboard 的 SQL Editor 中执行每个文件
 
@@ -164,6 +180,7 @@ Missing tables: tenants, audit_logs
 ## 📝 更新日志
 
 ### v1.0.0 (2024)
+
 - ✅ 初始版本发布
 - ✅ 支持7个核心诊断项目
 - ✅ 实时进度显示

@@ -15,6 +15,7 @@
 **文件 1**: `src/app/api/tenant/seo/route.ts`
 
 **功能**：
+
 - ✅ GET 接口 - 获取 SEO 配置
 - ✅ PUT 接口 - 更新 SEO 配置
 - ✅ 权限验证（Owner, Admin）
@@ -23,6 +24,7 @@
 - ✅ 审计日志记录
 
 **默认配置包含**：
+
 - 基础 SEO（标题、描述、关键词、作者、语言）
 - Favicon 配置（4 种尺寸）
 - Open Graph 配置（Facebook、LinkedIn 等）
@@ -33,6 +35,7 @@
 **文件 2**: `src/app/api/tenant/seo/upload-favicon/route.ts`
 
 **功能**：
+
 - ✅ POST 接口 - 上传 Favicon
 - ✅ 支持 ICO, PNG, JPG, SVG 格式
 - ✅ 文件大小限制 1MB
@@ -48,6 +51,7 @@
 **文件**: `src/app/admin/seo/page.tsx`
 
 **功能**：
+
 - ✅ 标签式导航（6 个主要标签）
 - ✅ 基础 SEO 编辑
   - 网站标题（必填）
@@ -93,6 +97,7 @@
 **文件**: `src/app/admin/AdminLayoutClient.tsx`
 
 **更新**：
+
 - ✅ 添加"SEO 设置"菜单项
 - ✅ 使用 Search 图标
 - ✅ 链接到 `/admin/seo`
@@ -104,6 +109,7 @@
 ### 1. 基础 SEO
 
 **功能**：
+
 - 网站标题和描述编辑
 - 关键词管理（动态添加/删除）
 - 作者信息
@@ -111,6 +117,7 @@
 - 字符长度实时提示
 
 **验证**：
+
 - 标题推荐 50-60 字符
 - 描述推荐 150-160 字符
 
@@ -119,12 +126,14 @@
 ### 2. Favicon 管理
 
 **功能**：
+
 - 上传 4 种尺寸的图标
 - 实时预览
 - 删除功能
 - 文件类型和大小验证
 
 **支持格式**：
+
 - ICO, PNG, JPG, SVG
 - 最大 1MB
 
@@ -133,6 +142,7 @@
 ### 3. Open Graph
 
 **功能**：
+
 - 启用/禁用开关
 - 自定义标题、描述、图片
 - 类型选择（website, article, profile）
@@ -140,6 +150,7 @@
 - 图片预览
 
 **用途**：
+
 - Facebook 分享
 - LinkedIn 分享
 - 其他支持 OG 的平台
@@ -149,6 +160,7 @@
 ### 4. Twitter Card
 
 **功能**：
+
 - 启用/禁用开关
 - 卡片类型选择（summary, summary_large_image）
 - Twitter 账号配置
@@ -156,6 +168,7 @@
 - 图片预览
 
 **用途**：
+
 - Twitter 分享优化
 
 ---
@@ -163,12 +176,14 @@
 ### 5. 结构化数据
 
 **功能**：
+
 - 启用/禁用开关
 - 组织信息配置
 - 地址信息配置
 - 本地商业信息配置
 
 **用途**：
+
 - 提升搜索引擎理解
 - 显示富媒体搜索结果
 - 本地 SEO 优化
@@ -178,6 +193,7 @@
 ### 6. 高级设置
 
 **功能**：
+
 - Robots 设置（index/noindex, follow/nofollow）
 - Canonical URL 配置
 - 搜索引擎验证码
@@ -185,6 +201,7 @@
 - Google Tag Manager 集成
 
 **用途**：
+
 - 控制搜索引擎爬取
 - 网站验证
 - 流量分析
@@ -196,6 +213,7 @@
 ### 数据结构
 
 存储在 `tenant_settings` 表：
+
 ```json
 {
   "tenant_id": "uuid",
@@ -273,16 +291,19 @@
 ### API 端点
 
 **GET `/api/tenant/seo`**
+
 - 获取租户的 SEO 配置
 - 返回默认值或已保存的设置
 
 **PUT `/api/tenant/seo`**
+
 - 更新租户的 SEO 配置
 - 验证必填字段
 - 权限：Owner, Admin
 - 记录审计日志
 
 **POST `/api/tenant/seo/upload-favicon`**
+
 - 上传 Favicon 文件
 - 验证文件类型和大小
 - 上传到 Supabase Storage
@@ -293,36 +314,43 @@
 ## 🚀 使用流程
 
 ### 1. 访问 SEO 设置页面
+
 ```
 /admin/seo
 ```
 
 ### 2. 配置基础 SEO
+
 - 输入网站标题和描述
 - 添加关键词
 - 设置作者和语言
 
 ### 3. 上传 Favicon
+
 - 选择对应尺寸的图标文件
 - 上传并预览
 - 保存配置
 
 ### 4. 配置社交媒体分享
+
 - 启用 Open Graph 和 Twitter Card
 - 设置标题、描述、图片
 - 预览效果
 
 ### 5. 配置结构化数据
+
 - 启用结构化数据
 - 填写组织信息
 - 配置本地商业信息
 
 ### 6. 配置高级设置
+
 - 设置 Robots 规则
 - 添加验证码
 - 集成分析工具
 
 ### 7. 保存设置
+
 - 点击右上角"保存设置"按钮
 - 等待保存成功提示
 
@@ -386,13 +414,13 @@ const { seo } = await getTenantConfig(tenantId);
   <meta name="keywords" content={seo.basic.keywords.join(', ')} />
   <meta name="author" content={seo.basic.author} />
   <meta name="language" content={seo.basic.language} />
-  
+
   {/* Favicon */}
   <link rel="icon" href={seo.favicon.favicon_url} />
   <link rel="apple-touch-icon" href={seo.favicon.apple_touch_icon_url} />
   <link rel="icon" type="image/png" sizes="32x32" href={seo.favicon.favicon_32_url} />
   <link rel="icon" type="image/png" sizes="16x16" href={seo.favicon.favicon_16_url} />
-  
+
   {/* Open Graph */}
   {seo.open_graph.enabled && (
     <>
@@ -404,7 +432,7 @@ const { seo } = await getTenantConfig(tenantId);
       <meta property="og:site_name" content={seo.open_graph.og_site_name} />
     </>
   )}
-  
+
   {/* Twitter Card */}
   {seo.twitter.enabled && (
     <>
@@ -416,15 +444,15 @@ const { seo } = await getTenantConfig(tenantId);
       <meta name="twitter:image" content={seo.twitter.twitter_image} />
     </>
   )}
-  
+
   {/* Robots */}
   <meta name="robots" content={seo.advanced.robots} />
-  
+
   {/* Canonical */}
   {seo.advanced.canonical_url && (
     <link rel="canonical" href={seo.advanced.canonical_url} />
   )}
-  
+
   {/* 验证码 */}
   {seo.advanced.google_site_verification && (
     <meta name="google-site-verification" content={seo.advanced.google_site_verification} />
@@ -432,12 +460,12 @@ const { seo } = await getTenantConfig(tenantId);
   {seo.advanced.bing_site_verification && (
     <meta name="msvalidate.01" content={seo.advanced.bing_site_verification} />
   )}
-  
+
   {/* Google Analytics */}
   {seo.advanced.google_analytics_id && (
     <script async src={`https://www.googletagmanager.com/gtag/js?id=${seo.advanced.google_analytics_id}`}></script>
   )}
-  
+
   {/* 结构化数据 */}
   {seo.structured_data.enabled && (
     <script type="application/ld+json">
@@ -469,12 +497,14 @@ const { seo } = await getTenantConfig(tenantId);
 ## 📁 文件清单
 
 ### 新增文件
+
 1. `src/app/api/tenant/seo/route.ts` - SEO 配置 API
 2. `src/app/api/tenant/seo/upload-favicon/route.ts` - Favicon 上传 API
 3. `src/app/admin/seo/page.tsx` - SEO 设置页面
 4. `Phase6-SEO设置-开发完成.md` - 开发完成报告
 
 ### 修改文件
+
 1. `src/app/admin/AdminLayoutClient.tsx` - 添加"SEO 设置"菜单项
 
 ---
@@ -484,6 +514,7 @@ const { seo } = await getTenantConfig(tenantId);
 **Phase 6: SEO 设置** 功能已完成！
 
 ### 已实现的功能
+
 - ✅ 基础 SEO 配置
 - ✅ Favicon 上传和管理
 - ✅ Open Graph 配置
@@ -495,6 +526,7 @@ const { seo } = await getTenantConfig(tenantId);
 ### 租户自助 DIY 系统进度
 
 **已完成**：
+
 1. ✅ Phase 1: 品牌设置
 2. ✅ Phase 2: 价格配置
 3. ✅ Phase 3: 功能开关
@@ -502,14 +534,14 @@ const { seo } = await getTenantConfig(tenantId);
 5. ✅ Phase 5: 域名配置
 6. ✅ Phase 6: SEO 设置
 
-**待开发**：
-7. ⏳ Phase 7: 通知设置
+**待开发**：7. ⏳ Phase 7: 通知设置
 
 **完成度**: 86% (6/7 阶段)
 
 ### 系统能力
 
 租户现在可以：
+
 - ✅ 自主管理品牌形象（Logo、颜色、公司信息）
 - ✅ 自主设置服务价格（咨询、文档、会员、折扣）
 - ✅ 自主控制功能模块（15+ 个功能开关）

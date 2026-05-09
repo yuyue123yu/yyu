@@ -24,4 +24,4 @@ module.exports = {
       kill_timeout: 5000,
     },
   ],
-};
+}

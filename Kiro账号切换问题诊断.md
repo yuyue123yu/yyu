@@ -3,6 +3,7 @@
 ## 📋 问题背景
 
 **关键信息**：用户在开发过程中切换了Kiro账号，这可能导致：
+
 1. Supabase项目连接不匹配
 2. 环境变量指向错误的项目
 3. 数据库修改应用到了错误的项目
@@ -12,11 +13,13 @@
 ### 问题1：Supabase项目不匹配
 
 **症状**：
+
 - 登录成功但无法访问Dashboard
 - 数据库查询失败
 - Profile数据无法读取
 
 **原因**：
+
 - `.env.local` 中的 Supabase URL 和 Key 可能指向旧项目
 - 所有的SQL修复都应用到了旧项目的数据库
 - 新项目的数据库可能没有正确的表结构和数据
@@ -24,11 +27,13 @@
 ### 问题2：Session持久化失败
 
 **症状**：
+
 - 登录显示成功
 - 跳转后被重定向回登录页
 - 刷新页面后Session丢失
 
 **原因**：
+
 - Cookie域名不匹配
 - LocalStorage被清除
 - Session没有正确保存
@@ -42,6 +47,7 @@ http://localhost:3000/diagnose-login
 ```
 
 这个页面会检查：
+
 - ✅ 环境变量是否正确
 - ✅ Session是否存在
 - ✅ User是否存在
@@ -90,6 +96,7 @@ AND routine_name IN ('is_super_admin', 'get_user_tenant_id');
    - 复制 Project URL 和 API Keys
 
 2. **更新 `.env.local`**
+
    ```env
    NEXT_PUBLIC_SUPABASE_URL=https://YOUR_PROJECT_REF.supabase.co
    NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_ANON_KEY
@@ -97,6 +104,7 @@ AND routine_name IN ('is_super_admin', 'get_user_tenant_id');
    ```
 
 3. **重启开发服务器**
+
    ```bash
    # 停止当前服务器 (Ctrl+C)
    # 清除缓存
@@ -129,12 +137,13 @@ AND routine_name IN ('is_super_admin', 'get_user_tenant_id');
 如果以上方案都不行：
 
 1. **在 Supabase Dashboard 中创建新用户**
+
    ```sql
    -- 在 SQL Editor 中执行
-   
+
    -- 1. 在 auth.users 中创建用户（需要在 Dashboard 的 Authentication > Users 中手动创建）
    -- 或者使用 Supabase Dashboard 的 UI 创建
-   
+
    -- 2. 创建 Profile
    INSERT INTO profiles (id, email, full_name, user_type, super_admin, tenant_id)
    VALUES (
@@ -157,6 +166,7 @@ AND routine_name IN ('is_super_admin', 'get_user_tenant_id');
 如果需要紧急访问Dashboard：
 
 1. **修改 `src/app/admin/layout.tsx`**
+
    ```typescript
    // 注释掉这段代码
    /*
@@ -166,12 +176,12 @@ AND routine_name IN ('is_super_admin', 'get_user_tenant_id');
      }
    }, [user, loading, router]);
    */
-   
+
    // 改为
    useEffect(() => {
      // 临时禁用权限检查
-     console.log('Auth check disabled for debugging');
-   }, []);
+     console.log('Auth check disabled for debugging')
+   }, [])
    ```
 
 2. **直接访问Dashboard**
@@ -201,6 +211,7 @@ AND routine_name IN ('is_super_admin', 'get_user_tenant_id');
 **原因**：API Key 不匹配或过期
 
 **解决**：
+
 1. 在 Supabase Dashboard 中获取新的 API Key
 2. 更新 `.env.local`
 3. 重启服务器
@@ -210,6 +221,7 @@ AND routine_name IN ('is_super_admin', 'get_user_tenant_id');
 **原因**：连接到了错误的数据库或表未创建
 
 **解决**：
+
 1. 确认 Supabase 项目 URL
 2. 在正确的项目中执行建表SQL
 
@@ -218,6 +230,7 @@ AND routine_name IN ('is_super_admin', 'get_user_tenant_id');
 **原因**：RLS 策略阻止查询
 
 **解决**：
+
 1. 确认 RLS 辅助函数已创建
 2. 执行 `修复RLS无限递归.sql`
 
@@ -226,6 +239,7 @@ AND routine_name IN ('is_super_admin', 'get_user_tenant_id');
 **原因**：用户不存在或在错误的项目中
 
 **解决**：
+
 1. 在 Supabase Dashboard 中确认用户存在
 2. 如果不存在，重新创建用户
 
@@ -234,6 +248,7 @@ AND routine_name IN ('is_super_admin', 'get_user_tenant_id');
 ### 立即执行：
 
 1. **访问诊断页面**
+
    ```
    http://localhost:3000/diagnose-login
    ```

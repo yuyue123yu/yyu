@@ -12,21 +12,25 @@
 ## 📝 现在执行这3个命令
 
 ### 步骤 1: 添加所有更改
+
 ```bash
 git add .
 ```
 
 ### 步骤 2: 提交代码
+
 ```bash
 git commit -m "生产环境配置完成，准备部署"
 ```
 
 ### 步骤 3: 推送到 GitHub
+
 ```bash
 git push origin main
 ```
 
 如果你的主分支是 `master`，使用：
+
 ```bash
 git push origin master
 ```
@@ -38,6 +42,7 @@ git push origin master
 推送代码后：
 
 1. **打开浏览器**，访问：
+
    ```
    https://github.com/yuyue123yu/yyu/actions
    ```
@@ -58,6 +63,7 @@ git push origin master
 部署成功后，你的网站就上线了！
 
 ### 测试清单：
+
 - [ ] 访问网站
 - [ ] 切换语言（中文/English/Bahasa）
 - [ ] 点击服务卡片
@@ -70,6 +76,7 @@ git push origin master
 ## 📱 分享你的网站
 
 网站地址：
+
 ```
 https://yuyue123yu.github.io/yyu/
 ```

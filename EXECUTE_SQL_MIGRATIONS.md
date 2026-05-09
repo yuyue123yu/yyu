@@ -31,6 +31,7 @@
 ## 📝 迁移文件执行顺序
 
 ### ⚠️ 重要提示
+
 - **必须按照以下顺序执行**
 - **每次只执行一个文件**
 - **等待每个文件执行完成后再执行下一个**
@@ -39,11 +40,13 @@
 ---
 
 ### 第 1 步: 创建租户表
+
 **文件**: `supabase/001_create_tenants_table.sql`
 
 **作用**: 创建 `tenants` 表，存储所有租户信息
 
 **执行方法**:
+
 1. 打开文件 `supabase/001_create_tenants_table.sql`
 2. 复制所有内容
 3. 粘贴到 Supabase SQL Editor
@@ -52,6 +55,7 @@
 6. 检查结果：应该显示 "Success. No rows returned"
 
 **预期结果**:
+
 - ✅ `tenants` 表已创建
 - ✅ 索引已创建
 - ✅ 触发器已创建
@@ -59,11 +63,13 @@
 ---
 
 ### 第 2 步: 创建租户设置表
+
 **文件**: `supabase/002_create_tenant_settings_table.sql`
 
 **作用**: 创建 `tenant_settings` 表，存储每个租户的 OEM 配置
 
 **执行方法**:
+
 1. 打开文件 `supabase/002_create_tenant_settings_table.sql`
 2. 复制所有内容
 3. 粘贴到 Supabase SQL Editor
@@ -71,6 +77,7 @@
 5. 等待执行完成
 
 **预期结果**:
+
 - ✅ `tenant_settings` 表已创建
 - ✅ 索引已创建
 - ✅ 外键约束已创建
@@ -78,11 +85,13 @@
 ---
 
 ### 第 3 步: 创建审计日志表
+
 **文件**: `supabase/003_create_audit_logs_table.sql`
 
 **作用**: 创建 `audit_logs` 表，记录所有超级管理员操作
 
 **执行方法**:
+
 1. 打开文件 `supabase/003_create_audit_logs_table.sql`
 2. 复制所有内容
 3. 粘贴到 Supabase SQL Editor
@@ -90,6 +99,7 @@
 5. 等待执行完成
 
 **预期结果**:
+
 - ✅ `audit_logs` 表已创建
 - ✅ 不可变策略已创建（防止更新和删除）
 - ✅ 索引已创建
@@ -97,11 +107,13 @@
 ---
 
 ### 第 4 步: 创建系统设置表
+
 **文件**: `supabase/004_create_system_settings_table.sql`
 
 **作用**: 创建 `system_settings` 表，存储全局系统配置
 
 **执行方法**:
+
 1. 打开文件 `supabase/004_create_system_settings_table.sql`
 2. 复制所有内容
 3. 粘贴到 Supabase SQL Editor
@@ -109,17 +121,20 @@
 5. 等待执行完成
 
 **预期结果**:
+
 - ✅ `system_settings` 表已创建
 - ✅ 索引已创建
 
 ---
 
 ### 第 5 步: 创建密码重置令牌表
+
 **文件**: `supabase/005_create_password_reset_tokens_table.sql`
 
 **作用**: 创建 `password_reset_tokens` 表，管理密码重置令牌
 
 **执行方法**:
+
 1. 打开文件 `supabase/005_create_password_reset_tokens_table.sql`
 2. 复制所有内容
 3. 粘贴到 Supabase SQL Editor
@@ -127,12 +142,14 @@
 5. 等待执行完成
 
 **预期结果**:
+
 - ✅ `password_reset_tokens` 表已创建
 - ✅ 索引已创建
 
 ---
 
 ### 第 6 步: 添加租户列到现有表
+
 **文件**: `supabase/006_add_tenant_columns.sql`
 
 **作用**: 向现有表添加 `tenant_id` 和 `super_admin` 列
@@ -140,6 +157,7 @@
 **⚠️ 重要**: 这个步骤会修改现有表，请确保已备份数据
 
 **执行方法**:
+
 1. 打开文件 `supabase/006_add_tenant_columns.sql`
 2. 复制所有内容
 3. 粘贴到 Supabase SQL Editor
@@ -147,6 +165,7 @@
 5. 等待执行完成（可能需要几秒钟）
 
 **预期结果**:
+
 - ✅ `profiles` 表添加了 `tenant_id` 和 `super_admin` 列
 - ✅ 所有多租户表添加了 `tenant_id` 列
 - ✅ 所有索引已创建
@@ -154,6 +173,7 @@
 ---
 
 ### 第 7 步: 创建 RLS 策略
+
 **文件**: `supabase/007_create_rls_policies.sql`
 
 **作用**: 创建行级安全策略，实现租户数据隔离
@@ -161,6 +181,7 @@
 **⚠️ 重要**: 这是最关键的安全步骤
 
 **执行方法**:
+
 1. 打开文件 `supabase/007_create_rls_policies.sql`
 2. 复制所有内容
 3. 粘贴到 Supabase SQL Editor
@@ -168,6 +189,7 @@
 5. 等待执行完成（可能需要10-20秒）
 
 **预期结果**:
+
 - ✅ 所有表的 RLS 已启用
 - ✅ 40+ RLS 策略已创建
 - ✅ 租户隔离已生效
@@ -175,11 +197,13 @@
 ---
 
 ### 第 8 步: 创建辅助函数
+
 **文件**: `supabase/008_create_helper_functions.sql`
 
 **作用**: 创建数据库辅助函数（设置配置、获取租户ID等）
 
 **执行方法**:
+
 1. 打开文件 `supabase/008_create_helper_functions.sql`
 2. 复制所有内容
 3. 粘贴到 Supabase SQL Editor
@@ -187,6 +211,7 @@
 5. 等待执行完成
 
 **预期结果**:
+
 - ✅ `set_config()` 函数已创建
 - ✅ `get_tenant_id()` 函数已创建
 - ✅ `is_super_admin()` 函数已创建
@@ -196,9 +221,11 @@
 ---
 
 ### 第 9 步: 迁移现有数据并设置 NOT NULL
+
 **文件**: `supabase/009_set_tenant_id_not_null.sql`
 
-**作用**: 
+**作用**:
+
 1. 创建默认租户
 2. 将所有现有数据迁移到默认租户
 3. 设置 `tenant_id` 为 NOT NULL
@@ -206,6 +233,7 @@
 **⚠️ 重要**: 这是最后一步，执行后无法轻易回滚
 
 **执行方法**:
+
 1. 打开文件 `supabase/009_set_tenant_id_not_null.sql`
 2. 复制所有内容
 3. 粘贴到 Supabase SQL Editor
@@ -213,6 +241,7 @@
 5. 等待执行完成（可能需要几秒钟到几分钟，取决于数据量）
 
 **预期结果**:
+
 - ✅ 默认租户已创建（ID: 00000000-0000-0000-0000-000000000001）
 - ✅ 所有现有数据已分配到默认租户
 - ✅ 所有 `tenant_id` 列已设置为 NOT NULL
@@ -225,15 +254,16 @@
 执行完所有 9 个文件后，运行以下查询验证：
 
 ### 1. 检查表是否存在
+
 ```sql
-SELECT table_name 
-FROM information_schema.tables 
-WHERE table_schema = 'public' 
+SELECT table_name
+FROM information_schema.tables
+WHERE table_schema = 'public'
   AND table_name IN (
-    'tenants', 
-    'tenant_settings', 
-    'audit_logs', 
-    'system_settings', 
+    'tenants',
+    'tenant_settings',
+    'audit_logs',
+    'system_settings',
     'password_reset_tokens'
   );
 ```
@@ -243,8 +273,9 @@ WHERE table_schema = 'public'
 ---
 
 ### 2. 检查默认租户
+
 ```sql
-SELECT * FROM public.tenants 
+SELECT * FROM public.tenants
 WHERE id = '00000000-0000-0000-0000-000000000001';
 ```
 
@@ -253,10 +284,11 @@ WHERE id = '00000000-0000-0000-0000-000000000001';
 ---
 
 ### 3. 检查 RLS 策略
+
 ```sql
-SELECT schemaname, tablename, policyname 
-FROM pg_policies 
-WHERE schemaname = 'public' 
+SELECT schemaname, tablename, policyname
+FROM pg_policies
+WHERE schemaname = 'public'
 ORDER BY tablename, policyname;
 ```
 
@@ -265,15 +297,16 @@ ORDER BY tablename, policyname;
 ---
 
 ### 4. 检查辅助函数
+
 ```sql
-SELECT routine_name 
-FROM information_schema.routines 
-WHERE routine_schema = 'public' 
+SELECT routine_name
+FROM information_schema.routines
+WHERE routine_schema = 'public'
   AND routine_name IN (
-    'set_config', 
-    'get_tenant_id', 
-    'is_super_admin', 
-    'log_audit_event', 
+    'set_config',
+    'get_tenant_id',
+    'is_super_admin',
+    'log_audit_event',
     'update_tenant_user_count'
   );
 ```
@@ -283,8 +316,9 @@ WHERE routine_schema = 'public'
 ---
 
 ### 5. 检查现有数据迁移
+
 ```sql
-SELECT 
+SELECT
   COUNT(*) as total_profiles,
   COUNT(CASE WHEN tenant_id IS NOT NULL THEN 1 END) as profiles_with_tenant
 FROM public.profiles;
@@ -310,13 +344,13 @@ FROM public.profiles;
 
 ```sql
 -- 将用户设置为超级管理员
-UPDATE public.profiles 
-SET super_admin = true 
+UPDATE public.profiles
+SET super_admin = true
 WHERE id = '你的用户UUID';
 
 -- 验证
-SELECT id, email, super_admin 
-FROM public.profiles 
+SELECT id, email, super_admin
+FROM public.profiles
 WHERE super_admin = true;
 ```
 
@@ -328,13 +362,13 @@ WHERE super_admin = true;
 
 ```sql
 -- 使用邮箱查找并设置为超级管理员
-UPDATE public.profiles 
-SET super_admin = true 
+UPDATE public.profiles
+SET super_admin = true
 WHERE email = 'your-email@example.com';
 
 -- 验证
-SELECT id, email, super_admin 
-FROM public.profiles 
+SELECT id, email, super_admin
+FROM public.profiles
 WHERE super_admin = true;
 ```
 
@@ -358,7 +392,8 @@ WHERE super_admin = true;
 
 **原因**: 表或策略已经存在
 
-**解决方案**: 
+**解决方案**:
+
 - 检查是否已经执行过该文件
 - 如果需要重新执行，先删除相关对象：
   ```sql
@@ -371,7 +406,8 @@ WHERE super_admin = true;
 
 **原因**: 列已经存在
 
-**解决方案**: 
+**解决方案**:
+
 - 跳过该步骤，继续下一个文件
 - 或者使用 `ALTER TABLE ... DROP COLUMN` 先删除列
 
@@ -381,7 +417,8 @@ WHERE super_admin = true;
 
 **原因**: 外键约束冲突
 
-**解决方案**: 
+**解决方案**:
+
 - 确保按照正确的顺序执行文件
 - 检查引用的表是否存在
 
@@ -391,7 +428,8 @@ WHERE super_admin = true;
 
 **原因**: RLS 策略阻止了查询
 
-**解决方案**: 
+**解决方案**:
+
 - 确保已设置租户上下文
 - 或者使用服务角色密钥（绕过 RLS）
 
@@ -427,6 +465,6 @@ npm run dev
 
 ---
 
-*执行时间: 约 15-20 分钟*  
-*难度: 中等*  
-*需要权限: Supabase 管理员*
+_执行时间: 约 15-20 分钟_  
+_难度: 中等_  
+_需要权限: Supabase 管理员_

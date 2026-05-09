@@ -62,6 +62,7 @@
 ### 方法 3：使用免费文件托管服务
 
 **推荐服务：**
+
 - **Cloudinary** - https://cloudinary.com (免费 25GB)
 - **ImgBB** - https://imgbb.com (免费，支持PDF)
 - **File.io** - https://www.file.io (临时文件)
@@ -156,6 +157,7 @@
 ### Q1: 文件URL无法访问怎么办？
 
 **A:** 确保：
+
 - URL是公开可访问的
 - 没有需要登录才能访问
 - URL格式正确（以 http:// 或 https:// 开头）
@@ -167,6 +169,7 @@
 ### Q3: 支持哪些文件格式？
 
 **A:** 虽然当前使用URL方式，但建议使用：
+
 - PDF (.pdf)
 - Word (.doc, .docx)
 - Excel (.xls, .xlsx)
@@ -174,12 +177,14 @@
 ### Q4: 文件大小有限制吗？
 
 **A:** URL方式没有限制，但建议：
+
 - 保持文件在 10MB 以内
 - 确保下载速度合理
 
 ### Q5: 如何修改已添加的模板？
 
-**A:** 
+**A:**
+
 1. 点击模板卡片上的"编辑"按钮
 2. 修改信息
 3. 点击"保存更改"
@@ -216,19 +221,19 @@
 ```typescript
 // 模板数据结构
 interface Template {
-  id: string;
-  category: string;
-  title_zh: string;
-  title_en: string;
-  title_ms: string;
-  description_zh: string;
-  file_url: string;        // 文件URL
-  file_size: string;       // 文件大小
-  language: string;        // 语言
-  downloads: number;       // 下载次数
-  is_free: boolean;        // 是否免费
-  price: number;           // 价格
-  created_at: string;      // 创建时间
+  id: string
+  category: string
+  title_zh: string
+  title_en: string
+  title_ms: string
+  description_zh: string
+  file_url: string // 文件URL
+  file_size: string // 文件大小
+  language: string // 语言
+  downloads: number // 下载次数
+  is_free: boolean // 是否免费
+  price: number // 价格
+  created_at: string // 创建时间
 }
 ```
 
@@ -261,12 +266,14 @@ CREATE TABLE templates (
 ✅ **模板管理功能完整可用！**
 
 使用URL方式可以：
+
 - 立即开始使用
 - 测试所有功能
 - 添加真实模板数据
 - 无需等待文件上传功能
 
 **开始使用：**
+
 1. 登录管理后台
 2. 进入模板管理
 3. 点击"添加模板"

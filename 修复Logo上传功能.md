@@ -44,6 +44,7 @@
 ## 📋 Storage Bucket 配置详情
 
 ### Bucket 信息
+
 - **名称**：`tenant-assets`
 - **公开访问**：是（允许前台读取）
 - **文件大小限制**：5MB
@@ -58,10 +59,10 @@
 
 ### Storage 策略
 
-| 策略名称 | 操作 | 权限 | 说明 |
-|---------|------|------|------|
-| Public Access | SELECT | 所有人 | 允许公开读取文件 |
-| Authenticated users can upload | INSERT | 认证用户 | 允许登录用户上传 |
+| 策略名称                          | 操作   | 权限     | 说明                   |
+| --------------------------------- | ------ | -------- | ---------------------- |
+| Public Access                     | SELECT | 所有人   | 允许公开读取文件       |
+| Authenticated users can upload    | INSERT | 认证用户 | 允许登录用户上传       |
 | Users can update own tenant files | UPDATE | 租户成员 | 只能更新自己租户的文件 |
 | Users can delete own tenant files | DELETE | 租户成员 | 只能删除自己租户的文件 |
 
@@ -84,6 +85,7 @@ tenant-assets/
 ```
 
 **优点**：
+
 - 每个租户的文件隔离存储
 - 便于管理和清理
 - 支持多租户架构
@@ -95,12 +97,14 @@ tenant-assets/
 ### 问题 1：上传后显示 "上传失败"
 
 **可能原因**：
+
 1. Storage bucket 未创建
 2. Storage 策略未配置
 3. 文件类型不支持
 4. 文件大小超过 5MB
 
 **解决方案**：
+
 1. 执行 `检查Storage状态.sql` 检查配置
 2. 如果 bucket 不存在，执行 `创建Storage-Bucket.sql`
 3. 检查文件类型和大小
@@ -109,11 +113,13 @@ tenant-assets/
 ### 问题 2：上传成功但看不到图片
 
 **可能原因**：
+
 1. Storage bucket 不是公开的
 2. 文件路径错误
 3. 浏览器缓存问题
 
 **解决方案**：
+
 1. 检查 bucket 的 `public` 字段是否为 `true`
 2. 在 Supabase Dashboard > Storage 中查看文件是否存在
 3. 强制刷新浏览器（Ctrl + Shift + R）
@@ -121,20 +127,22 @@ tenant-assets/
 ### 问题 3：权限错误 "权限不足"
 
 **可能原因**：
+
 1. 用户不是 admin 或 owner
 2. 用户未关联租户
 
 **解决方案**：
+
 1. 检查用户的 `user_type`：
    ```sql
-   SELECT id, email, user_type, tenant_id 
-   FROM profiles 
+   SELECT id, email, user_type, tenant_id
+   FROM profiles
    WHERE email = 'your-email@example.com';
    ```
 2. 如果 `user_type` 不是 'admin' 或 'owner'，更新：
    ```sql
-   UPDATE profiles 
-   SET user_type = 'admin' 
+   UPDATE profiles
+   SET user_type = 'admin'
    WHERE email = 'your-email@example.com';
    ```
 
@@ -156,6 +164,7 @@ tenant-assets/
 ## 📊 API 端点
 
 ### 上传 Logo
+
 ```
 POST /api/tenant/branding/upload-logo
 Content-Type: multipart/form-data
@@ -172,6 +181,7 @@ Response:
 ```
 
 ### 获取品牌设置
+
 ```
 GET /api/tenant/branding
 
@@ -238,6 +248,6 @@ Response:
 **问题**：Logo 上传失败  
 **原因**：缺少 Storage bucket  
 **解决**：执行 `创建Storage-Bucket.sql`  
-**测试**：上传图片并查看预览  
+**测试**：上传图片并查看预览
 
 现在请按照步骤操作，然后告诉我结果！✨

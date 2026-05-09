@@ -1,83 +1,92 @@
 // Force dynamic rendering
-export const dynamic = 'force-dynamic';
-export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
 
-import { createClient } from '@/lib/supabase/server';
-import { NextResponse } from 'next/server';
+import { createClient } from '@/lib/supabase/server'
+import { NextResponse } from 'next/server'
 
 /**
- * 獲取服務列表
+ * Get service list
  * GET /api/admin/services
  */
 export async function GET(request: Request) {
   try {
-    const supabase = await createClient();
+    const supabase = await createClient()
 
-    // 獲取當前用戶
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    // Get current user
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser()
     if (userError || !user) {
-      return NextResponse.json({ error: '未授�? }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    // 獲取用戶的租戶ID
+    // Get user's tenant ID
     const { data: profile } = await supabase
       .from('profiles')
       .select('tenant_id')
       .eq('id', user.id)
-      .single();
+      .single()
 
     if (!profile?.tenant_id) {
-      return NextResponse.json({ error: '未找到租戶信�? }, { status: 404 });
+      return NextResponse.json({ error: 'Tenant not found' }, { status: 404 })
     }
 
-    // 獲取服務列表
+    // Get service list
     const { data: services, error } = await supabase
       .from('services')
       .select('*')
       .eq('tenant_id', profile.tenant_id)
-      .order('display_order', { ascending: true });
+      .order('display_order', { ascending: true })
 
     if (error) {
-      console.error('獲取服務列表失敗:', error);
-      return NextResponse.json({ error: '獲取服務列表失敗' }, { status: 500 });
+      console.error('Failed to get service list:', error)
+      return NextResponse.json(
+        { error: 'Failed to get service list' },
+        { status: 500 },
+      )
     }
 
-    return NextResponse.json({ services });
+    return NextResponse.json({ services })
   } catch (error) {
-    console.error('服務器錯�?', error);
-    return NextResponse.json({ error: '服務器錯�? }, { status: 500 });
+    console.error('Server error:', error)
+    return NextResponse.json({ error: 'Server error' }, { status: 500 })
   }
 }
 
 /**
- * 創建新服�?
+ * Create new service
  * POST /api/admin/services
  */
 export async function POST(request: Request) {
   try {
-    const supabase = await createClient();
+    const supabase = await createClient()
 
-    // 獲取當前用戶
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    // Get current user
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser()
     if (userError || !user) {
-      return NextResponse.json({ error: '未授�? }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    // 獲取用戶的租戶ID
+    // Get user's tenant ID
     const { data: profile } = await supabase
       .from('profiles')
       .select('tenant_id')
       .eq('id', user.id)
-      .single();
+      .single()
 
     if (!profile?.tenant_id) {
-      return NextResponse.json({ error: '未找到租戶信�? }, { status: 404 });
+      return NextResponse.json({ error: 'Tenant not found' }, { status: 404 })
     }
 
-    // 解析請求�?
-    const body = await request.json();
+    // Parse request body
+    const body = await request.json()
 
-    // 創建服務
+    // Create service
     const { data: service, error } = await supabase
       .from('services')
       .insert({
@@ -85,16 +94,19 @@ export async function POST(request: Request) {
         ...body,
       })
       .select()
-      .single();
+      .single()
 
     if (error) {
-      console.error('創建服務失敗:', error);
-      return NextResponse.json({ error: '創建服務失敗' }, { status: 500 });
+      console.error('Failed to create service:', error)
+      return NextResponse.json(
+        { error: 'Failed to create service' },
+        { status: 500 },
+      )
     }
 
-    return NextResponse.json({ service }, { status: 201 });
+    return NextResponse.json({ service }, { status: 201 })
   } catch (error) {
-    console.error('服務器錯�?', error);
-    return NextResponse.json({ error: '服務器錯�? }, { status: 500 });
+    console.error('Server error:', error)
+    return NextResponse.json({ error: 'Server error' }, { status: 500 })
   }
 }

@@ -45,6 +45,7 @@ git push origin main
 ```
 
 如果你的主分支是 `master`，最后一行改为：
+
 ```bash
 git push origin master
 ```
@@ -54,6 +55,7 @@ git push origin master
 ### 第四步：等待部署 (2-5分钟)
 
 1. 打开浏览器，访问：
+
    ```
    https://github.com/yuyue123yu/yyu/actions
    ```
@@ -82,6 +84,7 @@ git push origin master
 **错误信息**: "Permission denied" 或 "Authentication failed"
 
 **解决方案**:
+
 ```bash
 # 检查你的 Git 配置
 git config --global user.name "你的用户名"
@@ -96,6 +99,7 @@ git push origin main
 **错误信息**: 看到红色的错误信息
 
 **解决方案**:
+
 1. 复制错误信息
 2. 检查是否有语法错误
 3. 运行 `npm run dev` 确保本地可以运行
@@ -104,6 +108,7 @@ git push origin main
 ### 问题3: 网站显示 404
 
 **解决方案**:
+
 1. 等待 5-10 分钟（DNS 需要时间生效）
 2. 清除浏览器缓存（Ctrl + Shift + Delete）
 3. 尝试无痕模式访问
@@ -128,6 +133,7 @@ git push origin main
 网站上线后，你可以：
 
 1. **分享链接**
+
    ```
    https://yuyue123yu.github.io/yyu/
    ```
@@ -156,6 +162,7 @@ git push origin main
 5. 完成！（更快，更稳定，支持更多功能）
 
 Vercel 的优势：
+
 - ✅ 部署更快（1-2分钟）
 - ✅ 自动 HTTPS
 - ✅ 全球 CDN
@@ -167,6 +174,7 @@ Vercel 的优势：
 ## 📞 需要帮助？
 
 如果有任何问题，检查：
+
 1. GitHub Actions 日志（查看具体错误）
 2. 浏览器控制台（F12）
 3. 确认所有文件都已提交

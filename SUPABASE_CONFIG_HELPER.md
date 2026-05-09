@@ -7,10 +7,12 @@
 ## ✅ **第 1 步：创建 Supabase 项目**
 
 ### **1.1 访问并登录**
+
 - 网址：https://supabase.com
 - 使用 GitHub 账号登录（推荐）或邮箱注册
 
 ### **1.2 创建项目**
+
 点击 "New Project" 并填写：
 
 ```
@@ -28,23 +30,27 @@ Plan: Free
 ## ✅ **第 2 步：获取 API 密钥**
 
 ### **2.1 进入设置**
+
 左侧菜单 → ⚙️ Settings → API
 
 ### **2.2 复制以下三个值**
 
 #### **① Project URL**
+
 ```
-复制这里 → 
+复制这里 →
 ```
 
 #### **② anon public key**
+
 ```
-复制这里 → 
+复制这里 →
 ```
 
 #### **③ service_role key**（点击 "Reveal" 显示）
+
 ```
-复制这里 → 
+复制这里 →
 ```
 
 ---
@@ -70,9 +76,11 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 ## ✅ **第 4 步：创建数据库表**
 
 ### **4.1 打开 SQL Editor**
+
 Supabase 左侧菜单 → 🔧 SQL Editor → New query
 
 ### **4.2 复制并执行 SQL**
+
 1. 打开项目中的 `supabase/schema.sql` 文件
 2. 全选（Ctrl+A）并复制（Ctrl+C）
 3. 粘贴到 Supabase SQL Editor
@@ -80,9 +88,11 @@ Supabase 左侧菜单 → 🔧 SQL Editor → New query
 5. 看到 "Success. No rows returned" 就成功了！
 
 ### **4.3 验证**
+
 左侧菜单 → 📊 Table Editor
 
 应该看到 10 个表：
+
 - ✅ profiles
 - ✅ lawyers
 - ✅ services

@@ -5,19 +5,23 @@
 ### 1. 移除调试日志
 
 #### 文件：`src/components/layout/Header.tsx`
+
 移除这些行：
+
 ```typescript
 // 调试日志
-console.log('🔍 Header - settings:', settings);
-console.log('🔍 Header - loading:', loading);
+console.log('🔍 Header - settings:', settings)
+console.log('🔍 Header - loading:', loading)
 ```
 
 #### 文件：`src/contexts/SiteSettingsContext.tsx`
+
 检查并移除：
+
 ```typescript
-console.log("✅ 网站设置已加载:", newSettings);
-console.error("❌ 加载网站设置失败:", error);
-console.error("❌ 加载网站设置异常:", error);
+console.log('✅ 网站设置已加载:', newSettings)
+console.error('❌ 加载网站设置失败:', error)
+console.error('❌ 加载网站设置异常:', error)
 ```
 
 **建议：** 保留错误日志，只移除调试日志
@@ -25,6 +29,7 @@ console.error("❌ 加载网站设置异常:", error);
 ### 2. 移除测试文件
 
 可以删除以下测试文件（可选）：
+
 - `test-settings-sync.html`
 - `check-settings-table.js`
 - `test-database-connection.js`
@@ -32,6 +37,7 @@ console.error("❌ 加载网站设置异常:", error);
 ### 3. 清理文档文件
 
 可以移动到 `docs/` 文件夹：
+
 - `部署上线指南.md`
 - `deploy-checklist.md`
 - `网站设置同步说明.md`
@@ -41,6 +47,7 @@ console.error("❌ 加载网站设置异常:", error);
 ### 4. 检查环境变量
 
 确保 `.gitignore` 包含：
+
 ```
 .env
 .env.local
@@ -53,6 +60,7 @@ node_modules/
 ### 5. 优化图片
 
 检查 `public/` 目录下的图片：
+
 - 压缩大图片
 - 转换为 WebP 格式
 - 移除未使用的图片
@@ -62,11 +70,13 @@ node_modules/
 ## 快速清理命令
 
 ### 创建文档目录
+
 ```bash
 mkdir -p docs
 ```
 
 ### 移动文档文件
+
 ```bash
 mv *.md docs/ 2>/dev/null || true
 mv 部署上线指南.md docs/
@@ -75,6 +85,7 @@ mv pre-deploy-cleanup.md docs/
 ```
 
 ### 删除测试文件
+
 ```bash
 rm -f test-settings-sync.html
 rm -f check-settings-table.js
@@ -82,6 +93,7 @@ rm -f test-database-connection.js
 ```
 
 ### 清理 node_modules
+
 ```bash
 rm -rf node_modules
 npm install
@@ -94,10 +106,11 @@ npm install
 ### 1. 移除 Header 调试日志
 
 打开 `src/components/layout/Header.tsx`，删除：
+
 ```typescript
-  // 调试日志
-  console.log('🔍 Header - settings:', settings);
-  console.log('🔍 Header - loading:', loading);
+// 调试日志
+console.log('🔍 Header - settings:', settings)
+console.log('🔍 Header - loading:', loading)
 ```
 
 ### 2. 优化 SiteSettingsContext 日志
@@ -105,21 +118,24 @@ npm install
 打开 `src/contexts/SiteSettingsContext.tsx`，修改：
 
 **从：**
+
 ```typescript
-console.log("✅ 网站设置已加载:", newSettings);
+console.log('✅ 网站设置已加载:', newSettings)
 ```
 
 **改为：**
+
 ```typescript
 // 生产环境不输出日志
 if (process.env.NODE_ENV === 'development') {
-  console.log("✅ 网站设置已加载:", newSettings);
+  console.log('✅ 网站设置已加载:', newSettings)
 }
 ```
 
 ### 3. 检查其他 console.log
 
 搜索项目中的所有 console.log：
+
 ```bash
 grep -r "console.log" src/
 ```
@@ -131,11 +147,13 @@ grep -r "console.log" src/
 ## 生产环境日志策略
 
 ### 保留的日志
+
 ✅ 错误日志（console.error）
 ✅ 警告日志（console.warn）
 ✅ 关键操作日志
 
 ### 移除的日志
+
 ❌ 调试日志（console.log）
 ❌ 开发测试日志
 ❌ 详细的数据输出
@@ -149,24 +167,25 @@ grep -r "console.log" src/
 export const logger = {
   debug: (...args: any[]) => {
     if (process.env.NODE_ENV === 'development') {
-      console.log(...args);
+      console.log(...args)
     }
   },
   error: (...args: any[]) => {
-    console.error(...args);
+    console.error(...args)
   },
   warn: (...args: any[]) => {
-    console.warn(...args);
+    console.warn(...args)
   },
-};
+}
 ```
 
 使用：
-```typescript
-import { logger } from '@/lib/logger';
 
-logger.debug('调试信息'); // 只在开发环境输出
-logger.error('错误信息'); // 总是输出
+```typescript
+import { logger } from '@/lib/logger'
+
+logger.debug('调试信息') // 只在开发环境输出
+logger.error('错误信息') // 总是输出
 ```
 
 ---

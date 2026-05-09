@@ -28,19 +28,21 @@
 
 ### 前置要求
 
-- Node.js 18+ 
+- Node.js 18+
 - npm 或 yarn
 - PostgreSQL 数据库
 
 ### 安装步骤
 
 1. 克隆项目
+
 ```bash
 git clone <repository-url>
 cd malaysia-legal-consultation
 ```
 
 2. 安装依赖
+
 ```bash
 npm install
 # 或
@@ -48,12 +50,14 @@ yarn install
 ```
 
 3. 配置环境变量
+
 ```bash
 cp .env.example .env
 # 编辑 .env 文件，填入你的配置
 ```
 
 4. 运行开发服务器
+
 ```bash
 npm run dev
 # 或

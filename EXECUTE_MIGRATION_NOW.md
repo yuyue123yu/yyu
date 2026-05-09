@@ -3,25 +3,32 @@
 ## Quick Start (2 Minutes)
 
 ### Step 1: Open Supabase SQL Editor
+
 Click this link or copy to your browser:
+
 ```
 https://supabase.com/dashboard/project/ovtrvzbftinsfwytzgwy/sql/new
 ```
 
 ### Step 2: Copy the SQL
+
 The SQL migration is in: `supabase/001_create_tenants_table.sql`
 
 **OR** use one of these pre-copied files:
+
 - `TENANTS_MIGRATION_SQL.txt`
 - `EXECUTE_THIS_SQL.sql`
 
 ### Step 3: Paste and Run
+
 1. Paste the SQL into the editor
 2. Click the **"Run"** button (or press Ctrl+Enter)
 3. Wait for "Success. No rows returned" message
 
 ### Step 4: Verify
+
 Run this verification script:
+
 ```bash
 node scripts/execute-tenants-migration.js
 ```
@@ -33,7 +40,9 @@ Should show: ✅ Tenants table already exists!
 ## What This Creates
 
 ### Tenants Table
+
 A complete multi-tenant management table with:
+
 - **12 columns** for tenant data
 - **5 indexes** for performance
 - **Row-Level Security** enabled
@@ -41,6 +50,7 @@ A complete multi-tenant management table with:
 - **Data validation** via CHECK constraints
 
 ### Key Features
+
 - ✅ Unique subdomains for each tenant
 - ✅ Optional custom domains
 - ✅ Subscription management (free/basic/premium/enterprise)
@@ -59,9 +69,9 @@ CREATE TABLE public.tenants (
   name TEXT NOT NULL,
   subdomain TEXT UNIQUE NOT NULL,
   primary_domain TEXT UNIQUE,
-  status TEXT DEFAULT 'active' NOT NULL 
+  status TEXT DEFAULT 'active' NOT NULL
     CHECK (status IN ('active', 'inactive', 'suspended')),
-  subscription_plan TEXT DEFAULT 'free' NOT NULL 
+  subscription_plan TEXT DEFAULT 'free' NOT NULL
     CHECK (subscription_plan IN ('free', 'basic', 'premium', 'enterprise')),
   -- ... more columns ...
 );
@@ -78,23 +88,27 @@ Full SQL is in: `supabase/001_create_tenants_table.sql` (5KB, ~150 lines)
 Once the migration is executed, you can:
 
 ### 1. View the Table
+
 - Go to Supabase Dashboard → Table Editor
 - Find `tenants` in the list
 - Explore the schema
 
 ### 2. Insert Test Data
+
 ```sql
 INSERT INTO public.tenants (name, subdomain, status, subscription_plan)
 VALUES ('Test Tenant', 'test', 'active', 'free');
 ```
 
 ### 3. Query Tenants
+
 ```sql
 SELECT id, name, subdomain, status, subscription_plan
 FROM public.tenants;
 ```
 
 ### 4. Continue with Next Tasks
+
 - Task 1.1.2: Add tenant_id and super_admin to profiles
 - Task 1.2: Create tenant_settings table
 - Task 1.3: Create audit_logs table
@@ -104,12 +118,15 @@ FROM public.tenants;
 ## Need Help?
 
 ### Detailed Instructions
+
 See: `supabase/MIGRATION_INSTRUCTIONS.md`
 
 ### Troubleshooting
+
 See: `TASK_1.1.1_SUMMARY.md`
 
 ### Verification
+
 ```bash
 node scripts/execute-tenants-migration.js
 ```
@@ -119,6 +136,7 @@ node scripts/execute-tenants-migration.js
 ## Why Manual Execution?
 
 The Supabase JavaScript client doesn't support executing arbitrary SQL for security reasons. The Dashboard SQL Editor is the recommended method and provides:
+
 - ✅ Full SQL capabilities
 - ✅ Syntax validation
 - ✅ Error reporting

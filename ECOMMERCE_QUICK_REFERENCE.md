@@ -3,9 +3,11 @@
 ## 📦 新增组件
 
 ### 1. Promotions.tsx
+
 **位置**: `src/components/home/Promotions.tsx`
 
 **功能**:
+
 - 闪购专场（5折优惠）
 - 新用户礼包（¥100优惠券）
 - 满减活动（满¥500减¥50）
@@ -13,36 +15,42 @@
 - 热销律师排行榜
 
 **使用**:
-```tsx
-import Promotions from "@/components/home/Promotions";
 
-<Promotions />
+```tsx
+import Promotions from '@/components/home/Promotions'
+
+;<Promotions />
 ```
 
 ---
 
 ### 2. SearchFilters.tsx
+
 **位置**: `src/components/home/SearchFilters.tsx`
 
 **功能**:
+
 - 搜索框（粘性顶部）
 - 5 维度筛选（价格、评分、响应时间、地区、专业领域）
 - 5 种排序方式
 - 清除筛选快捷按钮
 
 **使用**:
-```tsx
-import SearchFilters from "@/components/home/SearchFilters";
 
-<SearchFilters />
+```tsx
+import SearchFilters from '@/components/home/SearchFilters'
+
+;<SearchFilters />
 ```
 
 ---
 
 ### 3. UserReviews.tsx
+
 **位置**: `src/components/home/UserReviews.tsx`
 
 **功能**:
+
 - 用户评价卡片网格（3列）
 - 律师信息 + 评分 + 评价内容
 - 已验证标签
@@ -50,28 +58,32 @@ import SearchFilters from "@/components/home/SearchFilters";
 - 平均评分统计
 
 **使用**:
-```tsx
-import UserReviews from "@/components/home/UserReviews";
 
-<UserReviews />
+```tsx
+import UserReviews from '@/components/home/UserReviews'
+
+;<UserReviews />
 ```
 
 ---
 
 ### 4. ShoppingCart.tsx
+
 **位置**: `src/components/home/ShoppingCart.tsx`
 
 **功能**:
+
 - 待咨询列表（购物车）
 - 收藏夹
 - 订单总结
 - 优惠提示
 
 **使用**:
-```tsx
-import ShoppingCart from "@/components/home/ShoppingCart";
 
-<ShoppingCart />
+```tsx
+import ShoppingCart from '@/components/home/ShoppingCart'
+
+;<ShoppingCart />
 ```
 
 ---
@@ -79,7 +91,9 @@ import ShoppingCart from "@/components/home/ShoppingCart";
 ## 🎨 优化的组件
 
 ### 1. Hero.tsx
+
 **改进**:
+
 - ✅ 添加购物车和收藏夹按钮
 - ✅ 3 个轮播 Banner（促销）
 - ✅ 6 个分类导航网格
@@ -88,7 +102,9 @@ import ShoppingCart from "@/components/home/ShoppingCart";
 ---
 
 ### 2. Services.tsx
+
 **改进**:
+
 - ✅ 6 列网格布局
 - ✅ 添加热销/推荐/新徽章
 - ✅ 显示案例数和价格
@@ -97,7 +113,9 @@ import ShoppingCart from "@/components/home/ShoppingCart";
 ---
 
 ### 3. FeaturedLawyers.tsx
+
 **改进**:
+
 - ✅ 6 列网格布局（电商卡片风格）
 - ✅ 添加已服务客户数（销量）
 - ✅ 添加价格区间
@@ -109,24 +127,24 @@ import ShoppingCart from "@/components/home/ShoppingCart";
 
 ## 🎯 电商特性总结
 
-| 特性 | 组件 | 说明 |
-|------|------|------|
-| 轮播 Banner | Hero | 3-5 个促销活动 |
-| 分类导航 | Hero | 6-8 个主要服务 |
-| 闪购 | Promotions | 限时优惠 |
-| 新用户优惠 | Promotions | ¥100 优惠券 |
-| 满减活动 | Promotions | 满¥500减¥50 |
-| 积分系统 | Promotions | 每次咨询赚积分 |
-| 热销排行 | Promotions | 周销量排行 |
-| 搜索 | SearchFilters | 快速查询 |
-| 筛选 | SearchFilters | 5 维度筛选 |
-| 排序 | SearchFilters | 5 种排序方式 |
-| 销量展示 | FeaturedLawyers | 已服务客户数 |
-| 评分展示 | FeaturedLawyers | 5 星评分 |
-| 用户评价 | UserReviews | 真实用户评价 |
-| 购物车 | ShoppingCart | 待咨询列表 |
-| 收藏夹 | ShoppingCart | 收藏律师 |
-| 订单总结 | ShoppingCart | 价格计算 |
+| 特性        | 组件            | 说明           |
+| ----------- | --------------- | -------------- |
+| 轮播 Banner | Hero            | 3-5 个促销活动 |
+| 分类导航    | Hero            | 6-8 个主要服务 |
+| 闪购        | Promotions      | 限时优惠       |
+| 新用户优惠  | Promotions      | ¥100 优惠券    |
+| 满减活动    | Promotions      | 满¥500减¥50    |
+| 积分系统    | Promotions      | 每次咨询赚积分 |
+| 热销排行    | Promotions      | 周销量排行     |
+| 搜索        | SearchFilters   | 快速查询       |
+| 筛选        | SearchFilters   | 5 维度筛选     |
+| 排序        | SearchFilters   | 5 种排序方式   |
+| 销量展示    | FeaturedLawyers | 已服务客户数   |
+| 评分展示    | FeaturedLawyers | 5 星评分       |
+| 用户评价    | UserReviews     | 真实用户评价   |
+| 购物车      | ShoppingCart    | 待咨询列表     |
+| 收藏夹      | ShoppingCart    | 收藏律师       |
+| 订单总结    | ShoppingCart    | 价格计算       |
 
 ---
 
@@ -149,43 +167,54 @@ neutral-900: #18181b
 ## 📱 响应式布局
 
 ### 网格列数
-| 设备 | Services | FeaturedLawyers | UserReviews |
-|------|----------|-----------------|-------------|
-| 移动端 | 2 列 | 2 列 | 1 列 |
-| 平板端 | 3 列 | 3 列 | 2 列 |
-| 桌面端 | 6 列 | 6 列 | 3 列 |
+
+| 设备   | Services | FeaturedLawyers | UserReviews |
+| ------ | -------- | --------------- | ----------- |
+| 移动端 | 2 列     | 2 列            | 1 列        |
+| 平板端 | 3 列     | 3 列            | 2 列        |
+| 桌面端 | 6 列     | 6 列            | 3 列        |
 
 ---
 
 ## 🔧 快速修改
 
 ### 修改促销内容
+
 编辑 `src/components/home/Promotions.tsx` 中的数据：
+
 ```tsx
-{/* 闪购 */}
-<div className="...">
+{
+  /* 闪购 */
+}
+;<div className="...">
   <h3 className="...">闪购专场</h3>
-  <p className="...">首次咨询 <span className="...">5折</span></p>
+  <p className="...">
+    首次咨询 <span className="...">5折</span>
+  </p>
 </div>
 ```
 
 ### 修改律师数据
+
 编辑 `src/components/home/FeaturedLawyers.tsx` 中的 `lawyers` 数组：
+
 ```tsx
 const lawyers = [
   {
     id: 1,
-    name: "律师名字",
-    specialty: "专业领域",
+    name: '律师名字',
+    specialty: '专业领域',
     rating: 4.9,
     // ... 其他字段
   },
   // ...
-];
+]
 ```
 
 ### 修改筛选选项
+
 编辑 `src/components/home/SearchFilters.tsx` 中的筛选数据：
+
 ```tsx
 {[
   { label: "全部", value: "all" },

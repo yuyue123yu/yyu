@@ -27,9 +27,7 @@ const IGNORE_DIRS = [
 ]
 
 function shouldIgnore(filePath) {
-  return IGNORE_DIRS.some(dir =>
-    filePath.includes(path.sep + dir + path.sep)
-  )
+  return IGNORE_DIRS.some((dir) => filePath.includes(path.sep + dir + path.sep))
 }
 
 function processFile(filePath) {

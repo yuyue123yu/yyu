@@ -3,6 +3,7 @@
 ## 需要修改的文件列表
 
 ### 用户页面（需要移除 useLanguage）
+
 1. `src/app/about/page.tsx`
 2. `src/app/careers/page.tsx`
 3. `src/app/cart/page.tsx`
@@ -25,11 +26,13 @@
 ## 修改方案
 
 ### 方案 1：移除 useLanguage，使用硬编码文本（推荐）
+
 - 从这些文件中删除 `import { useLanguage } from "@/contexts/LanguageContext";`
 - 删除 `const { t, language } = useLanguage();`
 - 将所有 `t('key')` 替换为实际的文本
 
 ### 方案 2：创建一个空的翻译函数
+
 创建一个简单的 fallback 函数，当翻译键不存在时返回键本身。
 
 ## 快速修复
