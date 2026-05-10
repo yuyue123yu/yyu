@@ -10,8 +10,15 @@ const nextConfig = {
 
   // 实验性功能
   experimental: {
-    // 跳过静态生成错误
-    staticPageGenerationTimeout: 180,
+    // 使用服务器端渲染
+    serverActions: {
+      bodySizeLimit: '2mb',
+    },
+  },
+
+  // 生成配置
+  generateBuildId: async () => {
+    return 'build-' + Date.now();
   },
 
   // TypeScript 和 ESLint 配置
