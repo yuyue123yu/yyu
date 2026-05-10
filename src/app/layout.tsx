@@ -5,6 +5,10 @@ import { LanguageProvider } from '@/contexts/LanguageContext'
 import { AuthProvider } from '@/contexts/AuthContext'
 import { SiteSettingsProvider } from '@/contexts/SiteSettingsContext'
 
+// Force dynamic rendering for entire app
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
+
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {

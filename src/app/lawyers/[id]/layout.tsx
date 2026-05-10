@@ -1,3 +1,6 @@
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
+
 // 生成静态路径 - 服务器组件
 export function generateStaticParams() {
   // 预生成所有律师的静态路径
