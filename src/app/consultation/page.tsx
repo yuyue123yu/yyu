@@ -31,10 +31,24 @@ export default function ConsultationPage() {
     const supabase = await createClient()
 
     try {
+      // Get the first active tenant (temporary solution)
+      const { data: tenant } = await supabase
+        .from('tenants')
+        .select('id')
+        .eq('status', 'active')
+        .order('created_at', { ascending: true })
+        .limit(1)
+        .single()
+
+      if (!tenant) {
+        throw new Error('No active tenant found')
+      }
+
       const { error: insertError } = await supabase
         .from('consultations')
         .insert([
           {
+            tenant_id: tenant.id,
             client_id: user?.id || null,
             name: formData.name,
             email: formData.email,
